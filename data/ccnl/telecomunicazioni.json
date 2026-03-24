@@ -1,0 +1,34 @@
+{
+  "id": "telecomunicazioni",
+  "nome": "CCNL Telecomunicazioni (Asstel-Assotelecomunicazioni)",
+  "fonte": "https://www.asstel.it/contratto-collettivo",
+  "updatedAt": "2026-01-01T00:00:00Z",
+  "mensilita": 13,
+  "contributiContrattuali": {
+    "azienda": {
+      "fastelC": {
+        "percentuale": 0.0075,
+        "descrizione": "Fondo sanitario integrativo Fastel",
+        "notaLegge": "Art. 19 CCNL Telecomunicazioni"
+      },
+      "telemaco": {
+        "percentuale": 0.0200,
+        "descrizione": "Fondo pensione complementare Telemaco (quota azienda)",
+        "notaLegge": "Art. 50 CCNL Telecomunicazioni"
+      }
+    }
+  },
+  "livelli": [
+    { "codice": "Q",  "descrizione": "Quadro",          "moltiplicatore": 1.00 },
+    { "codice": "A",  "descrizione": "Livello A",       "moltiplicatore": 0.90 },
+    { "codice": "B",  "descrizione": "Livello B",       "moltiplicatore": 0.81 },
+    { "codice": "C",  "descrizione": "Livello C",       "moltiplicatore": 0.72 },
+    { "codice": "D",  "descrizione": "Livello D",       "moltiplicatore": 0.64 },
+    { "codice": "E",  "descrizione": "Livello E",       "moltiplicatore": 0.57 }
+  ],
+  "scattiAnzianita": {
+    "periodicitaMesi": 24,
+    "importoPerScattoEuro": 10.57,
+    "maxScatti": 8
+  }
+}

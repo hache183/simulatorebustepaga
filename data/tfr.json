@@ -1,0 +1,10 @@
+{
+  "updatedAt": "2026-01-01T00:00:00Z",
+  "fonte": "Art. 2120 c.c. — D.Lgs. 252/2005 — invariato",
+  "divisoreAnnuo": 13.5,
+  "rivalutazione": {
+    "quotaFissa": 0.015,
+    "quotaVariabileCpi": 0.75,
+    "descrizione": "1,5% fisso annuo + 75% dell'indice ISTAT FOI (invariato per legge)"
+  }
+}

@@ -1,0 +1,138 @@
+{
+  "updatedAt": "2026-01-01T00:00:00Z",
+  "fonte": "Circolare INPS n. 1/2026 — Legge di Bilancio 2025 (L. 207/2024)",
+  "aliquotaBaseAzienda": 0.288,
+  "aliquotaBaseDipendente": 0.0919,
+  "agevolazioni": [
+    {
+      "id": "under36",
+      "nome": "Esonero contributivo under 36",
+      "descrizione": "Esonero 100% contributi datoriali fino a 6.000 euro/anno per assunzioni a tempo indeterminato di under 36 alla prima occupazione stabile",
+      "fonteLegge": "Legge 207/2024 art. 1 cc. 181-187 (proroga Legge 178/2020)",
+      "percentualeEsonero": 1.0,
+      "massimaleAnnuo": 6000,
+      "requisiti": {
+        "etaMassima": 35,
+        "tipiContratto": [
+          "tempo_indeterminato"
+        ],
+        "primaOccupazione": true
+      },
+      "cumulabileCon": [],
+      "nonCumulabileCon": [
+        "decontribuzione_sud",
+        "donne_svantaggiate"
+      ],
+      "scadenza": "2026-12-31T00:00:00Z",
+      "scadenzaAlertGiorni": 90
+    },
+    {
+      "id": "donne_svantaggiate",
+      "nome": "Esonero contributivo donne svantaggiate",
+      "descrizione": "Esonero 60% contributi datoriali fino a 8.000 euro/anno per assunzione di donne in situazione di svantaggio occupazionale",
+      "fonteLegge": "Legge 207/2024 art. 1 cc. 191-193 (proroga Legge 92/2012 art. 4 cc. 8-11)",
+      "percentualeEsonero": 0.6,
+      "massimaleAnnuo": 8000,
+      "requisiti": {
+        "sesso": "F"
+      },
+      "cumulabileCon": [],
+      "nonCumulabileCon": [
+        "under36",
+        "decontribuzione_sud"
+      ],
+      "scadenza": "2026-12-31T00:00:00Z",
+      "scadenzaAlertGiorni": 90
+    },
+    {
+      "id": "decontribuzione_sud",
+      "nome": "Decontribuzione Sud 2026",
+      "descrizione": "Esonero 25% contributi datoriali per aziende con sede operativa nelle regioni del Mezzogiorno (ridotta al 25% rispetto al 30% del 2023 per decalage progressivo)",
+      "fonteLegge": "Legge 207/2024 art. 1 cc. 161-168 — proroga con riduzione al 25% per il 2026",
+      "percentualeEsonero": 0.25,
+      "massimaleAnnuo": null,
+      "requisiti": {
+        "regioni": [
+          "Campania",
+          "Puglia",
+          "Basilicata",
+          "Calabria",
+          "Sicilia",
+          "Sardegna",
+          "Molise",
+          "Abruzzo"
+        ]
+      },
+      "cumulabileCon": [],
+      "nonCumulabileCon": [
+        "under36",
+        "donne_svantaggiate"
+      ],
+      "scadenza": "2029-12-31T00:00:00Z",
+      "scadenzaAlertGiorni": 90
+    },
+    {
+      "id": "apprendistato",
+      "nome": "Agevolazione contributiva apprendistato",
+      "descrizione": "Aliquota contributiva ridotta al 10% per i contratti di apprendistato professionalizzante (risparmio dell'80% sull'aliquota ordinaria del 28,80%)",
+      "fonteLegge": "D.Lgs. 81/2015 art. 47 c. 7",
+      "percentualeEsonero": 0.9,
+      "massimaleAnnuo": null,
+      "requisiti": {
+        "tipiContratto": [
+          "apprendistato"
+        ]
+      },
+      "cumulabileCon": [],
+      "nonCumulabileCon": [
+        "under36",
+        "decontribuzione_sud",
+        "donne_svantaggiate"
+      ],
+      "scadenza": null,
+      "scadenzaAlertGiorni": null
+    },
+    {
+      "id": "disoccupati_12mesi",
+      "nome": "Incentivo assunzione disoccupati 12 mesi",
+      "descrizione": "Esonero 50% contributi datoriali fino a 4.030 euro/anno per assunzione di lavoratori disoccupati da almeno 12 mesi",
+      "fonteLegge": "D.Lgs. 150/2015 art. 31 — confermato dalla Legge 207/2024",
+      "percentualeEsonero": 0.5,
+      "massimaleAnnuo": 4030,
+      "requisiti": {
+        "disoccupatoMesiMin": 12
+      },
+      "cumulabileCon": [
+        "decontribuzione_sud"
+      ],
+      "nonCumulabileCon": [
+        "under36"
+      ],
+      "scadenza": null,
+      "scadenzaAlertGiorni": null
+    },
+    {
+      "id": "neet",
+      "nome": "Esonero NEET under 30 (Garanzia Giovani)",
+      "descrizione": "Esonero 100% contributi datoriali fino a 8.000 euro/anno per assunzione a tempo indeterminato di giovani under 30 NEET registrati al programma GOL",
+      "fonteLegge": "Legge 207/2024 art. 1 cc. 194-197",
+      "percentualeEsonero": 1.0,
+      "massimaleAnnuo": 8000,
+      "requisiti": {
+        "etaMassima": 29,
+        "tipiContratto": [
+          "tempo_indeterminato"
+        ],
+        "neet": true
+      },
+      "cumulabileCon": [],
+      "nonCumulabileCon": [
+        "under36",
+        "donne_svantaggiate",
+        "decontribuzione_sud"
+      ],
+      "scadenza": "2026-12-31T00:00:00Z",
+      "scadenzaAlertGiorni": 90
+    }
+  ]
+}

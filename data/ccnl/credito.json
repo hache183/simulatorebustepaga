@@ -1,0 +1,36 @@
+{
+  "id": "credito",
+  "nome": "CCNL Credito (ABI — Associazione Bancaria Italiana)",
+  "fonte": "https://www.abi.it/contratto-collettivo",
+  "updatedAt": "2026-01-01T00:00:00Z",
+  "mensilita": 13,
+  "contributiContrattuali": {
+    "azienda": {
+      "casiB": {
+        "percentuale": 0.0090,
+        "descrizione": "Fondo assistenza sanitaria bancari CASI",
+        "notaLegge": "Art. 73 CCNL Credito ABI"
+      },
+      "fonteB": {
+        "percentuale": 0.0280,
+        "descrizione": "Fondo pensione complementare Fonte (quota azienda)",
+        "notaLegge": "Art. 74 CCNL Credito ABI"
+      }
+    }
+  },
+  "livelli": [
+    { "codice": "Q",   "descrizione": "Quadro direttivo 4°",   "moltiplicatore": 1.00 },
+    { "codice": "QD3", "descrizione": "Quadro direttivo 3°",   "moltiplicatore": 0.90 },
+    { "codice": "QD2", "descrizione": "Quadro direttivo 2°",   "moltiplicatore": 0.82 },
+    { "codice": "QD1", "descrizione": "Quadro direttivo 1°",   "moltiplicatore": 0.75 },
+    { "codice": "3A",  "descrizione": "Area professionale 3° — 3a fascia", "moltiplicatore": 0.68 },
+    { "codice": "3B",  "descrizione": "Area professionale 3° — 2a fascia", "moltiplicatore": 0.62 },
+    { "codice": "3C",  "descrizione": "Area professionale 3° — 1a fascia", "moltiplicatore": 0.57 },
+    { "codice": "2A",  "descrizione": "Area professionale 2°", "moltiplicatore": 0.52 }
+  ],
+  "scattiAnzianita": {
+    "periodicitaMesi": 24,
+    "importoPerScattoEuro": 13.94,
+    "maxScatti": 8
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "id": "trasporti",
+  "nome": "CCNL Trasporto Merci e Logistica (Conftrasporto-Confartigianato)",
+  "fonte": "https://www.conftrasporto.it/contratto-collettivo",
+  "updatedAt": "2026-01-01T00:00:00Z",
+  "mensilita": 13,
+  "contributiContrattuali": {
+    "azienda": {
+      "sanita": {
+        "percentuale": 0.0060,
+        "descrizione": "Fondo sanitario integrativo trasportatori",
+        "notaLegge": "Art. 28 CCNL Trasporti"
+      },
+      "enbic": {
+        "percentuale": 0.0020,
+        "descrizione": "Ente bilaterale trasporti ENBIC",
+        "notaLegge": "Art. 5 CCNL Trasporti"
+      }
+    }
+  },
+  "livelli": [
+    { "codice": "Q",  "descrizione": "Quadro",                      "moltiplicatore": 1.00 },
+    { "codice": "1",  "descrizione": "1° livello (Quadri tecnici)", "moltiplicatore": 0.91 },
+    { "codice": "2",  "descrizione": "2° livello",                  "moltiplicatore": 0.82 },
+    { "codice": "3",  "descrizione": "3° livello (Autisti)",        "moltiplicatore": 0.74 },
+    { "codice": "4",  "descrizione": "4° livello",                  "moltiplicatore": 0.67 },
+    { "codice": "5",  "descrizione": "5° livello",                  "moltiplicatore": 0.60 }
+  ],
+  "scattiAnzianita": {
+    "periodicitaMesi": 24,
+    "importoPerScattoEuro": 9.00,
+    "maxScatti": 8
+  }
+}

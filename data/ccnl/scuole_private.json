@@ -1,0 +1,33 @@
+{
+  "id": "scuole_private",
+  "nome": "CCNL Scuole ed Istituti Privati (FISM — Agidae)",
+  "fonte": "https://www.agidae.it/contratto-collettivo",
+  "updatedAt": "2026-01-01T00:00:00Z",
+  "mensilita": 13,
+  "contributiContrattuali": {
+    "azienda": {
+      "sanScuola": {
+        "percentuale": 0.0040,
+        "descrizione": "Fondo sanitario integrativo scuola privata",
+        "notaLegge": "Art. 17 CCNL Scuole Private"
+      },
+      "perseo": {
+        "percentuale": 0.0100,
+        "descrizione": "Fondo pensione complementare Perseo Sirio",
+        "notaLegge": "Art. 41 CCNL Scuole Private"
+      }
+    }
+  },
+  "livelli": [
+    { "codice": "D",  "descrizione": "Dirigente scolastico",      "moltiplicatore": 1.00 },
+    { "codice": "A",  "descrizione": "Docente laureato",          "moltiplicatore": 0.85 },
+    { "codice": "B",  "descrizione": "Docente diplomato",         "moltiplicatore": 0.75 },
+    { "codice": "C",  "descrizione": "Personale ATA qualificato", "moltiplicatore": 0.65 },
+    { "codice": "E",  "descrizione": "Personale ausiliario",      "moltiplicatore": 0.56 }
+  ],
+  "scattiAnzianita": {
+    "periodicitaMesi": 24,
+    "importoPerScattoEuro": 8.20,
+    "maxScatti": 8
+  }
+}

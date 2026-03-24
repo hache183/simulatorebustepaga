@@ -1,0 +1,33 @@
+{
+  "id": "edilizia",
+  "nome": "CCNL Edilizia (ANCE — Industria)",
+  "fonte": "https://www.ance.it/contratto-collettivo",
+  "updatedAt": "2026-01-01T00:00:00Z",
+  "mensilita": 13,
+  "contributiContrattuali": {
+    "azienda": {
+      "cassaEdile": {
+        "percentuale": 0.0400,
+        "descrizione": "Contributo Cassa Edile (quota azienda)",
+        "notaLegge": "Art. 38 CCNL Edilizia ANCE"
+      },
+      "formazioneEdile": {
+        "percentuale": 0.0070,
+        "descrizione": "Contributo per la formazione professionale edile",
+        "notaLegge": "Art. 39 CCNL Edilizia ANCE"
+      }
+    }
+  },
+  "livelli": [
+    { "codice": "Q",  "descrizione": "Quadro",                         "moltiplicatore": 1.00 },
+    { "codice": "1",  "descrizione": "1° livello (Operaio specializzato)", "moltiplicatore": 0.85 },
+    { "codice": "2",  "descrizione": "2° livello (Operaio qualificato)",   "moltiplicatore": 0.75 },
+    { "codice": "3",  "descrizione": "3° livello (Operaio comune)",        "moltiplicatore": 0.65 },
+    { "codice": "4",  "descrizione": "4° livello (Manovale)",              "moltiplicatore": 0.58 }
+  ],
+  "scattiAnzianita": {
+    "periodicitaMesi": 24,
+    "importoPerScattoEuro": 9.20,
+    "maxScatti": 8
+  }
+}

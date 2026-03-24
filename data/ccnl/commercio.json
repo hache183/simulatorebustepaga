@@ -1,0 +1,35 @@
+{
+  "id": "commercio",
+  "nome": "CCNL Terziario Distribuzione e Servizi (Commercio)",
+  "fonte": "https://www.confcommercio.it/contratti-collettivi",
+  "updatedAt": "2026-01-01T00:00:00Z",
+  "mensilita": 13,
+  "contributiContrattuali": {
+    "azienda": {
+      "fondoEst": {
+        "percentuale": 0.0056,
+        "descrizione": "Fondo sanitario integrativo Est",
+        "notaLegge": "Accordo nazionale Confcommercio"
+      },
+      "ebiter": {
+        "percentuale": 0.0015,
+        "descrizione": "Ente bilaterale territoriale Ebiter",
+        "notaLegge": "Art. 4 CCNL Commercio"
+      }
+    }
+  },
+  "livelli": [
+    { "codice": "Q",  "descrizione": "Quadro",      "moltiplicatore": 1.00 },
+    { "codice": "1",  "descrizione": "1° livello",   "moltiplicatore": 0.94 },
+    { "codice": "2",  "descrizione": "2° livello",   "moltiplicatore": 0.86 },
+    { "codice": "3",  "descrizione": "3° livello",   "moltiplicatore": 0.79 },
+    { "codice": "4",  "descrizione": "4° livello",   "moltiplicatore": 0.72 },
+    { "codice": "5",  "descrizione": "5° livello",   "moltiplicatore": 0.65 },
+    { "codice": "6",  "descrizione": "6° livello",   "moltiplicatore": 0.60 }
+  ],
+  "scattiAnzianita": {
+    "periodicitaMesi": 24,
+    "importoPerScattoEuro": 10.33,
+    "maxScatti": 8
+  }
+}

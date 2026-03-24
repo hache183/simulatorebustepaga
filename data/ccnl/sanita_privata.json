@@ -1,0 +1,34 @@
+{
+  "id": "sanita_privata",
+  "nome": "CCNL Sanità Privata (Aiop-Aris)",
+  "fonte": "https://www.aiop.it/contratto-collettivo",
+  "updatedAt": "2026-01-01T00:00:00Z",
+  "mensilita": 13,
+  "contributiContrattuali": {
+    "azienda": {
+      "fasdaC": {
+        "percentuale": 0.0050,
+        "descrizione": "Fondo sanitario integrativo Fasda",
+        "notaLegge": "Art. 5 CCNL Sanità Privata"
+      },
+      "previr": {
+        "percentuale": 0.0130,
+        "descrizione": "Fondo pensione complementare Previcooper",
+        "notaLegge": "Art. 44 CCNL Sanità Privata"
+      }
+    }
+  },
+  "livelli": [
+    { "codice": "DS", "descrizione": "Dirigente sanitario",            "moltiplicatore": 1.00 },
+    { "codice": "B",  "descrizione": "Categoria B (Laureati)",         "moltiplicatore": 0.88 },
+    { "codice": "C",  "descrizione": "Categoria C (Diplomati spec.)",  "moltiplicatore": 0.76 },
+    { "codice": "D",  "descrizione": "Categoria D (Diplomati)",        "moltiplicatore": 0.67 },
+    { "codice": "E",  "descrizione": "Categoria E (Qualificati)",      "moltiplicatore": 0.60 },
+    { "codice": "F",  "descrizione": "Categoria F (Operatori)",        "moltiplicatore": 0.54 }
+  ],
+  "scattiAnzianita": {
+    "periodicitaMesi": 24,
+    "importoPerScattoEuro": 9.50,
+    "maxScatti": 8
+  }
+}

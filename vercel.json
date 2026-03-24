@@ -1,0 +1,12 @@
+{
+  "functions": {
+    "app/api/**": { "maxDuration": 10 }
+  },
+  "regions": ["fra1"],
+  "headers": [
+    {
+      "source": "/admin(.*)",
+      "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }]
+    }
+  ]
+}

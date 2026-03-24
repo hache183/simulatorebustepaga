@@ -1,0 +1,76 @@
+{
+  "updatedAt": "2026-01-01T00:00:00Z",
+  "fonte": "INAIL Tariffe 2025 — Delibera CDA 25/06/2024",
+  "voci": [
+    {
+      "codice": "0111",
+      "settore": "Commercio al dettaglio",
+      "tassoPerMille": 8.3
+    },
+    {
+      "codice": "0721",
+      "settore": "Uffici e amministrazione",
+      "tassoPerMille": 3.1
+    },
+    {
+      "codice": "3111",
+      "settore": "Costruzioni edili",
+      "tassoPerMille": 63.0
+    },
+    {
+      "codice": "5411",
+      "settore": "Ristorazione e pubblici esercizi",
+      "tassoPerMille": 12.0
+    },
+    {
+      "codice": "6311",
+      "settore": "Trasporto merci su strada",
+      "tassoPerMille": 36.5
+    },
+    {
+      "codice": "9100",
+      "settore": "Informatica e servizi IT",
+      "tassoPerMille": 2.7
+    },
+    {
+      "codice": "4211",
+      "settore": "Industria metalmeccanica",
+      "tassoPerMille": 17.8
+    },
+    {
+      "codice": "7111",
+      "settore": "Sanità e assistenza sociale privata",
+      "tassoPerMille": 6.2
+    },
+    {
+      "codice": "8121",
+      "settore": "Pulizie e multiservizi",
+      "tassoPerMille": 9.4
+    },
+    {
+      "codice": "2311",
+      "settore": "Industria chimica e farmaceutica",
+      "tassoPerMille": 11.2
+    },
+    {
+      "codice": "1411",
+      "settore": "Industria tessile e abbigliamento",
+      "tassoPerMille": 14.6
+    },
+    {
+      "codice": "0211",
+      "settore": "Agricoltura e florovivaismo",
+      "tassoPerMille": 22.1
+    },
+    {
+      "codice": "6111",
+      "settore": "Telecomunicazioni e ICT",
+      "tassoPerMille": 4.3
+    },
+    {
+      "codice": "0311",
+      "settore": "Istruzione e formazione privata",
+      "tassoPerMille": 3.8
+    }
+  ]
+}
