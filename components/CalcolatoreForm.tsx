@@ -84,170 +84,213 @@ export function CalcolatoreFormStep1({ onNext }: Props) {
       .finally(() => setLoadingLivelli(false));
   }, [ccnlSelezionato]);
 
-  const inputClass = (hasError: boolean) =>
-    `w-full rounded-lg border px-3 py-2 text-sm text-gray-900 bg-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-      hasError ? 'border-red-400 bg-red-50' : 'border-gray-300'
-    }`;
-
   return (
-    <form onSubmit={handleSubmit(onNext)} className="space-y-5">
-      <h2 className="text-lg font-semibold text-gray-800">Dati dell&apos;assunzione</h2>
+    <form onSubmit={handleSubmit(onNext)} style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+
+      {/* Label sezione */}
+      <div style={{ borderBottom: '1px solid var(--color-border)', paddingBottom: '14px' }}>
+        <p style={{
+          fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, fontSize: '11px',
+          color: 'var(--color-accent-bright)', letterSpacing: '0.06em', textTransform: 'uppercase',
+        }}>
+          Step 1 di 2
+        </p>
+        <h2 style={{
+          fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: '18px',
+          color: 'var(--color-text-primary)', marginTop: '4px',
+        }}>
+          Dati dell&apos;assunzione
+        </h2>
+      </div>
 
       {/* CCNL */}
       <div>
-        <label htmlFor="ccnlId" className="block text-sm font-medium text-gray-700 mb-1">
+        <label htmlFor="ccnlId" style={{ display: 'block', fontSize: '13px', fontWeight: 500,
+          color: 'var(--color-text-secondary)', marginBottom: '6px' }}>
           Contratto collettivo (CCNL)
         </label>
-        <select id="ccnlId" {...register('ccnlId')} className={inputClass(!!errors.ccnlId)}>
+        <select id="ccnlId" {...register('ccnlId')} style={{
+          width: '100%', padding: '11px 14px',
+          background: 'var(--color-bg-input)', color: 'var(--color-text-primary)',
+          border: `1px solid ${errors.ccnlId ? 'var(--color-red)' : 'var(--color-border)'}`,
+          borderRadius: '6px', fontSize: '13px', cursor: 'pointer',
+        }}>
           <option value="">— Seleziona il CCNL —</option>
           {CCNL_DISPONIBILI.map(c => (
             <option key={c.id} value={c.id}>{c.nome}</option>
           ))}
         </select>
-        {errors.ccnlId && <p className="mt-1 text-xs text-red-600">{errors.ccnlId.message}</p>}
+        {errors.ccnlId && <p style={{ marginTop: '4px', fontSize: '11px', color: 'var(--color-red)' }}>{errors.ccnlId.message}</p>}
       </div>
 
       {/* Livello */}
       <div>
-        <label htmlFor="livello" className="block text-sm font-medium text-gray-700 mb-1">
+        <label htmlFor="livello" style={{ display: 'block', fontSize: '13px', fontWeight: 500,
+          color: 'var(--color-text-secondary)', marginBottom: '6px' }}>
           Livello contrattuale
         </label>
-        <select
-          id="livello"
-          {...register('livello')}
+        <select id="livello" {...register('livello')}
           disabled={loadingLivelli || livelli.length === 0}
-          className={inputClass(!!errors.livello)}
-        >
+          style={{
+            width: '100%', padding: '11px 14px',
+            background: 'var(--color-bg-input)', color: 'var(--color-text-primary)',
+            border: `1px solid ${errors.livello ? 'var(--color-red)' : 'var(--color-border)'}`,
+            borderRadius: '6px', fontSize: '13px', cursor: 'pointer',
+            opacity: (loadingLivelli || livelli.length === 0) ? 0.5 : 1,
+          }}>
           <option value="">
             {loadingLivelli ? 'Caricamento...' : livelli.length === 0 ? '— Prima seleziona il CCNL —' : '— Seleziona il livello —'}
           </option>
           {livelli.map(l => (
-            <option key={l.codice} value={l.codice}>
-              {l.codice} — {l.descrizione}
-            </option>
+            <option key={l.codice} value={l.codice}>{l.codice} — {l.descrizione}</option>
           ))}
         </select>
-        {errors.livello && <p className="mt-1 text-xs text-red-600">{errors.livello.message}</p>}
+        {errors.livello && <p style={{ marginTop: '4px', fontSize: '11px', color: 'var(--color-red)' }}>{errors.livello.message}</p>}
       </div>
 
       {/* RAL */}
       <div>
-        <label htmlFor="ral" className="block text-sm font-medium text-gray-700 mb-1">
-          RAL annua lorda (€)
+        <label htmlFor="ral" style={{ display: 'block', fontSize: '13px', fontWeight: 500,
+          color: 'var(--color-text-secondary)', marginBottom: '6px' }}>
+          RAL annua lorda
         </label>
-        <input
-          id="ral"
-          type="number"
-          step="100"
-          placeholder="es. 28000"
-          {...register('ral', { valueAsNumber: true })}
-          className={inputClass(!!errors.ral)}
-        />
-        {errors.ral && <p className="mt-1 text-xs text-red-600">{errors.ral.message}</p>}
+        <div style={{ position: 'relative' }}>
+          <span style={{
+            position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)',
+            fontFamily: "'DM Mono', monospace", fontSize: '13px', color: 'var(--color-text-muted)',
+          }}>€</span>
+          <input id="ral" type="number" step="500" placeholder="28.000"
+            {...register('ral', { valueAsNumber: true })}
+            style={{
+              width: '100%', padding: '11px 14px 11px 28px',
+              background: 'var(--color-bg-input)', color: 'var(--color-text-primary)',
+              border: `1px solid ${errors.ral ? 'var(--color-red)' : 'var(--color-border)'}`,
+              borderRadius: '6px', fontSize: '13px',
+              fontFamily: "'DM Mono', monospace",
+            }}
+          />
+        </div>
+        {errors.ral && <p style={{ marginTop: '4px', fontSize: '11px', color: 'var(--color-red)' }}>{errors.ral.message}</p>}
       </div>
 
       {/* Tipo contratto */}
       <div>
-        <label htmlFor="tipoContratto" className="block text-sm font-medium text-gray-700 mb-1">
+        <label style={{ display: 'block', fontSize: '13px', fontWeight: 500,
+          color: 'var(--color-text-secondary)', marginBottom: '6px' }}>
           Tipo di contratto
         </label>
-        <select id="tipoContratto" {...register('tipoContratto')} className={inputClass(!!errors.tipoContratto)}>
-          {TIPI_CONTRATTO.map(t => (
-            <option key={t.value} value={t.value}>{t.label}</option>
-          ))}
-        </select>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px' }}>
+          {TIPI_CONTRATTO.map(t => {
+            const selected = watch('tipoContratto') === t.value;
+            return (
+              <button key={t.value} type="button"
+                onClick={() => setValue('tipoContratto', t.value)}
+                style={{
+                  padding: '8px 10px', borderRadius: '6px', fontSize: '12px', fontWeight: 500,
+                  cursor: 'pointer', transition: 'all 0.15s ease', textAlign: 'left',
+                  background: selected ? 'var(--color-accent-glow)' : 'var(--color-bg-input)',
+                  border: `1px solid ${selected ? 'var(--color-accent)' : 'var(--color-border)'}`,
+                  color: selected ? 'var(--color-accent-bright)' : 'var(--color-text-secondary)',
+                }}>
+                {t.label}
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       {/* Ore di lavoro */}
       <div>
-        <div className="flex justify-between items-center mb-1">
-          <label htmlFor="oreLavoro" className="text-sm font-medium text-gray-700">
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+          <label style={{ fontSize: '13px', fontWeight: 500,
+            color: 'var(--color-text-secondary)' }}>
             Ore settimanali
           </label>
-          <span className={`text-sm font-semibold ${oreLavoro < 40 ? 'text-amber-600' : 'text-green-600'}`}>
-            {oreLavoro}h — {oreLavoro >= 40 ? 'Full-time' : `Part-time (${Math.round((oreLavoro / 40) * 100)}%)`}
+          <span style={{
+            fontFamily: "'DM Mono', monospace", fontSize: '13px', fontWeight: 500,
+            color: Number(oreLavoro) >= 40 ? 'var(--color-green)' : 'var(--color-amber)',
+            background: Number(oreLavoro) >= 40 ? 'var(--color-green-dim)' : 'var(--color-amber-dim)',
+            padding: '2px 8px', borderRadius: '4px',
+          }}>
+            {oreLavoro}h · {Number(oreLavoro) >= 40 ? 'Full-time' : `Part-time ${Math.round((Number(oreLavoro) / 40) * 100)}%`}
           </span>
         </div>
-        <input
-          id="oreLavoro"
-          type="range"
-          min="8"
-          max="48"
-          step="1"
+        <input id="oreLavoro" type="range" min="8" max="48" step="1"
           {...register('oreLavoro', { valueAsNumber: true })}
-          className="w-full accent-blue-600"
+          style={{ width: '100%' }}
         />
-        <div className="flex justify-between text-xs text-gray-400 mt-0.5">
+        <div style={{ display: 'flex', justifyContent: 'space-between',
+          fontSize: '10px', color: 'var(--color-text-muted)', marginTop: '4px',
+          fontFamily: "'DM Mono', monospace" }}>
           <span>8h</span><span>40h</span><span>48h</span>
         </div>
       </div>
 
       {/* Mensilità */}
       <div>
-        <div className="flex items-start justify-between gap-4 mb-1">
-          <label htmlFor="mensilita" className="text-sm font-medium text-gray-700">
+        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '16px', marginBottom: '8px' }}>
+          <label style={{ fontSize: '13px', fontWeight: 500,
+            color: 'var(--color-text-secondary)' }}>
             Mensilità
           </label>
-          <span className="text-xs text-gray-400 text-right max-w-[60%]">
-            Precompilato dal CCNL — modifica solo se c&apos;è un accordo aziendale integrativo
+          <span style={{ fontSize: '11px', color: 'var(--color-text-muted)', textAlign: 'right', maxWidth: '60%' }}>
+            Precompilato dal CCNL — modifica solo se c&apos;è un accordo integrativo
           </span>
         </div>
-
-        <div className="flex gap-2">
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '6px' }}>
           {[13, 14, 15, 16].map(n => {
             const selected = Number(watch('mensilita')) === n;
             return (
-              <button
-                key={n}
-                type="button"
+              <button key={n} type="button"
                 onClick={() => setValue('mensilita', n)}
-                className={`flex-1 py-2 rounded-lg border text-sm font-semibold transition-colors ${
-                  selected
-                    ? 'bg-blue-600 text-white border-blue-600'
-                    : 'bg-white text-gray-700 border-gray-300 hover:border-blue-400'
-                }`}
-              >
+                style={{
+                  padding: '8px 10px', borderRadius: '6px', fontSize: '13px', fontWeight: 600,
+                  cursor: 'pointer', transition: 'all 0.15s ease', textAlign: 'center',
+                  fontFamily: "'DM Mono', monospace",
+                  background: selected ? 'var(--color-accent-glow)' : 'var(--color-bg-input)',
+                  border: `1px solid ${selected ? 'var(--color-accent)' : 'var(--color-border)'}`,
+                  color: selected ? 'var(--color-accent-bright)' : 'var(--color-text-secondary)',
+                }}>
                 {n}
               </button>
             );
           })}
         </div>
-
-        {/* Warning condizionale basato sul valore selezionato e sul default del CCNL */}
         {(() => {
           const val = Number(watch('mensilita'));
           if (val === 13) return null;
           if (val === 14 && ccnlMensilita === 13) return (
-            <p className="mt-2 text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded px-2 py-1.5">
-              ⚠️ La quattordicesima non è prevista da questo CCNL. Selezionala solo se presente
-              un accordo aziendale integrativo scritto (art. 2077 c.c.).
+            <p style={{ marginTop: '8px', fontSize: '11px', padding: '8px 10px', borderRadius: '4px',
+              background: 'var(--color-amber-dim)', color: 'var(--color-amber)', border: '1px solid var(--color-amber)' }}>
+              ⚠ La quattordicesima non è prevista da questo CCNL (art. 2077 c.c.).
             </p>
           );
           if (val === 14 && ccnlMensilita === 14) return (
-            <p className="mt-2 text-xs text-green-700 bg-green-50 border border-green-200 rounded px-2 py-1.5">
+            <p style={{ marginTop: '8px', fontSize: '11px', padding: '8px 10px', borderRadius: '4px',
+              background: 'var(--color-green-dim)', color: 'var(--color-green)', border: '1px solid var(--color-green)' }}>
               ✓ La quattordicesima è prevista da questo CCNL.
             </p>
           );
           if (val >= 15) return (
-            <p className="mt-2 text-xs text-orange-700 bg-orange-50 border border-orange-200 rounded px-2 py-1.5">
-              ⚠️ {val} mensilità sono ammesse solo tramite contrattazione di secondo livello
-              (accordo aziendale o territoriale). Verifica l&apos;esistenza dell&apos;accordo
-              scritto prima di procedere con questo calcolo (art. 2077 c.c.).
+            <p style={{ marginTop: '8px', fontSize: '11px', padding: '8px 10px', borderRadius: '4px',
+              background: 'var(--color-amber-dim)', color: 'var(--color-amber)', border: '1px solid var(--color-amber)' }}>
+              ⚠ {val} mensilità ammesse solo tramite contrattazione di secondo livello (art. 2077 c.c.).
             </p>
           );
           return null;
         })()}
-
-        {errors.mensilita && (
-          <p className="mt-1 text-xs text-red-600">{errors.mensilita.message}</p>
-        )}
+        {errors.mensilita && <p style={{ marginTop: '4px', fontSize: '11px', color: 'var(--color-red)' }}>{errors.mensilita.message}</p>}
       </div>
 
-      <button
-        type="submit"
-        disabled={loadingLivelli}
-        className="w-full bg-blue-600 text-white py-2.5 rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50 transition-colors"
-      >
+      {/* Pulsante */}
+      <button type="submit" disabled={loadingLivelli} style={{
+        width: '100%', padding: '14px',
+        background: 'var(--color-accent)',
+        color: 'white', border: 'none', borderRadius: '10px',
+        fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, fontSize: '14px',
+        cursor: 'pointer', transition: 'background 0.15s ease, opacity 0.15s ease',
+        opacity: loadingLivelli ? 0.5 : 1,
+      }}>
         Avanti →
       </button>
     </form>

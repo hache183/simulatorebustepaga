@@ -1,92 +1,976 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import { AppHeader } from '@/components/AppHeader';
 
-const FILE_MODIFICABILI = [
-  { path: 'data/aliquote-inps.json',           label: 'Aliquote INPS e Agevolazioni 2026' },
-  { path: 'data/inail.json',                   label: 'Tariffe INAIL 2025/2026' },
-  { path: 'data/tfr.json',                     label: 'Parametri TFR (art. 2120 c.c.)' },
-  { path: 'data/ccnl/commercio.json',          label: 'CCNL Commercio' },
-  { path: 'data/ccnl/metalmeccanici.json',     label: 'CCNL Metalmeccanici' },
-  { path: 'data/ccnl/edilizia.json',           label: 'CCNL Edilizia' },
-  { path: 'data/ccnl/sanita_privata.json',     label: 'CCNL Sanità Privata' },
-  { path: 'data/ccnl/studi_professionali.json', label: 'CCNL Studi Professionali' },
-  { path: 'data/ccnl/cooperative_sociali.json', label: 'CCNL Cooperative Sociali' },
-  { path: 'data/ccnl/trasporti.json',          label: 'CCNL Trasporti e Logistica' },
-  { path: 'data/ccnl/pubblici_esercizi.json',  label: 'CCNL Pubblici Esercizi e Turismo' },
-  { path: 'data/ccnl/chimica.json',            label: 'CCNL Chimica-Farmaceutica' },
-  { path: 'data/ccnl/credito.json',            label: 'CCNL Credito (ABI)' },
-  { path: 'data/ccnl/multiservizi.json',       label: 'CCNL Multiservizi' },
-  { path: 'data/ccnl/telecomunicazioni.json',  label: 'CCNL Telecomunicazioni' },
-  { path: 'data/ccnl/tessile.json',            label: 'CCNL Tessile-Abbigliamento' },
-  { path: 'data/ccnl/informatica.json',        label: 'CCNL Informatica' },
-  { path: 'data/ccnl/agricoltura.json',        label: 'CCNL Agricoltura' },
-  { path: 'data/ccnl/scuole_private.json',     label: 'CCNL Scuole Private' },
+// ─── Types ────────────────────────────────────────────────────────────────────
+
+interface Agevolazione {
+  id: string;
+  nome: string;
+  descrizione: string;
+  fonteLegge: string;
+  percentualeEsonero: number;
+  massimaleAnnuo: number | null;
+  scadenza: string | null;
+  scadenzaAlertGiorni: number | null;
+  requisiti: Record<string, unknown>;
+  cumulabileCon: string[];
+  nonCumulabileCon: string[];
+}
+
+interface AliquoteInps {
+  updatedAt?: string;
+  fonte?: string;
+  aliquotaBaseAzienda: number;
+  aliquotaBaseDipendente: number;
+  agevolazioni: Agevolazione[];
+}
+
+interface VoceInail {
+  codice: string;
+  settore: string;
+  tassoPerMille: number;
+}
+
+interface InailData {
+  updatedAt?: string;
+  fonte?: string;
+  voci: VoceInail[];
+}
+
+interface TfrData {
+  updatedAt?: string;
+  fonte?: string;
+  divisoreAnnuo: number;
+  rivalutazione: {
+    quotaFissa: number;
+    quotaVariabileCpi: number;
+    descrizione: string;
+  };
+}
+
+interface ContributoContrattuale {
+  percentuale: number;
+  descrizione: string;
+  notaLegge: string;
+}
+
+interface LivelloCcnl {
+  codice: string;
+  descrizione: string;
+  moltiplicatore: number;
+}
+
+interface CcnlData {
+  id: string;
+  nome: string;
+  fonte?: string;
+  updatedAt?: string;
+  mensilita: number;
+  livelli: LivelloCcnl[];
+  scattiAnzianita: {
+    periodicitaMesi: number;
+    importoPerScattoEuro: number;
+    maxScatti: number;
+  };
+  contributiContrattuali: {
+    azienda: Record<string, ContributoContrattuale>;
+  };
+}
+
+type FeedbackState = { tipo: 'ok' | 'errore'; messaggio: string } | null;
+
+// ─── CCNL list ────────────────────────────────────────────────────────────────
+
+const CCNL_LIST = [
+  { id: 'commercio',          nome: 'Commercio',            path: 'data/ccnl/commercio.json' },
+  { id: 'metalmeccanici',     nome: 'Metalmeccanici',       path: 'data/ccnl/metalmeccanici.json' },
+  { id: 'edilizia',           nome: 'Edilizia',             path: 'data/ccnl/edilizia.json' },
+  { id: 'sanita_privata',     nome: 'Sanità Privata',       path: 'data/ccnl/sanita_privata.json' },
+  { id: 'studi_professionali',nome: 'Studi Professionali',  path: 'data/ccnl/studi_professionali.json' },
+  { id: 'cooperative_sociali',nome: 'Cooperative Sociali',  path: 'data/ccnl/cooperative_sociali.json' },
+  { id: 'trasporti',          nome: 'Trasporti',            path: 'data/ccnl/trasporti.json' },
+  { id: 'pubblici_esercizi',  nome: 'Pubblici Esercizi',    path: 'data/ccnl/pubblici_esercizi.json' },
+  { id: 'chimica',            nome: 'Chimica-Farm.',        path: 'data/ccnl/chimica.json' },
+  { id: 'credito',            nome: 'Credito (ABI)',        path: 'data/ccnl/credito.json' },
+  { id: 'multiservizi',       nome: 'Multiservizi',         path: 'data/ccnl/multiservizi.json' },
+  { id: 'telecomunicazioni',  nome: 'Telecomunicazioni',    path: 'data/ccnl/telecomunicazioni.json' },
+  { id: 'tessile',            nome: 'Tessile',              path: 'data/ccnl/tessile.json' },
+  { id: 'informatica',        nome: 'Informatica',          path: 'data/ccnl/informatica.json' },
+  { id: 'agricoltura',        nome: 'Agricoltura',          path: 'data/ccnl/agricoltura.json' },
+  { id: 'scuole_private',     nome: 'Scuole Private',       path: 'data/ccnl/scuole_private.json' },
 ];
+
+// ─── Shared helpers ───────────────────────────────────────────────────────────
+
+function fmtDate(iso: string | null | undefined): string {
+  if (!iso) return '—';
+  return new Date(iso).toLocaleDateString('it-IT', { day: '2-digit', month: '2-digit', year: 'numeric' });
+}
+
+function updatedAtLabel(iso: string | undefined) {
+  if (!iso) return null;
+  return (
+    <p style={{ fontFamily: "'DM Mono', monospace", fontSize: '11px', color: 'var(--color-text-muted)', marginBottom: '16px' }}>
+      Ultimo aggiornamento: {fmtDate(iso)}
+    </p>
+  );
+}
+
+function warnRange(value: number, min: number, max: number): boolean {
+  return value < min || value > max;
+}
+
+function WarningInline({ show, msg }: { show: boolean; msg: string }) {
+  if (!show) return null;
+  return (
+    <span style={{ fontFamily: "'DM Mono', monospace", fontSize: '10px', color: 'var(--color-amber)', marginLeft: '8px' }}>
+      ⚠ {msg}
+    </span>
+  );
+}
+
+function FeedbackBanner({ feedback }: { feedback: FeedbackState }) {
+  if (!feedback) return null;
+  const ok = feedback.tipo === 'ok';
+  return (
+    <div style={{
+      padding: '10px 14px',
+      borderRadius: '8px',
+      border: `1px solid ${ok ? 'var(--color-green)' : 'var(--color-red)'}`,
+      background: ok ? 'var(--color-green-dim)' : 'var(--color-red-dim)',
+      color: ok ? 'var(--color-green)' : 'var(--color-red)',
+      fontSize: '13px',
+      fontFamily: "'Plus Jakarta Sans', sans-serif",
+      marginTop: '12px',
+    }}>
+      {ok ? '✓' : '✕'} {feedback.messaggio}
+    </div>
+  );
+}
+
+// Styled input + optional adornment
+function NumInput({
+  value,
+  onChange,
+  label,
+  prefix,
+  suffix,
+  step = '0.01',
+  warn = false,
+  warnMsg = '',
+  style: extraStyle,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+  label?: string;
+  prefix?: string;
+  suffix?: string;
+  step?: string;
+  warn?: boolean;
+  warnMsg?: string;
+  style?: React.CSSProperties;
+}) {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', ...extraStyle }}>
+      {label && (
+        <label style={{ fontSize: '12px', fontFamily: "'Plus Jakarta Sans', sans-serif", color: 'var(--color-text-secondary)' }}>
+          {label}
+          <WarningInline show={warn} msg={warnMsg} />
+        </label>
+      )}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0' }}>
+        {prefix && (
+          <span style={{
+            padding: '7px 8px',
+            background: 'var(--color-bg-elevated)',
+            border: '1px solid var(--color-border)',
+            borderRight: 'none',
+            borderRadius: '6px 0 0 6px',
+            fontFamily: "'DM Mono', monospace",
+            fontSize: '13px',
+            color: 'var(--color-text-muted)',
+          }}>{prefix}</span>
+        )}
+        <input
+          type="number"
+          value={value}
+          step={step}
+          onChange={e => onChange(e.target.value)}
+          style={{
+            fontFamily: "'DM Mono', monospace",
+            fontSize: '13px',
+            padding: '7px 10px',
+            background: 'var(--color-bg-input)',
+            border: `1px solid ${warn ? 'var(--color-amber)' : 'var(--color-border)'}`,
+            borderRadius: prefix ? '0' : suffix ? '6px 0 0 6px' : '6px',
+            color: 'var(--color-text-primary)',
+            width: '100%',
+          }}
+        />
+        {suffix && (
+          <span style={{
+            padding: '7px 8px',
+            background: 'var(--color-bg-elevated)',
+            border: '1px solid var(--color-border)',
+            borderLeft: 'none',
+            borderRadius: '0 6px 6px 0',
+            fontFamily: "'DM Mono', monospace",
+            fontSize: '13px',
+            color: 'var(--color-text-muted)',
+          }}>{suffix}</span>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function SectionTitle({ children }: { children: React.ReactNode }) {
+  return (
+    <h3 style={{
+      fontFamily: "'Plus Jakarta Sans', sans-serif",
+      fontWeight: 600,
+      fontSize: '14px',
+      color: 'var(--color-text-primary)',
+      marginBottom: '12px',
+      paddingBottom: '8px',
+      borderBottom: '1px solid var(--color-border)',
+    }}>{children}</h3>
+  );
+}
+
+// ─── Save helper shared by all tabs ──────────────────────────────────────────
+
+async function apiSalva(
+  password: string,
+  filePath: string,
+  content: string,
+  setSalvando: (v: boolean) => void,
+  setFeedback: (f: FeedbackState) => void,
+) {
+  setSalvando(true);
+  setFeedback(null);
+  try {
+    const res = await fetch('/api/admin/update-json', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password, filePath, content }),
+    });
+    const json = await res.json() as { errore?: string; updatedAt?: string };
+    if (!res.ok) throw new Error(json.errore ?? 'Errore sconosciuto');
+    const when = json.updatedAt ? new Date(json.updatedAt).toLocaleString('it-IT') : '';
+    setFeedback({ tipo: 'ok', messaggio: `Salvato · updatedAt: ${when}` });
+  } catch (e) {
+    setFeedback({ tipo: 'errore', messaggio: e instanceof Error ? e.message : 'Errore sconosciuto' });
+  } finally {
+    setSalvando(false);
+  }
+}
+
+// ─── TAB 1: INPS & Agevolazioni ───────────────────────────────────────────────
+
+function TabInps({ password }: { password: string }) {
+  const [raw, setRaw] = useState<AliquoteInps | null>(null);
+  const [aliqAzienda, setAliqAzienda] = useState('');
+  const [aliqDip, setAliqDip] = useState('');
+  const [agState, setAgState] = useState<Record<string, { esonero: string; massimale: string; scadenza: string }>>({});
+  const [expanded, setExpanded] = useState<Record<string, boolean>>({});
+  const [salvando, setSalvando] = useState(false);
+  const [feedback, setFeedback] = useState<FeedbackState>(null);
+
+  const carica = useCallback(async () => {
+    try {
+      const r = await fetch(`/api/admin/leggi-file?path=${encodeURIComponent('data/aliquote-inps.json')}&password=${encodeURIComponent(password)}`);
+      const d = await r.json() as { contenuto?: string; errore?: string };
+      if (!r.ok) throw new Error(d.errore ?? `HTTP ${r.status}`);
+      if (!d.contenuto) throw new Error('Contenuto mancante');
+      const parsed: AliquoteInps = JSON.parse(d.contenuto);
+      setAliqAzienda(String(+(parsed.aliquotaBaseAzienda * 100).toFixed(4)));
+      setAliqDip(String(+(parsed.aliquotaBaseDipendente * 100).toFixed(4)));
+      const st: Record<string, { esonero: string; massimale: string; scadenza: string }> = {};
+      for (const ag of parsed.agevolazioni ?? []) {
+        st[ag.id] = {
+          esonero: String(+(ag.percentualeEsonero * 100).toFixed(4)),
+          massimale: ag.massimaleAnnuo !== null ? String(ag.massimaleAnnuo) : '',
+          scadenza: ag.scadenza ? ag.scadenza.substring(0, 10) : '',
+        };
+      }
+      setAgState(st);
+      setRaw(parsed);
+    } catch (e) {
+      setFeedback({ tipo: 'errore', messaggio: e instanceof Error ? e.message : 'Errore nel caricamento del file' });
+    }
+  }, [password]);
+
+  useEffect(() => { void carica(); }, [carica]);
+
+  const salva = async () => {
+    if (!raw) return;
+    const updated: AliquoteInps = {
+      ...raw,
+      aliquotaBaseAzienda: parseFloat(aliqAzienda) / 100,
+      aliquotaBaseDipendente: parseFloat(aliqDip) / 100,
+      agevolazioni: raw.agevolazioni.map(ag => ({
+        ...ag,
+        percentualeEsonero: parseFloat(agState[ag.id]?.esonero ?? String(ag.percentualeEsonero * 100)) / 100,
+        massimaleAnnuo: agState[ag.id]?.massimale !== '' && agState[ag.id]?.massimale !== undefined
+          ? parseFloat(agState[ag.id].massimale)
+          : null,
+        scadenza: agState[ag.id]?.scadenza ? new Date(agState[ag.id].scadenza).toISOString() : null,
+      })),
+    };
+    await apiSalva(password, 'data/aliquote-inps.json', JSON.stringify(updated, null, 2), setSalvando, setFeedback);
+  };
+
+  const scadenzaBadge = (scadenza: string | null) => {
+    if (!scadenza) return { label: 'Nessuna scadenza', bg: 'var(--color-bg-elevated)', color: 'var(--color-text-muted)', border: 'var(--color-border)' };
+    const daysLeft = (new Date(scadenza).getTime() - Date.now()) / 86400000;
+    if (daysLeft < 90) return { label: fmtDate(scadenza), bg: 'var(--color-red-dim)', color: 'var(--color-red)', border: 'var(--color-red)' };
+    return { label: fmtDate(scadenza), bg: 'var(--color-green-dim)', color: 'var(--color-green)', border: 'var(--color-green)' };
+  };
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+      {updatedAtLabel(raw?.updatedAt)}
+
+      <SectionTitle>Aliquote INPS base</SectionTitle>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+        <NumInput
+          label="Contributo INPS aziendale (%)"
+          value={aliqAzienda}
+          onChange={setAliqAzienda}
+          suffix="%"
+          step="0.001"
+          warn={warnRange(parseFloat(aliqAzienda) || 0, 0, 100)}
+          warnMsg="Fuori range 0–100%"
+        />
+        <NumInput
+          label="Contributo INPS dipendente (%)"
+          value={aliqDip}
+          onChange={setAliqDip}
+          suffix="%"
+          step="0.001"
+          warn={warnRange(parseFloat(aliqDip) || 0, 0, 100)}
+          warnMsg="Fuori range 0–100%"
+        />
+      </div>
+
+      <SectionTitle>Agevolazioni contributive</SectionTitle>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+        {(raw?.agevolazioni ?? []).map(ag => {
+          const badge = scadenzaBadge(ag.scadenza);
+          const st = agState[ag.id];
+          const isOpen = expanded[ag.id] ?? false;
+          return (
+            <div key={ag.id} style={{
+              border: '1px solid var(--color-border)',
+              borderRadius: '8px',
+              background: 'var(--color-bg-elevated)',
+              overflow: 'hidden',
+            }}>
+              <button
+                onClick={() => setExpanded(prev => ({ ...prev, [ag.id]: !prev[ag.id] }))}
+                style={{
+                  width: '100%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  padding: '12px 14px',
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  color: 'var(--color-text-primary)',
+                  fontFamily: "'Plus Jakarta Sans', sans-serif",
+                  fontSize: '13px',
+                  fontWeight: 600,
+                  textAlign: 'left',
+                }}
+              >
+                <span>{ag.nome}</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <span style={{
+                    fontSize: '10px',
+                    fontFamily: "'DM Mono', monospace",
+                    padding: '2px 7px',
+                    borderRadius: '4px',
+                    background: badge.bg,
+                    color: badge.color,
+                    border: `1px solid ${badge.border}`,
+                  }}>{badge.label}</span>
+                  <span style={{ color: 'var(--color-text-muted)', fontSize: '12px' }}>{isOpen ? '▲' : '▼'}</span>
+                </div>
+              </button>
+              {isOpen && st && (
+                <div style={{ padding: '0 14px 14px', display: 'flex', flexDirection: 'column', gap: '12px', borderTop: '1px solid var(--color-border)' }}>
+                  <div style={{ paddingTop: '12px', display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px' }}>
+                    <NumInput
+                      label="Esonero contributivo (%)"
+                      value={st.esonero}
+                      onChange={v => setAgState(prev => ({ ...prev, [ag.id]: { ...prev[ag.id], esonero: v } }))}
+                      suffix="%"
+                      step="0.01"
+                      warn={warnRange(parseFloat(st.esonero) || 0, 0, 100)}
+                      warnMsg="Fuori range 0–100%"
+                    />
+                    <NumInput
+                      label="Massimale annuo (€)"
+                      value={st.massimale}
+                      onChange={v => setAgState(prev => ({ ...prev, [ag.id]: { ...prev[ag.id], massimale: v } }))}
+                      prefix="€"
+                      step="100"
+                    />
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                      <label style={{ fontSize: '12px', color: 'var(--color-text-secondary)', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>Scadenza</label>
+                      <input
+                        type="date"
+                        value={st.scadenza}
+                        onChange={e => setAgState(prev => ({ ...prev, [ag.id]: { ...prev[ag.id], scadenza: e.target.value } }))}
+                        style={{
+                          fontFamily: "'DM Mono', monospace",
+                          fontSize: '13px',
+                          padding: '7px 10px',
+                          background: 'var(--color-bg-input)',
+                          border: '1px solid var(--color-border)',
+                          borderRadius: '6px',
+                          color: 'var(--color-text-primary)',
+                        }}
+                      />
+                    </div>
+                  </div>
+                  <textarea
+                    readOnly
+                    value={`${ag.descrizione}\n\nFonte: ${ag.fonteLegge}`}
+                    rows={3}
+                    style={{
+                      fontFamily: "'Plus Jakarta Sans', sans-serif",
+                      fontSize: '12px',
+                      padding: '8px 10px',
+                      background: 'var(--color-bg-input)',
+                      border: '1px solid var(--color-border)',
+                      borderRadius: '6px',
+                      color: 'var(--color-text-muted)',
+                      resize: 'none',
+                      width: '100%',
+                    }}
+                  />
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+
+      <FeedbackBanner feedback={feedback} />
+      <SaveButton label="Salva INPS" salvando={salvando} onClick={() => { void salva(); }} />
+    </div>
+  );
+}
+
+// ─── TAB 2: Tariffe INAIL ─────────────────────────────────────────────────────
+
+function TabInail({ password }: { password: string }) {
+  const [raw, setRaw] = useState<InailData | null>(null);
+  const [tassi, setTassi] = useState<Record<string, string>>({});
+  const [salvando, setSalvando] = useState(false);
+  const [feedback, setFeedback] = useState<FeedbackState>(null);
+
+  const carica = useCallback(async () => {
+    try {
+      const r = await fetch(`/api/admin/leggi-file?path=${encodeURIComponent('data/inail.json')}&password=${encodeURIComponent(password)}`);
+      const d = await r.json() as { contenuto?: string; errore?: string };
+      if (!r.ok) throw new Error(d.errore ?? `HTTP ${r.status}`);
+      if (!d.contenuto) throw new Error('Contenuto mancante');
+      const parsed: InailData = JSON.parse(d.contenuto);
+      const t: Record<string, string> = {};
+      for (const v of parsed.voci ?? []) t[v.codice] = String(v.tassoPerMille);
+      setTassi(t);
+      setRaw(parsed);
+    } catch (e) {
+      setFeedback({ tipo: 'errore', messaggio: e instanceof Error ? e.message : 'Errore nel caricamento del file' });
+    }
+  }, [password]);
+
+  useEffect(() => { void carica(); }, [carica]);
+
+  const salva = async () => {
+    if (!raw) return;
+    const updated: InailData = {
+      ...raw,
+      voci: raw.voci.map(v => ({ ...v, tassoPerMille: parseFloat(tassi[v.codice] ?? String(v.tassoPerMille)) })),
+    };
+    await apiSalva(password, 'data/inail.json', JSON.stringify(updated, null, 2), setSalvando, setFeedback);
+  };
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+      {updatedAtLabel(raw?.updatedAt)}
+      <SectionTitle>Voci e tassi INAIL</SectionTitle>
+      <div style={{
+        border: '1px solid var(--color-border)',
+        borderRadius: '10px',
+        overflow: 'hidden',
+      }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse', fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: '13px' }}>
+          <thead>
+            <tr style={{ background: 'var(--color-bg-elevated)' }}>
+              <th style={{ padding: '10px 14px', textAlign: 'left', color: 'var(--color-text-secondary)', fontWeight: 500, fontSize: '12px' }}>Codice</th>
+              <th style={{ padding: '10px 14px', textAlign: 'left', color: 'var(--color-text-secondary)', fontWeight: 500, fontSize: '12px' }}>Settore</th>
+              <th style={{ padding: '10px 14px', textAlign: 'right', color: 'var(--color-text-secondary)', fontWeight: 500, fontSize: '12px' }}>Tasso ‰</th>
+            </tr>
+          </thead>
+          <tbody>
+            {(raw?.voci ?? []).map((v, i) => {
+              const val = parseFloat(tassi[v.codice] ?? '0');
+              const warn = warnRange(val, 0.1, 100);
+              return (
+                <tr key={v.codice} style={{ background: i % 2 === 0 ? 'var(--color-bg-base)' : 'var(--color-bg-surface)', borderTop: '1px solid var(--color-border)' }}>
+                  <td style={{ padding: '8px 14px', fontFamily: "'DM Mono', monospace", color: 'var(--color-accent-bright)' }}>{v.codice}</td>
+                  <td style={{ padding: '8px 14px', color: 'var(--color-text-secondary)' }}>{v.settore}</td>
+                  <td style={{ padding: '8px 14px', textAlign: 'right' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '6px' }}>
+                      {warn && <span style={{ fontSize: '10px', color: 'var(--color-amber)' }}>⚠</span>}
+                      <input
+                        type="number"
+                        value={tassi[v.codice] ?? ''}
+                        step="0.1"
+                        onChange={e => setTassi(prev => ({ ...prev, [v.codice]: e.target.value }))}
+                        style={{
+                          width: '90px',
+                          textAlign: 'right',
+                          fontFamily: "'DM Mono', monospace",
+                          fontSize: '13px',
+                          padding: '4px 8px',
+                          background: 'var(--color-bg-input)',
+                          border: `1px solid ${warn ? 'var(--color-amber)' : 'var(--color-border)'}`,
+                          borderRadius: '6px',
+                          color: 'var(--color-text-primary)',
+                        }}
+                      />
+                      <span style={{ fontFamily: "'DM Mono', monospace", color: 'var(--color-text-muted)', fontSize: '12px' }}>‰</span>
+                    </div>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+      <FeedbackBanner feedback={feedback} />
+      <SaveButton label="Salva INAIL" salvando={salvando} onClick={() => { void salva(); }} />
+    </div>
+  );
+}
+
+// ─── TAB 3: TFR ──────────────────────────────────────────────────────────────
+
+function TabTfr({ password }: { password: string }) {
+  const [raw, setRaw] = useState<TfrData | null>(null);
+  const [divisore, setDivisore] = useState('');
+  const [quotaFissa, setQuotaFissa] = useState('');
+  const [quotaCpi, setQuotaCpi] = useState('');
+  const [salvando, setSalvando] = useState(false);
+  const [feedback, setFeedback] = useState<FeedbackState>(null);
+
+  const carica = useCallback(async () => {
+    try {
+      const r = await fetch(`/api/admin/leggi-file?path=${encodeURIComponent('data/tfr.json')}&password=${encodeURIComponent(password)}`);
+      const d = await r.json() as { contenuto?: string; errore?: string };
+      if (!r.ok) throw new Error(d.errore ?? `HTTP ${r.status}`);
+      if (!d.contenuto) throw new Error('Contenuto mancante');
+      const parsed: TfrData = JSON.parse(d.contenuto);
+      setDivisore(String(parsed.divisoreAnnuo));
+      setQuotaFissa(String(+(parsed.rivalutazione.quotaFissa * 100).toFixed(4)));
+      setQuotaCpi(String(+(parsed.rivalutazione.quotaVariabileCpi * 100).toFixed(4)));
+      setRaw(parsed);
+    } catch (e) {
+      setFeedback({ tipo: 'errore', messaggio: e instanceof Error ? e.message : 'Errore nel caricamento del file' });
+    }
+  }, [password]);
+
+  useEffect(() => { void carica(); }, [carica]);
+
+  const salva = async () => {
+    if (!raw) return;
+    const updated: TfrData = {
+      ...raw,
+      divisoreAnnuo: parseFloat(divisore),
+      rivalutazione: {
+        ...raw.rivalutazione,
+        quotaFissa: parseFloat(quotaFissa) / 100,
+        quotaVariabileCpi: parseFloat(quotaCpi) / 100,
+      },
+    };
+    await apiSalva(password, 'data/tfr.json', JSON.stringify(updated, null, 2), setSalvando, setFeedback);
+  };
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+      {updatedAtLabel(raw?.updatedAt)}
+      <SectionTitle>Parametri TFR</SectionTitle>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '16px' }}>
+        <NumInput
+          label="Divisore annuo TFR"
+          value={divisore}
+          onChange={setDivisore}
+          step="0.1"
+          warn={warnRange(parseFloat(divisore) || 0, 10, 20)}
+          warnMsg="Range consigliato: 10–20"
+        />
+        <NumInput
+          label="Quota fissa rivalutazione (%)"
+          value={quotaFissa}
+          onChange={setQuotaFissa}
+          suffix="%"
+          step="0.001"
+          warn={warnRange(parseFloat(quotaFissa) || 0, 0, 100)}
+          warnMsg="Fuori range 0–100%"
+        />
+        <NumInput
+          label="Quota variabile CPI (%)"
+          value={quotaCpi}
+          onChange={setQuotaCpi}
+          suffix="%"
+          step="0.001"
+          warn={warnRange(parseFloat(quotaCpi) || 0, 0, 100)}
+          warnMsg="Fuori range 0–100%"
+        />
+      </div>
+      <p style={{ fontSize: '12px', color: 'var(--color-text-muted)', fontFamily: "'Plus Jakarta Sans', sans-serif", marginTop: '-10px' }}>
+        Art. 2120 c.c. — normalmente divisore 13.5, quota fissa 1.5%, quota variabile CPI 75%
+      </p>
+      <FeedbackBanner feedback={feedback} />
+      <SaveButton label="Salva TFR" salvando={salvando} onClick={() => { void salva(); }} />
+    </div>
+  );
+}
+
+// ─── TAB 4: CCNL ─────────────────────────────────────────────────────────────
+
+function TabCcnl({ password }: { password: string }) {
+  const [selectedId, setSelectedId] = useState(CCNL_LIST[0].id);
+  const [raw, setRaw] = useState<CcnlData | null>(null);
+  const [mensilita, setMensilita] = useState('13');
+  const [livelli, setLivelli] = useState<Record<string, string>>({});
+  const [scattiPer, setScattiPer] = useState('');
+  const [scattiImporto, setScattiImporto] = useState('');
+  const [scattiMax, setScattiMax] = useState('');
+  const [contributi, setContributi] = useState<Record<string, string>>({});
+  const [salvando, setSalvando] = useState(false);
+  const [feedback, setFeedback] = useState<FeedbackState>(null);
+
+  const selectedCcnl = CCNL_LIST.find(c => c.id === selectedId) ?? CCNL_LIST[0];
+
+  const carica = useCallback(async () => {
+    setRaw(null);
+    setFeedback(null);
+    try {
+      const r = await fetch(`/api/admin/leggi-file?path=${encodeURIComponent(selectedCcnl.path)}&password=${encodeURIComponent(password)}`);
+      const d = await r.json() as { contenuto?: string; errore?: string };
+      if (!r.ok) throw new Error(d.errore ?? `HTTP ${r.status}`);
+      if (!d.contenuto) throw new Error('Contenuto mancante');
+      const parsed: CcnlData = JSON.parse(d.contenuto);
+      setMensilita(String(parsed.mensilita));
+      const lv: Record<string, string> = {};
+      for (const l of parsed.livelli ?? []) lv[l.codice] = String(l.moltiplicatore);
+      setLivelli(lv);
+      setScattiPer(String(parsed.scattiAnzianita.periodicitaMesi));
+      setScattiImporto(String(parsed.scattiAnzianita.importoPerScattoEuro));
+      setScattiMax(String(parsed.scattiAnzianita.maxScatti));
+      const ct: Record<string, string> = {};
+      for (const [k, v] of Object.entries(parsed.contributiContrattuali?.azienda ?? {})) {
+        ct[k] = String(+(v.percentuale * 100).toFixed(4));
+      }
+      setContributi(ct);
+      setRaw(parsed);
+    } catch (e) {
+      setFeedback({ tipo: 'errore', messaggio: e instanceof Error ? e.message : 'Errore nel caricamento del file' });
+    }
+  }, [selectedCcnl.path, password]);
+
+  useEffect(() => { void carica(); }, [carica]);
+
+  const salva = async () => {
+    if (!raw) return;
+    const updated: CcnlData = {
+      ...raw,
+      mensilita: parseInt(mensilita, 10),
+      livelli: raw.livelli.map(l => ({ ...l, moltiplicatore: parseFloat(livelli[l.codice] ?? String(l.moltiplicatore)) })),
+      scattiAnzianita: {
+        periodicitaMesi: parseInt(scattiPer, 10),
+        importoPerScattoEuro: parseFloat(scattiImporto),
+        maxScatti: parseInt(scattiMax, 10),
+      },
+      contributiContrattuali: {
+        ...raw.contributiContrattuali,
+        azienda: Object.fromEntries(
+          Object.entries(raw.contributiContrattuali.azienda).map(([k, v]) => [
+            k,
+            { ...v, percentuale: parseFloat(contributi[k] ?? String(v.percentuale * 100)) / 100 },
+          ])
+        ),
+      },
+    };
+    await apiSalva(password, selectedCcnl.path, JSON.stringify(updated, null, 2), setSalvando, setFeedback);
+  };
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+      {/* CCNL selector pills */}
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+        {CCNL_LIST.map(c => (
+          <button
+            key={c.id}
+            onClick={() => setSelectedId(c.id)}
+            style={{
+              padding: '5px 12px',
+              borderRadius: '20px',
+              border: `1px solid ${selectedId === c.id ? 'var(--color-accent)' : 'var(--color-border)'}`,
+              background: selectedId === c.id ? 'var(--color-accent-glow)' : 'transparent',
+              color: selectedId === c.id ? 'var(--color-accent-bright)' : 'var(--color-text-secondary)',
+              fontSize: '12px',
+              fontFamily: "'Plus Jakarta Sans', sans-serif",
+              cursor: 'pointer',
+              fontWeight: selectedId === c.id ? 600 : 400,
+            }}
+          >{c.nome}</button>
+        ))}
+      </div>
+
+      {raw && (
+        <>
+          {updatedAtLabel(raw.updatedAt)}
+
+          {/* A - Mensilità */}
+          <SectionTitle>Mensilità contrattuali</SectionTitle>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <label style={{ fontSize: '12px', color: 'var(--color-text-secondary)', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+              Mensilità previste dal contratto
+            </label>
+            <select
+              value={mensilita}
+              onChange={e => setMensilita(e.target.value)}
+              style={{
+                padding: '7px 10px',
+                background: 'var(--color-bg-input)',
+                border: '1px solid var(--color-border)',
+                borderRadius: '6px',
+                color: 'var(--color-text-primary)',
+                fontFamily: "'DM Mono', monospace",
+                fontSize: '13px',
+              }}
+            >
+              <option value="13">13</option>
+              <option value="14">14</option>
+            </select>
+          </div>
+
+          {/* B - Livelli */}
+          <SectionTitle>Livelli contrattuali</SectionTitle>
+          <div style={{ border: '1px solid var(--color-border)', borderRadius: '8px', overflow: 'hidden' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: '13px' }}>
+              <thead>
+                <tr style={{ background: 'var(--color-bg-elevated)' }}>
+                  <th style={{ padding: '9px 14px', textAlign: 'left', color: 'var(--color-text-secondary)', fontSize: '12px', fontWeight: 500 }}>Codice</th>
+                  <th style={{ padding: '9px 14px', textAlign: 'left', color: 'var(--color-text-secondary)', fontSize: '12px', fontWeight: 500 }}>Descrizione</th>
+                  <th style={{ padding: '9px 14px', textAlign: 'right', color: 'var(--color-text-secondary)', fontSize: '12px', fontWeight: 500 }}>Moltiplicatore RAL</th>
+                </tr>
+              </thead>
+              <tbody>
+                {raw.livelli.map((l, i) => {
+                  const val = parseFloat(livelli[l.codice] ?? '0');
+                  const warn = warnRange(val, 0.5, 3.0);
+                  return (
+                    <tr key={l.codice} style={{ background: i % 2 === 0 ? 'var(--color-bg-base)' : 'var(--color-bg-surface)', borderTop: '1px solid var(--color-border)' }}>
+                      <td style={{ padding: '8px 14px', fontFamily: "'DM Mono', monospace", color: 'var(--color-accent-bright)' }}>{l.codice}</td>
+                      <td style={{ padding: '8px 14px', color: 'var(--color-text-secondary)' }}>{l.descrizione}</td>
+                      <td style={{ padding: '8px 14px', textAlign: 'right' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '6px' }}>
+                          {warn && <span style={{ fontSize: '10px', color: 'var(--color-amber)' }}>⚠</span>}
+                          <input
+                            type="number"
+                            value={livelli[l.codice] ?? ''}
+                            step="0.01"
+                            onChange={e => setLivelli(prev => ({ ...prev, [l.codice]: e.target.value }))}
+                            style={{
+                              width: '90px',
+                              textAlign: 'right',
+                              fontFamily: "'DM Mono', monospace",
+                              fontSize: '13px',
+                              padding: '4px 8px',
+                              background: 'var(--color-bg-input)',
+                              border: `1px solid ${warn ? 'var(--color-amber)' : 'var(--color-border)'}`,
+                              borderRadius: '6px',
+                              color: 'var(--color-text-primary)',
+                            }}
+                          />
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+          <p style={{ fontSize: '12px', color: 'var(--color-text-muted)', fontFamily: "'Plus Jakarta Sans', sans-serif", marginTop: '-12px' }}>
+            1.00 = livello base; &gt;1.00 = livello superiore
+          </p>
+
+          {/* C - Scatti */}
+          <SectionTitle>Scatti di anzianità</SectionTitle>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '16px' }}>
+            <NumInput
+              label="Periodicità scatti (mesi)"
+              value={scattiPer}
+              onChange={setScattiPer}
+              step="1"
+            />
+            <NumInput
+              label="Importo per scatto (€)"
+              value={scattiImporto}
+              onChange={setScattiImporto}
+              prefix="€"
+              step="0.01"
+            />
+            <NumInput
+              label="Numero massimo scatti"
+              value={scattiMax}
+              onChange={setScattiMax}
+              step="1"
+            />
+          </div>
+
+          {/* D - Contributi contrattuali */}
+          {Object.keys(raw.contributiContrattuali.azienda).length > 0 && (
+            <>
+              <SectionTitle>Contributi contrattuali azienda</SectionTitle>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                {Object.entries(raw.contributiContrattuali.azienda).map(([k, v]) => {
+                  const val = parseFloat(contributi[k] ?? '0');
+                  const warn = warnRange(val, 0, 100);
+                  return (
+                    <div key={k} style={{ display: 'flex', alignItems: 'center', gap: '14px', padding: '10px 14px', background: 'var(--color-bg-elevated)', borderRadius: '6px', border: '1px solid var(--color-border)' }}>
+                      <div style={{ width: '120px', flexShrink: 0 }}>
+                        <span style={{ fontFamily: "'DM Mono', monospace", fontSize: '12px', color: 'var(--color-gold)' }}>{k}</span>
+                      </div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        {warn && <span style={{ fontSize: '10px', color: 'var(--color-amber)' }}>⚠</span>}
+                        <input
+                          type="number"
+                          value={contributi[k] ?? ''}
+                          step="0.001"
+                          onChange={e => setContributi(prev => ({ ...prev, [k]: e.target.value }))}
+                          style={{
+                            width: '80px',
+                            textAlign: 'right',
+                            fontFamily: "'DM Mono', monospace",
+                            fontSize: '13px',
+                            padding: '5px 8px',
+                            background: 'var(--color-bg-input)',
+                            border: `1px solid ${warn ? 'var(--color-amber)' : 'var(--color-border)'}`,
+                            borderRadius: '6px',
+                            color: 'var(--color-text-primary)',
+                          }}
+                        />
+                        <span style={{ fontFamily: "'DM Mono', monospace", fontSize: '12px', color: 'var(--color-text-muted)' }}>%</span>
+                      </div>
+                      <span style={{ fontSize: '12px', color: 'var(--color-text-muted)', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>{v.descrizione}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </>
+          )}
+
+          <FeedbackBanner feedback={feedback} />
+          <SaveButton label={`Salva CCNL ${raw.nome}`} salvando={salvando} onClick={() => { void salva(); }} />
+        </>
+      )}
+
+      {!raw && !feedback && (
+        <p style={{ color: 'var(--color-text-muted)', fontFamily: "'DM Mono', monospace", fontSize: '12px' }}>Caricamento...</p>
+      )}
+      {!raw && feedback && <FeedbackBanner feedback={feedback} />}
+    </div>
+  );
+}
+
+// ─── Save button ──────────────────────────────────────────────────────────────
+
+function SaveButton({ label, salvando, onClick }: { label: string; salvando: boolean; onClick: () => void }) {
+  return (
+    <button
+      onClick={onClick}
+      disabled={salvando}
+      style={{
+        padding: '11px 24px',
+        background: salvando ? 'var(--color-bg-elevated)' : 'var(--color-accent)',
+        color: salvando ? 'var(--color-text-muted)' : 'white',
+        border: 'none',
+        borderRadius: '8px',
+        cursor: salvando ? 'not-allowed' : 'pointer',
+        fontFamily: "'Plus Jakarta Sans', sans-serif",
+        fontSize: '13px',
+        fontWeight: 600,
+        transition: 'background 0.15s ease, opacity 0.15s ease',
+        alignSelf: 'flex-start',
+      }}
+    >
+      {salvando ? 'Salvataggio...' : label}
+    </button>
+  );
+}
+
+// ─── Main AdminPage ───────────────────────────────────────────────────────────
 
 export default function AdminPage() {
   const [password, setPassword] = useState('');
   const [autenticato, setAutenticato] = useState(false);
   const [erroreLogin, setErroreLogin] = useState('');
-  const [fileSelezionato, setFileSelezionato] = useState(FILE_MODIFICABILI[0]);
-  const [contenuto, setContenuto] = useState('');
-  const [erroreJson, setErroreJson] = useState('');
-  const [feedback, setFeedback] = useState<{ tipo: 'ok' | 'errore'; messaggio: string } | null>(null);
-  const [salvando, setSalvando] = useState(false);
-
-  useEffect(() => {
-    if (!autenticato) return;
-    fetch(`/api/admin/leggi-file?path=${encodeURIComponent(fileSelezionato.path)}&password=${encodeURIComponent(password)}`)
-      .then(r => r.json())
-      .then(d => setContenuto((d as { contenuto?: string }).contenuto ?? ''))
-      .catch(() => setContenuto('Errore nel caricamento del file'));
-  }, [fileSelezionato, autenticato, password]);
-
-  const validaJson = (testo: string) => {
-    try { JSON.parse(testo); setErroreJson(''); } catch (e) { setErroreJson(String(e)); }
-    setContenuto(testo);
-  };
-
-  const salva = async () => {
-    if (erroreJson) return;
-    const conferma = window.confirm(`Stai per sovrascrivere ${fileSelezionato.label}. Continuare?`);
-    if (!conferma) return;
-    setSalvando(true);
-    setFeedback(null);
-    try {
-      const res = await fetch('/api/admin/update-json', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password, filePath: fileSelezionato.path, content: contenuto }),
-      });
-      const json = await res.json();
-      if (!res.ok) throw new Error((json as { errore?: string }).errore ?? 'Errore sconosciuto');
-      setFeedback({ tipo: 'ok', messaggio: `Salvato — aggiornato al ${new Date((json as { updatedAt: string }).updatedAt).toLocaleString('it-IT')}` });
-    } catch (e) {
-      setFeedback({ tipo: 'errore', messaggio: e instanceof Error ? e.message : 'Errore sconosciuto' });
-    } finally {
-      setSalvando(false);
-    }
-  };
+  const [tabAttivo, setTabAttivo] = useState<'inps' | 'inail' | 'tfr' | 'ccnl'>('inps');
 
   if (!autenticato) {
     return (
-      <main className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="bg-white rounded-xl border border-gray-200 p-8 w-full max-w-sm space-y-4">
-          <h1 className="text-xl font-bold text-gray-900">Pannello Admin</h1>
-          <p className="text-sm text-gray-500">Inserisci la password per accedere alla gestione dei dati.</p>
+      <main style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--color-bg-base)' }}>
+        <div style={{
+          background: 'var(--color-bg-surface)',
+          border: '1px solid var(--color-border)',
+          borderRadius: '12px',
+          padding: '32px',
+          width: '100%',
+          maxWidth: '360px',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '16px',
+        }}>
+          <h1 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: '20px', color: 'var(--color-text-primary)', margin: 0 }}>
+            Pannello Admin
+          </h1>
+          <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: '13px', color: 'var(--color-text-muted)', margin: 0 }}>
+            Inserisci la password per accedere alla gestione dei dati.
+          </p>
           <input
             type="password"
             value={password}
             onChange={e => setPassword(e.target.value)}
-            onKeyDown={e => e.key === 'Enter' && setAutenticato(true)}
+            onKeyDown={e => e.key === 'Enter' && (password.trim() ? setAutenticato(true) : setErroreLogin('Inserisci la password'))}
             placeholder="Password admin"
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            style={{ padding: '11px 14px', borderRadius: '8px', fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: '13px' }}
           />
-          {erroreLogin && <p className="text-xs text-red-600">{erroreLogin}</p>}
+          {erroreLogin && <p style={{ fontSize: '12px', color: 'var(--color-red)', fontFamily: "'Plus Jakarta Sans', sans-serif", margin: 0 }}>{erroreLogin}</p>}
           <button
             onClick={() => { if (password.trim()) setAutenticato(true); else setErroreLogin('Inserisci la password'); }}
-            className="w-full bg-blue-600 text-white py-2 rounded-lg text-sm font-medium hover:bg-blue-700"
+            style={{
+              padding: '11px',
+              background: 'var(--color-accent)',
+              color: 'white',
+              border: 'none',
+              borderRadius: '8px',
+              cursor: 'pointer',
+              fontFamily: "'Plus Jakarta Sans', sans-serif",
+              fontSize: '13px',
+              fontWeight: 600,
+            }}
           >
             Accedi
           </button>
@@ -95,65 +979,81 @@ export default function AdminPage() {
     );
   }
 
+  const TABS: { id: 'inps' | 'inail' | 'tfr' | 'ccnl'; label: string }[] = [
+    { id: 'inps',  label: 'INPS & Agevolazioni' },
+    { id: 'inail', label: 'Tariffe INAIL' },
+    { id: 'tfr',   label: 'TFR' },
+    { id: 'ccnl',  label: 'CCNL' },
+  ];
+
   return (
-    <main className="min-h-screen bg-gray-50">
-      <div className="max-w-4xl mx-auto px-4 py-8 space-y-6">
-        <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold text-gray-900">Gestione dati</h1>
-          <a href="/calcolatore" className="text-sm text-blue-600 hover:underline">← Torna al calcolatore</a>
+    <main style={{ minHeight: '100vh', background: 'var(--color-bg-base)' }}>
+      <AppHeader />
+      <div style={{ maxWidth: '1000px', margin: '0 auto', padding: '80px 24px 48px' }}>
+
+        {/* Page title */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '28px' }}>
+          <h2 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: '22px', color: 'var(--color-text-primary)', margin: 0 }}>
+            Gestione parametri fiscali
+          </h2>
+          <a href="/calcolatore" style={{ fontSize: '13px', color: 'var(--color-accent-bright)', textDecoration: 'none', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+            ← Torna al calcolatore
+          </a>
         </div>
 
-        <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 text-sm text-amber-800">
-          ⚠️ Qualsiasi modifica viene applicata immediatamente. Verifica sempre la validità del JSON prima di salvare.
+        {/* Warning banner */}
+        <div style={{
+          padding: '10px 14px',
+          borderRadius: '8px',
+          border: '1px solid var(--color-border)',
+          background: 'var(--color-bg-elevated)',
+          color: 'var(--color-text-secondary)',
+          fontSize: '12px',
+          fontFamily: "'Plus Jakarta Sans', sans-serif",
+          marginBottom: '24px',
+        }}>
+          ⚠ Le modifiche vengono applicate immediatamente. Verifica i valori prima di salvare.
         </div>
 
-        {/* Selezione file */}
-        <div className="flex gap-2 flex-wrap">
-          {FILE_MODIFICABILI.map(f => (
+        {/* Tab navigation */}
+        <div style={{
+          display: 'flex',
+          gap: '2px',
+          borderBottom: '1px solid var(--color-border)',
+          marginBottom: '28px',
+        }}>
+          {TABS.map(t => (
             <button
-              key={f.path}
-              onClick={() => { setFileSelezionato(f); setFeedback(null); }}
-              className={`px-4 py-2 rounded-lg text-sm font-medium border transition-colors ${
-                fileSelezionato.path === f.path
-                  ? 'bg-blue-600 text-white border-blue-600'
-                  : 'bg-white text-gray-700 border-gray-300 hover:border-gray-400'
-              }`}
+              key={t.id}
+              onClick={() => setTabAttivo(t.id)}
+              style={{
+                padding: '10px 20px',
+                background: tabAttivo === t.id ? 'var(--color-bg-elevated)' : 'transparent',
+                border: 'none',
+                borderBottom: tabAttivo === t.id ? '2px solid var(--color-accent)' : '2px solid transparent',
+                color: tabAttivo === t.id ? 'var(--color-text-primary)' : 'var(--color-text-muted)',
+                fontFamily: "'Plus Jakarta Sans', sans-serif",
+                fontSize: '13px',
+                fontWeight: tabAttivo === t.id ? 600 : 400,
+                cursor: 'pointer',
+                marginBottom: '-1px',
+                borderRadius: '6px 6px 0 0',
+                transition: 'color 0.15s ease, background 0.15s ease',
+              }}
             >
-              {f.label}
+              {t.label}
             </button>
           ))}
         </div>
 
-        {/* Editor */}
-        <div className="bg-white rounded-xl border border-gray-200 p-4 space-y-3">
-          <div className="flex items-center justify-between">
-            <p className="text-sm font-mono text-gray-500">{fileSelezionato.path}</p>
-            {erroreJson && <p className="text-xs text-red-600 font-mono">JSON non valido</p>}
-          </div>
-          <textarea
-            value={contenuto}
-            onChange={e => validaJson(e.target.value)}
-            className={`w-full h-96 font-mono text-xs border rounded-lg p-3 focus:outline-none focus:ring-2 resize-y ${
-              erroreJson ? 'border-red-400 focus:ring-red-400' : 'border-gray-200 focus:ring-blue-500'
-            }`}
-            spellCheck={false}
-          />
-          {erroreJson && <p className="text-xs text-red-600 font-mono bg-red-50 p-2 rounded">{erroreJson}</p>}
-
-          {feedback && (
-            <div className={`rounded-lg p-3 text-sm ${feedback.tipo === 'ok' ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-red-50 text-red-700 border border-red-200'}`}>
-              {feedback.tipo === 'ok' ? '✅' : '❌'} {feedback.messaggio}
-            </div>
-          )}
-
-          <button
-            onClick={salva}
-            disabled={!!erroreJson || salvando}
-            className="w-full bg-blue-600 text-white py-2.5 rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50 transition-colors"
-          >
-            {salvando ? 'Salvataggio...' : 'Salva modifiche'}
-          </button>
+        {/* Tab content */}
+        <div style={{ background: 'var(--color-bg-surface)', borderRadius: '10px', border: '1px solid var(--color-border)', padding: '28px' }}>
+          {tabAttivo === 'inps'  && <TabInps  password={password} />}
+          {tabAttivo === 'inail' && <TabInail password={password} />}
+          {tabAttivo === 'tfr'   && <TabTfr   password={password} />}
+          {tabAttivo === 'ccnl'  && <TabCcnl  password={password} />}
         </div>
+
       </div>
     </main>
   );

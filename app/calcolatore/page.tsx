@@ -1,5 +1,6 @@
 import { Suspense } from 'react';
 import { CalcolatorePageClient } from './CalcolatorePageClient';
+import { AppHeader } from '@/components/AppHeader';
 import fs from 'fs';
 import path from 'path';
 import type { AliquoteInpsData, InailData, TfrData, CcnlData } from '@/types';
@@ -29,16 +30,20 @@ function getUpdatedDates(): string[] {
 export default function CalcolatorePageWrapper() {
   const updatedDates = getUpdatedDates();
   return (
-    <main className="min-h-screen bg-gray-50">
-      <div className="max-w-5xl mx-auto px-4 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Calcolatore Costo del Lavoro</h1>
-          <p className="text-gray-500 mt-1">Strumento professionale multi-CCNL per studi di consulenza</p>
-        </div>
-        <Suspense fallback={<div className="animate-pulse h-96 bg-white rounded-xl" />}>
+    <>
+      <AppHeader />
+      <main>
+        <Suspense fallback={
+          <div style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            height: '100vh', background: 'var(--color-bg-base)',
+          }}>
+            <div className="skeleton" style={{ width: '200px', height: '4px', borderRadius: '2px' }} />
+          </div>
+        }>
           <CalcolatorePageClient updatedDates={updatedDates} />
         </Suspense>
-      </div>
-    </main>
+      </main>
+    </>
   );
 }

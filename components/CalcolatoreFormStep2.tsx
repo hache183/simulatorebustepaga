@@ -76,39 +76,75 @@ export function CalcolatoreFormStep2({ onSubmit, onBack, isLoading }: Props) {
     return Math.ceil((new Date(scadenza).getTime() - Date.now()) / 86_400_000);
   };
 
-  const inputClass = (hasError: boolean) =>
-    `w-full rounded-lg border px-3 py-2 text-sm text-gray-900 bg-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-      hasError ? 'border-red-400 bg-red-50' : 'border-gray-300'
-    }`;
-
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-      <h2 className="text-lg font-semibold text-gray-800">Dati aziendali e agevolazioni</h2>
+    <form onSubmit={handleSubmit(onSubmit)} style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+
+      {/* Label sezione */}
+      <div style={{ borderBottom: '1px solid var(--color-border)', paddingBottom: '14px' }}>
+        <p style={{
+          fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, fontSize: '11px',
+          color: 'var(--color-accent-bright)', letterSpacing: '0.06em', textTransform: 'uppercase',
+        }}>
+          Step 2 di 2
+        </p>
+        <h2 style={{
+          fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: '18px',
+          color: 'var(--color-text-primary)', marginTop: '4px',
+        }}>
+          Dati aziendali
+        </h2>
+      </div>
 
       {/* Numero dipendenti */}
       <div>
-        <label htmlFor="numeroDipendenti" className="block text-sm font-medium text-gray-700 mb-1">
+        <label htmlFor="numeroDipendenti" style={{ display: 'block', fontSize: '13px', fontWeight: 500,
+          color: 'var(--color-text-secondary)', marginBottom: '6px' }}>
           Numero di dipendenti in azienda
         </label>
-        <input id="numeroDipendenti" type="number" min="1" {...register('numeroDipendenti', { valueAsNumber: true })}
-          className={inputClass(!!errors.numeroDipendenti)} placeholder="es. 10" />
-        {errors.numeroDipendenti && <p className="mt-1 text-xs text-red-600">{errors.numeroDipendenti.message}</p>}
+        <input id="numeroDipendenti" type="number" min="1"
+          {...register('numeroDipendenti', { valueAsNumber: true })}
+          placeholder="es. 10"
+          style={{
+            width: '100%', padding: '11px 14px',
+            background: 'var(--color-bg-input)', color: 'var(--color-text-primary)',
+            border: `1px solid ${errors.numeroDipendenti ? 'var(--color-red)' : 'var(--color-border)'}`,
+            borderRadius: '6px', fontSize: '13px',
+            fontFamily: "'DM Mono', monospace",
+          }}
+        />
+        {errors.numeroDipendenti && <p style={{ marginTop: '4px', fontSize: '11px', color: 'var(--color-red)' }}>{errors.numeroDipendenti.message}</p>}
       </div>
 
       {/* Regione */}
       <div>
-        <label htmlFor="regione" className="block text-sm font-medium text-gray-700 mb-1">Regione</label>
-        <select id="regione" {...register('regione')} className={inputClass(!!errors.regione)}>
+        <label htmlFor="regione" style={{ display: 'block', fontSize: '13px', fontWeight: 500,
+          color: 'var(--color-text-secondary)', marginBottom: '6px' }}>
+          Regione
+        </label>
+        <select id="regione" {...register('regione')} style={{
+          width: '100%', padding: '11px 14px',
+          background: 'var(--color-bg-input)', color: 'var(--color-text-primary)',
+          border: `1px solid ${errors.regione ? 'var(--color-red)' : 'var(--color-border)'}`,
+          borderRadius: '6px', fontSize: '13px', cursor: 'pointer',
+        }}>
           <option value="">— Seleziona la regione —</option>
           {REGIONI.map(r => <option key={r} value={r}>{r}</option>)}
         </select>
-        {errors.regione && <p className="mt-1 text-xs text-red-600">{errors.regione.message}</p>}
+        {errors.regione && <p style={{ marginTop: '4px', fontSize: '11px', color: 'var(--color-red)' }}>{errors.regione.message}</p>}
       </div>
 
       {/* Categoria INAIL */}
       <div>
-        <label htmlFor="codiceInail" className="block text-sm font-medium text-gray-700 mb-1">Categoria INAIL</label>
-        <select id="codiceInail" {...register('codiceInail')} className={inputClass(!!errors.codiceInail)}>
+        <label htmlFor="codiceInail" style={{ display: 'block', fontSize: '13px', fontWeight: 500,
+          color: 'var(--color-text-secondary)', marginBottom: '6px' }}>
+          Categoria INAIL
+        </label>
+        <select id="codiceInail" {...register('codiceInail')} style={{
+          width: '100%', padding: '11px 14px',
+          background: 'var(--color-bg-input)', color: 'var(--color-text-primary)',
+          border: `1px solid ${errors.codiceInail ? 'var(--color-red)' : 'var(--color-border)'}`,
+          borderRadius: '6px', fontSize: '13px', cursor: 'pointer',
+        }}>
           <option value="">— Seleziona la categoria —</option>
           {voceInail.map(v => (
             <option key={v.codice} value={v.codice}>
@@ -116,22 +152,34 @@ export function CalcolatoreFormStep2({ onSubmit, onBack, isLoading }: Props) {
             </option>
           ))}
         </select>
-        {errors.codiceInail && <p className="mt-1 text-xs text-red-600">{errors.codiceInail.message}</p>}
+        {errors.codiceInail && <p style={{ marginTop: '4px', fontSize: '11px', color: 'var(--color-red)' }}>{errors.codiceInail.message}</p>}
       </div>
 
       {/* Anzianità */}
       <div>
-        <label htmlFor="anzianitaAnni" className="block text-sm font-medium text-gray-700 mb-1">
-          Anni di anzianità nel CCNL (per scatti)
+        <label htmlFor="anzianitaAnni" style={{ display: 'block', fontSize: '13px', fontWeight: 500,
+          color: 'var(--color-text-secondary)', marginBottom: '6px' }}>
+          Anzianità nel CCNL (anni, per scatti)
         </label>
-        <input id="anzianitaAnni" type="number" min="0" max="50" {...register('anzianitaAnni', { valueAsNumber: true })}
-          className={inputClass(false)} />
+        <input id="anzianitaAnni" type="number" min="0" max="50"
+          {...register('anzianitaAnni', { valueAsNumber: true })}
+          style={{
+            width: '100%', padding: '11px 14px',
+            background: 'var(--color-bg-input)', color: 'var(--color-text-primary)',
+            border: '1px solid var(--color-border)',
+            borderRadius: '6px', fontSize: '13px',
+            fontFamily: "'DM Mono', monospace",
+          }}
+        />
       </div>
 
       {/* Agevolazioni */}
       <div>
-        <p className="text-sm font-medium text-gray-700 mb-2">Agevolazioni contributive applicabili</p>
-        <div className="space-y-2">
+        <p style={{ fontSize: '13px', fontWeight: 500, color: 'var(--color-text-secondary)',
+          marginBottom: '10px' }}>
+          Agevolazioni contributive applicabili
+        </p>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
           {agevolazioni.map(agev => {
             const giorni = giorniAllaScadenza(agev.scadenza);
             const selezionata = agevolazioniSelezionate.includes(agev.id);
@@ -140,32 +188,49 @@ export function CalcolatoreFormStep2({ onSubmit, onBack, isLoading }: Props) {
               <div
                 key={agev.id}
                 onClick={() => toggleAgevolazione(agev.id)}
-                className={`border rounded-lg p-3 cursor-pointer transition-colors ${
-                  selezionata ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-gray-300'
-                }`}
+                style={{
+                  padding: '12px', borderRadius: '6px', cursor: 'pointer',
+                  transition: 'all 0.15s ease',
+                  background: selezionata ? 'var(--color-accent-glow)' : 'var(--color-bg-input)',
+                  border: `1px solid ${selezionata ? 'var(--color-accent)' : 'var(--color-border)'}`,
+                }}
               >
-                <div className="flex items-start justify-between gap-2">
-                  <div className="flex items-start gap-2">
-                    <input type="checkbox" checked={selezionata} readOnly className="mt-0.5 accent-blue-600" />
+                <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '8px' }}>
+                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
+                    <input type="checkbox" checked={selezionata} readOnly
+                      style={{ marginTop: '2px', accentColor: 'var(--color-accent)', cursor: 'pointer' }} />
                     <div>
-                      <p className="text-sm font-medium text-gray-800">{agev.nome}</p>
-                      <p className="text-xs text-gray-500 mt-0.5">{agev.fonteLegge}</p>
+                      <p style={{ fontSize: '13px', fontWeight: 500, color: 'var(--color-text-primary)' }}>{agev.nome}</p>
+                      <p style={{ fontSize: '11px', color: 'var(--color-text-muted)', marginTop: '2px' }}>{agev.fonteLegge}</p>
                     </div>
                   </div>
                   {giorni !== null && giorni <= 90 && (
-                    <span className="shrink-0 text-xs px-2 py-0.5 rounded-full bg-red-100 text-red-700 font-medium">
-                      Scade tra {giorni}gg
+                    <span style={{
+                      flexShrink: 0, fontSize: '10px', padding: '2px 8px', borderRadius: '4px',
+                      background: 'var(--color-red-dim)', color: 'var(--color-red)',
+                      border: '1px solid var(--color-red)', fontFamily: "'DM Mono', monospace",
+                      whiteSpace: 'nowrap',
+                    }}>
+                      Scade {giorni}gg
                     </span>
                   )}
                   {agev.scadenza === null && (
-                    <span className="shrink-0 text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-500">
+                    <span style={{
+                      flexShrink: 0, fontSize: '10px', padding: '2px 8px', borderRadius: '4px',
+                      background: 'transparent', color: 'var(--color-text-muted)',
+                      border: '1px solid var(--color-border)',
+                    }}>
                       Nessuna scadenza
                     </span>
                   )}
                 </div>
                 {conflitto && selezionata && (
-                  <p className="mt-2 text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded px-2 py-1">
-                    ⚠️ {conflitto} — il motore applicherà solo quella più vantaggiosa
+                  <p style={{
+                    marginTop: '8px', fontSize: '11px', padding: '6px 10px', borderRadius: '4px',
+                    background: 'var(--color-amber-dim)', color: 'var(--color-amber)',
+                    border: '1px solid var(--color-amber)',
+                  }}>
+                    ⚠ {conflitto} — il motore applicherà solo quella più vantaggiosa
                   </p>
                 )}
               </div>
@@ -174,14 +239,26 @@ export function CalcolatoreFormStep2({ onSubmit, onBack, isLoading }: Props) {
         </div>
       </div>
 
-      <div className="flex gap-3">
-        <button type="button" onClick={onBack}
-          className="flex-1 border border-gray-300 text-gray-700 py-2.5 rounded-lg font-medium hover:bg-gray-50 transition-colors">
+      {/* Pulsanti */}
+      <div style={{ display: 'flex', gap: '12px' }}>
+        <button type="button" onClick={onBack} style={{
+          flex: 1, padding: '14px',
+          background: 'transparent', color: 'var(--color-text-secondary)',
+          border: '1px solid var(--color-border)', borderRadius: '10px',
+          fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, fontSize: '14px',
+          cursor: 'pointer', transition: 'border-color 0.15s ease',
+        }}>
           ← Indietro
         </button>
-        <button type="submit" disabled={isLoading}
-          className="flex-1 bg-blue-600 text-white py-2.5 rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50 transition-colors">
-          {isLoading ? 'Calcolo in corso...' : 'Calcola il costo'}
+        <button type="submit" disabled={isLoading} style={{
+          flex: 1, padding: '14px',
+          background: 'var(--color-accent)',
+          color: 'white', border: 'none', borderRadius: '10px',
+          fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, fontSize: '14px',
+          cursor: 'pointer', transition: 'background 0.15s ease, opacity 0.15s ease',
+          opacity: isLoading ? 0.5 : 1,
+        }}>
+          {isLoading ? 'Calcolo...' : 'Calcola il costo →'}
         </button>
       </div>
     </form>

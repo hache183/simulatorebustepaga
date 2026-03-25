@@ -6,17 +6,6 @@ const eur = (n: number) =>
   new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(n);
 const pct = (n: number) => (n * 100).toFixed(1) + '%';
 
-const COLORI_CATEGORIA: Record<string, string> = {
-  ral:             'bg-blue-500',
-  inps_azienda:    'bg-orange-400',
-  tfr:             'bg-green-500',
-  inail:           'bg-yellow-400',
-  tredicesima:     'bg-purple-400',
-  quattordicesima: 'bg-pink-400',
-  ccnl_contrattuale: 'bg-gray-400',
-  agevolazione:    'bg-emerald-400',
-};
-
 interface Props {
   risultato: CalcolatoreOutput;
   onRicalcola: () => void;
@@ -27,113 +16,244 @@ export function RisultatiCalcolatore({ risultato, onRicalcola }: Props) {
   const risparmioTotale = agevolazioniApplicate.reduce((s, a) => s + a.risparmioAnnuo, 0);
 
   return (
-    <div className="space-y-6 print:space-y-4">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
 
-      {/* Alert scadenze */}
-      {alertScadenze.length > 0 && (
-        <div className="bg-amber-50 border border-amber-300 rounded-lg p-4 print:border-amber-400">
-          <p className="text-sm font-semibold text-amber-800 mb-1">⚠️ Agevolazioni in scadenza</p>
-          {alertScadenze.map(a => (
-            <p key={a.agevolazioneId} className="text-sm text-amber-700">
-              {a.nome}: scade tra <strong>{a.giorniRimanenti} giorni</strong> ({new Date(a.scadenza).toLocaleDateString('it-IT')})
-            </p>
-          ))}
+      {/* SEZIONE A — KPI bar */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '16px' }}>
+        {/* Card 1 — Costo annuo */}
+        <div style={{
+          background: 'var(--color-bg-surface)', border: '1px solid var(--color-border)',
+          borderRadius: '10px', padding: '20px',
+        }}>
+          <p style={{ fontSize: '12px', color: 'var(--color-text-secondary)',
+            fontFamily: "'Plus Jakarta Sans', sans-serif", marginBottom: '6px' }}>
+            Costo annuo aziendale
+          </p>
+          <p style={{
+            fontFamily: "'DM Mono', monospace", fontSize: '24px', fontWeight: 500,
+            color: 'var(--color-accent-bright)', lineHeight: 1,
+          }}>
+            {eur(costoTotaleAnnuo)}
+          </p>
         </div>
-      )}
-
-      {/* Card riepilogo */}
-      <div className="grid grid-cols-3 gap-3">
-        <div className="bg-blue-900 text-white rounded-xl p-4 col-span-1">
-          <p className="text-xs text-blue-200 uppercase tracking-wide">Costo annuo</p>
-          <p className="text-2xl font-bold mt-1">{eur(costoTotaleAnnuo)}</p>
+        {/* Card 2 — Costo mensile */}
+        <div style={{
+          background: 'var(--color-bg-surface)', border: '1px solid var(--color-border)',
+          borderRadius: '10px', padding: '20px',
+        }}>
+          <p style={{ fontSize: '12px', color: 'var(--color-text-secondary)',
+            fontFamily: "'Plus Jakarta Sans', sans-serif", marginBottom: '6px' }}>
+            Equivalente mensile
+          </p>
+          <p style={{
+            fontFamily: "'DM Mono', monospace", fontSize: '22px', fontWeight: 500,
+            color: 'var(--color-text-primary)', lineHeight: 1,
+          }}>
+            {eur(costoTotaleMensile)}
+          </p>
         </div>
-        <div className="bg-white border rounded-xl p-4">
-          <p className="text-xs text-gray-500 uppercase tracking-wide">Costo mensile</p>
-          <p className="text-xl font-bold text-gray-800 mt-1">{eur(costoTotaleMensile)}</p>
-        </div>
-        <div className={`border rounded-xl p-4 ${percentualeRal > 1.45 ? 'border-red-300 bg-red-50' : 'bg-white'}`}>
-          <p className="text-xs text-gray-500 uppercase tracking-wide">% sulla RAL</p>
-          <p className={`text-xl font-bold mt-1 ${percentualeRal > 1.45 ? 'text-red-600' : 'text-gray-800'}`}>
+        {/* Card 3 — % sulla RAL */}
+        <div style={{
+          background: 'var(--color-bg-surface)', border: '1px solid var(--color-border)',
+          borderRadius: '10px', padding: '20px',
+        }}>
+          <p style={{ fontSize: '12px', color: 'var(--color-text-secondary)',
+            fontFamily: "'Plus Jakarta Sans', sans-serif", marginBottom: '6px' }}>
+            Incidenza sulla RAL
+          </p>
+          <p style={{
+            fontFamily: "'DM Mono', monospace", fontSize: '22px', fontWeight: 500,
+            color: percentualeRal > 1.45 ? 'var(--color-red)' : percentualeRal <= 1.30 ? 'var(--color-green)' : 'var(--color-amber)',
+            lineHeight: 1,
+          }}>
             {pct(percentualeRal)}
           </p>
         </div>
       </div>
 
-      {/* Barra visiva */}
+      {/* SEZIONE B — Alert scadenze */}
+      {alertScadenze.length > 0 && (
+        <div style={{
+          background: 'var(--color-amber-dim)',
+          borderLeft: '3px solid var(--color-amber)',
+          borderRadius: '8px', padding: '14px 16px',
+          display: 'flex', alignItems: 'flex-start', gap: '10px',
+        }}>
+          <span style={{ fontSize: '14px', flexShrink: 0 }}>⚠</span>
+          <div>
+            <p style={{ fontSize: '13px', fontWeight: 600, color: 'var(--color-amber)',
+              marginBottom: '4px',
+              fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+              Agevolazioni in scadenza
+            </p>
+            {alertScadenze.map(a => (
+              <p key={a.agevolazioneId} style={{ fontSize: '13px', color: 'var(--color-text-secondary)' }}>
+                {a.nome}: scade tra{' '}
+                <strong style={{ color: 'var(--color-amber)', fontFamily: "'DM Mono', monospace" }}>
+                  {a.giorniRimanenti} gg
+                </strong>{' '}
+                ({new Date(a.scadenza).toLocaleDateString('it-IT')})
+              </p>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* SEZIONE C — Barra composizione */}
       <div>
-        <p className="text-sm font-medium text-gray-600 mb-2">Composizione del costo</p>
-        <div className="flex h-4 rounded-full overflow-hidden">
-          {voci.filter(v => v.importoAnnuo > 0).map(v => (
-            <div
-              key={v.id}
-              className={COLORI_CATEGORIA[v.categoria] ?? 'bg-gray-300'}
-              style={{ width: `${(v.importoAnnuo / costoTotaleAnnuo) * 100}%` }}
-              title={`${v.descrizione}: ${eur(v.importoAnnuo)}`}
-            />
-          ))}
+        <p style={{ fontSize: '13px', color: 'var(--color-text-secondary)',
+          marginBottom: '10px',
+          fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+          Composizione del costo
+        </p>
+        <div style={{ display: 'flex', height: '14px', borderRadius: '8px', overflow: 'hidden' }}>
+          {voci.filter(v => v.importoAnnuo > 0).map(v => {
+            const colori: Record<string, string> = {
+              ral: '#14b8a6', inps_azienda: '#2dd4bf', tfr: '#22c55e', inail: '#f59e0b',
+              tredicesima: '#818cf8', quattordicesima: '#a78bfa', ccnl_contrattuale: '#71717a', agevolazione: '#38383f',
+            };
+            return (
+              <div key={v.id}
+                style={{
+                  width: `${(v.importoAnnuo / costoTotaleAnnuo) * 100}%`,
+                  background: colori[v.categoria] ?? '#38383f',
+                }}
+                title={`${v.descrizione}: ${eur(v.importoAnnuo)}`}
+              />
+            );
+          })}
         </div>
-        <div className="flex flex-wrap gap-x-4 gap-y-1 mt-2">
-          {voci.filter(v => v.importoAnnuo > 0).map(v => (
-            <div key={v.id} className="flex items-center gap-1">
-              <div className={`w-2.5 h-2.5 rounded-sm ${COLORI_CATEGORIA[v.categoria] ?? 'bg-gray-300'}`} />
-              <span className="text-xs text-gray-600">{v.descrizione.split(' — ')[0].split('(')[0].trim()}</span>
-            </div>
-          ))}
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px 16px', marginTop: '10px' }}>
+          {voci.filter(v => v.importoAnnuo > 0).map(v => {
+            const colori: Record<string, string> = {
+              ral: '#14b8a6', inps_azienda: '#2dd4bf', tfr: '#22c55e', inail: '#f59e0b',
+              tredicesima: '#818cf8', quattordicesima: '#a78bfa', ccnl_contrattuale: '#71717a', agevolazione: '#38383f',
+            };
+            return (
+              <div key={v.id} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: colori[v.categoria] ?? '#38383f', flexShrink: 0 }} />
+                <span style={{ fontSize: '12px', color: 'var(--color-text-muted)', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+                  {v.descrizione.split(' — ')[0].split('(')[0].trim()}
+                </span>
+              </div>
+            );
+          })}
         </div>
+        {risparmioTotale > 0 && (
+          <p style={{ marginTop: '8px', fontSize: '13px', color: 'var(--color-green)',
+            fontFamily: "'DM Mono', monospace" }}>
+            ▼ Risparmio agevolazioni: -{eur(risparmioTotale)}/anno
+          </p>
+        )}
       </div>
 
-      {/* Tabella dettaglio */}
-      <div className="overflow-hidden rounded-xl border border-gray-200">
-        <table className="w-full text-sm">
+      {/* SEZIONE D — Tabella dettaglio */}
+      <div style={{ borderRadius: '10px', overflow: 'hidden', border: '1px solid var(--color-border)' }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
           <thead>
-            <tr className="bg-gray-50 border-b border-gray-200">
-              <th className="text-left py-2.5 px-4 font-semibold text-gray-600">Voce di costo</th>
-              <th className="text-right py-2.5 px-4 font-semibold text-gray-600">Annuo</th>
-              <th className="text-right py-2.5 px-4 font-semibold text-gray-600">Mensile</th>
-              <th className="text-right py-2.5 px-4 font-semibold text-gray-600">% RAL</th>
+            <tr style={{ background: 'var(--color-bg-elevated)' }}>
+              {['Voce di costo', 'Importo annuo', 'Importo mensile', '% RAL'].map((h, i) => (
+                <th key={h} style={{
+                  textAlign: i === 0 ? 'left' : 'right',
+                  padding: '12px 16px', fontSize: '12px',
+                  color: 'var(--color-text-secondary)',
+                  fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 500,
+                }}>
+                  {h}
+                </th>
+              ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-100">
+          <tbody>
             {voci.map((v, i) => (
-              <tr key={v.id} className={i % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                <td className="py-2.5 px-4 text-gray-700">
+              <tr key={v.id} style={{
+                background: i % 2 === 0 ? 'var(--color-bg-surface)' : 'var(--color-bg-base)',
+                borderBottom: '1px solid var(--color-border)',
+              }}>
+                <td style={{ padding: '12px 16px', color: 'var(--color-text-primary)' }}>
                   <div>{v.descrizione}</div>
-                  {v.notaLegge && <div className="text-xs text-gray-400">{v.notaLegge}</div>}
+                  {v.notaLegge && <div style={{ fontSize: '12px', color: 'var(--color-text-muted)', marginTop: '2px' }}>{v.notaLegge}</div>}
                 </td>
-                <td className="py-2.5 px-4 text-right font-mono text-gray-800">{eur(v.importoAnnuo)}</td>
-                <td className="py-2.5 px-4 text-right font-mono text-gray-500">{eur(v.importoMensile)}</td>
-                <td className="py-2.5 px-4 text-right text-gray-600">{pct(v.percentualeRal)}</td>
+                <td style={{ padding: '12px 16px', textAlign: 'right',
+                  fontFamily: "'DM Mono', monospace", color: 'var(--color-text-primary)' }}>
+                  {eur(v.importoAnnuo)}
+                </td>
+                <td style={{ padding: '12px 16px', textAlign: 'right',
+                  fontFamily: "'DM Mono', monospace", color: 'var(--color-text-secondary)' }}>
+                  {eur(v.importoMensile)}
+                </td>
+                <td style={{ padding: '12px 16px', textAlign: 'right', color: 'var(--color-text-secondary)' }}>
+                  {pct(v.percentualeRal)}
+                </td>
               </tr>
             ))}
             {risparmioTotale > 0 && (
-              <tr className="bg-emerald-50">
-                <td className="py-2.5 px-4 text-emerald-700 font-medium">💰 Risparmio da agevolazioni</td>
-                <td className="py-2.5 px-4 text-right font-mono font-bold text-emerald-600">- {eur(risparmioTotale)}</td>
-                <td className="py-2.5 px-4 text-right font-mono text-emerald-500">- {eur(risparmioTotale / 12)}</td>
-                <td className="py-2.5 px-4 text-right text-emerald-600">- {pct(risparmioTotale / risultato.input.ral)}</td>
+              <tr style={{ background: 'var(--color-green-dim)', borderBottom: '1px solid var(--color-border)' }}>
+                <td style={{ padding: '12px 16px', color: 'var(--color-green)', fontWeight: 500 }}>
+                  Risparmio agevolazioni
+                </td>
+                <td style={{ padding: '12px 16px', textAlign: 'right',
+                  fontFamily: "'DM Mono', monospace", color: 'var(--color-green)', fontWeight: 600 }}>
+                  -{eur(risparmioTotale)}
+                </td>
+                <td style={{ padding: '12px 16px', textAlign: 'right',
+                  fontFamily: "'DM Mono', monospace", color: 'var(--color-green)' }}>
+                  -{eur(risparmioTotale / 12)}
+                </td>
+                <td style={{ padding: '12px 16px', textAlign: 'right', color: 'var(--color-green)' }}>
+                  -{pct(risparmioTotale / risultato.input.ral)}
+                </td>
               </tr>
             )}
-            <tr className="bg-blue-900 text-white">
-              <td className="py-3 px-4 font-bold text-base">COSTO TOTALE AZIENDALE</td>
-              <td className="py-3 px-4 text-right font-mono font-bold text-lg">{eur(costoTotaleAnnuo)}</td>
-              <td className="py-3 px-4 text-right font-mono font-semibold">{eur(costoTotaleMensile)}</td>
-              <td className="py-3 px-4 text-right font-semibold">{pct(percentualeRal)}</td>
+            {/* Riga totale */}
+            <tr style={{ background: 'var(--color-bg-elevated)', borderTop: '2px solid var(--color-accent)' }}>
+              <td style={{ padding: '14px 16px',
+                fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 700, fontSize: '13px',
+                color: 'var(--color-accent-bright)' }}>
+                Costo totale aziendale
+              </td>
+              <td style={{ padding: '14px 16px', textAlign: 'right',
+                fontFamily: "'DM Mono', monospace", fontWeight: 500, fontSize: '15px',
+                color: 'var(--color-accent-bright)' }}>
+                {eur(costoTotaleAnnuo)}
+              </td>
+              <td style={{ padding: '14px 16px', textAlign: 'right',
+                fontFamily: "'DM Mono', monospace", fontSize: '14px',
+                color: 'var(--color-accent-bright)' }}>
+                {eur(costoTotaleMensile)}
+              </td>
+              <td style={{ padding: '14px 16px', textAlign: 'right',
+                fontFamily: "'DM Mono', monospace", fontSize: '14px',
+                color: 'var(--color-accent-bright)' }}>
+                {pct(percentualeRal)}
+              </td>
             </tr>
           </tbody>
         </table>
       </div>
 
-      {/* Pulsanti */}
-      <div className="flex gap-3 print:hidden">
-        <button onClick={onRicalcola}
-          className="flex-1 border border-gray-300 text-gray-700 py-2.5 rounded-lg font-medium hover:bg-gray-50 transition-colors">
+      {/* SEZIONE E — Footer azioni */}
+      <div style={{ display: 'flex', gap: '12px' }} className="no-print">
+        <button onClick={onRicalcola} style={{
+          flex: 1, padding: '14px',
+          background: 'transparent', color: 'var(--color-text-secondary)',
+          border: '1px solid var(--color-border)', borderRadius: '10px',
+          fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, fontSize: '14px',
+          cursor: 'pointer', transition: 'border-color 0.15s ease',
+        }}>
           ← Nuovo calcolo
         </button>
-        <button onClick={() => window.print()}
-          className="flex-1 bg-gray-800 text-white py-2.5 rounded-lg font-medium hover:bg-gray-900 transition-colors">
-          🖨️ Stampa / Salva PDF
+        <button onClick={() => window.print()} style={{
+          flex: 1, padding: '14px',
+          background: 'var(--color-bg-elevated)', color: 'var(--color-text-primary)',
+          border: '1px solid var(--color-border-bright)', borderRadius: '10px',
+          fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, fontSize: '14px',
+          cursor: 'pointer', transition: 'border-color 0.15s ease',
+        }}>
+          🖨 Stampa report
         </button>
       </div>
+
     </div>
   );
 }

@@ -3,40 +3,143 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --color-bg-base:       #131316;
+  --color-bg-surface:    #1a1a1e;
+  --color-bg-elevated:   #222226;
+  --color-bg-input:      #17171b;
+  --color-border:        #27272c;
+  --color-border-bright: #38383f;
+  --color-accent:        #14b8a6;
+  --color-accent-bright: #2dd4bf;
+  --color-accent-glow:   #14b8a612;
+  --color-gold:          #2dd4bf;
+  --color-gold-dim:      #14b8a608;
+  --color-green:         #22c55e;
+  --color-green-dim:     #22c55e0c;
+  --color-red:           #ef4444;
+  --color-red-dim:       #ef44440c;
+  --color-amber:         #f59e0b;
+  --color-amber-dim:     #f59e0b0c;
+  --color-text-primary:  #e4e4e7;
+  --color-text-secondary:#a1a1aa;
+  --color-text-muted:    #85858e;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* { box-sizing: border-box; }
+
+html, body {
+  background-color: var(--color-bg-base);
+  color: var(--color-text-primary);
+  font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+/* Form elements */
+input, select, textarea {
+  background-color: var(--color-bg-input) !important;
+  color: var(--color-text-primary) !important;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+  font-size: 14px;
+  transition: border-color 0.15s ease;
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
-}
-
-select,
-input[type="text"],
-input[type="number"],
-input[type="password"],
-input[type="email"],
-textarea {
-  color: #111827;
-  background-color: #ffffff;
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--color-accent) !important;
+  box-shadow: 0 0 0 2px var(--color-accent-glow) !important;
 }
 
 select option {
-  color: #111827;
-  background-color: #ffffff;
+  background-color: var(--color-bg-surface);
+  color: var(--color-text-primary);
+}
+
+input::placeholder { color: var(--color-text-muted) !important; }
+
+input[type="range"] {
+  -webkit-appearance: none;
+  background: transparent;
+  border: none !important;
+  box-shadow: none !important;
+}
+input[type="range"]::-webkit-slider-runnable-track {
+  height: 4px;
+  background: var(--color-border-bright);
+  border-radius: 2px;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  border: 2px solid var(--color-bg-base);
+  margin-top: -6px;
+  cursor: pointer;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--color-bg-base); }
+::-webkit-scrollbar-thumb { background: var(--color-border-bright); border-radius: 3px; }
+
+/* Number font */
+.font-mono, .tabular-nums {
+  font-family: 'DM Mono', monospace !important;
+}
+
+/* Card base */
+.card {
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+}
+
+.card-accent {
+  border-top: 2px solid var(--color-accent);
+}
+
+/* Animations — subtle */
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+
+.animate-fade-in {
+  animation: fadeSlideIn 0.2s ease forwards;
+}
+
+/* Skeleton loader */
+.skeleton {
+  background: linear-gradient(90deg,
+    var(--color-bg-surface) 25%,
+    var(--color-bg-elevated) 50%,
+    var(--color-bg-surface) 75%
+  );
+  background-size: 400px 100%;
+  animation: shimmer 1.4s ease infinite;
+  border-radius: 6px;
+}
+
+/* Step indicator */
+.step-active  { color: var(--color-accent-bright); font-weight: 600; }
+.step-done    { color: var(--color-green); }
+.step-pending { color: var(--color-text-muted); }
+
+/* Print */
+@media print {
+  body { background: #fff !important; }
+  * { color: #111 !important; border-color: #ddd !important;
+      box-shadow: none !important; background: #fff !important; }
+  .card { border: 1px solid #ddd !important; }
+  .no-print { display: none !important; }
 }
