@@ -7,11 +7,17 @@
   "contributiContrattuali": {
     "azienda": {
       "fastelC": {
+        "tipo": "sanitario",
+        "modalita": "percentuale",
+        "importoMensile": null,
         "percentuale": 0.0075,
         "descrizione": "Fondo sanitario integrativo Fastel",
         "notaLegge": "Art. 19 CCNL Telecomunicazioni"
       },
       "telemaco": {
+        "tipo": "previdenziale",
+        "modalita": "percentuale",
+        "importoMensile": null,
         "percentuale": 0.0200,
         "descrizione": "Fondo pensione complementare Telemaco (quota azienda)",
         "notaLegge": "Art. 50 CCNL Telecomunicazioni"
@@ -19,12 +25,12 @@
     }
   },
   "livelli": [
-    { "codice": "Q",  "descrizione": "Quadro",          "moltiplicatore": 1.00 },
-    { "codice": "A",  "descrizione": "Livello A",       "moltiplicatore": 0.90 },
-    { "codice": "B",  "descrizione": "Livello B",       "moltiplicatore": 0.81 },
-    { "codice": "C",  "descrizione": "Livello C",       "moltiplicatore": 0.72 },
-    { "codice": "D",  "descrizione": "Livello D",       "moltiplicatore": 0.64 },
-    { "codice": "E",  "descrizione": "Livello E",       "moltiplicatore": 0.57 }
+    { "codice": "Q",  "descrizione": "Quadro",      "qualifica": "Project manager, responsabile di rete",                  "minimoTabellare": 2000.00, "moltiplicatore": 1.00 },
+    { "codice": "A",  "descrizione": "Livello A",   "qualifica": "Ingegnere di rete, sviluppatore senior",                "minimoTabellare": 1800.00, "moltiplicatore": 0.90 },
+    { "codice": "B",  "descrizione": "Livello B",   "qualifica": "Tecnico di rete, analista sistemi",                     "minimoTabellare": 1620.00, "moltiplicatore": 0.81 },
+    { "codice": "C",  "descrizione": "Livello C",   "qualifica": "Operatore di call center specializzato, tecnico inst.", "minimoTabellare": 1440.00, "moltiplicatore": 0.72 },
+    { "codice": "D",  "descrizione": "Livello D",   "qualifica": "Operatore di call center, addetto amministrativo",      "minimoTabellare": 1280.00, "moltiplicatore": 0.64 },
+    { "codice": "E",  "descrizione": "Livello E",   "qualifica": "Ausiliario, addetto alla logistica",                    "minimoTabellare": 1140.00, "moltiplicatore": 0.57 }
   ],
   "scattiAnzianita": {
     "periodicitaMesi": 24,

@@ -7,11 +7,17 @@
   "contributiContrattuali": {
     "azienda": {
       "sanimoda": {
+        "tipo": "sanitario",
+        "modalita": "percentuale",
+        "importoMensile": null,
         "percentuale": 0.0050,
         "descrizione": "Fondo sanitario integrativo Assiinform",
         "notaLegge": "Art. 12 CCNL Informatica"
       },
       "fondoInformatica": {
+        "tipo": "previdenziale",
+        "modalita": "percentuale",
+        "importoMensile": null,
         "percentuale": 0.0100,
         "descrizione": "Fondo pensione complementare (quota azienda)",
         "notaLegge": "Art. 46 CCNL Informatica"
@@ -19,13 +25,13 @@
     }
   },
   "livelli": [
-    { "codice": "Q",  "descrizione": "Quadro",          "moltiplicatore": 1.00 },
-    { "codice": "A1", "descrizione": "A1 livello",      "moltiplicatore": 0.92 },
-    { "codice": "A2", "descrizione": "A2 livello",      "moltiplicatore": 0.84 },
-    { "codice": "B1", "descrizione": "B1 livello",      "moltiplicatore": 0.76 },
-    { "codice": "B2", "descrizione": "B2 livello",      "moltiplicatore": 0.68 },
-    { "codice": "C",  "descrizione": "C livello",       "moltiplicatore": 0.61 },
-    { "codice": "D",  "descrizione": "D livello",       "moltiplicatore": 0.55 }
+    { "codice": "Q",  "descrizione": "Quadro",      "qualifica": "IT Manager, direttore tecnico",                  "minimoTabellare": 2000.00, "moltiplicatore": 1.00 },
+    { "codice": "A1", "descrizione": "A1 livello",  "qualifica": "Analista programmatore senior, project manager",  "minimoTabellare": 1840.00, "moltiplicatore": 0.92 },
+    { "codice": "A2", "descrizione": "A2 livello",  "qualifica": "Sviluppatore software, sistemista",              "minimoTabellare": 1680.00, "moltiplicatore": 0.84 },
+    { "codice": "B1", "descrizione": "B1 livello",  "qualifica": "Programmatore, tecnico di rete",                  "minimoTabellare": 1520.00, "moltiplicatore": 0.76 },
+    { "codice": "B2", "descrizione": "B2 livello",  "qualifica": "Help desk, operatore sistemi",                    "minimoTabellare": 1360.00, "moltiplicatore": 0.68 },
+    { "codice": "C",  "descrizione": "C livello",   "qualifica": "Data entry, assistente tecnico",                  "minimoTabellare": 1220.00, "moltiplicatore": 0.61 },
+    { "codice": "D",  "descrizione": "D livello",   "qualifica": "Ausiliario, fattorino",                           "minimoTabellare": 1100.00, "moltiplicatore": 0.55 }
   ],
   "scattiAnzianita": {
     "periodicitaMesi": 24,

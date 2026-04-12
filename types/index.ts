@@ -18,6 +18,9 @@ export interface CalcolatoreInput {
   regione: string;
   codiceInail: string;                // codice voce tariffaria INAIL
   agevolazioniSelezionate: string[];  // array di id agevolazioni
+  includiAssistenzaSanitaria: boolean; // se true, include contributi sanitari CCNL
+  aliquotaInps: number;               // aliquota INPS datoriale personalizzata (es. 0.2676 per 26,76%)
+  retribuzionePersonalizzata?: number; // RAL personalizzata concordata tra le parti (euro/anno)
 }
 
 // ─── OUTPUT CALCOLATORE ───────────────────────────────────────────────────
@@ -65,19 +68,48 @@ export interface CalcolatoreOutput {
   agevolazioniApplicate: AgevolazioneApplicata[];
   alertScadenze: AlertScadenza[];
   calcolatoIl: string;
+  nettoDipendente: NettoDipendente;
+}
+
+export interface NettoDipendente {
+  ralLorda: number;
+  inpsDipendente: number;
+  imponibileIrpef: number;
+  irpefLorda: number;
+  detrazioneLavoroDip: number;
+  bonusCuneoFiscale: number;
+  irpefNetta: number;
+  addizionaleRegionale: number;
+  addizionaleComunale: number;
+  nettoAnnuo: number;
+  nettoMensile12: number;
+  nettoPerMensilita: number;
+  disclaimer: string;
 }
 
 // ─── TIPI PER I FILE JSON ─────────────────────────────────────────────────
 
 export interface ContributoContrattuale {
-  percentuale: number;
+  tipo: 'sanitario' | 'previdenziale' | 'bilaterale';
+  modalita: 'fisso' | 'percentuale';
+  importoMensile?: number | null;
+  percentuale: number | null;
   descrizione: string;
   notaLegge: string;
+}
+
+export interface ElementoAggiuntivo {
+  importoMensile: number;
+  mensilita: number;
+  condizione: string | null;
+  descrizione: string;
 }
 
 export interface LivelloCcnl {
   codice: string;
   descrizione: string;
+  qualifica: string;
+  minimoTabellare: number; // minimo tabellare mensile in euro
   moltiplicatore: number;
 }
 
@@ -98,6 +130,7 @@ export interface CcnlData {
   livelli: LivelloCcnl[];
   scattiAnzianita: ScattiAnzianita;
   mensilita: number;
+  elementiAggiuntivi?: Record<string, ElementoAggiuntivo>;
 }
 
 export interface AgevolazioneInps {
@@ -119,13 +152,25 @@ export interface AliquoteInpsData {
   fonte: string;
   aliquotaBaseAzienda: number;
   aliquotaBaseDipendente: number;
+  settoriContributivi: Record<string, SettoreContributivo>;
+  mappaCcnlSettore: Record<string, string>;
   agevolazioni: AgevolazioneInps[];
+}
+
+export interface SettoreContributivo {
+  nome: string;
+  aliquotaDatore: number;
+  aliquotaDipendente: number;
+  dettaglio: Record<string, number>;
 }
 
 export interface VoceInail {
   codice: string;
   settore: string;
+  gestione?: string;
   tassoPerMille: number;
+  rangeOscillazione?: { min: number; max: number };
+  note?: string;
 }
 
 export interface InailData {

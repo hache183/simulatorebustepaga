@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useState, useEffect } from 'react';
-import type { AgevolazioneInps } from '@/types';
+import type { AgevolazioneInps, ContributoContrattuale } from '@/types';
 
 const REGIONI = [
   'Abruzzo','Basilicata','Calabria','Campania','Emilia-Romagna',
@@ -19,6 +19,8 @@ const Step2Schema = z.object({
   codiceInail: z.string().min(4, 'Seleziona la categoria INAIL'),
   anzianitaAnni: z.number().min(0).max(50),
   agevolazioniSelezionate: z.array(z.string()),
+  includiAssistenzaSanitaria: z.boolean(),
+  aliquotaInps: z.number().min(0).max(50),
 });
 
 type Step2Data = z.infer<typeof Step2Schema>;
@@ -29,17 +31,22 @@ interface Props {
   onSubmit: (data: Step2Data) => void;
   onBack: () => void;
   isLoading: boolean;
+  contributiCcnl?: Record<string, ContributoContrattuale>;
 }
 
-export function CalcolatoreFormStep2({ onSubmit, onBack, isLoading }: Props) {
+export function CalcolatoreFormStep2({ onSubmit, onBack, isLoading, contributiCcnl }: Props) {
   const [voceInail, setVociInail] = useState<VoceInail[]>([]);
   const [agevolazioni, setAgevolazioni] = useState<AgevolazioneInps[]>([]);
   const [conflitti, setConflitti] = useState<Record<string, string>>({});
 
+  const fondoSanitarioNome = contributiCcnl
+    ? Object.values(contributiCcnl).find(c => c.tipo === 'sanitario')?.descrizione
+    : undefined;
+
   const { register, handleSubmit, watch, setValue, formState: { errors } } =
     useForm<Step2Data>({
       resolver: zodResolver(Step2Schema),
-      defaultValues: { anzianitaAnni: 0, agevolazioniSelezionate: [] },
+      defaultValues: { anzianitaAnni: 0, agevolazioniSelezionate: [], includiAssistenzaSanitaria: true, aliquotaInps: 28.80 },
     });
 
   const agevolazioniSelezionate = watch('agevolazioniSelezionate');
@@ -77,7 +84,9 @@ export function CalcolatoreFormStep2({ onSubmit, onBack, isLoading }: Props) {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+    <form onSubmit={handleSubmit((data) => {
+      onSubmit({ ...data, aliquotaInps: data.aliquotaInps / 100 });
+    })} style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
 
       {/* Label sezione */}
       <div style={{ borderBottom: '1px solid var(--color-border)', paddingBottom: '14px' }}>
@@ -171,6 +180,65 @@ export function CalcolatoreFormStep2({ onSubmit, onBack, isLoading }: Props) {
             fontFamily: "'DM Mono', monospace",
           }}
         />
+      </div>
+
+      {/* Aliquota INPS (MOD3) */}
+      <div>
+        <label htmlFor="aliquotaInps" style={{ display: 'block', fontSize: '13px', fontWeight: 500,
+          color: 'var(--color-text-secondary)', marginBottom: '6px' }}>
+          Aliquota INPS datoriale (%)
+        </label>
+        <div style={{ position: 'relative' }}>
+          <input id="aliquotaInps" type="number" step="0.01" min="0" max="50"
+            {...register('aliquotaInps', { valueAsNumber: true })}
+            style={{
+              width: '100%', padding: '11px 14px 11px 14px',
+              background: 'var(--color-bg-input)', color: 'var(--color-text-primary)',
+              border: `1px solid ${errors.aliquotaInps ? 'var(--color-red)' : 'var(--color-border)'}`,
+              borderRadius: '6px', fontSize: '13px',
+              fontFamily: "'DM Mono', monospace",
+            }}
+          />
+          <span style={{
+            position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)',
+            fontFamily: "'DM Mono', monospace", fontSize: '13px', color: 'var(--color-text-muted)',
+          }}>%</span>
+        </div>
+        <p style={{ marginTop: '6px', fontSize: '11px', color: 'var(--color-text-muted)', lineHeight: '1.5' }}>
+          Aliquota contributiva INPS a carico del datore di lavoro. Il valore precompilato (28,80%) è quello standard per la generalità delle aziende.
+          Modifica se il settore ha un&apos;aliquota diversa (es. Artigianato, Agricoltura, Credito). Verifica con il tuo consulente del lavoro.
+        </p>
+        {errors.aliquotaInps && <p style={{ marginTop: '4px', fontSize: '11px', color: 'var(--color-red)' }}>{errors.aliquotaInps.message}</p>}
+      </div>
+
+      {/* Toggle assistenza sanitaria integrativa (MOD2) */}
+      <div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '6px' }}>
+          <button type="button"
+            onClick={() => setValue('includiAssistenzaSanitaria', !watch('includiAssistenzaSanitaria'))}
+            style={{
+              width: '40px', height: '22px', borderRadius: '11px', border: 'none', cursor: 'pointer',
+              background: watch('includiAssistenzaSanitaria') ? 'var(--color-accent)' : 'var(--color-bg-elevated)',
+              position: 'relative', transition: 'background 0.2s ease',
+              outline: `1px solid ${watch('includiAssistenzaSanitaria') ? 'var(--color-accent)' : 'var(--color-border)'}`,
+            }}>
+            <div style={{
+              width: '16px', height: '16px', borderRadius: '50%', background: 'white',
+              position: 'absolute', top: '3px',
+              left: watch('includiAssistenzaSanitaria') ? '21px' : '3px',
+              transition: 'left 0.2s ease',
+            }} />
+          </button>
+          <label style={{ fontSize: '13px', fontWeight: 500, color: 'var(--color-text-secondary)', cursor: 'pointer' }}
+            onClick={() => setValue('includiAssistenzaSanitaria', !watch('includiAssistenzaSanitaria'))}>
+            Includi assistenza sanitaria integrativa
+          </label>
+        </div>
+        <p style={{ fontSize: '11px', color: 'var(--color-text-muted)', lineHeight: '1.5' }}>
+          Se attivo, include nel costo i contributi al fondo sanitario previsto dal CCNL
+          {fondoSanitarioNome ? ` (${fondoSanitarioNome})` : ' (es. Fondo Est, Metasalute, San.Arti)'}.
+          Disattivalo se l&apos;azienda non aderisce al fondo sanitario.
+        </p>
       </div>
 
       {/* Agevolazioni */}

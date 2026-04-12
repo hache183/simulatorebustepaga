@@ -3,15 +3,21 @@
   "nome": "CCNL Trasporto Merci e Logistica (Conftrasporto-Confartigianato)",
   "fonte": "https://www.conftrasporto.it/contratto-collettivo",
   "updatedAt": "2026-01-01T00:00:00Z",
-  "mensilita": 13,
+  "mensilita": 14,
   "contributiContrattuali": {
     "azienda": {
       "sanita": {
+        "tipo": "sanitario",
+        "modalita": "percentuale",
+        "importoMensile": null,
         "percentuale": 0.0060,
         "descrizione": "Fondo sanitario integrativo trasportatori",
         "notaLegge": "Art. 28 CCNL Trasporti"
       },
       "enbic": {
+        "tipo": "bilaterale",
+        "modalita": "percentuale",
+        "importoMensile": null,
         "percentuale": 0.0020,
         "descrizione": "Ente bilaterale trasporti ENBIC",
         "notaLegge": "Art. 5 CCNL Trasporti"
@@ -19,12 +25,12 @@
     }
   },
   "livelli": [
-    { "codice": "Q",  "descrizione": "Quadro",                      "moltiplicatore": 1.00 },
-    { "codice": "1",  "descrizione": "1° livello (Quadri tecnici)", "moltiplicatore": 0.91 },
-    { "codice": "2",  "descrizione": "2° livello",                  "moltiplicatore": 0.82 },
-    { "codice": "3",  "descrizione": "3° livello (Autisti)",        "moltiplicatore": 0.74 },
-    { "codice": "4",  "descrizione": "4° livello",                  "moltiplicatore": 0.67 },
-    { "codice": "5",  "descrizione": "5° livello",                  "moltiplicatore": 0.60 }
+    { "codice": "Q",  "descrizione": "Quadro",                      "qualifica": "Dirigente operativo, responsabile di filiale",        "minimoTabellare": 1850.00, "moltiplicatore": 1.00 },
+    { "codice": "1",  "descrizione": "1° livello (Quadri tecnici)", "qualifica": "Capo magazziniere, responsabile turni",               "minimoTabellare": 1683.50, "moltiplicatore": 0.91 },
+    { "codice": "2",  "descrizione": "2° livello",                  "qualifica": "Autista di lungo raggio (pat. C+E), magazziniere sp.","minimoTabellare": 1517.00, "moltiplicatore": 0.82 },
+    { "codice": "3",  "descrizione": "3° livello (Autisti)",        "qualifica": "Autista, conducente di mezzi pesanti",                "minimoTabellare": 1369.00, "moltiplicatore": 0.74 },
+    { "codice": "4",  "descrizione": "4° livello",                  "qualifica": "Magazziniere, carrellista",                           "minimoTabellare": 1239.50, "moltiplicatore": 0.67 },
+    { "codice": "5",  "descrizione": "5° livello",                  "qualifica": "Facchino, operatore di carico/scarico",               "minimoTabellare": 1110.00, "moltiplicatore": 0.60 }
   ],
   "scattiAnzianita": {
     "periodicitaMesi": 24,

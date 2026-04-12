@@ -1,35 +1,81 @@
 {
   "id": "commercio",
   "nome": "CCNL Terziario Distribuzione e Servizi (Commercio)",
-  "fonte": "https://www.confcommercio.it/contratti-collettivi",
-  "updatedAt": "2026-01-01T00:00:00Z",
-  "mensilita": 13,
+  "fonte": "Rinnovo CCNL 22/03/2024 — Wolters Kluwer One Lavoro, verificato aprile 2026",
+  "updatedAt": "2026-04-12T00:00:00Z",
+  "mensilita": 14,
   "contributiContrattuali": {
     "azienda": {
       "fondoEst": {
-        "percentuale": 0.0056,
+        "tipo": "sanitario",
+        "modalita": "fisso",
+        "importoMensile": 10.42,
+        "percentuale": null,
         "descrizione": "Fondo sanitario integrativo Est",
         "notaLegge": "Accordo nazionale Confcommercio"
       },
       "ebiter": {
-        "percentuale": 0.0015,
+        "tipo": "bilaterale",
+        "modalita": "fisso",
+        "importoMensile": 4.58,
+        "percentuale": null,
         "descrizione": "Ente bilaterale territoriale Ebiter",
         "notaLegge": "Art. 4 CCNL Commercio"
+      },
+      "previcommercio": {
+        "tipo": "previdenziale",
+        "modalita": "fisso",
+        "importoMensile": 28.85,
+        "percentuale": null,
+        "descrizione": "Fondo previdenza complementare integrativa Previcommercio",
+        "notaLegge": "CCNL Commercio Confcommercio — Wolters Kluwer One Lavoro"
       }
     }
   },
   "livelli": [
-    { "codice": "Q",  "descrizione": "Quadro",      "moltiplicatore": 1.00 },
-    { "codice": "1",  "descrizione": "1° livello",   "moltiplicatore": 0.94 },
-    { "codice": "2",  "descrizione": "2° livello",   "moltiplicatore": 0.86 },
-    { "codice": "3",  "descrizione": "3° livello",   "moltiplicatore": 0.79 },
-    { "codice": "4",  "descrizione": "4° livello",   "moltiplicatore": 0.72 },
-    { "codice": "5",  "descrizione": "5° livello",   "moltiplicatore": 0.65 },
-    { "codice": "6",  "descrizione": "6° livello",   "moltiplicatore": 0.60 }
+    { "codice": "Q",  "descrizione": "Quadro",      "qualifica": "Funzioni direttive con responsabilità di unità organizzativa",          "minimoTabellare": 2357.28, "moltiplicatore": 1.00, "_nota": "TODO: verificare — stimato da parametro CCNL e valore confermato L6" },
+    { "codice": "1",  "descrizione": "1° livello",  "qualifica": "Personale con funzioni ad elevata responsabilità",                      "minimoTabellare": 2209.90, "moltiplicatore": 0.94, "_nota": "TODO: verificare — stimato da parametro CCNL e valore confermato L6" },
+    { "codice": "2",  "descrizione": "2° livello",  "qualifica": "Impiegati con mansioni di concetto",                                    "minimoTabellare": 2045.94, "moltiplicatore": 0.86, "_nota": "TODO: verificare — stimato da parametro CCNL e valore confermato L6" },
+    { "codice": "3",  "descrizione": "3° livello",  "qualifica": "Impiegati d'ordine, commessi qualificati",                              "minimoTabellare": 1904.00, "moltiplicatore": 0.79, "_nota": "TODO: verificare — stimato da parametro CCNL e valore confermato L6" },
+    { "codice": "4",  "descrizione": "4° livello",  "qualifica": "Commessi alla vendita, cassieri, contabili d'ordine",                   "minimoTabellare": 1777.47, "moltiplicatore": 0.72, "_nota": "TODO: verificare — stimato da parametro CCNL e valore confermato L6" },
+    { "codice": "5",  "descrizione": "5° livello",  "qualifica": "Ausiliari, addetti al confezionamento",                                 "minimoTabellare": 1652.35, "moltiplicatore": 0.65, "_nota": "TODO: verificare — stimato da parametro CCNL e valore confermato L6" },
+    { "codice": "6",  "descrizione": "6° livello",  "qualifica": "Personale di pulizia, fattorini",                                       "minimoTabellare": 1541.77, "moltiplicatore": 0.60 }
   ],
   "scattiAnzianita": {
-    "periodicitaMesi": 24,
-    "importoPerScattoEuro": 10.33,
-    "maxScatti": 8
+    "periodicitaMesi": 36,
+    "importoPerScattoEuro": 19.73,
+    "maxScatti": 10
+  },
+  "elementiAggiuntivi": {
+    "edrEnteBilaterale": {
+      "importoMensile": 4.62,
+      "mensilita": 14,
+      "condizione": "mancata_adesione_ente_bilaterale",
+      "descrizione": "E.d.r. mancata adesione Ente bilaterale"
+    },
+    "edrAssistenzaSanitaria": {
+      "importoMensile": 16.00,
+      "mensilita": 14,
+      "condizione": "mancata_erogazione_assistenza_sanitaria",
+      "descrizione": "E.d.r. mancata erogazione prestazioni assistenza sanitaria"
+    },
+    "exFestivita": {
+      "importoMensile": 5.07,
+      "mensilita": 12,
+      "condizione": null,
+      "descrizione": "Ex festività (4 novembre)"
+    },
+    "festivitaNonGodute": {
+      "importoMensile": 10.14,
+      "mensilita": 12,
+      "condizione": null,
+      "descrizione": "Festività non godute"
+    },
+    "contributoSolidarieta": {
+      "importoMensile": 2.89,
+      "mensilita": 12,
+      "condizione": null,
+      "descrizione": "Contributo di solidarietà"
+    }
   }
 }

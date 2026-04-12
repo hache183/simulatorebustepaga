@@ -1,76 +1,326 @@
 {
-  "updatedAt": "2026-01-01T00:00:00Z",
-  "fonte": "INAIL Tariffe 2025 — Delibera CDA 25/06/2024",
+  "updatedAt": "2026-04-12T00:00:00Z",
+  "fonte": "INAIL Tariffe Premi DD.MM. 27/02/2019, in vigore — Estratti da Wolters Kluwer One Lavoro, 7 aprile 2026",
   "voci": [
     {
       "codice": "0111",
-      "settore": "Commercio al dettaglio",
-      "tassoPerMille": 8.3
+      "settore": "Commercio al dettaglio e all'ingrosso",
+      "gestione": "terziario",
+      "tassoPerMille": 7.31,
+      "rangeOscillazione": { "min": 5.12, "max": 10.97 },
+      "note": "Tasso ordinario Terziario — verificato da consulente e PDF ufficiale"
     },
     {
-      "codice": "0721",
-      "settore": "Uffici e amministrazione",
-      "tassoPerMille": 3.1
+      "codice": "0112",
+      "settore": "Commercio autoveicoli e imbarcazioni",
+      "gestione": "terziario",
+      "tassoPerMille": 7.79,
+      "rangeOscillazione": { "min": 5.45, "max": 11.69 },
+      "note": ""
     },
     {
-      "codice": "3111",
-      "settore": "Costruzioni edili",
-      "tassoPerMille": 63.0
+      "codice": "0113",
+      "settore": "Supermercati e ipermercati",
+      "gestione": "terziario",
+      "tassoPerMille": 10.27,
+      "rangeOscillazione": { "min": 7.19, "max": 15.41 },
+      "note": ""
     },
     {
-      "codice": "5411",
-      "settore": "Ristorazione e pubblici esercizi",
-      "tassoPerMille": 12.0
+      "codice": "0114",
+      "settore": "Grandi magazzini",
+      "gestione": "terziario",
+      "tassoPerMille": 7.83,
+      "rangeOscillazione": { "min": 5.48, "max": 11.75 },
+      "note": ""
     },
     {
-      "codice": "6311",
-      "settore": "Trasporto merci su strada",
-      "tassoPerMille": 36.5
+      "codice": "0210",
+      "settore": "Ristorazione con somministrazione, mense, catering",
+      "gestione": "terziario",
+      "tassoPerMille": 9.91,
+      "rangeOscillazione": { "min": 6.94, "max": 14.87 },
+      "note": "Ristorazione — codice corretto per CCNL pubblici esercizi"
     },
     {
-      "codice": "9100",
-      "settore": "Informatica e servizi IT",
-      "tassoPerMille": 2.7
-    },
-    {
-      "codice": "4211",
-      "settore": "Industria metalmeccanica",
-      "tassoPerMille": 17.8
-    },
-    {
-      "codice": "7111",
-      "settore": "Sanità e assistenza sociale privata",
-      "tassoPerMille": 6.2
-    },
-    {
-      "codice": "8121",
-      "settore": "Pulizie e multiservizi",
-      "tassoPerMille": 9.4
-    },
-    {
-      "codice": "2311",
-      "settore": "Industria chimica e farmaceutica",
-      "tassoPerMille": 11.2
-    },
-    {
-      "codice": "1411",
-      "settore": "Industria tessile e abbigliamento",
-      "tassoPerMille": 14.6
-    },
-    {
-      "codice": "0211",
-      "settore": "Agricoltura e florovivaismo",
-      "tassoPerMille": 22.1
-    },
-    {
-      "codice": "6111",
-      "settore": "Telecomunicazioni e ICT",
-      "tassoPerMille": 4.3
+      "codice": "0221",
+      "settore": "Alberghi, pensioni, affittacamere",
+      "gestione": "terziario",
+      "tassoPerMille": 10.56,
+      "rangeOscillazione": { "min": 7.39, "max": 15.84 },
+      "note": ""
     },
     {
       "codice": "0311",
+      "settore": "Sanità, prestazioni sanitarie e assistenziali domiciliari",
+      "gestione": "terziario",
+      "tassoPerMille": 11.85,
+      "rangeOscillazione": { "min": 8.30, "max": 17.78 },
+      "note": "Sanità privata — codice corretto per CCNL sanità privata"
+    },
+    {
+      "codice": "0314",
+      "settore": "Erogazione infermieristica leggera",
+      "gestione": "terziario",
+      "tassoPerMille": 5.00,
+      "rangeOscillazione": { "min": 3.50, "max": 7.50 },
+      "note": ""
+    },
+    {
+      "codice": "0410",
+      "settore": "Servizi estetici, barbieri, parrucchieri",
+      "gestione": "terziario",
+      "tassoPerMille": 4.63,
+      "rangeOscillazione": { "min": 3.24, "max": 6.95 },
+      "note": ""
+    },
+    {
+      "codice": "0421",
+      "settore": "Pulizie interne di edifici",
+      "gestione": "terziario",
+      "tassoPerMille": 18.88,
+      "rangeOscillazione": { "min": 13.22, "max": 28.32 },
+      "note": "Pulizie/multiservizi — codice corretto per CCNL multiservizi"
+    },
+    {
+      "codice": "0611",
       "settore": "Istruzione e formazione privata",
-      "tassoPerMille": 3.8
+      "gestione": "terziario",
+      "tassoPerMille": 5.71,
+      "rangeOscillazione": { "min": 4.00, "max": 8.57 },
+      "note": "Scuole private — codice corretto per CCNL scuole private"
+    },
+    {
+      "codice": "0721",
+      "settore": "Uffici, attività amministrative, recapito corrispondenza",
+      "gestione": "terziario",
+      "tassoPerMille": 12.09,
+      "rangeOscillazione": { "min": 8.46, "max": 18.14 },
+      "note": "Tasso ordinario Terziario — attività d'ufficio con eventuale consegna merci"
+    },
+    {
+      "codice": "0722",
+      "settore": "Credito, assicurazioni, servizi finanziari",
+      "gestione": "terziario",
+      "tassoPerMille": 4.00,
+      "rangeOscillazione": { "min": 2.80, "max": 6.00 },
+      "note": "Credito e finanza — codice corretto per CCNL credito"
+    },
+    {
+      "codice": "0723",
+      "settore": "Studi professionali, uffici con accesso cantieri",
+      "gestione": "terziario",
+      "tassoPerMille": 5.64,
+      "rangeOscillazione": { "min": 3.95, "max": 8.46 },
+      "note": "Studi professionali — codice per CCNL studi professionali"
+    },
+    {
+      "codice": "2110",
+      "settore": "Farmacia, chimica e cosmetica (terziario)",
+      "gestione": "terziario",
+      "tassoPerMille": 6.24,
+      "rangeOscillazione": { "min": 4.37, "max": 9.36 },
+      "note": "Chimica terziario (farmacie, preparazioni)"
+    },
+    {
+      "codice": "3100",
+      "settore": "Edilizia civile e industriale (terziario)",
+      "gestione": "terziario",
+      "tassoPerMille": 48.85,
+      "rangeOscillazione": { "min": 34.20, "max": 73.28 },
+      "note": "Costruzioni edili — gestione terziario"
+    },
+    {
+      "codice": "4100",
+      "settore": "Energia, telecomunicazioni, gas, acqua",
+      "gestione": "terziario",
+      "tassoPerMille": 14.13,
+      "rangeOscillazione": { "min": 9.89, "max": 21.20 },
+      "note": "Telecomunicazioni — codice corretto per CCNL telecomunicazioni"
+    },
+    {
+      "codice": "6250",
+      "settore": "Oreficeria, argenteria, orologeria, strumenti di precisione",
+      "gestione": "terziario",
+      "tassoPerMille": 3.66,
+      "rangeOscillazione": { "min": 2.56, "max": 5.49 },
+      "note": ""
+    },
+    {
+      "codice": "6310",
+      "settore": "Macchine elettriche, elettrodomestici (terziario)",
+      "gestione": "terziario",
+      "tassoPerMille": 6.54,
+      "rangeOscillazione": { "min": 4.58, "max": 9.81 },
+      "note": ""
+    },
+    {
+      "codice": "6520",
+      "settore": "Elettricisti civili, installaz. distributori automatici",
+      "gestione": "terziario",
+      "tassoPerMille": 6.37,
+      "rangeOscillazione": { "min": 4.46, "max": 9.56 },
+      "note": ""
+    },
+    {
+      "codice": "6561",
+      "settore": "Apparecchi per illuminazione, elettronica",
+      "gestione": "terziario",
+      "tassoPerMille": 5.56,
+      "rangeOscillazione": { "min": 3.89, "max": 8.34 },
+      "note": "Informatica/elettronica — codice per CCNL informatica"
+    },
+    {
+      "codice": "7100",
+      "settore": "Ceramica, vetro, cemento, laterizi",
+      "gestione": "terziario",
+      "tassoPerMille": 10.89,
+      "rangeOscillazione": { "min": 7.62, "max": 16.34 },
+      "note": ""
+    },
+    {
+      "codice": "8100",
+      "settore": "Pelletteria, calzature, arredamento",
+      "gestione": "terziario",
+      "tassoPerMille": 7.50,
+      "rangeOscillazione": { "min": 5.25, "max": 11.25 },
+      "note": "Tessile/pelletteria (terziario)"
+    },
+    {
+      "codice": "8200",
+      "settore": "Lavanderia, tintoria, stireria",
+      "gestione": "terziario",
+      "tassoPerMille": 8.03,
+      "rangeOscillazione": { "min": 5.62, "max": 12.05 },
+      "note": ""
+    },
+    {
+      "codice": "9110",
+      "settore": "Trasporti ferroviari e metropolitane (terziario)",
+      "gestione": "terziario",
+      "tassoPerMille": 14.94,
+      "rangeOscillazione": { "min": 10.46, "max": 22.41 },
+      "note": ""
+    },
+    {
+      "codice": "9121",
+      "settore": "Trasporto merci su strada (terziario)",
+      "gestione": "terziario",
+      "tassoPerMille": 41.92,
+      "rangeOscillazione": { "min": 29.34, "max": 62.88 },
+      "note": "Trasporto merci — codice corretto per CCNL trasporti (terziario)"
+    },
+    {
+      "codice": "9124",
+      "settore": "Trasporto persone urbano e extraurbano",
+      "gestione": "terziario",
+      "tassoPerMille": 19.60,
+      "rangeOscillazione": { "min": 13.72, "max": 29.40 },
+      "note": ""
+    },
+    {
+      "codice": "7211",
+      "settore": "Cooperative sociali e servizi alla persona",
+      "gestione": "terziario",
+      "tassoPerMille": 11.85,
+      "rangeOscillazione": { "min": 8.30, "max": 17.78 },
+      "note": "Cooperative sociali — usa codice 0311 (servizi sanitari/assistenziali)"
+    },
+    {
+      "codice": "0120",
+      "settore": "Commercio ambulante, manifestazioni fieristiche",
+      "gestione": "terziario",
+      "tassoPerMille": 5.64,
+      "rangeOscillazione": { "min": 3.95, "max": 8.46 },
+      "note": ""
+    },
+    {
+      "codice": "1100",
+      "settore": "Agricoltura, silvicoltura, aree verdi (terziario)",
+      "gestione": "terziario",
+      "tassoPerMille": 34.12,
+      "rangeOscillazione": { "min": 23.88, "max": 51.18 },
+      "note": "Agricoltura gestione terziario"
+    },
+    {
+      "codice": "2111_ind",
+      "settore": "Industria chimica e farmaceutica",
+      "gestione": "industria",
+      "tassoPerMille": 22.22,
+      "rangeOscillazione": { "min": 15.55, "max": 33.33 },
+      "note": "Chimica industria"
+    },
+    {
+      "codice": "6211_ind",
+      "settore": "Carpenteria metallica, metalmeccanica (industria)",
+      "gestione": "industria",
+      "tassoPerMille": 82.85,
+      "rangeOscillazione": { "min": 58.00, "max": 124.28 },
+      "note": "Metalmeccanici industria — lavorazioni laminati e trafilati"
+    },
+    {
+      "codice": "6311_ind",
+      "settore": "Motori elettrici, macchine elettriche (industria)",
+      "gestione": "industria",
+      "tassoPerMille": 22.97,
+      "rangeOscillazione": { "min": 16.08, "max": 34.46 },
+      "note": "Metalmeccanici industria — macchine e motori"
+    },
+    {
+      "codice": "6240_ind",
+      "settore": "Lavorazioni macchine utensili, torniture (industria)",
+      "gestione": "industria",
+      "tassoPerMille": 19.55,
+      "rangeOscillazione": { "min": 13.69, "max": 29.33 },
+      "note": "Metalmeccanici industria — macchine utensili"
+    },
+    {
+      "codice": "8210_ind",
+      "settore": "Confezioni, tessile, abbigliamento (industria)",
+      "gestione": "industria",
+      "tassoPerMille": 11.79,
+      "rangeOscillazione": { "min": 8.25, "max": 17.69 },
+      "note": "Tessile industria — confezioni e abbigliamento"
+    },
+    {
+      "codice": "8121_ind",
+      "settore": "Tessitura (industria)",
+      "gestione": "industria",
+      "tassoPerMille": 24.51,
+      "rangeOscillazione": { "min": 17.16, "max": 36.77 },
+      "note": "Tessile industria — tessitura"
+    },
+    {
+      "codice": "9121_ind",
+      "settore": "Trasporto merci su strada (industria)",
+      "gestione": "industria",
+      "tassoPerMille": 80.18,
+      "rangeOscillazione": { "min": 56.13, "max": 120.27 },
+      "note": "Trasporti industria — autotrasporto merci"
+    },
+    {
+      "codice": "9124_ind",
+      "settore": "Trasporto persone urbano e extraurbano (industria)",
+      "gestione": "industria",
+      "tassoPerMille": 25.00,
+      "rangeOscillazione": { "min": 17.50, "max": 37.50 },
+      "note": "Trasporti industria — trasporto persone"
+    },
+    {
+      "codice": "3100_ind",
+      "settore": "Edilizia civile e industriale (industria)",
+      "gestione": "industria",
+      "tassoPerMille": 110.00,
+      "rangeOscillazione": { "min": 77.00, "max": 110.00 },
+      "note": "TODO: verificare — voce 3100 non trovata esplicitamente nel PDF industria. Valore stimato dal range superiore."
+    },
+    {
+      "codice": "1100_aa",
+      "settore": "Agricoltura, silvicoltura (altre attività)",
+      "gestione": "altre_attivita",
+      "tassoPerMille": 27.30,
+      "rangeOscillazione": { "min": 19.11, "max": 40.95 },
+      "note": "Agricoltura — gestione altre attività"
     }
   ]
 }

@@ -12,14 +12,14 @@ interface Props {
 }
 
 export function RisultatiCalcolatore({ risultato, onRicalcola }: Props) {
-  const { costoTotaleAnnuo, costoTotaleMensile, percentualeRal, voci, agevolazioniApplicate, alertScadenze } = risultato;
+  const { costoTotaleAnnuo, costoTotaleMensile, percentualeRal, voci, agevolazioniApplicate, alertScadenze, nettoDipendente } = risultato;
   const risparmioTotale = agevolazioniApplicate.reduce((s, a) => s + a.risparmioAnnuo, 0);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
 
       {/* SEZIONE A — KPI bar */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '16px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '16px' }}>
         {/* Card 1 — Costo annuo */}
         <div style={{
           background: 'var(--color-bg-surface)', border: '1px solid var(--color-border)',
@@ -67,6 +67,25 @@ export function RisultatiCalcolatore({ risultato, onRicalcola }: Props) {
             lineHeight: 1,
           }}>
             {pct(percentualeRal)}
+          </p>
+        </div>
+        {/* Card 4 — Netto mensile dipendente */}
+        <div style={{
+          background: 'var(--color-bg-surface)', border: '1px solid var(--color-border)',
+          borderRadius: '10px', padding: '20px',
+        }}>
+          <p style={{ fontSize: '12px', color: 'var(--color-text-secondary)',
+            fontFamily: "'Plus Jakarta Sans', sans-serif", marginBottom: '6px' }}>
+            Netto mensile stimato dip.
+          </p>
+          <p style={{
+            fontFamily: "'DM Mono', monospace", fontSize: '22px', fontWeight: 500,
+            color: 'var(--color-text-primary)', lineHeight: 1,
+          }}>
+            {eur(nettoDipendente.nettoMensile12)}
+          </p>
+          <p style={{ fontSize: '10px', color: 'var(--color-text-muted)', marginTop: '4px' }}>
+            Media su 12 mesi — stima indicativa
           </p>
         </div>
       </div>
@@ -232,7 +251,91 @@ export function RisultatiCalcolatore({ risultato, onRicalcola }: Props) {
         </table>
       </div>
 
-      {/* SEZIONE E — Footer azioni */}
+      {/* SEZIONE E — Prospetto netto dipendente */}
+      <div>
+        <p style={{ fontSize: '13px', fontWeight: 600, color: 'var(--color-text-secondary)',
+          marginBottom: '12px', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+          Prospetto netto dipendente (stima)
+        </p>
+        <div style={{ borderRadius: '10px', overflow: 'hidden', border: '1px solid var(--color-border)' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
+            <tbody>
+              {[
+                { label: 'RAL lorda', value: nettoDipendente.ralLorda, sign: '' },
+                { label: 'Contributi INPS dipendente (9,19%)', value: nettoDipendente.inpsDipendente, sign: '−' },
+                { label: 'Imponibile IRPEF', value: nettoDipendente.imponibileIrpef, sign: '=', bold: true },
+                { label: 'IRPEF lorda', value: nettoDipendente.irpefLorda, sign: '−' },
+                { label: 'Detrazioni lavoro dipendente', value: nettoDipendente.detrazioneLavoroDip, sign: '+', color: 'var(--color-green)' },
+                { label: 'Bonus cuneo fiscale', value: nettoDipendente.bonusCuneoFiscale, sign: '+', color: 'var(--color-green)' },
+                { label: 'IRPEF netta', value: nettoDipendente.irpefNetta, sign: '−', bold: true },
+                { label: 'Addizionali reg./com. (stima)', value: nettoDipendente.addizionaleRegionale + nettoDipendente.addizionaleComunale, sign: '−' },
+              ].map((row, i) => (
+                <tr key={i} style={{
+                  background: i % 2 === 0 ? 'var(--color-bg-surface)' : 'var(--color-bg-base)',
+                  borderBottom: '1px solid var(--color-border)',
+                }}>
+                  <td style={{ padding: '10px 16px', color: 'var(--color-text-primary)',
+                    fontWeight: row.bold ? 600 : 400 }}>
+                    {row.sign && <span style={{ color: row.color ?? 'var(--color-text-muted)', marginRight: '4px' }}>{row.sign}</span>}
+                    {row.label}
+                  </td>
+                  <td style={{ padding: '10px 16px', textAlign: 'right',
+                    fontFamily: "'DM Mono', monospace",
+                    color: row.color ?? 'var(--color-text-primary)',
+                    fontWeight: row.bold ? 600 : 400 }}>
+                    {row.sign === '+' ? '+' : row.sign === '−' ? '−' : ''}{eur(row.value)}
+                  </td>
+                </tr>
+              ))}
+              {/* Riga netto annuo */}
+              <tr style={{ background: 'var(--color-bg-elevated)', borderTop: '2px solid var(--color-accent)' }}>
+                <td style={{ padding: '12px 16px', fontWeight: 700, color: 'var(--color-accent-bright)',
+                  fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: '13px' }}>
+                  NETTO ANNUO stimato
+                </td>
+                <td style={{ padding: '12px 16px', textAlign: 'right',
+                  fontFamily: "'DM Mono', monospace", fontWeight: 600, fontSize: '15px',
+                  color: 'var(--color-accent-bright)' }}>
+                  {eur(nettoDipendente.nettoAnnuo)}
+                </td>
+              </tr>
+              {/* Netto mensile su 12 mesi */}
+              <tr style={{ background: 'var(--color-bg-elevated)' }}>
+                <td style={{ padding: '10px 16px', fontWeight: 600, color: 'var(--color-text-primary)',
+                  fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: '13px' }}>
+                  NETTO MENSILE stimato (su 12 mesi)
+                </td>
+                <td style={{ padding: '10px 16px', textAlign: 'right',
+                  fontFamily: "'DM Mono', monospace", fontWeight: 600, fontSize: '14px',
+                  color: 'var(--color-text-primary)' }}>
+                  {eur(nettoDipendente.nettoMensile12)}
+                </td>
+              </tr>
+              {/* Netto per busta */}
+              <tr style={{ background: 'var(--color-bg-elevated)', borderTop: '1px solid var(--color-border)' }}>
+                <td style={{ padding: '10px 16px', color: 'var(--color-text-secondary)',
+                  fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: '13px' }}>
+                  NETTO per busta ({risultato.input.mensilita} mensilità)
+                </td>
+                <td style={{ padding: '10px 16px', textAlign: 'right',
+                  fontFamily: "'DM Mono', monospace", fontSize: '13px',
+                  color: 'var(--color-text-secondary)' }}>
+                  {eur(nettoDipendente.nettoPerMensilita)}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        {/* Disclaimer netto */}
+        <p style={{
+          marginTop: '10px', fontSize: '11px', color: 'var(--color-text-muted)',
+          lineHeight: '1.5', fontStyle: 'italic',
+        }}>
+          {nettoDipendente.disclaimer}
+        </p>
+      </div>
+
+      {/* SEZIONE F — Footer azioni */}
       <div style={{ display: 'flex', gap: '12px' }} className="no-print">
         <button onClick={onRicalcola} style={{
           flex: 1, padding: '14px',

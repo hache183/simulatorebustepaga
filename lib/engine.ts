@@ -6,8 +6,9 @@ import {
   calcolaTfr,
   calcolaInail,
   calcolaScattiAnzianita,
+  getSettoreContributivo,
 } from './contributi';
-import type { CalcolatoreInput, CalcolatoreOutput, DettaglioCosto } from '@/types';
+import type { CalcolatoreInput, CalcolatoreOutput, DettaglioCosto, ContributoContrattuale, NettoDipendente } from '@/types';
 
 // Schema di validazione Zod — rifiuta qualsiasi input malformato prima del calcolo
 const InputSchema = z.object({
@@ -29,11 +30,109 @@ const InputSchema = z.object({
   regione: z.string().min(1, 'Seleziona la regione'),
   codiceInail: z.string().min(4, 'Seleziona la categoria INAIL'),
   agevolazioniSelezionate: z.array(z.string()),
+  includiAssistenzaSanitaria: z.boolean(),
+  aliquotaInps: z.number().min(0).max(0.5),
+  retribuzionePersonalizzata: z.number().min(0).max(500_000).optional(),
 });
 
 // Soglie sanity check: il costo totale deve essere tra il 128% e il 150% della RAL.
 // Se è fuori range, probabilmente c'è un errore nelle aliquote JSON.
 const RANGE_ATTESO = { min: 1.28, max: 1.50 };
+
+/**
+ * Calcola IRPEF lorda per scaglioni 2025-2026 (confermati da L. 207/2024).
+ */
+function calcolaIrpefLorda(imponibile: number): number {
+  if (imponibile <= 28_000) {
+    return imponibile * 0.23;
+  } else if (imponibile <= 50_000) {
+    return 28_000 * 0.23 + (imponibile - 28_000) * 0.35;
+  } else {
+    return 28_000 * 0.23 + 22_000 * 0.35 + (imponibile - 50_000) * 0.43;
+  }
+}
+
+/**
+ * Calcola detrazione per lavoro dipendente (art. 13 TUIR post-riforma).
+ */
+function calcolaDetrazioneLavoroDip(imponibile: number): number {
+  if (imponibile <= 15_000) {
+    return Math.max(1955, 690);
+  } else if (imponibile <= 28_000) {
+    return 1910 + 1190 * (28_000 - imponibile) / 13_000;
+  } else if (imponibile <= 50_000) {
+    return 1910 * (50_000 - imponibile) / 22_000;
+  }
+  return 0;
+}
+
+/**
+ * Calcola bonus cuneo fiscale 2025 (L. 207/2024, art. 1 cc. 4-9).
+ * Sostituisce il taglio contributivo. Per redditi fino a 20k è un bonus non tassabile,
+ * per redditi 20k-40k è una detrazione IRPEF aggiuntiva.
+ */
+function calcolaBonusCuneoFiscale(redditoComplessivo: number): number {
+  if (redditoComplessivo <= 20_000) {
+    return redditoComplessivo * 0.071;
+  } else if (redditoComplessivo <= 32_000) {
+    return 1_000;
+  } else if (redditoComplessivo <= 40_000) {
+    return 1_000 * (40_000 - redditoComplessivo) / 8_000;
+  }
+  return 0;
+}
+
+/**
+ * Calcola il netto mensile stimato del dipendente.
+ */
+function calcolaNettoDipendente(
+  ral: number,
+  mensilita: number,
+  aliquotaInpsDipendente: number,
+): NettoDipendente {
+  // STEP 2 — Contributi INPS dipendente
+  const inpsDipendente = ral * aliquotaInpsDipendente;
+
+  // STEP 3 — Imponibile IRPEF
+  const imponibileIrpef = ral - inpsDipendente;
+
+  // STEP 4 — IRPEF lorda
+  const irpefLorda = calcolaIrpefLorda(imponibileIrpef);
+
+  // STEP 5 — Detrazioni lavoro dipendente
+  const detrazioneLavoroDip = calcolaDetrazioneLavoroDip(imponibileIrpef);
+
+  // STEP 6 — Bonus cuneo fiscale 2025
+  const bonusCuneoFiscale = calcolaBonusCuneoFiscale(imponibileIrpef);
+
+  // STEP 7 — IRPEF netta
+  const irpefNetta = Math.max(0, irpefLorda - detrazioneLavoroDip - bonusCuneoFiscale);
+
+  // STEP 8 — Addizionali (stima media nazionale)
+  const addizionaleRegionale = imponibileIrpef * 0.0173;
+  const addizionaleComunale = imponibileIrpef * 0.008;
+
+  // STEP 9 — Netto
+  const nettoAnnuo = ral - inpsDipendente - irpefNetta - addizionaleRegionale - addizionaleComunale;
+  const nettoMensile12 = nettoAnnuo / 12;
+  const nettoPerMensilita = nettoAnnuo / mensilita;
+
+  return {
+    ralLorda: ral,
+    inpsDipendente,
+    imponibileIrpef,
+    irpefLorda,
+    detrazioneLavoroDip,
+    bonusCuneoFiscale,
+    irpefNetta,
+    addizionaleRegionale,
+    addizionaleComunale,
+    nettoAnnuo,
+    nettoMensile12,
+    nettoPerMensilita,
+    disclaimer: 'Il netto è una stima indicativa. Il calcolo esatto dipende dalla situazione fiscale personale del dipendente (carichi familiari, detrazioni aggiuntive, addizionali comunali/regionali specifiche).',
+  };
+}
 
 /**
  * Funzione principale del calcolatore.
@@ -53,10 +152,27 @@ export async function calculateCosto(rawInput: unknown): Promise<CalcolatoreOutp
 
   // 3. Calcola RAL effettiva (aggiustata per livello e part-time)
   const oreRatio = input.oreLavoro / 40; // 40h = full-time di riferimento
-  const ralEffettiva = input.ral * livello.moltiplicatore * oreRatio;
+  let ralEffettiva: number;
+  let isRetribuzionePersonalizzata = false;
+  if (input.retribuzionePersonalizzata && input.retribuzionePersonalizzata > 0) {
+    ralEffettiva = input.retribuzionePersonalizzata * oreRatio;
+    isRetribuzionePersonalizzata = true;
+  } else {
+    ralEffettiva = input.ral * oreRatio;
+  }
 
-  // 4. Contributi INPS lordi
-  const inpsBase = calcolaInpsBase(ralEffettiva);
+  // Calcola superminimo informativo
+  const ralTabellare = livello.minimoTabellare * input.mensilita;
+  const superminimo = isRetribuzionePersonalizzata
+    ? Math.max(0, input.retribuzionePersonalizzata! - ralTabellare)
+    : 0;
+
+  // 4. Contributi INPS lordi — auto-select settore se l'utente non ha personalizzato
+  const settore = getSettoreContributivo(input.ccnlId, input.numeroDipendenti);
+  const aliquotaInpsDefault = settore ? settore.aliquotaDatore : 0.288;
+  const aliquotaDipendenteDefault = settore ? settore.aliquotaDipendente : 0.0919;
+  const aliquotaInpsEffettiva = input.aliquotaInps;
+  const inpsBase = calcolaInpsBase(ralEffettiva, aliquotaInpsEffettiva);
 
   // 5. Agevolazioni e risparmio contributivo
   const { agevolazioniApplicate, risparmioTotale, alertScadenze } =
@@ -83,18 +199,38 @@ export async function calculateCosto(rawInput: unknown): Promise<CalcolatoreOutp
   const quattordicesima = mensilita >= 14 ? ralEffettiva / 12 : 0;
   const quindicesimaESedicesima = mensilita >= 15 ? (ralEffettiva / 12) * (mensilita - 14) : 0;
 
-  // 9. Contributi contrattuali specifici del CCNL
-  const contributiCcnl = Object.values(ccnl.contributiContrattuali.azienda)
-    .reduce((sum, c) => sum + ralEffettiva * c.percentuale, 0);
+  // 9. Contributi contrattuali specifici del CCNL (supporta fisso e percentuale)
+  const contributiEntries = Object.values(ccnl.contributiContrattuali.azienda) as ContributoContrattuale[];
+  const contributiAttivi = input.includiAssistenzaSanitaria
+    ? contributiEntries
+    : contributiEntries.filter(c => c.tipo !== 'sanitario');
+  const contributiCcnl = contributiAttivi.reduce((sum, c) => {
+    if (c.modalita === 'fisso' && c.importoMensile != null) {
+      return sum + c.importoMensile * 12;
+    }
+    return sum + ralEffettiva * (c.percentuale ?? 0);
+  }, 0);
 
   // 10. Scatti di anzianità
   const costoScatti = calcolaScattiAnzianita(input.anzianitaAnni, ccnl.scattiAnzianita);
+
+  // 10b. Elementi aggiuntivi CCNL (EDR, ex festività, contributo solidarietà, ecc.)
+  let costoElementiAggiuntivi = 0;
+  if (ccnl.elementiAggiuntivi) {
+    for (const elem of Object.values(ccnl.elementiAggiuntivi)) {
+      // Includi solo gli elementi senza condizione (sempre dovuti)
+      // o con condizione specifica — per ora includiamo tutti quelli senza condizione
+      if (elem.condizione === null || elem.condizione === undefined) {
+        costoElementiAggiuntivi += elem.importoMensile * elem.mensilita;
+      }
+    }
+  }
 
   // 11. Totale
   const costoTotaleAnnuo =
     ralEffettiva + inpsNetto + tfr + inail +
     tredicesima + quattordicesima + quindicesimaESedicesima +
-    contributiCcnl + costoScatti;
+    contributiCcnl + costoScatti + costoElementiAggiuntivi;
 
   const percentualeRal = costoTotaleAnnuo / ralEffettiva;
 
@@ -108,6 +244,18 @@ export async function calculateCosto(rawInput: unknown): Promise<CalcolatoreOutp
   }
 
   // 12. Assembla le voci di dettaglio
+  const notaInps = aliquotaInpsEffettiva !== aliquotaInpsDefault
+    ? `Aliquota ${(aliquotaInpsEffettiva * 100).toFixed(2)}% — personalizzata dall'utente`
+    : 'Circ. INPS n. 99/2023 — aliquota base 28,80%';
+
+  const notaRal = isRetribuzionePersonalizzata
+    ? 'Retribuzione concordata tra le parti — art. 2099 c.c.'
+    : undefined;
+
+  const notaCcnl = !input.includiAssistenzaSanitaria
+    ? `CCNL ${ccnl.nome} — assistenza sanitaria esclusa`
+    : `CCNL ${ccnl.nome}`;
+
   const voci: DettaglioCosto[] = [
     {
       id: 'ral',
@@ -116,7 +264,19 @@ export async function calculateCosto(rawInput: unknown): Promise<CalcolatoreOutp
       importoAnnuo: ralEffettiva,
       importoMensile: ralEffettiva / 12,
       percentualeRal: 1,
+      notaLegge: notaRal,
     },
+    ...(isRetribuzionePersonalizzata && superminimo > 0
+      ? [{
+          id: 'superminimo',
+          categoria: 'ral' as const,
+          descrizione: `Superminimo (differenza rispetto al minimo tabellare)`,
+          importoAnnuo: 0,
+          importoMensile: 0,
+          percentualeRal: 0,
+          notaLegge: `Art. 2099 c.c. — superminimo individuale o collettivo: €${(superminimo / 12).toFixed(2)}/mese (€${superminimo.toFixed(2)}/anno)`,
+        }]
+      : []),
     {
       id: 'inps',
       categoria: 'inps_azienda',
@@ -124,7 +284,7 @@ export async function calculateCosto(rawInput: unknown): Promise<CalcolatoreOutp
       importoAnnuo: inpsNetto,
       importoMensile: inpsNetto / 12,
       percentualeRal: inpsNetto / ralEffettiva,
-      notaLegge: 'Circ. INPS n. 99/2023 — aliquota base 28,80%',
+      notaLegge: notaInps,
     },
     {
       id: 'tfr',
@@ -182,7 +342,7 @@ export async function calculateCosto(rawInput: unknown): Promise<CalcolatoreOutp
       importoAnnuo: contributiCcnl,
       importoMensile: contributiCcnl / 12,
       percentualeRal: contributiCcnl / ralEffettiva,
-      notaLegge: `CCNL ${ccnl.nome}`,
+      notaLegge: notaCcnl,
     },
     {
       id: 'scatti_anzianita',
@@ -191,9 +351,23 @@ export async function calculateCosto(rawInput: unknown): Promise<CalcolatoreOutp
       importoAnnuo: costoScatti,
       importoMensile: costoScatti / 12,
       percentualeRal: costoScatti / ralEffettiva,
-      notaLegge: 'CCNL — scatti biennali di anzianità',
+      notaLegge: 'CCNL — scatti di anzianità',
     },
+    ...(costoElementiAggiuntivi > 0
+      ? [{
+          id: 'elementi_aggiuntivi',
+          categoria: 'ccnl_contrattuale' as const,
+          descrizione: 'Elementi aggiuntivi CCNL (ex festività, festività non godute, contributo solidarietà)',
+          importoAnnuo: costoElementiAggiuntivi,
+          importoMensile: costoElementiAggiuntivi / 12,
+          percentualeRal: costoElementiAggiuntivi / ralEffettiva,
+          notaLegge: `CCNL ${ccnl.nome} — elementi retributivi indiretti`,
+        }]
+      : []),
   ];
+
+  // 13. Calcolo netto dipendente
+  const nettoDipendente = calcolaNettoDipendente(ralEffettiva, mensilita, aliquotaDipendenteDefault);
 
   return {
     input,
@@ -204,5 +378,6 @@ export async function calculateCosto(rawInput: unknown): Promise<CalcolatoreOutp
     agevolazioniApplicate,
     alertScadenze,
     calcolatoIl: new Date().toISOString(),
+    nettoDipendente,
   };
 }

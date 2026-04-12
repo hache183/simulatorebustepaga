@@ -3,15 +3,21 @@
   "nome": "CCNL Credito (ABI — Associazione Bancaria Italiana)",
   "fonte": "https://www.abi.it/contratto-collettivo",
   "updatedAt": "2026-01-01T00:00:00Z",
-  "mensilita": 13,
+  "mensilita": 14,
   "contributiContrattuali": {
     "azienda": {
       "casiB": {
+        "tipo": "sanitario",
+        "modalita": "percentuale",
+        "importoMensile": null,
         "percentuale": 0.0090,
         "descrizione": "Fondo assistenza sanitaria bancari CASI",
         "notaLegge": "Art. 73 CCNL Credito ABI"
       },
       "fonteB": {
+        "tipo": "previdenziale",
+        "modalita": "percentuale",
+        "importoMensile": null,
         "percentuale": 0.0280,
         "descrizione": "Fondo pensione complementare Fonte (quota azienda)",
         "notaLegge": "Art. 74 CCNL Credito ABI"
@@ -19,14 +25,14 @@
     }
   },
   "livelli": [
-    { "codice": "Q",   "descrizione": "Quadro direttivo 4°",   "moltiplicatore": 1.00 },
-    { "codice": "QD3", "descrizione": "Quadro direttivo 3°",   "moltiplicatore": 0.90 },
-    { "codice": "QD2", "descrizione": "Quadro direttivo 2°",   "moltiplicatore": 0.82 },
-    { "codice": "QD1", "descrizione": "Quadro direttivo 1°",   "moltiplicatore": 0.75 },
-    { "codice": "3A",  "descrizione": "Area professionale 3° — 3a fascia", "moltiplicatore": 0.68 },
-    { "codice": "3B",  "descrizione": "Area professionale 3° — 2a fascia", "moltiplicatore": 0.62 },
-    { "codice": "3C",  "descrizione": "Area professionale 3° — 1a fascia", "moltiplicatore": 0.57 },
-    { "codice": "2A",  "descrizione": "Area professionale 2°", "moltiplicatore": 0.52 }
+    { "codice": "Q",   "descrizione": "Quadro direttivo 4°",                   "qualifica": "Responsabile di filiale, dirigente operativo",        "minimoTabellare": 3200.00, "moltiplicatore": 1.00 },
+    { "codice": "QD3", "descrizione": "Quadro direttivo 3°",                   "qualifica": "Vicedirettore di filiale, responsabile area",         "minimoTabellare": 2880.00, "moltiplicatore": 0.90 },
+    { "codice": "QD2", "descrizione": "Quadro direttivo 2°",                   "qualifica": "Responsabile ufficio, gestore corporate",             "minimoTabellare": 2624.00, "moltiplicatore": 0.82 },
+    { "codice": "QD1", "descrizione": "Quadro direttivo 1°",                   "qualifica": "Funzionario, gestore clientela",                     "minimoTabellare": 2400.00, "moltiplicatore": 0.75 },
+    { "codice": "3A",  "descrizione": "Area professionale 3° — 3a fascia",     "qualifica": "Addetto ai servizi bancari, operatore di sportello senior", "minimoTabellare": 2176.00, "moltiplicatore": 0.68 },
+    { "codice": "3B",  "descrizione": "Area professionale 3° — 2a fascia",     "qualifica": "Cassiere, addetto back-office",                      "minimoTabellare": 1984.00, "moltiplicatore": 0.62 },
+    { "codice": "3C",  "descrizione": "Area professionale 3° — 1a fascia",     "qualifica": "Impiegato d'ordine, addetto amministrativo",          "minimoTabellare": 1824.00, "moltiplicatore": 0.57 },
+    { "codice": "2A",  "descrizione": "Area professionale 2°",                 "qualifica": "Ausiliario, commesso",                               "minimoTabellare": 1664.00, "moltiplicatore": 0.52 }
   ],
   "scattiAnzianita": {
     "periodicitaMesi": 24,

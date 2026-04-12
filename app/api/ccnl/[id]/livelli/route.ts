@@ -11,6 +11,7 @@ export async function GET(
       livelli: ccnl.livelli,
       nome: ccnl.nome,
       mensilita: ccnl.mensilita, // default contrattuale — il frontend lo usa come valore iniziale
+      contributiContrattuali: ccnl.contributiContrattuali,
     });
   } catch {
     return NextResponse.json({ errore: 'CCNL non trovato' }, { status: 404 });

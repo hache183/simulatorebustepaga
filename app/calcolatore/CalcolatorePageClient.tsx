@@ -5,18 +5,20 @@ import { CalcolatoreFormStep1 } from '@/components/CalcolatoreForm';
 import { CalcolatoreFormStep2 } from '@/components/CalcolatoreFormStep2';
 import { RisultatiCalcolatore } from '@/components/RisultatiCalcolatore';
 import { Disclaimer } from '@/components/Disclaimer';
-import type { CalcolatoreOutput } from '@/types';
+import type { CalcolatoreOutput, ContributoContrattuale } from '@/types';
 
 interface Step1Data {
   ccnlId: string; livello: string; ral: number;
   tipoContratto: 'tempo_indeterminato'|'tempo_determinato'|'apprendistato'|'somministrazione';
   oreLavoro: number;
   mensilita: number;
+  retribuzionePersonalizzata?: number;
 }
 
 interface Step2Data {
   numeroDipendenti: number; regione: string; codiceInail: string;
   anzianitaAnni: number; agevolazioniSelezionate: string[];
+  includiAssistenzaSanitaria: boolean; aliquotaInps: number;
 }
 
 interface Props { updatedDates: string[]; }
@@ -27,8 +29,20 @@ export function CalcolatorePageClient({ updatedDates }: Props) {
   const [risultato, setRisultato] = useState<CalcolatoreOutput | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [errore, setErrore] = useState<string | null>(null);
+  const [contributiCcnl, setContributiCcnl] = useState<Record<string, ContributoContrattuale>>({});
 
-  const handleStep1 = (data: Step1Data) => { setStep1Data(data); setStep(2); };
+  const handleStep1 = (data: Step1Data) => {
+    setStep1Data(data);
+    // Fetch contributi CCNL for Step 2 toggle
+    fetch(`/api/ccnl/${data.ccnlId}/livelli`)
+      .then(r => r.json())
+      .then(d => {
+        const resp = d as { contributiContrattuali?: { azienda: Record<string, ContributoContrattuale> } };
+        if (resp.contributiContrattuali?.azienda) setContributiCcnl(resp.contributiContrattuali.azienda);
+      })
+      .catch(() => {});
+    setStep(2);
+  };
 
   const handleStep2 = async (data: Step2Data) => {
     if (!step1Data) return;
@@ -54,10 +68,10 @@ export function CalcolatorePageClient({ updatedDates }: Props) {
   const ricalcola = () => { setStep(1); setRisultato(null); setErrore(null); };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
+    <div className="print-unlock" style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
 
       {/* Step indicator bar — sotto l'header */}
-      <div style={{
+      <div className="no-print" style={{
         paddingTop: '56px',
         background: 'var(--color-bg-surface)',
         borderBottom: '1px solid var(--color-border)',
@@ -106,7 +120,7 @@ export function CalcolatorePageClient({ updatedDates }: Props) {
       </div>
 
       {/* Contenuto principale — due colonne */}
-      <div style={{
+      <div className="print-unlock" style={{
         flex: 1,
         maxWidth: '1400px', margin: '0 auto',
         width: '100%',
@@ -128,7 +142,7 @@ export function CalcolatorePageClient({ updatedDates }: Props) {
             animation: 'fadeSlideIn 0.2s ease forwards',
           }}>
             {step === 1 && <CalcolatoreFormStep1 onNext={handleStep1} />}
-            {step === 2 && <CalcolatoreFormStep2 onSubmit={handleStep2} onBack={() => setStep(1)} isLoading={isLoading} />}
+            {step === 2 && <CalcolatoreFormStep2 onSubmit={handleStep2} onBack={() => setStep(1)} isLoading={isLoading} contributiCcnl={contributiCcnl} />}
           </div>
         )}
 
@@ -213,7 +227,7 @@ export function CalcolatorePageClient({ updatedDates }: Props) {
       </div>
 
       {/* Disclaimer fisso in fondo */}
-      <div style={{
+      <div className="no-print" style={{
         borderTop: '1px solid var(--color-border)',
         padding: '12px 32px',
         background: 'var(--color-bg-surface)',

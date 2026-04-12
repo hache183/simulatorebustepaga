@@ -137,9 +137,42 @@ input[type="range"]::-webkit-slider-thumb {
 
 /* Print */
 @media print {
-  body { background: #fff !important; }
-  * { color: #111 !important; border-color: #ddd !important;
-      box-shadow: none !important; background: #fff !important; }
-  .card { border: 1px solid #ddd !important; }
+  @page { margin: 12mm 10mm; }
+
+  html, body {
+    height: auto !important;
+    overflow: visible !important;
+    background: #fff !important;
+    font-size: 11px !important;
+  }
+
+  * {
+    color: #111 !important;
+    border-color: #ddd !important;
+    box-shadow: none !important;
+    background: #fff !important;
+  }
+
+  /* Nasconde header, step bar, pulsanti */
   .no-print { display: none !important; }
+
+  .card { border: 1px solid #ddd !important; }
+
+  /* Sblocca SOLO i container del layout (height:100vh / overflow:auto) */
+  .print-unlock {
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+    display: block !important;
+  }
+
+  /* Evita tagli a metà di tabelle e sezioni */
+  table { page-break-inside: auto; }
+  tr, td, th { page-break-inside: avoid; }
+  thead { display: table-header-group; }
+
+  /* Evita che le card KPI si spezzino */
+  [style*="gridTemplateColumns"] {
+    page-break-inside: avoid;
+  }
 }

@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useState, useEffect } from 'react';
-import type { LivelloCcnl } from '@/types';
+import type { LivelloCcnl, ContributoContrattuale } from '@/types';
 
 const CCNL_DISPONIBILI = [
   { id: 'commercio',           nome: 'Commercio — Terziario Distribuzione e Servizi (Confcommercio)' },
@@ -32,6 +32,8 @@ const TIPI_CONTRATTO = [
   { value: 'somministrazione',    label: 'Somministrazione' },
 ] as const;
 
+const fmtEur = (n: number) => new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR', minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n);
+
 const Step1Schema = z.object({
   ccnlId: z.string().min(1, 'Seleziona un CCNL'),
   livello: z.string().min(1, 'Seleziona il livello contrattuale'),
@@ -42,6 +44,7 @@ const Step1Schema = z.object({
     .int('Le mensilità devono essere un numero intero')
     .min(13, 'Minimo 13 — la tredicesima è obbligatoria per legge (R.D.L. 1525/1937)')
     .max(16, 'Massimo 16 — oltre non esiste nel diritto del lavoro italiano'),
+  retribuzionePersonalizzata: z.number().min(0).max(500_000).optional(),
 });
 
 type Step1Data = z.infer<typeof Step1Schema>;
@@ -54,6 +57,8 @@ export function CalcolatoreFormStep1({ onNext }: Props) {
   const [livelli, setLivelli] = useState<LivelloCcnl[]>([]);
   const [loadingLivelli, setLoadingLivelli] = useState(false);
   const [ccnlMensilita, setCcnlMensilita] = useState<number>(13);
+  const [contributiCcnl, setContributiCcnl] = useState<Record<string, ContributoContrattuale>>({});
+  const [retribPersonalizzataAttiva, setRetribPersonalizzataAttiva] = useState(false);
 
   const {
     register,
@@ -68,6 +73,11 @@ export function CalcolatoreFormStep1({ onNext }: Props) {
 
   const ccnlSelezionato = watch('ccnlId');
   const oreLavoro = watch('oreLavoro');
+  const livelloSelezionato = watch('livello');
+  const ralWatch = watch('ral');
+
+  const livelloData = livelli.find(l => l.codice === livelloSelezionato);
+  const ralTabellare = livelloData ? livelloData.minimoTabellare * ccnlMensilita : 0;
 
   useEffect(() => {
     if (!ccnlSelezionato) return;
@@ -75,17 +85,36 @@ export function CalcolatoreFormStep1({ onNext }: Props) {
     fetch(`/api/ccnl/${ccnlSelezionato}/livelli`)
       .then(r => r.json())
       .then(d => {
-        const data = d as { livelli?: LivelloCcnl[]; mensilita?: number };
+        const data = d as { livelli?: LivelloCcnl[]; mensilita?: number; contributiContrattuali?: { azienda: Record<string, ContributoContrattuale> } };
         setLivelli(data.livelli ?? []);
         if (data.mensilita) setValue('mensilita', data.mensilita);
         if (data.mensilita) setCcnlMensilita(data.mensilita);
+        if (data.contributiContrattuali?.azienda) setContributiCcnl(data.contributiContrattuali.azienda);
+        // Reset livello selection when CCNL changes
+        setValue('livello', '');
+        setRetribPersonalizzataAttiva(false);
       })
       .catch(() => setLivelli([]))
       .finally(() => setLoadingLivelli(false));
   }, [ccnlSelezionato]);
 
+  // Precompile RAL when livello changes and retrib personalizzata is off
+  useEffect(() => {
+    if (livelloData && !retribPersonalizzataAttiva) {
+      setValue('ral', Math.round(livelloData.minimoTabellare * ccnlMensilita * 100) / 100);
+      setValue('retribuzionePersonalizzata', undefined);
+    }
+  }, [livelloSelezionato, retribPersonalizzataAttiva, ccnlMensilita]);
+
+  const warningRalInferiore = retribPersonalizzataAttiva && livelloData && ralWatch && ralWatch < ralTabellare;
+
   return (
-    <form onSubmit={handleSubmit(onNext)} style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+    <form onSubmit={handleSubmit((data) => {
+      if (retribPersonalizzataAttiva) {
+        data.retribuzionePersonalizzata = data.ral;
+      }
+      onNext(data);
+    })} style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
 
       {/* Label sezione */}
       <div style={{ borderBottom: '1px solid var(--color-border)', paddingBottom: '14px' }}>
@@ -141,12 +170,80 @@ export function CalcolatoreFormStep1({ onNext }: Props) {
           <option value="">
             {loadingLivelli ? 'Caricamento...' : livelli.length === 0 ? '— Prima seleziona il CCNL —' : '— Seleziona il livello —'}
           </option>
-          {livelli.map(l => (
-            <option key={l.codice} value={l.codice}>{l.codice} — {l.descrizione}</option>
-          ))}
+          {livelli.map(l => {
+            const ralAnnua = l.minimoTabellare * ccnlMensilita;
+            return (
+              <option key={l.codice} value={l.codice}>
+                Liv. {l.codice} — {l.qualifica} — Min. tab. {fmtEur(l.minimoTabellare)}/mese (RAL {fmtEur(ralAnnua)})
+              </option>
+            );
+          })}
         </select>
         {errors.livello && <p style={{ marginTop: '4px', fontSize: '11px', color: 'var(--color-red)' }}>{errors.livello.message}</p>}
+
+        {/* Riquadro informativo livello selezionato */}
+        {livelloData && (
+          <div style={{
+            marginTop: '10px', padding: '12px', borderRadius: '6px',
+            background: 'var(--color-bg-elevated)', border: '1px solid var(--color-border)',
+          }}>
+            <p style={{ fontSize: '12px', fontWeight: 600, color: 'var(--color-text-primary)', marginBottom: '4px' }}>
+              Liv. {livelloData.codice} — {livelloData.qualifica}
+            </p>
+            <div style={{ display: 'flex', gap: '16px', fontSize: '12px', color: 'var(--color-text-secondary)', fontFamily: "'DM Mono', monospace" }}>
+              <span>Min. tab. {fmtEur(livelloData.minimoTabellare)}/mese</span>
+              <span>RAL tab. {fmtEur(ralTabellare)}/anno</span>
+            </div>
+          </div>
+        )}
       </div>
+
+      {/* Toggle retribuzione personalizzata (MOD4) */}
+      {livelloData && (
+        <div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
+            <button type="button"
+              onClick={() => {
+                const newVal = !retribPersonalizzataAttiva;
+                setRetribPersonalizzataAttiva(newVal);
+                if (!newVal) {
+                  setValue('ral', Math.round(ralTabellare * 100) / 100);
+                  setValue('retribuzionePersonalizzata', undefined);
+                }
+              }}
+              style={{
+                width: '40px', height: '22px', borderRadius: '11px', border: 'none', cursor: 'pointer',
+                background: retribPersonalizzataAttiva ? 'var(--color-accent)' : 'var(--color-bg-elevated)',
+                position: 'relative', transition: 'background 0.2s ease',
+                outline: `1px solid ${retribPersonalizzataAttiva ? 'var(--color-accent)' : 'var(--color-border)'}`,
+              }}>
+              <div style={{
+                width: '16px', height: '16px', borderRadius: '50%', background: 'white',
+                position: 'absolute', top: '3px',
+                left: retribPersonalizzataAttiva ? '21px' : '3px',
+                transition: 'left 0.2s ease',
+              }} />
+            </button>
+            <label style={{ fontSize: '13px', fontWeight: 500, color: 'var(--color-text-secondary)', cursor: 'pointer' }}
+              onClick={() => {
+                const newVal = !retribPersonalizzataAttiva;
+                setRetribPersonalizzataAttiva(newVal);
+                if (!newVal) {
+                  setValue('ral', Math.round(ralTabellare * 100) / 100);
+                  setValue('retribuzionePersonalizzata', undefined);
+                }
+              }}>
+              Retribuzione diversa dal minimo tabellare
+            </label>
+          </div>
+          {retribPersonalizzataAttiva && (
+            <p style={{ fontSize: '11px', color: 'var(--color-text-muted)', marginBottom: '4px', lineHeight: '1.5' }}>
+              Inserisci la RAL annua lorda concordata tra le parti (superminimo individuale, ad personam o collettivo).
+              Deve essere ≥ al minimo tabellare del livello selezionato.
+            </p>
+          )}
+        </div>
+      )}
 
       {/* RAL */}
       <div>
@@ -159,7 +256,7 @@ export function CalcolatoreFormStep1({ onNext }: Props) {
             position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)',
             fontFamily: "'DM Mono', monospace", fontSize: '13px', color: 'var(--color-text-muted)',
           }}>€</span>
-          <input id="ral" type="number" step="500" placeholder="28.000"
+          <input id="ral" type="number" step="any" placeholder="28.000"
             {...register('ral', { valueAsNumber: true })}
             style={{
               width: '100%', padding: '11px 14px 11px 28px',
@@ -171,6 +268,29 @@ export function CalcolatoreFormStep1({ onNext }: Props) {
           />
         </div>
         {errors.ral && <p style={{ marginTop: '4px', fontSize: '11px', color: 'var(--color-red)' }}>{errors.ral.message}</p>}
+
+        {/* Warning RAL inferiore al minimo (MOD4) */}
+        {warningRalInferiore && (
+          <p style={{
+            marginTop: '8px', fontSize: '11px', padding: '8px 10px', borderRadius: '4px',
+            background: 'var(--color-amber-dim)', color: 'var(--color-amber)', border: '1px solid var(--color-amber)',
+            lineHeight: '1.5',
+          }}>
+            ⚠ La RAL inserita ({fmtEur(ralWatch)}) è inferiore al minimo tabellare CCNL per questo livello ({fmtEur(ralTabellare)}).
+            Verifica con il consulente del lavoro.
+          </p>
+        )}
+
+        {/* Superminimo info (MOD4) */}
+        {retribPersonalizzataAttiva && livelloData && ralWatch > ralTabellare && (
+          <p style={{
+            marginTop: '8px', fontSize: '11px', padding: '8px 10px', borderRadius: '4px',
+            background: 'var(--color-green-dim)', color: 'var(--color-green)', border: '1px solid var(--color-green)',
+            fontFamily: "'DM Mono', monospace",
+          }}>
+            Superminimo: {fmtEur((ralWatch - ralTabellare) / 12)}/mese ({fmtEur(ralWatch - ralTabellare)}/anno)
+          </p>
+        )}
       </div>
 
       {/* Tipo contratto */}
@@ -237,6 +357,12 @@ export function CalcolatoreFormStep1({ onNext }: Props) {
             Precompilato dal CCNL — modifica solo se c&apos;è un accordo integrativo
           </span>
         </div>
+        {ccnlSelezionato && (
+          <p style={{ fontSize: '11px', color: 'var(--color-text-muted)', marginBottom: '8px',
+            fontFamily: "'DM Mono', monospace" }}>
+            Il CCNL selezionato prevede <strong style={{ color: 'var(--color-text-secondary)' }}>{ccnlMensilita}</strong> mensilità
+          </p>
+        )}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '6px' }}>
           {[13, 14, 15, 16].map(n => {
             const selected = Number(watch('mensilita')) === n;
@@ -258,26 +384,30 @@ export function CalcolatoreFormStep1({ onNext }: Props) {
         </div>
         {(() => {
           const val = Number(watch('mensilita'));
-          if (val === 13) return null;
-          if (val === 14 && ccnlMensilita === 13) return (
-            <p style={{ marginTop: '8px', fontSize: '11px', padding: '8px 10px', borderRadius: '4px',
-              background: 'var(--color-amber-dim)', color: 'var(--color-amber)', border: '1px solid var(--color-amber)' }}>
-              ⚠ La quattordicesima non è prevista da questo CCNL (art. 2077 c.c.).
-            </p>
+          const diffFromCcnl = ccnlSelezionato && val !== ccnlMensilita;
+          return (
+            <>
+              {diffFromCcnl && (
+                <p style={{ marginTop: '8px', fontSize: '11px', padding: '8px 10px', borderRadius: '4px',
+                  background: 'var(--color-amber-dim)', color: 'var(--color-amber)', border: '1px solid var(--color-amber)',
+                  lineHeight: '1.5' }}>
+                  ⚠ Stai usando un numero di mensilità diverso da quello previsto dal CCNL (default: {ccnlMensilita})
+                </p>
+              )}
+              {val === 14 && ccnlMensilita === 14 && (
+                <p style={{ marginTop: '8px', fontSize: '11px', padding: '8px 10px', borderRadius: '4px',
+                  background: 'var(--color-green-dim)', color: 'var(--color-green)', border: '1px solid var(--color-green)' }}>
+                  ✓ La quattordicesima è prevista da questo CCNL.
+                </p>
+              )}
+              {val >= 15 && (
+                <p style={{ marginTop: '8px', fontSize: '11px', padding: '8px 10px', borderRadius: '4px',
+                  background: 'var(--color-amber-dim)', color: 'var(--color-amber)', border: '1px solid var(--color-amber)' }}>
+                  ⚠ {val} mensilità ammesse solo tramite contrattazione di secondo livello (art. 2077 c.c.).
+                </p>
+              )}
+            </>
           );
-          if (val === 14 && ccnlMensilita === 14) return (
-            <p style={{ marginTop: '8px', fontSize: '11px', padding: '8px 10px', borderRadius: '4px',
-              background: 'var(--color-green-dim)', color: 'var(--color-green)', border: '1px solid var(--color-green)' }}>
-              ✓ La quattordicesima è prevista da questo CCNL.
-            </p>
-          );
-          if (val >= 15) return (
-            <p style={{ marginTop: '8px', fontSize: '11px', padding: '8px 10px', borderRadius: '4px',
-              background: 'var(--color-amber-dim)', color: 'var(--color-amber)', border: '1px solid var(--color-amber)' }}>
-              ⚠ {val} mensilità ammesse solo tramite contrattazione di secondo livello (art. 2077 c.c.).
-            </p>
-          );
-          return null;
         })()}
         {errors.mensilita && <p style={{ marginTop: '4px', fontSize: '11px', color: 'var(--color-red)' }}>{errors.mensilita.message}</p>}
       </div>

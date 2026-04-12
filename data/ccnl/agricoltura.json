@@ -7,11 +7,17 @@
   "contributiContrattuali": {
     "azienda": {
       "enpaia": {
+        "tipo": "previdenziale",
+        "modalita": "percentuale",
+        "importoMensile": null,
         "percentuale": 0.0156,
         "descrizione": "Contributo ENPAIA (previdenza integrativa agricoltura)",
         "notaLegge": "Legge 111/1951 — ENPAIA"
       },
       "enbac": {
+        "tipo": "bilaterale",
+        "modalita": "percentuale",
+        "importoMensile": null,
         "percentuale": 0.0020,
         "descrizione": "Ente bilaterale agricoltura",
         "notaLegge": "Art. 6 CCNL Agricoltura"
@@ -19,11 +25,11 @@
     }
   },
   "livelli": [
-    { "codice": "Q",  "descrizione": "Quadro / Impiegato direttivo",    "moltiplicatore": 1.00 },
-    { "codice": "1",  "descrizione": "1° livello (Specializzato sup.)", "moltiplicatore": 0.88 },
-    { "codice": "2",  "descrizione": "2° livello (Specializzato)",      "moltiplicatore": 0.78 },
-    { "codice": "3",  "descrizione": "3° livello (Qualificato)",        "moltiplicatore": 0.68 },
-    { "codice": "4",  "descrizione": "4° livello (Comune)",             "moltiplicatore": 0.60 }
+    { "codice": "Q",  "descrizione": "Quadro / Impiegato direttivo",    "qualifica": "Dirigente d'azienda agricola, agronomo",           "minimoTabellare": 1500.00, "moltiplicatore": 1.00 },
+    { "codice": "1",  "descrizione": "1° livello (Specializzato sup.)", "qualifica": "Trattorista specializzato, capo operaio",          "minimoTabellare": 1320.00, "moltiplicatore": 0.88 },
+    { "codice": "2",  "descrizione": "2° livello (Specializzato)",      "qualifica": "Operaio agricolo specializzato, potatore",        "minimoTabellare": 1170.00, "moltiplicatore": 0.78 },
+    { "codice": "3",  "descrizione": "3° livello (Qualificato)",        "qualifica": "Operaio agricolo qualificato, addetto alla raccolta", "minimoTabellare": 1020.00, "moltiplicatore": 0.68 },
+    { "codice": "4",  "descrizione": "4° livello (Comune)",             "qualifica": "Operaio agricolo comune, bracciante",             "minimoTabellare": 900.00,  "moltiplicatore": 0.60 }
   ],
   "scattiAnzianita": {
     "periodicitaMesi": 24,

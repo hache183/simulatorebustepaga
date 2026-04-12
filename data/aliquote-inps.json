@@ -1,8 +1,144 @@
 {
   "updatedAt": "2026-01-01T00:00:00Z",
-  "fonte": "Circolare INPS n. 1/2026 — Legge di Bilancio 2025 (L. 207/2024)",
+  "fonte": "Circolare INPS n. 19/2025 — L. 207/2024 (Legge di Bilancio 2025)",
   "aliquotaBaseAzienda": 0.288,
   "aliquotaBaseDipendente": 0.0919,
+  "settoriContributivi": {
+    "commercio_fino15": {
+      "nome": "Commercio e Terziario (fino a 15 dipendenti)",
+      "aliquotaDatore": 0.2928,
+      "aliquotaDipendente": 0.0919,
+      "dettaglio": {
+        "IVS": 0.2381,
+        "NASpI": 0.0161,
+        "CUAF_assegniFamiliari": 0.0068,
+        "malattia": 0.0244,
+        "maternita": 0.0024,
+        "FIS": 0.0050
+      }
+    },
+    "commercio_oltre15": {
+      "nome": "Commercio e Terziario (oltre 15 dipendenti)",
+      "aliquotaDatore": 0.2968,
+      "aliquotaDipendente": 0.0919,
+      "dettaglio": {
+        "IVS": 0.2381,
+        "NASpI": 0.0161,
+        "CUAF_assegniFamiliari": 0.0068,
+        "malattia": 0.0244,
+        "maternita": 0.0024,
+        "CIGS": 0.0090,
+        "FIS": 0.0000
+      }
+    },
+    "industria_fino15": {
+      "nome": "Industria (fino a 15 dipendenti)",
+      "aliquotaDatore": 0.3037,
+      "aliquotaDipendente": 0.0919,
+      "dettaglio": {
+        "IVS": 0.2381,
+        "NASpI": 0.0161,
+        "CUAF_assegniFamiliari": 0.0068,
+        "malattia": 0.0353,
+        "maternita": 0.0024,
+        "FIS": 0.0050,
+        "CIGS": 0.0000
+      }
+    },
+    "industria_oltre15": {
+      "nome": "Industria (oltre 15 dipendenti)",
+      "aliquotaDatore": 0.3077,
+      "aliquotaDipendente": 0.0919,
+      "dettaglio": {
+        "IVS": 0.2381,
+        "NASpI": 0.0161,
+        "CUAF_assegniFamiliari": 0.0068,
+        "malattia": 0.0353,
+        "maternita": 0.0024,
+        "CIGS": 0.0090,
+        "FIS": 0.0000
+      }
+    },
+    "artigianato": {
+      "nome": "Artigianato",
+      "aliquotaDatore": 0.2938,
+      "aliquotaDipendente": 0.0919,
+      "dettaglio": {
+        "IVS": 0.2381,
+        "NASpI": 0.0161,
+        "CUAF_assegniFamiliari": 0.0068,
+        "malattia": 0.0244,
+        "maternita": 0.0024,
+        "FSBA": 0.0060
+      }
+    },
+    "edilizia_industria": {
+      "nome": "Edilizia industria",
+      "aliquotaDatore": 0.3447,
+      "aliquotaDipendente": 0.0919,
+      "dettaglio": {
+        "IVS": 0.2381,
+        "NASpI": 0.0161,
+        "CUAF_assegniFamiliari": 0.0068,
+        "malattia": 0.0353,
+        "maternita": 0.0024,
+        "CIGS": 0.0090,
+        "cassaEdile": 0.0370
+      }
+    },
+    "credito_assicurazioni": {
+      "nome": "Credito e Assicurazioni",
+      "aliquotaDatore": 0.3218,
+      "aliquotaDipendente": 0.0919,
+      "dettaglio": {
+        "IVS": 0.2381,
+        "NASpI": 0.0161,
+        "CUAF_assegniFamiliari": 0.0068,
+        "malattia": 0.0244,
+        "maternita": 0.0024,
+        "FondoSolidarieta": 0.0340
+      }
+    },
+    "cooperative_sociali": {
+      "nome": "Cooperative sociali",
+      "aliquotaDatore": 0.2928,
+      "aliquotaDipendente": 0.0919,
+      "dettaglio": {
+        "IVS": 0.2381,
+        "NASpI": 0.0161,
+        "CUAF_assegniFamiliari": 0.0068,
+        "malattia": 0.0244,
+        "maternita": 0.0024,
+        "FIS": 0.0050
+      }
+    },
+    "apprendistato_base": {
+      "nome": "Apprendistato (datori fino a 9 dipendenti, 1° anno)",
+      "aliquotaDatore": 0.0350,
+      "aliquotaDipendente": 0.0584,
+      "dettaglio": {
+        "IVS_ridotto": 0.0350
+      }
+    }
+  },
+  "mappaCcnlSettore": {
+    "commercio": "commercio",
+    "metalmeccanici": "industria",
+    "edilizia": "edilizia_industria",
+    "chimica": "industria",
+    "credito": "credito_assicurazioni",
+    "pubblici_esercizi": "commercio",
+    "studi_professionali": "commercio",
+    "cooperative_sociali": "cooperative_sociali",
+    "trasporti": "industria",
+    "multiservizi": "commercio",
+    "telecomunicazioni": "commercio",
+    "tessile": "industria",
+    "informatica": "commercio",
+    "agricoltura": "industria",
+    "scuole_private": "commercio",
+    "sanita_privata": "commercio"
+  },
   "agevolazioni": [
     {
       "id": "under36",
@@ -13,16 +149,11 @@
       "massimaleAnnuo": 6000,
       "requisiti": {
         "etaMassima": 35,
-        "tipiContratto": [
-          "tempo_indeterminato"
-        ],
+        "tipiContratto": ["tempo_indeterminato"],
         "primaOccupazione": true
       },
       "cumulabileCon": [],
-      "nonCumulabileCon": [
-        "decontribuzione_sud",
-        "donne_svantaggiate"
-      ],
+      "nonCumulabileCon": ["decontribuzione_sud", "donne_svantaggiate"],
       "scadenza": "2026-12-31T00:00:00Z",
       "scadenzaAlertGiorni": 90
     },
@@ -33,62 +164,37 @@
       "fonteLegge": "Legge 207/2024 art. 1 cc. 191-193 (proroga Legge 92/2012 art. 4 cc. 8-11)",
       "percentualeEsonero": 0.6,
       "massimaleAnnuo": 8000,
-      "requisiti": {
-        "sesso": "F"
-      },
+      "requisiti": { "sesso": "F" },
       "cumulabileCon": [],
-      "nonCumulabileCon": [
-        "under36",
-        "decontribuzione_sud"
-      ],
+      "nonCumulabileCon": ["under36", "decontribuzione_sud"],
       "scadenza": "2026-12-31T00:00:00Z",
       "scadenzaAlertGiorni": 90
     },
     {
       "id": "decontribuzione_sud",
       "nome": "Decontribuzione Sud 2026",
-      "descrizione": "Esonero 25% contributi datoriali per aziende con sede operativa nelle regioni del Mezzogiorno (ridotta al 25% rispetto al 30% del 2023 per decalage progressivo)",
-      "fonteLegge": "Legge 207/2024 art. 1 cc. 161-168 — proroga con riduzione al 25% per il 2026",
+      "descrizione": "Esonero 25% contributi datoriali per aziende con sede operativa nelle regioni del Mezzogiorno",
+      "fonteLegge": "Legge 207/2024 art. 1 cc. 161-168",
       "percentualeEsonero": 0.25,
       "massimaleAnnuo": null,
       "requisiti": {
-        "regioni": [
-          "Campania",
-          "Puglia",
-          "Basilicata",
-          "Calabria",
-          "Sicilia",
-          "Sardegna",
-          "Molise",
-          "Abruzzo"
-        ]
+        "regioni": ["Campania", "Puglia", "Basilicata", "Calabria", "Sicilia", "Sardegna", "Molise", "Abruzzo"]
       },
       "cumulabileCon": [],
-      "nonCumulabileCon": [
-        "under36",
-        "donne_svantaggiate"
-      ],
+      "nonCumulabileCon": ["under36", "donne_svantaggiate"],
       "scadenza": "2029-12-31T00:00:00Z",
       "scadenzaAlertGiorni": 90
     },
     {
       "id": "apprendistato",
       "nome": "Agevolazione contributiva apprendistato",
-      "descrizione": "Aliquota contributiva ridotta al 10% per i contratti di apprendistato professionalizzante (risparmio dell'80% sull'aliquota ordinaria del 28,80%)",
+      "descrizione": "Aliquota contributiva ridotta al 10% per i contratti di apprendistato professionalizzante",
       "fonteLegge": "D.Lgs. 81/2015 art. 47 c. 7",
       "percentualeEsonero": 0.9,
       "massimaleAnnuo": null,
-      "requisiti": {
-        "tipiContratto": [
-          "apprendistato"
-        ]
-      },
+      "requisiti": { "tipiContratto": ["apprendistato"] },
       "cumulabileCon": [],
-      "nonCumulabileCon": [
-        "under36",
-        "decontribuzione_sud",
-        "donne_svantaggiate"
-      ],
+      "nonCumulabileCon": ["under36", "decontribuzione_sud", "donne_svantaggiate"],
       "scadenza": null,
       "scadenzaAlertGiorni": null
     },
@@ -99,38 +205,26 @@
       "fonteLegge": "D.Lgs. 150/2015 art. 31 — confermato dalla Legge 207/2024",
       "percentualeEsonero": 0.5,
       "massimaleAnnuo": 4030,
-      "requisiti": {
-        "disoccupatoMesiMin": 12
-      },
-      "cumulabileCon": [
-        "decontribuzione_sud"
-      ],
-      "nonCumulabileCon": [
-        "under36"
-      ],
+      "requisiti": { "disoccupatoMesiMin": 12 },
+      "cumulabileCon": ["decontribuzione_sud"],
+      "nonCumulabileCon": ["under36"],
       "scadenza": null,
       "scadenzaAlertGiorni": null
     },
     {
       "id": "neet",
       "nome": "Esonero NEET under 30 (Garanzia Giovani)",
-      "descrizione": "Esonero 100% contributi datoriali fino a 8.000 euro/anno per assunzione a tempo indeterminato di giovani under 30 NEET registrati al programma GOL",
+      "descrizione": "Esonero 100% contributi datoriali fino a 8.000 euro/anno per assunzione a tempo indeterminato di giovani under 30 NEET",
       "fonteLegge": "Legge 207/2024 art. 1 cc. 194-197",
       "percentualeEsonero": 1.0,
       "massimaleAnnuo": 8000,
       "requisiti": {
         "etaMassima": 29,
-        "tipiContratto": [
-          "tempo_indeterminato"
-        ],
+        "tipiContratto": ["tempo_indeterminato"],
         "neet": true
       },
       "cumulabileCon": [],
-      "nonCumulabileCon": [
-        "under36",
-        "donne_svantaggiate",
-        "decontribuzione_sud"
-      ],
+      "nonCumulabileCon": ["under36", "donne_svantaggiate", "decontribuzione_sud"],
       "scadenza": "2026-12-31T00:00:00Z",
       "scadenzaAlertGiorni": 90
     }

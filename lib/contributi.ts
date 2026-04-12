@@ -9,6 +9,7 @@ import type {
   InailData,
   TfrData,
   ScattiAnzianita,
+  SettoreContributivo,
 } from '@/types';
 
 function loadJson<T>(relativePath: string): T {
@@ -20,9 +21,35 @@ function loadJson<T>(relativePath: string): T {
  * Calcola i contributi INPS datoriali lordi (prima delle agevolazioni).
  * @see Circolare INPS n. 99/2023
  */
-export function calcolaInpsBase(ral: number): number {
+export function calcolaInpsBase(ral: number, aliquotaOverride?: number): number {
+  if (aliquotaOverride !== undefined) return ral * aliquotaOverride;
   const data = loadJson<AliquoteInpsData>('data/aliquote-inps.json');
   return ral * data.aliquotaBaseAzienda;
+}
+
+/**
+ * Determina il settore contributivo INPS in base al CCNL e alla dimensione aziendale.
+ * Ritorna l'aliquota datore e dipendente appropriate.
+ */
+export function getSettoreContributivo(
+  ccnlId: string,
+  numeroDipendenti: number
+): SettoreContributivo | null {
+  const data = loadJson<AliquoteInpsData>('data/aliquote-inps.json');
+  const baseSector = data.mappaCcnlSettore[ccnlId];
+  if (!baseSector) return null;
+
+  // Resolve size-based variant
+  let settoreKey: string;
+  if (baseSector === 'commercio') {
+    settoreKey = numeroDipendenti <= 15 ? 'commercio_fino15' : 'commercio_oltre15';
+  } else if (baseSector === 'industria') {
+    settoreKey = numeroDipendenti <= 15 ? 'industria_fino15' : 'industria_oltre15';
+  } else {
+    settoreKey = baseSector;
+  }
+
+  return data.settoriContributivi[settoreKey] ?? null;
 }
 
 /**
@@ -122,13 +149,15 @@ export function calcolaAgevolazioni(input: CalcolatoreInput): {
 
 /**
  * Calcola il TFR annuo da accantonare.
+ * Formula: TFR = RAL / 13,5 (Art. 2120 c.c.)
+ * La RAL include già le mensilità aggiuntive (es. 1541.77 × 14 = 21584.78),
+ * quindi NON va moltiplicata ulteriormente per mensilita/12.
+ * La base TFR esatta dipende dalla retribuzione utile definita da ciascun CCNL.
  * @see Art. 2120 c.c. — divisore fisso 13,5
  */
-export function calcolaTfr(ral: number, mensilita: number): number {
+export function calcolaTfr(ral: number, _mensilita: number): number {
   const data = loadJson<TfrData>('data/tfr.json');
-  // La retribuzione utile al TFR scala in proporzione alle mensilità effettive
-  const retribuzioneTfr = ral * (mensilita / 12);
-  return retribuzioneTfr / data.divisoreAnnuo;
+  return ral / data.divisoreAnnuo;
 }
 
 /**

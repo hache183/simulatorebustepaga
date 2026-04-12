@@ -7,11 +7,17 @@
   "contributiContrattuali": {
     "azienda": {
       "metasalute": {
+        "tipo": "sanitario",
+        "modalita": "percentuale",
+        "importoMensile": null,
         "percentuale": 0.0100,
         "descrizione": "Fondo sanitario Metasalute",
         "notaLegge": "Art. 1 CCNL Metalmeccanici"
       },
       "cometa": {
+        "tipo": "previdenziale",
+        "modalita": "percentuale",
+        "importoMensile": null,
         "percentuale": 0.0200,
         "descrizione": "Fondo pensione complementare Cometa (quota azienda)",
         "notaLegge": "Art. 46 CCNL Metalmeccanici"
@@ -19,13 +25,13 @@
     }
   },
   "livelli": [
-    { "codice": "7", "descrizione": "7° livello (Quadro)", "moltiplicatore": 1.00 },
-    { "codice": "6", "descrizione": "6° livello",          "moltiplicatore": 0.90 },
-    { "codice": "5", "descrizione": "5° livello",          "moltiplicatore": 0.81 },
-    { "codice": "4", "descrizione": "4° livello",          "moltiplicatore": 0.73 },
-    { "codice": "3", "descrizione": "3° livello",          "moltiplicatore": 0.65 },
-    { "codice": "2", "descrizione": "2° livello",          "moltiplicatore": 0.58 },
-    { "codice": "1", "descrizione": "1° livello",          "moltiplicatore": 0.52 }
+    { "codice": "7", "descrizione": "7° livello (Quadro)",  "qualifica": "Quadri e alte professionalità (ex D1)",                           "minimoTabellare": 2102.00, "moltiplicatore": 1.00 },
+    { "codice": "6", "descrizione": "6° livello",           "qualifica": "Impiegati direttivi, tecnici di alto livello (ex D2)",             "minimoTabellare": 1893.00, "moltiplicatore": 0.90 },
+    { "codice": "5", "descrizione": "5° livello",           "qualifica": "Impiegati di concetto con esperienza (ex C1)",                     "minimoTabellare": 1713.00, "moltiplicatore": 0.81 },
+    { "codice": "4", "descrizione": "4° livello",           "qualifica": "Operai specializzati, impiegati d'ordine qualificati (ex C2)",     "minimoTabellare": 1544.00, "moltiplicatore": 0.73 },
+    { "codice": "3", "descrizione": "3° livello",           "qualifica": "Operai qualificati (ex C3)",                                       "minimoTabellare": 1373.00, "moltiplicatore": 0.65 },
+    { "codice": "2", "descrizione": "2° livello",           "qualifica": "Operai comuni, ausiliari (ex B1)",                                  "minimoTabellare": 1226.00, "moltiplicatore": 0.58 },
+    { "codice": "1", "descrizione": "1° livello",           "qualifica": "Apprendisti, personale senza qualifica (ex B2)",                    "minimoTabellare": 1098.00, "moltiplicatore": 0.52 }
   ],
   "scattiAnzianita": {
     "periodicitaMesi": 24,

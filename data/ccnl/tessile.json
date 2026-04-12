@@ -7,11 +7,17 @@
   "contributiContrattuali": {
     "azienda": {
       "sanimoda": {
+        "tipo": "sanitario",
+        "modalita": "percentuale",
+        "importoMensile": null,
         "percentuale": 0.0060,
         "descrizione": "Fondo sanitario Sanimoda",
         "notaLegge": "Art. 14 CCNL Tessile-Abbigliamento"
       },
       "previmoda": {
+        "tipo": "previdenziale",
+        "modalita": "percentuale",
+        "importoMensile": null,
         "percentuale": 0.0130,
         "descrizione": "Fondo pensione complementare Previmoda (quota azienda)",
         "notaLegge": "Art. 48 CCNL Tessile-Abbigliamento"
@@ -19,13 +25,13 @@
     }
   },
   "livelli": [
-    { "codice": "Q",  "descrizione": "Quadro",          "moltiplicatore": 1.00 },
-    { "codice": "1",  "descrizione": "1° livello",      "moltiplicatore": 0.91 },
-    { "codice": "2",  "descrizione": "2° livello",      "moltiplicatore": 0.83 },
-    { "codice": "3",  "descrizione": "3° livello",      "moltiplicatore": 0.75 },
-    { "codice": "4",  "descrizione": "4° livello",      "moltiplicatore": 0.67 },
-    { "codice": "5",  "descrizione": "5° livello",      "moltiplicatore": 0.60 },
-    { "codice": "6",  "descrizione": "6° livello",      "moltiplicatore": 0.54 }
+    { "codice": "Q",  "descrizione": "Quadro",      "qualifica": "Responsabile di produzione, quadro tecnico",          "minimoTabellare": 1800.00, "moltiplicatore": 1.00 },
+    { "codice": "1",  "descrizione": "1° livello",  "qualifica": "Modellista, stilista tecnico",                        "minimoTabellare": 1638.00, "moltiplicatore": 0.91 },
+    { "codice": "2",  "descrizione": "2° livello",  "qualifica": "Tagliatore, tessitore specializzato",                 "minimoTabellare": 1494.00, "moltiplicatore": 0.83 },
+    { "codice": "3",  "descrizione": "3° livello",  "qualifica": "Cucitrice qualificata, addetto al controllo qualità", "minimoTabellare": 1350.00, "moltiplicatore": 0.75 },
+    { "codice": "4",  "descrizione": "4° livello",  "qualifica": "Operaio alla macchina, stiratrici",                   "minimoTabellare": 1206.00, "moltiplicatore": 0.67 },
+    { "codice": "5",  "descrizione": "5° livello",  "qualifica": "Confezionatore, imballatore",                         "minimoTabellare": 1080.00, "moltiplicatore": 0.60 },
+    { "codice": "6",  "descrizione": "6° livello",  "qualifica": "Ausiliario, manovale",                                "minimoTabellare": 972.00,  "moltiplicatore": 0.54 }
   ],
   "scattiAnzianita": {
     "periodicitaMesi": 24,

@@ -7,11 +7,17 @@
   "contributiContrattuali": {
     "azienda": {
       "fast": {
+        "tipo": "sanitario",
+        "modalita": "percentuale",
+        "importoMensile": null,
         "percentuale": 0.0056,
         "descrizione": "Fondo assistenza sanitaria turismo FAST",
         "notaLegge": "Art. 16 CCNL Pubblici Esercizi"
       },
       "ebtl": {
+        "tipo": "bilaterale",
+        "modalita": "percentuale",
+        "importoMensile": null,
         "percentuale": 0.0020,
         "descrizione": "Ente bilaterale turismo e lavoro",
         "notaLegge": "Art. 7 CCNL Pubblici Esercizi"
@@ -19,13 +25,13 @@
     }
   },
   "livelli": [
-    { "codice": "Q",  "descrizione": "Quadro",          "moltiplicatore": 1.00 },
-    { "codice": "1",  "descrizione": "1° livello",      "moltiplicatore": 0.92 },
-    { "codice": "2",  "descrizione": "2° livello",      "moltiplicatore": 0.84 },
-    { "codice": "3",  "descrizione": "3° livello",      "moltiplicatore": 0.76 },
-    { "codice": "4",  "descrizione": "4° livello",      "moltiplicatore": 0.69 },
-    { "codice": "5",  "descrizione": "5° livello",      "moltiplicatore": 0.62 },
-    { "codice": "6",  "descrizione": "6° livello",      "moltiplicatore": 0.56 }
+    { "codice": "Q",  "descrizione": "Quadro",      "qualifica": "Direttore di sala, responsabile di esercizio",      "minimoTabellare": 1800.00, "moltiplicatore": 1.00 },
+    { "codice": "1",  "descrizione": "1° livello",  "qualifica": "Chef de cuisine, maître d'hôtel",                   "minimoTabellare": 1656.00, "moltiplicatore": 0.92 },
+    { "codice": "2",  "descrizione": "2° livello",  "qualifica": "Cuoco capo partita, barman specializzato",           "minimoTabellare": 1512.00, "moltiplicatore": 0.84 },
+    { "codice": "3",  "descrizione": "3° livello",  "qualifica": "Cameriere di sala, cuoco",                          "minimoTabellare": 1368.00, "moltiplicatore": 0.76 },
+    { "codice": "4",  "descrizione": "4° livello",  "qualifica": "Commis di sala, addetto al banco bar",              "minimoTabellare": 1242.00, "moltiplicatore": 0.69 },
+    { "codice": "5",  "descrizione": "5° livello",  "qualifica": "Lavapiatti, addetto alle pulizie",                  "minimoTabellare": 1116.00, "moltiplicatore": 0.62 },
+    { "codice": "6",  "descrizione": "6° livello",  "qualifica": "Garzone, ausiliario",                               "minimoTabellare": 1008.00, "moltiplicatore": 0.56 }
   ],
   "scattiAnzianita": {
     "periodicitaMesi": 24,

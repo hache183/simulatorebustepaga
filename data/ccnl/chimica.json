@@ -7,11 +7,17 @@
   "contributiContrattuali": {
     "azienda": {
       "faschim": {
+        "tipo": "sanitario",
+        "modalita": "percentuale",
+        "importoMensile": null,
         "percentuale": 0.0065,
         "descrizione": "Fondo sanitario integrativo Faschim",
         "notaLegge": "Art. 11 CCNL Chimica"
       },
       "fonchim": {
+        "tipo": "previdenziale",
+        "modalita": "percentuale",
+        "importoMensile": null,
         "percentuale": 0.0195,
         "descrizione": "Fondo pensione complementare Fonchim (quota azienda)",
         "notaLegge": "Art. 47 CCNL Chimica"
@@ -19,13 +25,13 @@
     }
   },
   "livelli": [
-    { "codice": "Q",  "descrizione": "Quadro",          "moltiplicatore": 1.00 },
-    { "codice": "A",  "descrizione": "Livello A",       "moltiplicatore": 0.91 },
-    { "codice": "B",  "descrizione": "Livello B",       "moltiplicatore": 0.82 },
-    { "codice": "C",  "descrizione": "Livello C",       "moltiplicatore": 0.74 },
-    { "codice": "D",  "descrizione": "Livello D",       "moltiplicatore": 0.67 },
-    { "codice": "E",  "descrizione": "Livello E",       "moltiplicatore": 0.60 },
-    { "codice": "F",  "descrizione": "Livello F",       "moltiplicatore": 0.54 }
+    { "codice": "Q",  "descrizione": "Quadro",      "qualifica": "Responsabile di laboratorio, quadro tecnico-scientifico",       "minimoTabellare": 2050.00, "moltiplicatore": 1.00 },
+    { "codice": "A",  "descrizione": "Livello A",   "qualifica": "Ricercatore, analista chimico senior",                          "minimoTabellare": 1865.50, "moltiplicatore": 0.91 },
+    { "codice": "B",  "descrizione": "Livello B",   "qualifica": "Tecnico di laboratorio, operatore di impianto specializzato",   "minimoTabellare": 1681.00, "moltiplicatore": 0.82 },
+    { "codice": "C",  "descrizione": "Livello C",   "qualifica": "Addetto alla produzione qualificato, analista chimico junior",  "minimoTabellare": 1517.00, "moltiplicatore": 0.74 },
+    { "codice": "D",  "descrizione": "Livello D",   "qualifica": "Operatore di impianto, magazziniere chimico",                   "minimoTabellare": 1373.50, "moltiplicatore": 0.67 },
+    { "codice": "E",  "descrizione": "Livello E",   "qualifica": "Addetto al confezionamento, ausiliario di laboratorio",         "minimoTabellare": 1230.00, "moltiplicatore": 0.60 },
+    { "codice": "F",  "descrizione": "Livello F",   "qualifica": "Personale di pulizia, manovale",                                "minimoTabellare": 1107.00, "moltiplicatore": 0.54 }
   ],
   "scattiAnzianita": {
     "periodicitaMesi": 24,

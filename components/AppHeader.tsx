@@ -18,6 +18,7 @@ export function AppHeader() {
 
   return (
     <header
+      className="no-print"
       style={{
         position: 'fixed',
         top: 0, left: 0, right: 0,
