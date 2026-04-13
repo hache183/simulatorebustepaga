@@ -14,13 +14,13 @@
         "descrizione": "Fondo sanitario integrativo scuola privata",
         "notaLegge": "Art. 17 CCNL Scuole Private"
       },
-      "perseo": {
+      "fondoPensioneScuole": {
         "tipo": "previdenziale",
         "modalita": "percentuale",
         "importoMensile": null,
         "percentuale": 0.0100,
-        "descrizione": "Fondo pensione complementare Perseo Sirio",
-        "notaLegge": "Art. 41 CCNL Scuole Private"
+        "descrizione": "Fondo pensione complementare per dipendenti scuole private (Fondo FON.TE o fondo contrattuale specifico — NON Perseo-Sirio che è riservato al pubblico impiego)",
+        "notaLegge": "CCNL Scuole Private AGIDAE/ANINSEI"
       }
     }
   },

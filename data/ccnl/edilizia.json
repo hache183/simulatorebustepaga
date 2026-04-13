@@ -10,9 +10,9 @@
         "tipo": "bilaterale",
         "modalita": "percentuale",
         "importoMensile": null,
-        "percentuale": 0.0400,
-        "descrizione": "Contributo Cassa Edile (quota azienda)",
-        "notaLegge": "Art. 38 CCNL Edilizia ANCE"
+        "percentuale": 0.0950,
+        "descrizione": "Contributo Cassa Edile complessivo (quota azienda: include APE, ferie, gratifica, CAPE, scuola edile — media nazionale stimata 9,50%). Il contributo reale varia per provincia (dal 7% al 12%).",
+        "notaLegge": "Accordi Casse Edili provinciali — media nazionale"
       },
       "formazioneEdile": {
         "tipo": "bilaterale",
@@ -33,7 +33,8 @@
   ],
   "scattiAnzianita": {
     "periodicitaMesi": 24,
-    "importoPerScattoEuro": 9.20,
-    "maxScatti": 8
+    "importoPerScattoEuro": 0,
+    "maxScatti": 0,
+    "_nota": "Nell'edilizia non esistono scatti di anzianità tradizionali. L'anzianità professionale edile (APE) è gestita tramite la Cassa Edile ed è già inclusa nel contributo Cassa Edile."
   }
 }

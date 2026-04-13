@@ -8,11 +8,11 @@
     "azienda": {
       "metasalute": {
         "tipo": "sanitario",
-        "modalita": "percentuale",
-        "importoMensile": null,
-        "percentuale": 0.0100,
+        "modalita": "fisso",
+        "importoMensile": 12.00,
+        "percentuale": null,
         "descrizione": "Fondo sanitario Metasalute",
-        "notaLegge": "Art. 1 CCNL Metalmeccanici"
+        "notaLegge": "Art. 1 CCNL Metalmeccanici — importo fisso per dipendente"
       },
       "cometa": {
         "tipo": "previdenziale",
@@ -36,6 +36,6 @@
   "scattiAnzianita": {
     "periodicitaMesi": 24,
     "importoPerScattoEuro": 8.68,
-    "maxScatti": 8
+    "maxScatti": 5
   }
 }

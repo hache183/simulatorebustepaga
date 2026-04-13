@@ -6,13 +6,13 @@
   "mensilita": 13,
   "contributiContrattuali": {
     "azienda": {
-      "sanimoda": {
+      "fondoSanitarioInfoservizi": {
         "tipo": "sanitario",
-        "modalita": "percentuale",
-        "importoMensile": null,
-        "percentuale": 0.0050,
-        "descrizione": "Fondo sanitario integrativo Assiinform",
-        "notaLegge": "Art. 12 CCNL Informatica"
+        "modalita": "fisso",
+        "importoMensile": 13.00,
+        "percentuale": null,
+        "descrizione": "Fondo sanitario integrativo CCNL Informatica Assinform (€ 13/mese fisso)",
+        "notaLegge": "Art. 12 CCNL Informatica Assinform-Confcommercio"
       },
       "fondoInformatica": {
         "tipo": "previdenziale",

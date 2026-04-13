@@ -4,6 +4,7 @@
   "fonte": "https://www.confagricoltura.it/contratto-collettivo",
   "updatedAt": "2026-01-01T00:00:00Z",
   "mensilita": 13,
+  "_notaLimitazione": "ATTENZIONE: il settore agricolo ha un sistema retributivo proprio. Gli operai agricoli (soprattutto OTD) sono pagati con paga oraria/giornaliera, non mensile. Il modello mensile qui applicato è una semplificazione valida solo per impiegati/quadri agricoli (salariati fissi). Per operai a tempo determinato il calcolo reale è diverso.",
   "contributiContrattuali": {
     "azienda": {
       "enpaia": {

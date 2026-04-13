@@ -34,7 +34,7 @@
     { "codice": "F",  "descrizione": "Livello F",   "qualifica": "Personale di pulizia, manovale",                                "minimoTabellare": 1107.00, "moltiplicatore": 0.54 }
   ],
   "scattiAnzianita": {
-    "periodicitaMesi": 24,
+    "periodicitaMesi": 36,
     "importoPerScattoEuro": 10.13,
     "maxScatti": 8
   }

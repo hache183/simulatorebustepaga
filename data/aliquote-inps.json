@@ -14,7 +14,8 @@
         "CUAF_assegniFamiliari": 0.0068,
         "malattia": 0.0244,
         "maternita": 0.0024,
-        "FIS": 0.0050
+        "FIS": 0.0050,
+        "_notaFIS": "Aliquota FIS 0,50% per datori ≤15 dip. (D.Lgs. 148/2015, art. 29). Verificare se aggiornata da eventuali interventi legislativi 2026."
       }
     },
     "commercio_oltre15": {
@@ -88,7 +89,7 @@
     },
     "credito_assicurazioni": {
       "nome": "Credito e Assicurazioni",
-      "aliquotaDatore": 0.3218,
+      "aliquotaDatore": 0.2998,
       "aliquotaDipendente": 0.0919,
       "dettaglio": {
         "IVS": 0.2381,
@@ -96,7 +97,8 @@
         "CUAF_assegniFamiliari": 0.0068,
         "malattia": 0.0244,
         "maternita": 0.0024,
-        "FondoSolidarieta": 0.0340
+        "FondoSolidarieta_quotaDatore": 0.0120,
+        "_notaFondoSolidarieta": "Il Fondo di Solidarietà del Credito (D.M. 83486/2014) ha aliquota complessiva ~3,40%, ma la ripartizione è: 2/3 datore (≈1,20%) + 1/3 dipendente (≈0,60% in busta paga). Qui si considera solo la quota datore."
       }
     },
     "cooperative_sociali": {
@@ -112,12 +114,50 @@
         "FIS": 0.0050
       }
     },
+    "agricoltura": {
+      "nome": "Agricoltura (salariati agricoli — regime contributivo specifico INPS)",
+      "aliquotaDatore": 0.3950,
+      "aliquotaDipendente": 0.0919,
+      "dettaglio": {
+        "IVS": 0.2381,
+        "NASpI_agricola": 0.0244,
+        "CUAF_assegniFamiliari": 0.0068,
+        "malattia": 0.0353,
+        "maternita": 0.0024,
+        "contributi_specifici_agricoli": 0.0880
+      },
+      "_nota": "Il settore agricolo ha un regime contributivo proprio. Le aliquote sono una stima media per salariati fissi (impiegati). Per operai agricoli a tempo determinato (OTD) il regime è diverso."
+    },
     "apprendistato_base": {
       "nome": "Apprendistato (datori fino a 9 dipendenti, 1° anno)",
       "aliquotaDatore": 0.0350,
       "aliquotaDipendente": 0.0584,
       "dettaglio": {
         "IVS_ridotto": 0.0350
+      }
+    },
+    "apprendistato_anno2": {
+      "nome": "Apprendistato (datori fino a 9 dipendenti, 2° anno)",
+      "aliquotaDatore": 0.0450,
+      "aliquotaDipendente": 0.0584,
+      "dettaglio": {
+        "IVS_ridotto": 0.0450
+      }
+    },
+    "apprendistato_anno3": {
+      "nome": "Apprendistato (datori fino a 9 dipendenti, 3° anno)",
+      "aliquotaDatore": 0.0500,
+      "aliquotaDipendente": 0.0584,
+      "dettaglio": {
+        "IVS_ridotto": 0.0500
+      }
+    },
+    "apprendistato_oltre9": {
+      "nome": "Apprendistato (datori con 10+ dipendenti / dal 4° anno)",
+      "aliquotaDatore": 0.1000,
+      "aliquotaDipendente": 0.0584,
+      "dettaglio": {
+        "IVS_ridotto": 0.1000
       }
     }
   },
@@ -135,7 +175,7 @@
     "telecomunicazioni": "commercio",
     "tessile": "industria",
     "informatica": "commercio",
-    "agricoltura": "industria",
+    "agricoltura": "agricoltura",
     "scuole_private": "commercio",
     "sanita_privata": "commercio"
   },
@@ -153,35 +193,48 @@
         "primaOccupazione": true
       },
       "cumulabileCon": [],
-      "nonCumulabileCon": ["decontribuzione_sud", "donne_svantaggiate"],
+      "nonCumulabileCon": ["decontribuzione_sud", "donne_fornero", "donne_decreto_coesione"],
       "scadenza": "2026-12-31T00:00:00Z",
       "scadenzaAlertGiorni": 90
     },
     {
-      "id": "donne_svantaggiate",
-      "nome": "Esonero contributivo donne svantaggiate",
-      "descrizione": "Esonero 60% contributi datoriali fino a 8.000 euro/anno per assunzione di donne in situazione di svantaggio occupazionale",
-      "fonteLegge": "Legge 207/2024 art. 1 cc. 191-193 (proroga Legge 92/2012 art. 4 cc. 8-11)",
-      "percentualeEsonero": 0.6,
-      "massimaleAnnuo": 8000,
+      "id": "donne_fornero",
+      "nome": "Esonero donne svantaggiate (Fornero strutturale)",
+      "descrizione": "Esonero 50% contributi datoriali per assunzione di donne in situazione di svantaggio occupazionale. Misura strutturale senza scadenza.",
+      "fonteLegge": "Legge 92/2012 art. 4 cc. 8-11",
+      "percentualeEsonero": 0.5,
+      "massimaleAnnuo": null,
       "requisiti": { "sesso": "F" },
       "cumulabileCon": [],
-      "nonCumulabileCon": ["under36", "decontribuzione_sud"],
+      "nonCumulabileCon": ["under36", "decontribuzione_sud", "donne_decreto_coesione"],
+      "scadenza": null,
+      "scadenzaAlertGiorni": null
+    },
+    {
+      "id": "donne_decreto_coesione",
+      "nome": "Esonero donne svantaggiate (Decreto Coesione)",
+      "descrizione": "Esonero 100% contributi datoriali (fruizione 100% con incremento occupazionale netto, altrimenti 70%) fino a 650 euro/mese per assunzione di donne in situazione di svantaggio occupazionale",
+      "fonteLegge": "D.L. 60/2024 art. 22 conv. L. 95/2024 + Milleproroghe 2026",
+      "percentualeEsonero": 1.0,
+      "massimaleAnnuo": 7800,
+      "requisiti": { "sesso": "F" },
+      "cumulabileCon": [],
+      "nonCumulabileCon": ["under36", "decontribuzione_sud", "donne_fornero"],
       "scadenza": "2026-12-31T00:00:00Z",
       "scadenzaAlertGiorni": 90
     },
     {
       "id": "decontribuzione_sud",
-      "nome": "Decontribuzione Sud 2026",
-      "descrizione": "Esonero 25% contributi datoriali per aziende con sede operativa nelle regioni del Mezzogiorno",
+      "nome": "Decontribuzione ZES Unica 2026",
+      "descrizione": "Esonero 20% contributi datoriali per aziende con sede operativa nelle regioni ZES (schema decrescente: 2025→25%, 2026→20%, 2027→15%, 2028→10%, 2029→5%)",
       "fonteLegge": "Legge 207/2024 art. 1 cc. 161-168",
-      "percentualeEsonero": 0.25,
-      "massimaleAnnuo": null,
+      "percentualeEsonero": 0.20,
+      "massimaleAnnuo": 1740,
       "requisiti": {
         "regioni": ["Campania", "Puglia", "Basilicata", "Calabria", "Sicilia", "Sardegna", "Molise", "Abruzzo"]
       },
       "cumulabileCon": [],
-      "nonCumulabileCon": ["under36", "donne_svantaggiate"],
+      "nonCumulabileCon": ["under36", "donne_fornero", "donne_decreto_coesione"],
       "scadenza": "2029-12-31T00:00:00Z",
       "scadenzaAlertGiorni": 90
     },
@@ -194,7 +247,7 @@
       "massimaleAnnuo": null,
       "requisiti": { "tipiContratto": ["apprendistato"] },
       "cumulabileCon": [],
-      "nonCumulabileCon": ["under36", "decontribuzione_sud", "donne_svantaggiate"],
+      "nonCumulabileCon": ["under36", "decontribuzione_sud", "donne_fornero", "donne_decreto_coesione"],
       "scadenza": null,
       "scadenzaAlertGiorni": null
     },
@@ -224,7 +277,7 @@
         "neet": true
       },
       "cumulabileCon": [],
-      "nonCumulabileCon": ["under36", "donne_svantaggiate", "decontribuzione_sud"],
+      "nonCumulabileCon": ["under36", "donne_fornero", "donne_decreto_coesione", "decontribuzione_sud"],
       "scadenza": "2026-12-31T00:00:00Z",
       "scadenzaAlertGiorni": 90
     }

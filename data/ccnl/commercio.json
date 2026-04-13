@@ -24,11 +24,11 @@
       },
       "previcommercio": {
         "tipo": "previdenziale",
-        "modalita": "fisso",
-        "importoMensile": 28.85,
-        "percentuale": null,
-        "descrizione": "Fondo previdenza complementare integrativa Previcommercio",
-        "notaLegge": "CCNL Commercio Confcommercio — Wolters Kluwer One Lavoro"
+        "modalita": "percentuale",
+        "importoMensile": null,
+        "percentuale": 0.0155,
+        "descrizione": "Fondo previdenza complementare Previcommercio (1,55% sulla retribuzione utile TFR — quota datore)",
+        "notaLegge": "Art. 97-99 CCNL Commercio Confcommercio"
       }
     }
   },
@@ -63,13 +63,13 @@
       "importoMensile": 5.07,
       "mensilita": 12,
       "condizione": null,
-      "descrizione": "Ex festività (4 novembre)"
+      "descrizione": "Ex festività (4 novembre) — tecnicamente sono 32 ore/anno di permesso retribuito, qui monetizzate come costo orario per il datore"
     },
     "festivitaNonGodute": {
       "importoMensile": 10.14,
       "mensilita": 12,
       "condizione": null,
-      "descrizione": "Festività non godute"
+      "descrizione": "Festività non godute — rappresentano il costo retributivo aggiuntivo per le festività cadenti di domenica o in giorni non lavorativi"
     },
     "contributoSolidarieta": {
       "importoMensile": 2.89,

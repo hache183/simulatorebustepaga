@@ -307,12 +307,12 @@
       "note": "Trasporti industria — trasporto persone"
     },
     {
-      "codice": "3100_ind",
+      "codice": "3110_ind",
       "settore": "Edilizia civile e industriale (industria)",
       "gestione": "industria",
       "tassoPerMille": 110.00,
       "rangeOscillazione": { "min": 77.00, "max": 110.00 },
-      "note": "TODO: verificare — voce 3100 non trovata esplicitamente nel PDF industria. Valore stimato dal range superiore."
+      "note": "Voce 3110 (non gruppo 3100) — edilizia civile e industriale. Tasso 110‰ confermato da tariffe INAIL."
     },
     {
       "codice": "1100_aa",

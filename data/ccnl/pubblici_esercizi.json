@@ -34,7 +34,7 @@
     { "codice": "6",  "descrizione": "6° livello",  "qualifica": "Garzone, ausiliario",                               "minimoTabellare": 1008.00, "moltiplicatore": 0.56 }
   ],
   "scattiAnzianita": {
-    "periodicitaMesi": 24,
+    "periodicitaMesi": 36,
     "importoPerScattoEuro": 8.76,
     "maxScatti": 8
   }

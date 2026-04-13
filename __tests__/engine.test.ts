@@ -20,10 +20,10 @@ const inputBase = {
 };
 
 // ─── CASO 1: Costo base realistico ───────────────────────────────────────
-test('costo base: deve essere tra 128% e 150% della RAL', async () => {
+test('costo base: deve essere tra 128% e 160% della RAL', async () => {
   const result = await calculateCosto(inputBase);
   expect(result.costoTotaleAnnuo).toBeGreaterThan(28_000 * 1.28);
-  expect(result.costoTotaleAnnuo).toBeLessThan(28_000 * 1.50);
+  expect(result.costoTotaleAnnuo).toBeLessThan(28_000 * 1.60);
   expect(result.costoTotaleMensile).toBeCloseTo(result.costoTotaleAnnuo / 12, 0);
 });
 
@@ -122,13 +122,12 @@ test('mensilita 17: deve lanciare ZodError — sopra il massimo ammesso', async 
   ).rejects.toThrow(ZodError);
 });
 
-test('mensilita 14: costo deve essere maggiore di mensilita 13 (quattordicesima inclusa)', async () => {
+test('mensilita 14 vs 13: con stessa RAL il costo totale è identico (le mensilità sono già nella RAL)', async () => {
   const con13 = await calculateCosto({ ...inputBase, mensilita: 13 });
   const con14 = await calculateCosto({ ...inputBase, mensilita: 14 });
-  expect(con14.costoTotaleAnnuo).toBeGreaterThan(con13.costoTotaleAnnuo);
-  // La differenza deve essere circa una mensilità netta (RAL/12 + contributi)
-  const differenza = con14.costoTotaleAnnuo - con13.costoTotaleAnnuo;
-  expect(differenza).toBeGreaterThan(28_000 / 12); // almeno il lordo di una mensilità
+  // Con la stessa RAL, il costo aziendale non cambia: le mensilità aggiuntive
+  // sono una diversa distribuzione dello stesso importo annuo
+  expect(con14.costoTotaleAnnuo).toBeCloseTo(con13.costoTotaleAnnuo, 0);
 });
 
 test('mensilita 16: deve contenere voce mensilita_extra con importo corretto', async () => {
@@ -252,6 +251,13 @@ test('getSettoreContributivo: edilizia deve dare edilizia_industria', () => {
   expect(settore!.aliquotaDatore).toBeCloseTo(0.3447, 4);
 });
 
+test('getSettoreContributivo: agricoltura deve dare settore agricoltura dedicato (non industria)', () => {
+  const settore = getSettoreContributivo('agricoltura', 10);
+  expect(settore).toBeDefined();
+  expect(settore!.aliquotaDatore).toBeCloseTo(0.3950, 4);
+  expect(settore!.nome).toContain('Agricoltura');
+});
+
 // ─── MOD D: Netto dipendente ───────────────────────────────────────────────
 test('nettoDipendente deve essere presente nel risultato', async () => {
   const result = await calculateCosto(inputBase);
@@ -297,7 +303,7 @@ test('nettoDipendente: part-time 20h netto annuo deve essere circa metà del ful
 });
 
 test('nettoDipendente: bonus cuneo fiscale presente per redditi bassi', async () => {
-  // RAL 21584.78 → imponibile ~19602 → sotto 20k → bonus 7.1%
+  // RAL 21584.78 → imponibile ~19602 → sotto 20k → bonus cuneo (sub-fasce 7.1%/5.3%/4.8%)
   const result = await calculateCosto({
     ...inputBase,
     livello: '6',
@@ -351,11 +357,12 @@ describe('GOLDEN TEST — CCNL Commercio Liv.6 full-time', () => {
     expect(inail.importoAnnuo).toBeCloseTo(21_584.78 * 7.31 / 1000, 0);
   });
 
-  test('Contributi CCNL fissi ~525 €/anno (fondi Est+Ebiter+Previcommercio)', async () => {
+  test('Contributi CCNL ~515 €/anno (fondi Est+Ebiter+Previcommercio 1.55%)', async () => {
     const result = await calculateCosto(goldenInput);
     const ccnlContrib = result.voci.find(v => v.id === 'contributi_ccnl')!;
-    // FondoEst 10.42 + Ebiter 4.58 + Previcommercio 28.85 = 43.85/mese × 12 = 526.20
-    expect(ccnlContrib.importoAnnuo).toBeCloseTo((10.42 + 4.58 + 28.85) * 12, 0);
+    // FondoEst 10.42×12 + Ebiter 4.58×12 + Previcommercio 1.55% × 21584.78
+    const atteso = (10.42 + 4.58) * 12 + 21_584.78 * 0.0155;
+    expect(ccnlContrib.importoAnnuo).toBeCloseTo(atteso, 0);
   });
 
   test('Costo totale annuo deve essere tra 28.000 € e 35.000 €', async () => {

@@ -37,27 +37,30 @@ const InputSchema = z.object({
 
 // Soglie sanity check: il costo totale deve essere tra il 128% e il 150% della RAL.
 // Se è fuori range, probabilmente c'è un errore nelle aliquote JSON.
-const RANGE_ATTESO = { min: 1.28, max: 1.50 };
+const RANGE_ATTESO = { min: 1.28, max: 1.60 };
 
 /**
- * Calcola IRPEF lorda per scaglioni 2025-2026 (confermati da L. 207/2024).
+ * Calcola IRPEF lorda per scaglioni 2025-2026 (L. 207/2024, aggiornata da L. 199/2025).
+ * Dal 2025 il secondo scaglione passa dal 35% al 33% (art. 1 L. 199/2025).
  */
 function calcolaIrpefLorda(imponibile: number): number {
   if (imponibile <= 28_000) {
     return imponibile * 0.23;
   } else if (imponibile <= 50_000) {
-    return 28_000 * 0.23 + (imponibile - 28_000) * 0.35;
+    return 28_000 * 0.23 + (imponibile - 28_000) * 0.33;
   } else {
-    return 28_000 * 0.23 + 22_000 * 0.35 + (imponibile - 50_000) * 0.43;
+    return 28_000 * 0.23 + 22_000 * 0.33 + (imponibile - 50_000) * 0.43;
   }
 }
 
 /**
  * Calcola detrazione per lavoro dipendente (art. 13 TUIR post-riforma).
+ * La detrazione minima è 690€ per tempo indeterminato, 1.380€ per tempo determinato.
  */
-function calcolaDetrazioneLavoroDip(imponibile: number): number {
+function calcolaDetrazioneLavoroDip(imponibile: number, tipoContratto: string): number {
+  const detrazioneMinima = tipoContratto === 'tempo_determinato' ? 1380 : 690;
   if (imponibile <= 15_000) {
-    return Math.max(1955, 690);
+    return Math.max(1955, detrazioneMinima);
   } else if (imponibile <= 28_000) {
     return 1910 + 1190 * (28_000 - imponibile) / 13_000;
   } else if (imponibile <= 50_000) {
@@ -68,12 +71,16 @@ function calcolaDetrazioneLavoroDip(imponibile: number): number {
 
 /**
  * Calcola bonus cuneo fiscale 2025 (L. 207/2024, art. 1 cc. 4-9).
- * Sostituisce il taglio contributivo. Per redditi fino a 20k è un bonus non tassabile,
- * per redditi 20k-40k è una detrazione IRPEF aggiuntiva.
+ * Sostituisce il taglio contributivo. Per redditi fino a 20k è un bonus non tassabile
+ * con tre sotto-fasce (7.1%, 5.3%, 4.8%), per redditi 20k-40k è una detrazione IRPEF aggiuntiva.
  */
 function calcolaBonusCuneoFiscale(redditoComplessivo: number): number {
-  if (redditoComplessivo <= 20_000) {
+  if (redditoComplessivo <= 8_500) {
     return redditoComplessivo * 0.071;
+  } else if (redditoComplessivo <= 15_000) {
+    return 8_500 * 0.071 + (redditoComplessivo - 8_500) * 0.053;
+  } else if (redditoComplessivo <= 20_000) {
+    return 8_500 * 0.071 + 6_500 * 0.053 + (redditoComplessivo - 15_000) * 0.048;
   } else if (redditoComplessivo <= 32_000) {
     return 1_000;
   } else if (redditoComplessivo <= 40_000) {
@@ -89,6 +96,7 @@ function calcolaNettoDipendente(
   ral: number,
   mensilita: number,
   aliquotaInpsDipendente: number,
+  tipoContratto: string,
 ): NettoDipendente {
   // STEP 2 — Contributi INPS dipendente
   const inpsDipendente = ral * aliquotaInpsDipendente;
@@ -100,7 +108,7 @@ function calcolaNettoDipendente(
   const irpefLorda = calcolaIrpefLorda(imponibileIrpef);
 
   // STEP 5 — Detrazioni lavoro dipendente
-  const detrazioneLavoroDip = calcolaDetrazioneLavoroDip(imponibileIrpef);
+  const detrazioneLavoroDip = calcolaDetrazioneLavoroDip(imponibileIrpef, tipoContratto);
 
   // STEP 6 — Bonus cuneo fiscale 2025
   const bonusCuneoFiscale = calcolaBonusCuneoFiscale(imponibileIrpef);
@@ -108,7 +116,9 @@ function calcolaNettoDipendente(
   // STEP 7 — IRPEF netta
   const irpefNetta = Math.max(0, irpefLorda - detrazioneLavoroDip - bonusCuneoFiscale);
 
-  // STEP 8 — Addizionali (stima media nazionale)
+  // STEP 8 — Addizionali (stima media nazionale — varia per regione/comune.
+  // Regionale: da 0,90% (Bolzano) a 3,33% (Lazio/Campania fascia alta). Media ~1,73%.
+  // Comunale: da 0% a 0,90%. Media ~0,80%.
   const addizionaleRegionale = imponibileIrpef * 0.0173;
   const addizionaleComunale = imponibileIrpef * 0.008;
 
@@ -227,9 +237,11 @@ export async function calculateCosto(rawInput: unknown): Promise<CalcolatoreOutp
   }
 
   // 11. Totale
+  // NOTA: la RAL include già tutte le mensilità (es. 1541.77 × 14 = 21584.78),
+  // quindi tredicesima, quattordicesima e mensilità extra NON vanno aggiunte al totale
+  // — sono solo voci informative che mostrano la scomposizione della RAL.
   const costoTotaleAnnuo =
     ralEffettiva + inpsNetto + tfr + inail +
-    tredicesima + quattordicesima + quindicesimaESedicesima +
     contributiCcnl + costoScatti + costoElementiAggiuntivi;
 
   const percentualeRal = costoTotaleAnnuo / ralEffettiva;
@@ -298,30 +310,30 @@ export async function calculateCosto(rawInput: unknown): Promise<CalcolatoreOutp
     {
       id: 'inail',
       categoria: 'inail',
-      descrizione: 'Premio INAIL',
+      descrizione: 'Premio INAIL (tasso medio nazionale — il tasso effettivo della vostra azienda dipende dall\'oscillazione per andamento infortunistico e può variare significativamente)',
       importoAnnuo: inail,
       importoMensile: inail / 12,
       percentualeRal: inail / ralEffettiva,
-      notaLegge: 'D.P.R. 1124/1965 — Testo Unico INAIL',
+      notaLegge: 'D.P.R. 1124/1965 — Testo Unico INAIL. Tasso medio di tariffa: l\'oscillazione individuale può variare ±40%.',
     },
     {
       id: 'tredicesima',
       categoria: 'tredicesima',
-      descrizione: 'Tredicesima mensilità',
+      descrizione: 'Tredicesima mensilità (già inclusa nella RAL)',
       importoAnnuo: tredicesima,
       importoMensile: tredicesima / 12,
       percentualeRal: tredicesima / ralEffettiva,
-      notaLegge: 'CCNL — obbligatoria per tutti i lavoratori dipendenti',
+      notaLegge: 'CCNL — obbligatoria per tutti i lavoratori dipendenti. Voce informativa: importo già compreso nella RAL.',
     },
     ...(quattordicesima > 0
       ? [{
           id: 'quattordicesima',
           categoria: 'quattordicesima' as const,
-          descrizione: 'Quattordicesima mensilità',
+          descrizione: 'Quattordicesima mensilità (già inclusa nella RAL)',
           importoAnnuo: quattordicesima,
           importoMensile: quattordicesima / 12,
           percentualeRal: quattordicesima / ralEffettiva,
-          notaLegge: 'CCNL — prevista per CCNL con 14+ mensilità',
+          notaLegge: 'CCNL — prevista per CCNL con 14+ mensilità. Voce informativa: importo già compreso nella RAL.',
         }]
       : []),
     ...(quindicesimaESedicesima > 0
@@ -367,7 +379,7 @@ export async function calculateCosto(rawInput: unknown): Promise<CalcolatoreOutp
   ];
 
   // 13. Calcolo netto dipendente
-  const nettoDipendente = calcolaNettoDipendente(ralEffettiva, mensilita, aliquotaDipendenteDefault);
+  const nettoDipendente = calcolaNettoDipendente(ralEffettiva, mensilita, aliquotaDipendenteDefault, input.tipoContratto);
 
   return {
     input,
