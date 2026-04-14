@@ -1,6 +1,9 @@
 {
   "functions": {
-    "app/api/**": { "maxDuration": 10 }
+    "app/api/**": {
+      "maxDuration": 10,
+      "includeFiles": "data/**"
+    }
   },
   "regions": ["fra1"],
   "headers": [

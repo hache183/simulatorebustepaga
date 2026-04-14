@@ -1,8 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  outputFileTracingIncludes: {
-    '/api/**': ['./data/**/*.json'],
-  },
   async headers() {
     return [
       {
