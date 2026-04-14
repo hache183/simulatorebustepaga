@@ -1,0 +1,43 @@
+{
+  "id": "grafica_editoria",
+  "nome": "CCNL Grafica, Editoria e Cartaria (Assografici/Confindustria)",
+  "fonte": "CCNL Grafica Editoria — Assografici + SLC-CGIL, FISTEL-CISL, UILCOM-UIL",
+  "updatedAt": "2026-04-14T00:00:00Z",
+  "mensilita": 14,
+  "contributiContrattuali": {
+    "azienda": {
+      "byblos": {
+        "tipo": "previdenziale",
+        "modalita": "percentuale",
+        "importoMensile": null,
+        "percentuale": 0.0165,
+        "descrizione": "BYBLOS — Fondo pensione complementare grafica-editoria (1,65% quota datore)",
+        "notaLegge": "CCNL Grafica Editoria — previdenza complementare"
+      },
+      "saluteSempre": {
+        "tipo": "sanitario",
+        "modalita": "fisso",
+        "importoMensile": 12.00,
+        "percentuale": null,
+        "descrizione": "Salute Sempre — Fondo assistenza sanitaria grafica (€ 12/mese)",
+        "notaLegge": "CCNL Grafica Editoria — assistenza sanitaria integrativa"
+      }
+    }
+  },
+  "livelli": [
+    { "codice": "Q",  "descrizione": "Quadro",      "qualifica": "Funzioni direttive con responsabilità editoriale/produttiva", "minimoTabellare": 2000.00, "moltiplicatore": 1.00 },
+    { "codice": "1",  "descrizione": "1° livello",  "qualifica": "Personale con alta professionalità e responsabilità tecnica", "minimoTabellare": 1850.00, "moltiplicatore": 0.93 },
+    { "codice": "2",  "descrizione": "2° livello",  "qualifica": "Impiegati con mansioni di concetto, redattori", "minimoTabellare": 1700.00, "moltiplicatore": 0.85 },
+    { "codice": "3",  "descrizione": "3° livello",  "qualifica": "Tecnici qualificati, impaginatori, compositori", "minimoTabellare": 1550.00, "moltiplicatore": 0.78 },
+    { "codice": "4",  "descrizione": "4° livello",  "qualifica": "Operai specializzati, stampatori", "minimoTabellare": 1400.00, "moltiplicatore": 0.70 },
+    { "codice": "5",  "descrizione": "5° livello",  "qualifica": "Operai qualificati, legatoria", "minimoTabellare": 1280.00, "moltiplicatore": 0.64 },
+    { "codice": "6",  "descrizione": "6° livello",  "qualifica": "Operai comuni, confezionamento", "minimoTabellare": 1180.00, "moltiplicatore": 0.59 },
+    { "codice": "7",  "descrizione": "7° livello",  "qualifica": "Personale ausiliario e servizi generali", "minimoTabellare": 1140.00, "moltiplicatore": 0.57 },
+    { "codice": "8",  "descrizione": "8° livello",  "qualifica": "Personale di primo impiego", "minimoTabellare": 1100.00, "moltiplicatore": 0.55 }
+  ],
+  "scattiAnzianita": {
+    "periodicitaMesi": 24,
+    "importoPerScattoEuro": 12.00,
+    "maxScatti": 5
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "id": "gomma_plastica",
+  "nome": "CCNL Gomma-Plastica (Federazione Gomma Plastica / Confindustria)",
+  "fonte": "CCNL Gomma-Plastica — Federazione Gomma Plastica + FILCTEM-CGIL, FEMCA-CISL, UILTEC-UIL",
+  "updatedAt": "2026-04-14T00:00:00Z",
+  "mensilita": 13,
+  "contributiContrattuali": {
+    "azienda": {
+      "fonchim": {
+        "tipo": "previdenziale",
+        "modalita": "percentuale",
+        "importoMensile": null,
+        "percentuale": 0.0195,
+        "descrizione": "FONCHIM — Fondo pensione complementare chimici (1,95% quota datore)",
+        "notaLegge": "CCNL Gomma-Plastica — previdenza complementare"
+      },
+      "faschim": {
+        "tipo": "sanitario",
+        "modalita": "fisso",
+        "importoMensile": 17.00,
+        "percentuale": null,
+        "descrizione": "FASCHIM — Fondo assistenza sanitaria chimici (€ 17/mese)",
+        "notaLegge": "CCNL Gomma-Plastica — assistenza sanitaria integrativa"
+      }
+    }
+  },
+  "livelli": [
+    { "codice": "Q", "descrizione": "Quadro",     "qualifica": "Funzioni direttive con responsabilità di unità produttiva", "minimoTabellare": 2020.00, "moltiplicatore": 1.00 },
+    { "codice": "A", "descrizione": "Livello A",   "qualifica": "Personale con alta professionalità e autonomia", "minimoTabellare": 1850.00, "moltiplicatore": 0.92 },
+    { "codice": "B", "descrizione": "Livello B",   "qualifica": "Tecnici qualificati, capireparto", "minimoTabellare": 1660.00, "moltiplicatore": 0.82 },
+    { "codice": "C", "descrizione": "Livello C",   "qualifica": "Operai specializzati, impiegati qualificati", "minimoTabellare": 1490.00, "moltiplicatore": 0.74 },
+    { "codice": "D", "descrizione": "Livello D",   "qualifica": "Operai qualificati, addetti macchine", "minimoTabellare": 1370.00, "moltiplicatore": 0.68 },
+    { "codice": "E", "descrizione": "Livello E",   "qualifica": "Operai comuni, addetti confezionamento", "minimoTabellare": 1230.00, "moltiplicatore": 0.61 },
+    { "codice": "F", "descrizione": "Livello F",   "qualifica": "Personale di primo impiego e pulizia", "minimoTabellare": 1120.00, "moltiplicatore": 0.55 }
+  ],
+  "scattiAnzianita": {
+    "periodicitaMesi": 24,
+    "importoPerScattoEuro": 15.00,
+    "maxScatti": 5
+  }
+}

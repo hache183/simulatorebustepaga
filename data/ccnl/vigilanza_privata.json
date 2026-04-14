@@ -1,0 +1,41 @@
+{
+  "id": "vigilanza_privata",
+  "nome": "CCNL Vigilanza Privata e Servizi Fiduciari (Assiv/Univ)",
+  "fonte": "CCNL Vigilanza Privata — ANIVP, Assiv, Univ + FILCAMS-CGIL, FISASCAT-CISL, UILTuCS",
+  "updatedAt": "2026-04-14T00:00:00Z",
+  "mensilita": 14,
+  "contributiContrattuali": {
+    "azienda": {
+      "fondoSanitario": {
+        "tipo": "sanitario",
+        "modalita": "fisso",
+        "importoMensile": 10.00,
+        "percentuale": null,
+        "descrizione": "Fondo sanitario integrativo vigilanza privata",
+        "notaLegge": "CCNL Vigilanza Privata — assistenza sanitaria integrativa"
+      },
+      "fondoPensione": {
+        "tipo": "previdenziale",
+        "modalita": "percentuale",
+        "importoMensile": null,
+        "percentuale": 0.0100,
+        "descrizione": "Fondo pensione complementare vigilanza (1,00% quota datore)",
+        "notaLegge": "CCNL Vigilanza Privata — previdenza complementare"
+      }
+    }
+  },
+  "livelli": [
+    { "codice": "Q",  "descrizione": "Quadro",      "qualifica": "Funzioni direttive istituti di vigilanza", "minimoTabellare": 1550.00, "moltiplicatore": 1.00 },
+    { "codice": "1",  "descrizione": "1° livello",  "qualifica": "GPG Ispettore, responsabile operativo", "minimoTabellare": 1400.00, "moltiplicatore": 0.90 },
+    { "codice": "2",  "descrizione": "2° livello",  "qualifica": "GPG Capo servizio, coordinatore", "minimoTabellare": 1280.00, "moltiplicatore": 0.83 },
+    { "codice": "3",  "descrizione": "3° livello",  "qualifica": "Guardia Particolare Giurata (GPG)", "minimoTabellare": 1175.00, "moltiplicatore": 0.76 },
+    { "codice": "4",  "descrizione": "4° livello",  "qualifica": "GPG base, impiegato amministrativo", "minimoTabellare": 1075.00, "moltiplicatore": 0.69 },
+    { "codice": "5",  "descrizione": "5° livello",  "qualifica": "Addetto portierato e receptionist", "minimoTabellare": 990.00, "moltiplicatore": 0.64 },
+    { "codice": "6",  "descrizione": "6° livello",  "qualifica": "Ausiliario, addetto servizi fiduciari", "minimoTabellare": 920.00, "moltiplicatore": 0.59 }
+  ],
+  "scattiAnzianita": {
+    "periodicitaMesi": 36,
+    "importoPerScattoEuro": 10.00,
+    "maxScatti": 7
+  }
+}

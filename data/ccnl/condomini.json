@@ -1,0 +1,30 @@
+{
+  "id": "condomini",
+  "nome": "CCNL Condomini — Proprietari di Fabbricati (Confedilizia)",
+  "fonte": "CCNL Dipendenti da Proprietari di Fabbricati — Confedilizia + FILCAMS-CGIL, FISASCAT-CISL, UILTuCS",
+  "updatedAt": "2026-04-14T00:00:00Z",
+  "mensilita": 13,
+  "contributiContrattuali": {
+    "azienda": {
+      "fondoSanitario": {
+        "tipo": "sanitario",
+        "modalita": "fisso",
+        "importoMensile": 10.00,
+        "percentuale": null,
+        "descrizione": "Fondo sanitario integrativo dipendenti fabbricati",
+        "notaLegge": "CCNL Proprietari di Fabbricati — assistenza sanitaria"
+      }
+    }
+  },
+  "livelli": [
+    { "codice": "A",  "descrizione": "Livello A",  "qualifica": "Portiere con mansioni di sorveglianza e manutenzione qualificata", "minimoTabellare": 1100.00, "moltiplicatore": 1.00 },
+    { "codice": "B",  "descrizione": "Livello B",  "qualifica": "Portiere con mansioni di pulizia e gestione accessi", "minimoTabellare": 1000.00, "moltiplicatore": 0.91 },
+    { "codice": "C",  "descrizione": "Livello C",  "qualifica": "Addetto pulizia, giardiniere condominiale", "minimoTabellare": 900.00, "moltiplicatore": 0.82 },
+    { "codice": "D",  "descrizione": "Livello D",  "qualifica": "Addetto servizi generici condominiali", "minimoTabellare": 800.00, "moltiplicatore": 0.73 }
+  ],
+  "scattiAnzianita": {
+    "periodicitaMesi": 24,
+    "importoPerScattoEuro": 7.00,
+    "maxScatti": 8
+  }
+}

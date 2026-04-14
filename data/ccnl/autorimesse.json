@@ -1,0 +1,41 @@
+{
+  "id": "autorimesse",
+  "nome": "CCNL Autorimesse e Noleggio (ANIASA)",
+  "fonte": "CCNL Autorimesse, Noleggio, Autosilos — ANIASA + FILT-CGIL, FIT-CISL, UILTRASPORTI",
+  "updatedAt": "2026-04-14T00:00:00Z",
+  "mensilita": 14,
+  "contributiContrattuali": {
+    "azienda": {
+      "fondoSanitario": {
+        "tipo": "sanitario",
+        "modalita": "fisso",
+        "importoMensile": 10.00,
+        "percentuale": null,
+        "descrizione": "Fondo assistenza sanitaria integrativa autorimesse",
+        "notaLegge": "CCNL Autorimesse — assistenza sanitaria integrativa"
+      },
+      "fondoPensione": {
+        "tipo": "previdenziale",
+        "modalita": "percentuale",
+        "importoMensile": null,
+        "percentuale": 0.0100,
+        "descrizione": "Fondo pensione complementare (1,00% quota datore)",
+        "notaLegge": "CCNL Autorimesse — previdenza complementare"
+      }
+    }
+  },
+  "livelli": [
+    { "codice": "Q",  "descrizione": "Quadro",      "qualifica": "Direttore autorimessa, responsabile operativo", "minimoTabellare": 1700.00, "moltiplicatore": 1.00 },
+    { "codice": "1",  "descrizione": "1° livello",  "qualifica": "Personale con responsabilità gestionale e coordinamento", "minimoTabellare": 1550.00, "moltiplicatore": 0.91 },
+    { "codice": "2",  "descrizione": "2° livello",  "qualifica": "Impiegati qualificati, capo officina", "minimoTabellare": 1400.00, "moltiplicatore": 0.82 },
+    { "codice": "3",  "descrizione": "3° livello",  "qualifica": "Meccanici qualificati, addetti noleggio", "minimoTabellare": 1250.00, "moltiplicatore": 0.74 },
+    { "codice": "4",  "descrizione": "4° livello",  "qualifica": "Addetti parcheggio, lavaggio, cassa", "minimoTabellare": 1100.00, "moltiplicatore": 0.65 },
+    { "codice": "5",  "descrizione": "5° livello",  "qualifica": "Guardiani, addetti movimentazione veicoli", "minimoTabellare": 1020.00, "moltiplicatore": 0.60 },
+    { "codice": "6",  "descrizione": "6° livello",  "qualifica": "Personale generico di primo impiego", "minimoTabellare": 950.00, "moltiplicatore": 0.56 }
+  ],
+  "scattiAnzianita": {
+    "periodicitaMesi": 36,
+    "importoPerScattoEuro": 10.00,
+    "maxScatti": 5
+  }
+}

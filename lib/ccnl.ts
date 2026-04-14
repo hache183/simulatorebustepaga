@@ -5,12 +5,18 @@ import type { CcnlData, LivelloCcnl } from '@/types';
 const cache = new Map<string, CcnlData>();
 const DATA_DIR = path.join(process.cwd(), 'data', 'ccnl');
 
+// Regex per prevenire path traversal: solo lettere minuscole, numeri e underscore
+const CCNL_ID_PATTERN = /^[a-z0-9_]+$/;
+
 /**
  * Carica i dati di un CCNL dal file JSON.
  * Usa cache in-memory per evitare letture disco ripetute.
  * @throws {Error} Se il CCNL non esiste o il JSON non è valido
  */
 export function getCcnlData(ccnlId: string): CcnlData {
+  if (!CCNL_ID_PATTERN.test(ccnlId)) {
+    throw new Error(`CCNL ID non valido: '${ccnlId}'. Sono ammessi solo caratteri a-z, 0-9, _`);
+  }
   if (cache.has(ccnlId)) return cache.get(ccnlId)!;
   const filePath = path.join(DATA_DIR, `${ccnlId}.json`);
   if (!fs.existsSync(filePath)) {

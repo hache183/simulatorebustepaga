@@ -1,0 +1,42 @@
+{
+  "id": "legno_arredamento",
+  "nome": "CCNL Legno, Arredamento e Mobili — Industria (FederlegnoArredo)",
+  "fonte": "CCNL Legno Arredamento Industria — FederlegnoArredo + FILLEA-CGIL, FILCA-CISL, FENEAL-UIL",
+  "updatedAt": "2026-04-14T00:00:00Z",
+  "mensilita": 13,
+  "contributiContrattuali": {
+    "azienda": {
+      "arco": {
+        "tipo": "previdenziale",
+        "modalita": "percentuale",
+        "importoMensile": null,
+        "percentuale": 0.0150,
+        "descrizione": "ARCO — Fondo pensione complementare legno-arredamento (1,50% quota datore)",
+        "notaLegge": "CCNL Legno-Arredamento — previdenza complementare"
+      },
+      "altea": {
+        "tipo": "sanitario",
+        "modalita": "fisso",
+        "importoMensile": 12.00,
+        "percentuale": null,
+        "descrizione": "ALTEA — Fondo assistenza sanitaria integrativa legno (€ 12/mese)",
+        "notaLegge": "CCNL Legno-Arredamento — assistenza sanitaria integrativa"
+      }
+    }
+  },
+  "livelli": [
+    { "codice": "Q", "descrizione": "Quadro",     "qualifica": "Funzioni direttive con responsabilità di reparto/stabilimento", "minimoTabellare": 1850.00, "moltiplicatore": 1.00 },
+    { "codice": "A", "descrizione": "Livello A",   "qualifica": "Personale con alta professionalità e autonomia decisionale", "minimoTabellare": 1720.00, "moltiplicatore": 0.93 },
+    { "codice": "B", "descrizione": "Livello B",   "qualifica": "Tecnici specializzati, capireparto", "minimoTabellare": 1580.00, "moltiplicatore": 0.85 },
+    { "codice": "C", "descrizione": "Livello C",   "qualifica": "Operai specializzati, ebanisti qualificati", "minimoTabellare": 1420.00, "moltiplicatore": 0.77 },
+    { "codice": "D", "descrizione": "Livello D",   "qualifica": "Operai qualificati, addetti macchinari", "minimoTabellare": 1280.00, "moltiplicatore": 0.69 },
+    { "codice": "E", "descrizione": "Livello E",   "qualifica": "Operai comuni, addetti montaggio", "minimoTabellare": 1170.00, "moltiplicatore": 0.63 },
+    { "codice": "F", "descrizione": "Livello F",   "qualifica": "Manovali, personale generico di primo impiego", "minimoTabellare": 1080.00, "moltiplicatore": 0.58 },
+    { "codice": "G", "descrizione": "Livello G",   "qualifica": "Personale di pulizia e servizi ausiliari", "minimoTabellare": 1050.00, "moltiplicatore": 0.57 }
+  ],
+  "scattiAnzianita": {
+    "periodicitaMesi": 24,
+    "importoPerScattoEuro": 10.00,
+    "maxScatti": 5
+  }
+}

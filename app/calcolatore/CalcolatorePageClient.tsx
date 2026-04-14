@@ -13,6 +13,9 @@ interface Step1Data {
   oreLavoro: number;
   mensilita: number;
   retribuzionePersonalizzata?: number;
+  pagaOraria?: number;
+  oreSettimanali?: number;
+  convivente?: boolean;
 }
 
 interface Step2Data {
@@ -142,7 +145,7 @@ export function CalcolatorePageClient({ updatedDates }: Props) {
             animation: 'fadeSlideIn 0.2s ease forwards',
           }}>
             {step === 1 && <CalcolatoreFormStep1 onNext={handleStep1} />}
-            {step === 2 && <CalcolatoreFormStep2 onSubmit={handleStep2} onBack={() => setStep(1)} isLoading={isLoading} contributiCcnl={contributiCcnl} />}
+            {step === 2 && <CalcolatoreFormStep2 onSubmit={handleStep2} onBack={() => setStep(1)} isLoading={isLoading} contributiCcnl={contributiCcnl} isDomestico={step1Data?.ccnlId === 'lavoro_domestico'} />}
           </div>
         )}
 

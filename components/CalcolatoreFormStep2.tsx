@@ -16,7 +16,7 @@ const REGIONI = [
 const Step2Schema = z.object({
   numeroDipendenti: z.number().min(1, 'Inserisci il numero di dipendenti'),
   regione: z.string().min(1, 'Seleziona la regione'),
-  codiceInail: z.string().min(4, 'Seleziona la categoria INAIL'),
+  codiceInail: z.string(),
   anzianitaAnni: z.number().min(0).max(50),
   agevolazioniSelezionate: z.array(z.string()),
   includiAssistenzaSanitaria: z.boolean(),
@@ -32,9 +32,10 @@ interface Props {
   onBack: () => void;
   isLoading: boolean;
   contributiCcnl?: Record<string, ContributoContrattuale>;
+  isDomestico?: boolean;
 }
 
-export function CalcolatoreFormStep2({ onSubmit, onBack, isLoading, contributiCcnl }: Props) {
+export function CalcolatoreFormStep2({ onSubmit, onBack, isLoading, contributiCcnl, isDomestico = false }: Props) {
   const [voceInail, setVociInail] = useState<VoceInail[]>([]);
   const [agevolazioni, setAgevolazioni] = useState<AgevolazioneInps[]>([]);
   const [conflitti, setConflitti] = useState<Record<string, string>>({});
@@ -85,7 +86,11 @@ export function CalcolatoreFormStep2({ onSubmit, onBack, isLoading, contributiCc
 
   return (
     <form onSubmit={handleSubmit((data) => {
-      onSubmit({ ...data, aliquotaInps: data.aliquotaInps / 100 });
+      if (isDomestico) {
+        onSubmit({ ...data, codiceInail: '', aliquotaInps: 0, agevolazioniSelezionate: [] });
+      } else {
+        onSubmit({ ...data, aliquotaInps: data.aliquotaInps / 100 });
+      }
     })} style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
 
       {/* Label sezione */}
@@ -143,6 +148,7 @@ export function CalcolatoreFormStep2({ onSubmit, onBack, isLoading, contributiCc
       </div>
 
       {/* Categoria INAIL */}
+      {!isDomestico && (
       <div>
         <label htmlFor="codiceInail" style={{ display: 'block', fontSize: '13px', fontWeight: 500,
           color: 'var(--color-text-secondary)', marginBottom: '6px' }}>
@@ -163,6 +169,7 @@ export function CalcolatoreFormStep2({ onSubmit, onBack, isLoading, contributiCc
         </select>
         {errors.codiceInail && <p style={{ marginTop: '4px', fontSize: '11px', color: 'var(--color-red)' }}>{errors.codiceInail.message}</p>}
       </div>
+      )}
 
       {/* Anzianità */}
       <div>
@@ -183,6 +190,7 @@ export function CalcolatoreFormStep2({ onSubmit, onBack, isLoading, contributiCc
       </div>
 
       {/* Aliquota INPS (MOD3) */}
+      {!isDomestico && (
       <div>
         <label htmlFor="aliquotaInps" style={{ display: 'block', fontSize: '13px', fontWeight: 500,
           color: 'var(--color-text-secondary)', marginBottom: '6px' }}>
@@ -210,6 +218,7 @@ export function CalcolatoreFormStep2({ onSubmit, onBack, isLoading, contributiCc
         </p>
         {errors.aliquotaInps && <p style={{ marginTop: '4px', fontSize: '11px', color: 'var(--color-red)' }}>{errors.aliquotaInps.message}</p>}
       </div>
+      )}
 
       {/* Toggle assistenza sanitaria integrativa (MOD2) */}
       <div>
@@ -242,6 +251,7 @@ export function CalcolatoreFormStep2({ onSubmit, onBack, isLoading, contributiCc
       </div>
 
       {/* Agevolazioni */}
+      {!isDomestico && (
       <div>
         <p style={{ fontSize: '13px', fontWeight: 500, color: 'var(--color-text-secondary)',
           marginBottom: '10px' }}>
@@ -306,6 +316,7 @@ export function CalcolatoreFormStep2({ onSubmit, onBack, isLoading, contributiCc
           })}
         </div>
       </div>
+      )}
 
       {/* Pulsanti */}
       <div style={{ display: 'flex', gap: '12px' }}>

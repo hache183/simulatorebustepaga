@@ -7,22 +7,34 @@ import { useState, useEffect } from 'react';
 import type { LivelloCcnl, ContributoContrattuale } from '@/types';
 
 const CCNL_DISPONIBILI = [
-  { id: 'commercio',           nome: 'Commercio — Terziario Distribuzione e Servizi (Confcommercio)' },
-  { id: 'metalmeccanici',      nome: 'Metalmeccanici — Industria (Federmeccanica-Assistal)' },
-  { id: 'edilizia',            nome: 'Edilizia — Industria (ANCE)' },
-  { id: 'sanita_privata',      nome: 'Sanità Privata (Aiop-Aris)' },
-  { id: 'studi_professionali', nome: 'Studi Professionali (Confprofessioni)' },
-  { id: 'cooperative_sociali', nome: 'Cooperative Sociali (Legacoop-Agci-Confcooperative)' },
-  { id: 'trasporti',           nome: 'Trasporto Merci e Logistica (Conftrasporto)' },
-  { id: 'pubblici_esercizi',   nome: 'Pubblici Esercizi, Ristorazione e Turismo (FIPE)' },
-  { id: 'chimica',             nome: 'Chimica-Farmaceutica e Plastica (Federchimica)' },
-  { id: 'credito',             nome: 'Credito — Banche (ABI)' },
-  { id: 'multiservizi',        nome: 'Multiservizi — Pulizie e Facility (Ancst)' },
-  { id: 'telecomunicazioni',   nome: 'Telecomunicazioni (Asstel)' },
-  { id: 'tessile',             nome: 'Tessile-Abbigliamento-Moda (SMI)' },
-  { id: 'informatica',         nome: 'Informatica e Servizi Innovativi (Assinform)' },
-  { id: 'agricoltura',         nome: 'Agricoltura — Operai Agricoli (Confagricoltura)' },
-  { id: 'scuole_private',      nome: 'Scuole e Istituti Privati (Agidae-FISM)' },
+  { id: 'commercio',                  nome: 'Commercio — Terziario Distribuzione e Servizi (Confcommercio)' },
+  { id: 'metalmeccanici',             nome: 'Metalmeccanici — Industria (Federmeccanica-Assistal)' },
+  { id: 'edilizia',                   nome: 'Edilizia — Industria (ANCE)' },
+  { id: 'sanita_privata',             nome: 'Sanità Privata (Aiop-Aris)' },
+  { id: 'studi_professionali',        nome: 'Studi Professionali (Confprofessioni)' },
+  { id: 'cooperative_sociali',        nome: 'Cooperative Sociali (Legacoop-Agci-Confcooperative)' },
+  { id: 'trasporti',                  nome: 'Trasporto Merci e Logistica (Conftrasporto)' },
+  { id: 'pubblici_esercizi',          nome: 'Pubblici Esercizi, Ristorazione e Turismo (FIPE)' },
+  { id: 'chimica',                    nome: 'Chimica-Farmaceutica e Plastica (Federchimica)' },
+  { id: 'credito',                    nome: 'Credito — Banche (ABI)' },
+  { id: 'multiservizi',               nome: 'Multiservizi — Pulizie e Facility (Ancst)' },
+  { id: 'telecomunicazioni',          nome: 'Telecomunicazioni (Asstel)' },
+  { id: 'tessile',                    nome: 'Tessile-Abbigliamento-Moda (SMI)' },
+  { id: 'informatica',                nome: 'Informatica e Servizi Innovativi (Assinform)' },
+  { id: 'agricoltura',                nome: 'Agricoltura — Operai Agricoli (Confagricoltura)' },
+  { id: 'scuole_private',             nome: 'Scuole e Istituti Privati (Agidae-FISM)' },
+  { id: 'lavoro_domestico',           nome: 'Lavoro Domestico — Colf, Badanti, Baby-sitter (FIDALDO/DOMINA)' },
+  { id: 'alimentari',                 nome: 'Alimentari — Industria (Federalimentare)' },
+  { id: 'turismo',                    nome: 'Turismo — Alberghi e Strutture Ricettive (Federalberghi)' },
+  { id: 'assicurazioni',              nome: 'Assicurazioni (ANIA)' },
+  { id: 'gomma_plastica',             nome: 'Gomma-Plastica (Federazione Gomma Plastica)' },
+  { id: 'vigilanza_privata',          nome: 'Vigilanza Privata e Servizi Fiduciari (Assiv)' },
+  { id: 'legno_arredamento',          nome: 'Legno, Arredamento e Mobili (FederlegnoArredo)' },
+  { id: 'grafica_editoria',           nome: 'Grafica, Editoria e Cartaria (Assografici)' },
+  { id: 'metalmeccanici_artigianato', nome: 'Metalmeccanici — Artigianato (Confartigianato/CNA)' },
+  { id: 'commercio_confesercenti',    nome: 'Commercio — Confesercenti' },
+  { id: 'condomini',                  nome: 'Condomini — Proprietari di Fabbricati (Confedilizia)' },
+  { id: 'autorimesse',                nome: 'Autorimesse e Noleggio (ANIASA)' },
 ];
 
 const TIPI_CONTRATTO = [
@@ -37,7 +49,7 @@ const fmtEur = (n: number) => new Intl.NumberFormat('it-IT', { style: 'currency'
 const Step1Schema = z.object({
   ccnlId: z.string().min(1, 'Seleziona un CCNL'),
   livello: z.string().min(1, 'Seleziona il livello contrattuale'),
-  ral: z.number().min(10_000, 'Minimo 10.000 €').max(500_000, 'Massimo 500.000 €'),
+  ral: z.number().min(0, 'Minimo 0 €').max(500_000, 'Massimo 500.000 €'),
   tipoContratto: z.enum(['tempo_indeterminato', 'tempo_determinato', 'apprendistato', 'somministrazione']),
   oreLavoro: z.number().min(1).max(48),
   mensilita: z.number()
@@ -45,6 +57,10 @@ const Step1Schema = z.object({
     .min(13, 'Minimo 13 — la tredicesima è obbligatoria per legge (R.D.L. 1525/1937)')
     .max(16, 'Massimo 16 — oltre non esiste nel diritto del lavoro italiano'),
   retribuzionePersonalizzata: z.number().min(0).max(500_000).optional(),
+  // Campi lavoro domestico
+  pagaOraria: z.number().min(0).max(100).optional(),
+  oreSettimanali: z.number().min(1).max(54).optional(),
+  convivente: z.boolean().optional(),
 });
 
 type Step1Data = z.infer<typeof Step1Schema>;
@@ -57,8 +73,10 @@ export function CalcolatoreFormStep1({ onNext }: Props) {
   const [livelli, setLivelli] = useState<LivelloCcnl[]>([]);
   const [loadingLivelli, setLoadingLivelli] = useState(false);
   const [ccnlMensilita, setCcnlMensilita] = useState<number>(13);
-  const [contributiCcnl, setContributiCcnl] = useState<Record<string, ContributoContrattuale>>({});
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_contributiCcnl, setContributiCcnl] = useState<Record<string, ContributoContrattuale>>({});
   const [retribPersonalizzataAttiva, setRetribPersonalizzataAttiva] = useState(false);
+  const [isDomestico, setIsDomestico] = useState(false);
 
   const {
     register,
@@ -68,19 +86,22 @@ export function CalcolatoreFormStep1({ onNext }: Props) {
     formState: { errors },
   } = useForm<Step1Data>({
     resolver: zodResolver(Step1Schema),
-    defaultValues: { oreLavoro: 40, tipoContratto: 'tempo_indeterminato', mensilita: 13 },
+    defaultValues: { oreLavoro: 40, tipoContratto: 'tempo_indeterminato', mensilita: 13, convivente: false, oreSettimanali: 25 },
   });
 
   const ccnlSelezionato = watch('ccnlId');
   const oreLavoro = watch('oreLavoro');
   const livelloSelezionato = watch('livello');
   const ralWatch = watch('ral');
+  const convivente = watch('convivente');
 
   const livelloData = livelli.find(l => l.codice === livelloSelezionato);
   const ralTabellare = livelloData ? livelloData.minimoTabellare * ccnlMensilita : 0;
 
   useEffect(() => {
     if (!ccnlSelezionato) return;
+    const domestico = ccnlSelezionato === 'lavoro_domestico';
+    setIsDomestico(domestico);
     setLoadingLivelli(true);
     fetch(`/api/ccnl/${ccnlSelezionato}/livelli`)
       .then(r => r.json())
@@ -93,6 +114,11 @@ export function CalcolatoreFormStep1({ onNext }: Props) {
         // Reset livello selection when CCNL changes
         setValue('livello', '');
         setRetribPersonalizzataAttiva(false);
+        // Per lavoro domestico, pre-imposta paga oraria e ore
+        if (domestico) {
+          setValue('oreSettimanali', 25);
+          setValue('convivente', false);
+        }
       })
       .catch(() => setLivelli([]))
       .finally(() => setLoadingLivelli(false));
@@ -100,17 +126,30 @@ export function CalcolatoreFormStep1({ onNext }: Props) {
 
   // Precompile RAL when livello changes and retrib personalizzata is off
   useEffect(() => {
-    if (livelloData && !retribPersonalizzataAttiva) {
+    if (!livelloData || retribPersonalizzataAttiva) return;
+    if (isDomestico) {
+      // Per lavoro domestico: imposta pagaOraria dal minimo del livello
+      setValue('pagaOraria', livelloData.minimoTabellare);
+      const oreS = watch('oreSettimanali') ?? 25;
+      setValue('ral', Math.round(livelloData.minimoTabellare * oreS * 52 * 100) / 100);
+    } else {
       setValue('ral', Math.round(livelloData.minimoTabellare * ccnlMensilita * 100) / 100);
-      setValue('retribuzionePersonalizzata', undefined);
     }
-  }, [livelloSelezionato, retribPersonalizzataAttiva, ccnlMensilita]);
+    setValue('retribuzionePersonalizzata', undefined);
+  }, [livelloSelezionato, retribPersonalizzataAttiva, ccnlMensilita, isDomestico]);
 
-  const warningRalInferiore = retribPersonalizzataAttiva && livelloData && ralWatch && ralWatch < ralTabellare;
+  const warningRalInferiore = !isDomestico && retribPersonalizzataAttiva && livelloData && ralWatch && ralWatch < ralTabellare;
 
   return (
     <form onSubmit={handleSubmit((data) => {
-      if (retribPersonalizzataAttiva) {
+      if (isDomestico) {
+        // Per lavoro domestico, calcola la RAL dalla paga oraria
+        const po = data.pagaOraria ?? livelloData?.minimoTabellare ?? 0;
+        const os = data.oreSettimanali ?? 25;
+        data.ral = po * os * 52;
+        data.pagaOraria = po;
+        data.oreSettimanali = os;
+      } else if (retribPersonalizzataAttiva) {
         data.retribuzionePersonalizzata = data.ral;
       }
       onNext(data);
@@ -171,6 +210,13 @@ export function CalcolatoreFormStep1({ onNext }: Props) {
             {loadingLivelli ? 'Caricamento...' : livelli.length === 0 ? '— Prima seleziona il CCNL —' : '— Seleziona il livello —'}
           </option>
           {livelli.map(l => {
+            if (isDomestico) {
+              return (
+                <option key={l.codice} value={l.codice}>
+                  Liv. {l.codice} — {l.qualifica} — Min. {fmtEur(l.minimoTabellare)}/ora
+                </option>
+              );
+            }
             const ralAnnua = l.minimoTabellare * ccnlMensilita;
             return (
               <option key={l.codice} value={l.codice}>
@@ -191,15 +237,99 @@ export function CalcolatoreFormStep1({ onNext }: Props) {
               Liv. {livelloData.codice} — {livelloData.qualifica}
             </p>
             <div style={{ display: 'flex', gap: '16px', fontSize: '12px', color: 'var(--color-text-secondary)', fontFamily: "'DM Mono', monospace" }}>
-              <span>Min. tab. {fmtEur(livelloData.minimoTabellare)}/mese</span>
-              <span>RAL tab. {fmtEur(ralTabellare)}/anno</span>
+              {isDomestico ? (
+                <span>Min. {fmtEur(livelloData.minimoTabellare)}/ora</span>
+              ) : (
+                <>
+                  <span>Min. tab. {fmtEur(livelloData.minimoTabellare)}/mese</span>
+                  <span>RAL tab. {fmtEur(ralTabellare)}/anno</span>
+                </>
+              )}
             </div>
           </div>
         )}
       </div>
 
+      {/* ─── CAMPI SPECIFICI LAVORO DOMESTICO ──────────────────────── */}
+      {isDomestico && livelloData && (
+        <>
+          {/* Paga oraria */}
+          <div>
+            <label htmlFor="pagaOraria" style={{ display: 'block', fontSize: '13px', fontWeight: 500,
+              color: 'var(--color-text-secondary)', marginBottom: '6px' }}>
+              Paga oraria lorda
+            </label>
+            <div style={{ position: 'relative' }}>
+              <span style={{
+                position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)',
+                fontFamily: "'DM Mono', monospace", fontSize: '13px', color: 'var(--color-text-muted)',
+              }}>€</span>
+              <input id="pagaOraria" type="number" step="0.01" placeholder={String(livelloData.minimoTabellare)}
+                {...register('pagaOraria', { valueAsNumber: true })}
+                style={{
+                  width: '100%', padding: '11px 14px 11px 28px',
+                  background: 'var(--color-bg-input)', color: 'var(--color-text-primary)',
+                  border: `1px solid var(--color-border)`, borderRadius: '6px', fontSize: '13px',
+                  fontFamily: "'DM Mono', monospace",
+                }}
+              />
+            </div>
+          </div>
+
+          {/* Ore settimanali domestico */}
+          <div>
+            <label htmlFor="oreSettimanali" style={{ display: 'block', fontSize: '13px', fontWeight: 500,
+              color: 'var(--color-text-secondary)', marginBottom: '6px' }}>
+              Ore settimanali
+            </label>
+            <input id="oreSettimanali" type="number" step="1" min="1" max="54"
+              {...register('oreSettimanali', { valueAsNumber: true })}
+              style={{
+                width: '100%', padding: '11px 14px',
+                background: 'var(--color-bg-input)', color: 'var(--color-text-primary)',
+                border: `1px solid var(--color-border)`, borderRadius: '6px', fontSize: '13px',
+                fontFamily: "'DM Mono', monospace",
+              }}
+            />
+            <p style={{ marginTop: '4px', fontSize: '11px', color: 'var(--color-text-muted)' }}>
+              Oltre 24 ore/sett. il lavoratore è considerato convivente con tabella contributiva ridotta.
+            </p>
+          </div>
+
+          {/* Convivente toggle */}
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <button type="button"
+                onClick={() => setValue('convivente', !convivente)}
+                style={{
+                  width: '40px', height: '22px', borderRadius: '11px', border: 'none', cursor: 'pointer',
+                  background: convivente ? 'var(--color-accent)' : 'var(--color-bg-elevated)',
+                  position: 'relative', transition: 'background 0.2s ease',
+                  outline: `1px solid ${convivente ? 'var(--color-accent)' : 'var(--color-border)'}`,
+                }}>
+                <div style={{
+                  width: '16px', height: '16px', borderRadius: '50%', background: 'white',
+                  position: 'absolute', top: '3px',
+                  left: convivente ? '21px' : '3px',
+                  transition: 'left 0.2s ease',
+                }} />
+              </button>
+              <label style={{ fontSize: '13px', fontWeight: 500, color: 'var(--color-text-secondary)', cursor: 'pointer' }}
+                onClick={() => setValue('convivente', !convivente)}>
+                Lavoratore convivente (vitto e alloggio)
+              </label>
+            </div>
+            {convivente && (
+              <p style={{ marginTop: '6px', fontSize: '11px', color: 'var(--color-text-muted)', lineHeight: '1.5' }}>
+                Verrà aggiunta l&apos;indennità di vitto e alloggio (~€ 189,30/mese — 2025).
+              </p>
+            )}
+          </div>
+        </>
+      )}
+
       {/* Toggle retribuzione personalizzata (MOD4) */}
-      {livelloData && (
+      {livelloData && !isDomestico && (
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
             <button type="button"
@@ -245,7 +375,8 @@ export function CalcolatoreFormStep1({ onNext }: Props) {
         </div>
       )}
 
-      {/* RAL */}
+      {/* RAL — nascosto per lavoro domestico (calcolata automaticamente da paga oraria) */}
+      {!isDomestico && (
       <div>
         <label htmlFor="ral" style={{ display: 'block', fontSize: '13px', fontWeight: 500,
           color: 'var(--color-text-secondary)', marginBottom: '6px' }}>
@@ -292,8 +423,9 @@ export function CalcolatoreFormStep1({ onNext }: Props) {
           </p>
         )}
       </div>
+      )}
 
-      {/* Tipo contratto */}
+      {/* Tipo contratto — per domestico mostra solo tempo indeterminato e determinato */}
       <div>
         <label style={{ display: 'block', fontSize: '13px', fontWeight: 500,
           color: 'var(--color-text-secondary)', marginBottom: '6px' }}>
@@ -319,7 +451,8 @@ export function CalcolatoreFormStep1({ onNext }: Props) {
         </div>
       </div>
 
-      {/* Ore di lavoro */}
+      {/* Ore di lavoro — nascosto per lavoro domestico (usa campo dedicato) */}
+      {!isDomestico && (
       <div>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
           <label style={{ fontSize: '13px', fontWeight: 500,
@@ -345,8 +478,10 @@ export function CalcolatoreFormStep1({ onNext }: Props) {
           <span>8h</span><span>40h</span><span>48h</span>
         </div>
       </div>
+      )}
 
-      {/* Mensilità */}
+      {/* Mensilità — nascosto per lavoro domestico (sempre 13) */}
+      {!isDomestico && (
       <div>
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '16px', marginBottom: '8px' }}>
           <label style={{ fontSize: '13px', fontWeight: 500,
@@ -411,6 +546,7 @@ export function CalcolatoreFormStep1({ onNext }: Props) {
         })()}
         {errors.mensilita && <p style={{ marginTop: '4px', fontSize: '11px', color: 'var(--color-red)' }}>{errors.mensilita.message}</p>}
       </div>
+      )}
 
       {/* Pulsante */}
       <button type="submit" disabled={loadingLivelli} style={{

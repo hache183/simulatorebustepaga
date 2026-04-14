@@ -21,6 +21,12 @@ export interface CalcolatoreInput {
   includiAssistenzaSanitaria: boolean; // se true, include contributi sanitari CCNL
   aliquotaInps: number;               // aliquota INPS datoriale personalizzata (es. 0.2676 per 26,76%)
   retribuzionePersonalizzata?: number; // RAL personalizzata concordata tra le parti (euro/anno)
+
+  // ─── Campi specifici per CCNL Lavoro Domestico ───
+  tipoRetribuzione?: 'mensile' | 'oraria';  // default: 'mensile'
+  pagaOraria?: number;                       // paga oraria per lavoro domestico (euro)
+  oreSettimanali?: number;                   // ore settimanali effettive per lavoro domestico
+  convivente?: boolean;                      // se true, aggiunge indennità vitto e alloggio
 }
 
 // ─── OUTPUT CALCOLATORE ───────────────────────────────────────────────────

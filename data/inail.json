@@ -321,6 +321,46 @@
       "tassoPerMille": 27.30,
       "rangeOscillazione": { "min": 19.11, "max": 40.95 },
       "note": "Agricoltura — gestione altre attività"
+    },
+    {
+      "codice": "0422",
+      "settore": "Vigilanza e sorveglianza",
+      "gestione": "terziario",
+      "tassoPerMille": 17.00,
+      "rangeOscillazione": { "min": 11.90, "max": 25.50 },
+      "note": "Vigilanza privata — codice per CCNL vigilanza privata"
+    },
+    {
+      "codice": "5100_ind",
+      "settore": "Lavorazione legno, falegnameria industriale",
+      "gestione": "industria",
+      "tassoPerMille": 30.00,
+      "rangeOscillazione": { "min": 21.00, "max": 45.00 },
+      "note": "Legno arredamento industria — lavorazione legno"
+    },
+    {
+      "codice": "5200_ind",
+      "settore": "Produzione mobili e arredamento (industria)",
+      "gestione": "industria",
+      "tassoPerMille": 22.00,
+      "rangeOscillazione": { "min": 15.40, "max": 33.00 },
+      "note": "Legno arredamento industria — produzione mobili"
+    },
+    {
+      "codice": "2150_ind",
+      "settore": "Industria alimentare, conserviera, dolciaria",
+      "gestione": "industria",
+      "tassoPerMille": 18.50,
+      "rangeOscillazione": { "min": 12.95, "max": 27.75 },
+      "note": "Alimentari industria — produzione alimentare"
+    },
+    {
+      "codice": "6100_ind",
+      "settore": "Tipografia, stampa, editoria (industria)",
+      "gestione": "industria",
+      "tassoPerMille": 10.00,
+      "rangeOscillazione": { "min": 7.00, "max": 15.00 },
+      "note": "Grafica editoria industria — tipografia e stampa"
     }
   ]
 }

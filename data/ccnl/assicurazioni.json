@@ -1,0 +1,41 @@
+{
+  "id": "assicurazioni",
+  "nome": "CCNL Assicurazioni (ANIA)",
+  "fonte": "CCNL Imprese di Assicurazione — ANIA + FISAC-CGIL, FIRST-CISL, FNA, SNFIA, UILCA",
+  "updatedAt": "2026-04-14T00:00:00Z",
+  "mensilita": 14,
+  "contributiContrattuali": {
+    "azienda": {
+      "fondoPensione": {
+        "tipo": "previdenziale",
+        "modalita": "percentuale",
+        "importoMensile": null,
+        "percentuale": 0.0250,
+        "descrizione": "Fondo pensione complementare settore assicurativo (2,50% quota datore)",
+        "notaLegge": "CCNL Assicurazioni — previdenza complementare"
+      },
+      "fondoSanitario": {
+        "tipo": "sanitario",
+        "modalita": "percentuale",
+        "importoMensile": null,
+        "percentuale": 0.0100,
+        "descrizione": "Fondo sanitario integrativo assicurazioni (1,00%)",
+        "notaLegge": "CCNL Assicurazioni — assistenza sanitaria integrativa"
+      }
+    }
+  },
+  "livelli": [
+    { "codice": "7",  "descrizione": "7° livello (Funzionario)", "qualifica": "Funzionario con elevata responsabilità direttiva", "minimoTabellare": 3400.00, "moltiplicatore": 1.00 },
+    { "codice": "6",  "descrizione": "6° livello",              "qualifica": "Impiegati con funzioni di coordinamento e alta professionalità", "minimoTabellare": 2950.00, "moltiplicatore": 0.87 },
+    { "codice": "5",  "descrizione": "5° livello",              "qualifica": "Impiegati con mansioni di concetto e autonomia", "minimoTabellare": 2500.00, "moltiplicatore": 0.74 },
+    { "codice": "4",  "descrizione": "4° livello",              "qualifica": "Impiegati qualificati con competenze specialistiche", "minimoTabellare": 2150.00, "moltiplicatore": 0.63 },
+    { "codice": "3",  "descrizione": "3° livello",              "qualifica": "Impiegati d'ordine con mansioni esecutive qualificate", "minimoTabellare": 1900.00, "moltiplicatore": 0.56 },
+    { "codice": "2",  "descrizione": "2° livello",              "qualifica": "Impiegati con mansioni esecutive", "minimoTabellare": 1700.00, "moltiplicatore": 0.50 },
+    { "codice": "1",  "descrizione": "1° livello",              "qualifica": "Personale ausiliario e di supporto", "minimoTabellare": 1500.00, "moltiplicatore": 0.44 }
+  ],
+  "scattiAnzianita": {
+    "periodicitaMesi": 24,
+    "importoPerScattoEuro": 38.00,
+    "maxScatti": 12
+  }
+}

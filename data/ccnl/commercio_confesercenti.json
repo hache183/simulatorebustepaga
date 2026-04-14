@@ -1,0 +1,49 @@
+{
+  "id": "commercio_confesercenti",
+  "nome": "CCNL Commercio — Confesercenti",
+  "fonte": "CCNL Commercio Confesercenti — Confesercenti + FILCAMS-CGIL, FISASCAT-CISL, UILTuCS",
+  "updatedAt": "2026-04-14T00:00:00Z",
+  "mensilita": 14,
+  "contributiContrattuali": {
+    "azienda": {
+      "aster": {
+        "tipo": "bilaterale",
+        "modalita": "fisso",
+        "importoMensile": 5.00,
+        "percentuale": null,
+        "descrizione": "ASTER — Ente bilaterale territoriale Confesercenti",
+        "notaLegge": "CCNL Commercio Confesercenti — ente bilaterale"
+      },
+      "fondoSanitario": {
+        "tipo": "sanitario",
+        "modalita": "fisso",
+        "importoMensile": 10.00,
+        "percentuale": null,
+        "descrizione": "Fondo sanitario integrativo Confesercenti",
+        "notaLegge": "CCNL Commercio Confesercenti — assistenza sanitaria"
+      },
+      "fondoPensione": {
+        "tipo": "previdenziale",
+        "modalita": "percentuale",
+        "importoMensile": null,
+        "percentuale": 0.0155,
+        "descrizione": "Fondo pensione complementare (1,55% quota datore)",
+        "notaLegge": "CCNL Commercio Confesercenti — previdenza complementare"
+      }
+    }
+  },
+  "livelli": [
+    { "codice": "Q",  "descrizione": "Quadro",      "qualifica": "Funzioni direttive con responsabilità di unità organizzativa", "minimoTabellare": 2340.00, "moltiplicatore": 1.00 },
+    { "codice": "1",  "descrizione": "1° livello",  "qualifica": "Personale con funzioni ad elevata responsabilità", "minimoTabellare": 2190.00, "moltiplicatore": 0.94 },
+    { "codice": "2",  "descrizione": "2° livello",  "qualifica": "Impiegati con mansioni di concetto", "minimoTabellare": 2030.00, "moltiplicatore": 0.87 },
+    { "codice": "3",  "descrizione": "3° livello",  "qualifica": "Impiegati d'ordine, commessi qualificati", "minimoTabellare": 1890.00, "moltiplicatore": 0.81 },
+    { "codice": "4",  "descrizione": "4° livello",  "qualifica": "Commessi alla vendita, cassieri", "minimoTabellare": 1760.00, "moltiplicatore": 0.75 },
+    { "codice": "5",  "descrizione": "5° livello",  "qualifica": "Ausiliari, addetti confezionamento", "minimoTabellare": 1640.00, "moltiplicatore": 0.70 },
+    { "codice": "6",  "descrizione": "6° livello",  "qualifica": "Personale di pulizia, fattorini", "minimoTabellare": 1530.00, "moltiplicatore": 0.65 }
+  ],
+  "scattiAnzianita": {
+    "periodicitaMesi": 36,
+    "importoPerScattoEuro": 19.00,
+    "maxScatti": 10
+  }
+}

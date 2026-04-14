@@ -5,7 +5,7 @@
   "regions": ["fra1"],
   "headers": [
     {
-      "source": "/admin(.*)",
+      "source": "/(admin|login)(.*)",
       "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }]
     }
   ]

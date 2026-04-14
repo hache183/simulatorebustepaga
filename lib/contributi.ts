@@ -155,8 +155,12 @@ export function calcolaAgevolazioni(input: CalcolatoreInput): {
  * La base TFR esatta dipende dalla retribuzione utile definita da ciascun CCNL.
  * @see Art. 2120 c.c. — divisore fisso 13,5
  */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function calcolaTfr(ral: number, _mensilita: number): number {
   const data = loadJson<TfrData>('data/tfr.json');
+  if (!data.divisoreAnnuo || data.divisoreAnnuo <= 0) {
+    throw new Error('Errore nei dati TFR: divisoreAnnuo mancante o non valido');
+  }
   return ral / data.divisoreAnnuo;
 }
 
