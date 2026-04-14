@@ -1,6 +1,4 @@
 import { z } from 'zod';
-import fs from 'fs';
-import path from 'path';
 import { getCcnlData } from './ccnl';
 import {
   calcolaInpsBase,
@@ -12,10 +10,8 @@ import {
 } from './contributi';
 import type { CalcolatoreInput, CalcolatoreOutput, DettaglioCosto, ContributoContrattuale, NettoDipendente, AliquoteInpsData } from '@/types';
 
-function loadJson<T>(relativePath: string): T {
-  const fullPath = path.join(process.cwd(), relativePath);
-  return JSON.parse(fs.readFileSync(fullPath, 'utf-8')) as T;
-}
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const ALIQUOTE_INPS = require('../data/aliquote-inps.json') as AliquoteInpsData;
 
 // Schema di validazione Zod — rifiuta qualsiasi input malformato prima del calcolo
 const InputSchema = z.object({
@@ -166,8 +162,7 @@ function getContributoOrarioDomestico(
   convivente: boolean,
   tipoContratto: string,
 ): { contributoOrarioDatore: number; contributoOrarioLavoratore: number } {
-  const data = loadJson<AliquoteInpsData>('data/aliquote-inps.json');
-  const settore = data.settoriContributivi['lavoro_domestico'] as unknown as Record<string, unknown>;
+  const settore = ALIQUOTE_INPS.settoriContributivi['lavoro_domestico'] as unknown as Record<string, unknown>;
   const contributiOrari = settore['contributiOrari'] as Record<string, unknown>;
 
   const tabella = tipoContratto === 'tempo_determinato'
@@ -219,8 +214,7 @@ async function calculateCostoDomestico(input: CalcolatoreInput): Promise<Calcola
   const mensilita = input.mensilita; // 13 per lavoro domestico
 
   // Indennità vitto e alloggio per conviventi
-  const data = loadJson<AliquoteInpsData>('data/aliquote-inps.json');
-  const settoreDomestico = data.settoriContributivi['lavoro_domestico'] as unknown as Record<string, unknown>;
+  const settoreDomestico = ALIQUOTE_INPS.settoriContributivi['lavoro_domestico'] as unknown as Record<string, unknown>;
   const indennitaVAMensile = convivente ? (settoreDomestico['indennitaVittoAlloggioMensile'] as number) : 0;
   const indennitaVAAnnua = indennitaVAMensile * 12;
 
