@@ -3,8 +3,7 @@
 export type TipoContratto =
   | 'tempo_indeterminato'
   | 'tempo_determinato'
-  | 'apprendistato'
-  | 'somministrazione';
+  | 'apprendistato';
 
 export interface CalcolatoreInput {
   ccnlId: string;

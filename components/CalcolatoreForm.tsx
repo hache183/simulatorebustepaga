@@ -41,7 +41,6 @@ const TIPI_CONTRATTO = [
   { value: 'tempo_indeterminato', label: 'Tempo indeterminato' },
   { value: 'tempo_determinato',   label: 'Tempo determinato' },
   { value: 'apprendistato',       label: 'Apprendistato' },
-  { value: 'somministrazione',    label: 'Somministrazione' },
 ] as const;
 
 const fmtEur = (n: number) => new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR', minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n);
@@ -50,7 +49,7 @@ const Step1Schema = z.object({
   ccnlId: z.string().min(1, 'Seleziona un CCNL'),
   livello: z.string().min(1, 'Seleziona il livello contrattuale'),
   ral: z.number().min(0, 'Minimo 0 €').max(500_000, 'Massimo 500.000 €'),
-  tipoContratto: z.enum(['tempo_indeterminato', 'tempo_determinato', 'apprendistato', 'somministrazione']),
+  tipoContratto: z.enum(['tempo_indeterminato', 'tempo_determinato', 'apprendistato']),
   oreLavoro: z.number().min(1).max(48),
   mensilita: z.number()
     .int('Le mensilità devono essere un numero intero')
@@ -61,6 +60,15 @@ const Step1Schema = z.object({
   pagaOraria: z.number().min(0).max(100).optional(),
   oreSettimanali: z.number().min(1).max(54).optional(),
   convivente: z.boolean().optional(),
+}).superRefine((data, ctx) => {
+  if (data.ccnlId === 'lavoro_domestico') {
+    if (!data.pagaOraria || isNaN(data.pagaOraria) || data.pagaOraria <= 0) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['pagaOraria'], message: 'Inserisci la paga oraria lorda' });
+    }
+    if (!data.oreSettimanali || isNaN(data.oreSettimanali) || data.oreSettimanali <= 0) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['oreSettimanali'], message: 'Inserisci le ore settimanali' });
+    }
+  }
 });
 
 type Step1Data = z.infer<typeof Step1Schema>;
@@ -269,11 +277,12 @@ export function CalcolatoreFormStep1({ onNext }: Props) {
                 style={{
                   width: '100%', padding: '11px 14px 11px 28px',
                   background: 'var(--color-bg-input)', color: 'var(--color-text-primary)',
-                  border: `1px solid var(--color-border)`, borderRadius: '6px', fontSize: '13px',
+                  border: `1px solid ${errors.pagaOraria ? 'var(--color-red)' : 'var(--color-border)'}`, borderRadius: '6px', fontSize: '13px',
                   fontFamily: "'DM Mono', monospace",
                 }}
               />
             </div>
+            {errors.pagaOraria && <p style={{ marginTop: '4px', fontSize: '11px', color: 'var(--color-red)' }}>{errors.pagaOraria.message}</p>}
           </div>
 
           {/* Ore settimanali domestico */}
@@ -287,10 +296,11 @@ export function CalcolatoreFormStep1({ onNext }: Props) {
               style={{
                 width: '100%', padding: '11px 14px',
                 background: 'var(--color-bg-input)', color: 'var(--color-text-primary)',
-                border: `1px solid var(--color-border)`, borderRadius: '6px', fontSize: '13px',
+                border: `1px solid ${errors.oreSettimanali ? 'var(--color-red)' : 'var(--color-border)'}`, borderRadius: '6px', fontSize: '13px',
                 fontFamily: "'DM Mono', monospace",
               }}
             />
+            {errors.oreSettimanali && <p style={{ marginTop: '4px', fontSize: '11px', color: 'var(--color-red)' }}>{errors.oreSettimanali.message}</p>}
             <p style={{ marginTop: '4px', fontSize: '11px', color: 'var(--color-text-muted)' }}>
               Oltre 24 ore/sett. il lavoratore è considerato convivente con tabella contributiva ridotta.
             </p>

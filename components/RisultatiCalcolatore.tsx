@@ -43,7 +43,7 @@ export function RisultatiCalcolatore({ risultato, onRicalcola }: Props) {
         }}>
           <p style={{ fontSize: '12px', color: 'var(--color-text-secondary)',
             fontFamily: "'Plus Jakarta Sans', sans-serif", marginBottom: '6px' }}>
-            Equivalente mensile
+            Equivalente mensile medio
           </p>
           <p style={{
             fontFamily: "'DM Mono', monospace", fontSize: '22px', fontWeight: 500,
@@ -171,7 +171,7 @@ export function RisultatiCalcolatore({ risultato, onRicalcola }: Props) {
         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
           <thead>
             <tr style={{ background: 'var(--color-bg-elevated)' }}>
-              {['Voce di costo', 'Importo annuo', 'Importo mensile', '% RAL'].map((h, i) => (
+              {['Voce di costo', 'Importo annuo', 'Importo mensile medio', '% RAL'].map((h, i) => (
                 <th key={h} style={{
                   textAlign: i === 0 ? 'left' : 'right',
                   padding: '12px 16px', fontSize: '12px',

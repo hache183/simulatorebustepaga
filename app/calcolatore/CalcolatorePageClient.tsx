@@ -9,7 +9,7 @@ import type { CalcolatoreOutput, ContributoContrattuale } from '@/types';
 
 interface Step1Data {
   ccnlId: string; livello: string; ral: number;
-  tipoContratto: 'tempo_indeterminato'|'tempo_determinato'|'apprendistato'|'somministrazione';
+  tipoContratto: 'tempo_indeterminato'|'tempo_determinato'|'apprendistato';
   oreLavoro: number;
   mensilita: number;
   retribuzionePersonalizzata?: number;

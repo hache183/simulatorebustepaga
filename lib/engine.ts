@@ -21,7 +21,7 @@ const InputSchema = z.object({
     .min(0, 'RAL minima: 0 euro')
     .max(500_000, 'RAL massima: 500.000 euro'),
   tipoContratto: z.enum(
-    ['tempo_indeterminato', 'tempo_determinato', 'apprendistato', 'somministrazione'],
+    ['tempo_indeterminato', 'tempo_determinato', 'apprendistato'],
     { error: 'Tipo di contratto non valido' }
   ),
   oreLavoro: z.number().min(1).max(48),
