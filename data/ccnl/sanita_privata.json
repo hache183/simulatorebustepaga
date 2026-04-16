@@ -1,36 +1,38 @@
 {
   "id": "sanita_privata",
-  "nome": "CCNL Sanità Privata (Aiop-Aris)",
-  "fonte": "https://www.aiop.it/contratto-collettivo",
+  "nome": "CCNL Sanità Privata (AIOP-ARIS — Case di cura, Riabilitazione, RSA)",
+  "fonte": "Rinnovo CCNL 09/07/2023 (vigenza 2023-2025). Tabelle dal 01/01/2026. Fonte: kitech.it CodiceCateg=143",
   "updatedAt": "2026-01-01T00:00:00Z",
   "mensilita": 14,
   "contributiContrattuali": {
     "azienda": {
-      "fasdaC": {
+      "fasda": {
         "tipo": "sanitario",
         "modalita": "percentuale",
         "importoMensile": null,
         "percentuale": 0.0050,
-        "descrizione": "Fondo sanitario integrativo Fasda",
-        "notaLegge": "Art. 5 CCNL Sanità Privata"
+        "descrizione": "FASDA — Fondo di assistenza sanitaria integrativa sanità privata (0,50% quota datore)",
+        "notaLegge": "Art. 5 CCNL Sanità Privata AIOP-ARIS"
       },
       "previr": {
         "tipo": "previdenziale",
         "modalita": "percentuale",
         "importoMensile": null,
         "percentuale": 0.0130,
-        "descrizione": "Fondo pensione complementare Previcooper",
-        "notaLegge": "Art. 44 CCNL Sanità Privata"
+        "descrizione": "PREVIR — Fondo pensione complementare per i lavoratori della sanità privata (1,30% quota datore)",
+        "notaLegge": "Art. 44 CCNL Sanità Privata AIOP-ARIS"
       }
     }
   },
   "livelli": [
-    { "codice": "DS", "descrizione": "Dirigente sanitario",            "qualifica": "Dirigente sanitario, medico responsabile",              "minimoTabellare": 1950.00, "moltiplicatore": 1.00 },
-    { "codice": "B",  "descrizione": "Categoria B (Laureati)",         "qualifica": "Infermiere professionale, ostetrica laureata",           "minimoTabellare": 1716.00, "moltiplicatore": 0.88 },
-    { "codice": "C",  "descrizione": "Categoria C (Diplomati spec.)",  "qualifica": "Tecnico sanitario di laboratorio, tecnico di radiologia","minimoTabellare": 1482.00, "moltiplicatore": 0.76 },
-    { "codice": "D",  "descrizione": "Categoria D (Diplomati)",        "qualifica": "Assistente sanitario, operatore tecnico specializzato",  "minimoTabellare": 1306.50, "moltiplicatore": 0.67 },
-    { "codice": "E",  "descrizione": "Categoria E (Qualificati)",      "qualifica": "Operatore socio-sanitario (OSS)",                       "minimoTabellare": 1170.00, "moltiplicatore": 0.60 },
-    { "codice": "F",  "descrizione": "Categoria F (Operatori)",        "qualifica": "Ausiliario, portantino",                                "minimoTabellare": 1053.00, "moltiplicatore": 0.54 }
+    { "codice": "E2", "descrizione": "Livello E2", "qualifica": "Dirigente sanitario di struttura complessa, primario, direttore sanitario",              "minimoTabellare": 3554.39, "moltiplicatore": 1.00 },
+    { "codice": "E1", "descrizione": "Livello E1", "qualifica": "Dirigente sanitario di struttura semplice, responsabile di unità operativa",             "minimoTabellare": 2936.33, "moltiplicatore": 0.83 },
+    { "codice": "E",  "descrizione": "Livello E",  "qualifica": "Professionista sanitario laureato (infermiere coordinatore, fisioterapista senior)",      "minimoTabellare": 2410.22, "moltiplicatore": 0.68 },
+    { "codice": "DS", "descrizione": "Livello DS", "qualifica": "Tecnico sanitario diplomato specializzato (infermiere professionale, tecnico di Lab.)",   "minimoTabellare": 2101.08, "moltiplicatore": 0.59 },
+    { "codice": "D",  "descrizione": "Livello D",  "qualifica": "Operatore tecnico specializzato (tecnico di radiologia, fisioterapista qualificato)",     "minimoTabellare": 1953.87, "moltiplicatore": 0.55 },
+    { "codice": "C",  "descrizione": "Livello C",  "qualifica": "Operatore socio-sanitario qualificato (OSS avanzato, assistente sanitario)",              "minimoTabellare": 1803.61, "moltiplicatore": 0.51 },
+    { "codice": "B",  "descrizione": "Livello B",  "qualifica": "Ausiliario qualificato, operatore di supporto sanitario",                                  "minimoTabellare": 1579.86, "moltiplicatore": 0.44 },
+    { "codice": "A",  "descrizione": "Livello A",  "qualifica": "Personale ausiliario di primo impiego, addetto alle pulizie e servizi generici",           "minimoTabellare": 1467.45, "moltiplicatore": 0.41 }
   ],
   "scattiAnzianita": {
     "periodicitaMesi": 24,

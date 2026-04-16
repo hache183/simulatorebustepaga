@@ -1,37 +1,40 @@
 {
   "id": "tessile",
-  "nome": "CCNL Tessile-Abbigliamento-Moda (SMI — Sistema Moda Italia)",
-  "fonte": "https://www.sistemamodaitalia.com/contratto-collettivo",
+  "nome": "CCNL Tessile-Abbigliamento-Moda — Industria (SMI — Sistema Moda Italia)",
+  "fonte": "Rinnovo CCNL 11 novembre 2024 (vigenza 1° aprile 2024 – 31 marzo 2027). Fonte: kitech.it CodiceCateg=194",
   "updatedAt": "2026-01-01T00:00:00Z",
   "mensilita": 13,
   "contributiContrattuali": {
     "azienda": {
       "sanimoda": {
         "tipo": "sanitario",
-        "modalita": "percentuale",
-        "importoMensile": null,
-        "percentuale": 0.0060,
-        "descrizione": "Fondo sanitario Sanimoda",
-        "notaLegge": "Art. 14 CCNL Tessile-Abbigliamento"
+        "modalita": "fisso",
+        "importoMensile": 5.00,
+        "percentuale": null,
+        "descrizione": "SANIMODA — Fondo sanitario integrativo tessile-abbigliamento-moda (quota mensile fissa datore)",
+        "notaLegge": "Art. 14 CCNL Tessile-Abbigliamento — SANIMODA"
       },
       "previmoda": {
         "tipo": "previdenziale",
         "modalita": "percentuale",
         "importoMensile": null,
         "percentuale": 0.0130,
-        "descrizione": "Fondo pensione complementare Previmoda (quota azienda)",
-        "notaLegge": "Art. 48 CCNL Tessile-Abbigliamento"
+        "descrizione": "PREVIMODA — Fondo pensione complementare tessile-abbigliamento (1,30% quota datore)",
+        "notaLegge": "Art. 48 CCNL Tessile-Abbigliamento — PREVIMODA"
       }
     }
   },
   "livelli": [
-    { "codice": "Q",  "descrizione": "Quadro",      "qualifica": "Responsabile di produzione, quadro tecnico",          "minimoTabellare": 1800.00, "moltiplicatore": 1.00 },
-    { "codice": "1",  "descrizione": "1° livello",  "qualifica": "Modellista, stilista tecnico",                        "minimoTabellare": 1638.00, "moltiplicatore": 0.91 },
-    { "codice": "2",  "descrizione": "2° livello",  "qualifica": "Tagliatore, tessitore specializzato",                 "minimoTabellare": 1494.00, "moltiplicatore": 0.83 },
-    { "codice": "3",  "descrizione": "3° livello",  "qualifica": "Cucitrice qualificata, addetto al controllo qualità", "minimoTabellare": 1350.00, "moltiplicatore": 0.75 },
-    { "codice": "4",  "descrizione": "4° livello",  "qualifica": "Operaio alla macchina, stiratrici",                   "minimoTabellare": 1206.00, "moltiplicatore": 0.67 },
-    { "codice": "5",  "descrizione": "5° livello",  "qualifica": "Confezionatore, imballatore",                         "minimoTabellare": 1080.00, "moltiplicatore": 0.60 },
-    { "codice": "6",  "descrizione": "6° livello",  "qualifica": "Ausiliario, manovale",                                "minimoTabellare": 972.00,  "moltiplicatore": 0.54 }
+    { "codice": "8",  "descrizione": "8° livello",       "qualifica": "Quadro / impiegato direttivo con elevata responsabilità e indennità di funzione",    "minimoTabellare": 2509.37, "moltiplicatore": 1.00 },
+    { "codice": "7",  "descrizione": "7° livello",       "qualifica": "Personale con elevata professionalità e autonomia tecnica, modellista senior",       "minimoTabellare": 2318.50, "moltiplicatore": 0.92 },
+    { "codice": "6",  "descrizione": "6° livello",       "qualifica": "Tecnici specializzati, stilisti, tagliatori esperti, responsabile di reparto",       "minimoTabellare": 2175.37, "moltiplicatore": 0.87 },
+    { "codice": "5",  "descrizione": "5° livello",       "qualifica": "Operaio/impiegato qualificato, cucitrice specializzata capo, tessitore esperto",     "minimoTabellare": 2037.96, "moltiplicatore": 0.81 },
+    { "codice": "4",  "descrizione": "4° livello",       "qualifica": "Cucitrice qualificata, addetto alla confezione, operatore su macchina tessile",      "minimoTabellare": 1938.95, "moltiplicatore": 0.77 },
+    { "codice": "3S", "descrizione": "3° livello Super", "qualifica": "Operaio con specializzazione acquisita (livello super), confezionatore esperto",     "minimoTabellare": 1894.94, "moltiplicatore": 0.75 },
+    { "codice": "3",  "descrizione": "3° livello",       "qualifica": "Operaio/impiegato di 3° livello, cucitrice, addetto stireria, tintore",              "minimoTabellare": 1853.17, "moltiplicatore": 0.74 },
+    { "codice": "2S", "descrizione": "2° livello Super", "qualifica": "Operaio con qualificazione parziale (livello super), magazziniere con esperienza",   "minimoTabellare": 1799.17, "moltiplicatore": 0.72 },
+    { "codice": "2",  "descrizione": "2° livello",       "qualifica": "Operaio alla macchina semplice, confezionatore, addetto al taglio base",             "minimoTabellare": 1760.02, "moltiplicatore": 0.70 },
+    { "codice": "1",  "descrizione": "1° livello",       "qualifica": "Garzone, addetto ai servizi ausiliari, lavoratore di primo ingresso senza qualifica", "minimoTabellare": 1469.68, "moltiplicatore": 0.59 }
   ],
   "scattiAnzianita": {
     "periodicitaMesi": 24,

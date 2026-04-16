@@ -1,8 +1,8 @@
 {
   "id": "turismo",
   "nome": "CCNL Turismo — Alberghi e Strutture Ricettive (Federalberghi/Confcommercio)",
-  "fonte": "Rinnovo CCNL Turismo Federalberghi — FILCAMS-CGIL, FISASCAT-CISL, UILTuCS",
-  "updatedAt": "2026-04-14T00:00:00Z",
+  "fonte": "Rinnovo CCNL giugno 2024 (vigenza 2024-2027). Tabella a regime novembre 2027. Fonte: lexplain.it — tabelle-retributive-ccnl-alberghi-turismo-confcommercio",
+  "updatedAt": "2024-06-01T00:00:00Z",
   "mensilita": 14,
   "contributiContrattuali": {
     "azienda": {
@@ -11,7 +11,7 @@
         "modalita": "fisso",
         "importoMensile": 10.00,
         "percentuale": null,
-        "descrizione": "FAST — Fondo assistenza sanitaria turismo",
+        "descrizione": "FAST — Fondo assistenza sanitaria turismo (€ 10/mese fisso quota datore)",
         "notaLegge": "Art. 183 CCNL Turismo Federalberghi"
       },
       "fonte": {
@@ -33,15 +33,16 @@
     }
   },
   "livelli": [
-    { "codice": "Q",  "descrizione": "Quadro",      "qualifica": "Funzioni direttive con responsabilità di struttura ricettiva", "minimoTabellare": 1850.00, "moltiplicatore": 1.00 },
-    { "codice": "1",  "descrizione": "1° livello",  "qualifica": "Personale con funzioni ad elevata responsabilità tecnica o gestionale", "minimoTabellare": 1690.00, "moltiplicatore": 0.91 },
-    { "codice": "2",  "descrizione": "2° livello",  "qualifica": "Impiegati con mansioni di concetto, receptionist esperti", "minimoTabellare": 1545.00, "moltiplicatore": 0.84 },
-    { "codice": "3",  "descrizione": "3° livello",  "qualifica": "Receptionist, camerieri di sala capi-rango", "minimoTabellare": 1395.00, "moltiplicatore": 0.75 },
-    { "codice": "4",  "descrizione": "4° livello",  "qualifica": "Camerieri, baristi, portieri d'albergo", "minimoTabellare": 1270.00, "moltiplicatore": 0.69 },
-    { "codice": "5",  "descrizione": "5° livello",  "qualifica": "Addetti alle pulizie qualificati, facchini", "minimoTabellare": 1150.00, "moltiplicatore": 0.62 },
-    { "codice": "6S", "descrizione": "6° Super",    "qualifica": "Personale ausiliario con esperienza", "minimoTabellare": 1070.00, "moltiplicatore": 0.58 },
-    { "codice": "6",  "descrizione": "6° livello",  "qualifica": "Personale ausiliario di base", "minimoTabellare": 1010.00, "moltiplicatore": 0.55 },
-    { "codice": "7",  "descrizione": "7° livello",  "qualifica": "Personale di primo impiego senza esperienza", "minimoTabellare": 935.00, "moltiplicatore": 0.51 }
+    { "codice": "QA", "descrizione": "Quadro A",      "qualifica": "Funzioni direttive con piena responsabilità della struttura ricettiva (Quadro A)",      "minimoTabellare": 2495.22, "moltiplicatore": 1.00 },
+    { "codice": "QB", "descrizione": "Quadro B",      "qualifica": "Funzioni direttive con responsabilità di reparto/settore alberghiero (Quadro B)",      "minimoTabellare": 2310.11, "moltiplicatore": 0.93 },
+    { "codice": "1",  "descrizione": "1° livello",    "qualifica": "Personale con funzioni ad elevata responsabilità tecnica o gestionale",                 "minimoTabellare": 2152.32, "moltiplicatore": 0.86 },
+    { "codice": "2",  "descrizione": "2° livello",    "qualifica": "Impiegati con mansioni di concetto, receptionist senior, capo-ricevimento",            "minimoTabellare": 1967.20, "moltiplicatore": 0.79 },
+    { "codice": "3",  "descrizione": "3° livello",    "qualifica": "Receptionist, camerieri di sala capi-rango, cuoco capo partita",                      "minimoTabellare": 1855.32, "moltiplicatore": 0.74 },
+    { "codice": "4",  "descrizione": "4° livello",    "qualifica": "Camerieri, baristi, portieri d'albergo, cuoco",                                       "minimoTabellare": 1750.69, "moltiplicatore": 0.70 },
+    { "codice": "5",  "descrizione": "5° livello",    "qualifica": "Addetti alle pulizie qualificati, facchini con esperienza, commis di sala",            "minimoTabellare": 1641.85, "moltiplicatore": 0.66 },
+    { "codice": "6S", "descrizione": "6° Super",      "qualifica": "Personale ausiliario con esperienza consolidata (livello super)",                      "minimoTabellare": 1578.72, "moltiplicatore": 0.63 },
+    { "codice": "6",  "descrizione": "6° livello",    "qualifica": "Personale ausiliario di base, addetto pulizie, garzone",                               "minimoTabellare": 1556.35, "moltiplicatore": 0.62 },
+    { "codice": "7",  "descrizione": "7° livello",    "qualifica": "Personale di primo impiego senza esperienza nel settore alberghiero",                  "minimoTabellare": 1458.42, "moltiplicatore": 0.58 }
   ],
   "scattiAnzianita": {
     "periodicitaMesi": 36,

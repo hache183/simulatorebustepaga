@@ -1,17 +1,17 @@
 {
   "id": "multiservizi",
   "nome": "CCNL Multiservizi (Pulizie, Servizi Integrati e Facility Management)",
-  "fonte": "https://www.ancst.it/contratto-collettivo",
-  "updatedAt": "2026-01-01T00:00:00Z",
+  "fonte": "Rinnovo CCNL giugno 2025 + accordo integrativo agosto 2025 — Confindustria Servizi + FILCAMS-CGIL, FISASCAT-CISL, UILTuCS. Fonte: kitech.it CodiceCateg=99",
+  "updatedAt": "2025-08-01T00:00:00Z",
   "mensilita": 13,
   "contributiContrattuali": {
     "azienda": {
       "fasiv": {
         "tipo": "sanitario",
-        "modalita": "percentuale",
-        "importoMensile": null,
-        "percentuale": 0.0030,
-        "descrizione": "Fondo sanitario integrativo Fasiv",
+        "modalita": "fisso",
+        "importoMensile": 5.50,
+        "percentuale": null,
+        "descrizione": "FASIV — Fondo di Assistenza Sanitaria Integrativa multiservizi (quota mensile fissa datore)",
         "notaLegge": "Art. 13 CCNL Multiservizi"
       },
       "ebms": {
@@ -19,18 +19,20 @@
         "modalita": "percentuale",
         "importoMensile": null,
         "percentuale": 0.0025,
-        "descrizione": "Ente bilaterale multiservizi",
+        "descrizione": "Ente bilaterale multiservizi EBMS (0,25%)",
         "notaLegge": "Art. 4 CCNL Multiservizi"
       }
     }
   },
   "livelli": [
-    { "codice": "Q",  "descrizione": "Quadro",      "qualifica": "Responsabile di commessa, capo squadra",                 "minimoTabellare": 1600.00, "moltiplicatore": 1.00 },
-    { "codice": "1",  "descrizione": "1° livello",  "qualifica": "Operatore specializzato, tecnico impianti",              "minimoTabellare": 1424.00, "moltiplicatore": 0.89 },
-    { "codice": "2",  "descrizione": "2° livello",  "qualifica": "Addetto alle pulizie specializzato, operaio qualificato","minimoTabellare": 1280.00, "moltiplicatore": 0.80 },
-    { "codice": "3",  "descrizione": "3° livello",  "qualifica": "Addetto alle pulizie, operatore generico",              "minimoTabellare": 1136.00, "moltiplicatore": 0.71 },
-    { "codice": "4",  "descrizione": "4° livello",  "qualifica": "Ausiliario, facchino",                                  "minimoTabellare": 1008.00, "moltiplicatore": 0.63 },
-    { "codice": "5",  "descrizione": "5° livello",  "qualifica": "Manovale, guardiano",                                   "minimoTabellare": 896.00,  "moltiplicatore": 0.56 }
+    { "codice": "Q",  "descrizione": "Quadro",      "qualifica": "Responsabile di commessa, supervisore di servizio, capo squadra senior",          "minimoTabellare": 2195.83, "moltiplicatore": 1.00 },
+    { "codice": "7",  "descrizione": "7° livello",  "qualifica": "Operatore tecnico specializzato di impianti, coordinatore operativo",             "minimoTabellare": 2053.03, "moltiplicatore": 0.94 },
+    { "codice": "6",  "descrizione": "6° livello",  "qualifica": "Addetto servizi integrati con specializzazione, tecnico manutentore",             "minimoTabellare": 1842.82, "moltiplicatore": 0.84 },
+    { "codice": "5",  "descrizione": "5° livello",  "qualifica": "Addetto alle pulizie specializzato, operaio qualificato di facility management",  "minimoTabellare": 1581.04, "moltiplicatore": 0.72 },
+    { "codice": "4",  "descrizione": "4° livello",  "qualifica": "Addetto alle pulizie qualificato, ausiliario con esperienza (par. 130)",          "minimoTabellare": 1489.83, "moltiplicatore": 0.68 },
+    { "codice": "3",  "descrizione": "3° livello",  "qualifica": "Addetto alle pulizie, operatore di servizi generici",                            "minimoTabellare": 1412.60, "moltiplicatore": 0.64 },
+    { "codice": "2",  "descrizione": "2° livello",  "qualifica": "Ausiliario, facchino, addetto alla guardiania generica (par. 115)",               "minimoTabellare": 1388.60, "moltiplicatore": 0.63 },
+    { "codice": "1",  "descrizione": "1° livello",  "qualifica": "Operatore di primo ingresso senza qualifica, manovalanza generica",               "minimoTabellare": 1274.61, "moltiplicatore": 0.58 }
   ],
   "scattiAnzianita": {
     "periodicitaMesi": 24,

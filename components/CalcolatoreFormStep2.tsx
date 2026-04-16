@@ -47,7 +47,7 @@ export function CalcolatoreFormStep2({ onSubmit, onBack, isLoading, contributiCc
   const { register, handleSubmit, watch, setValue, formState: { errors } } =
     useForm<Step2Data>({
       resolver: zodResolver(Step2Schema),
-      defaultValues: { anzianitaAnni: 0, agevolazioniSelezionate: [], includiAssistenzaSanitaria: true, aliquotaInps: 28.80 },
+      defaultValues: { numeroDipendenti: 1, anzianitaAnni: 0, codiceInail: '', agevolazioniSelezionate: [], includiAssistenzaSanitaria: true, aliquotaInps: 28.80 },
     });
 
   const agevolazioniSelezionate = watch('agevolazioniSelezionate');
@@ -154,7 +154,9 @@ export function CalcolatoreFormStep2({ onSubmit, onBack, isLoading, contributiCc
           color: 'var(--color-text-secondary)', marginBottom: '6px' }}>
           Categoria INAIL
         </label>
-        <select id="codiceInail" {...register('codiceInail')} style={{
+        <select id="codiceInail" {...register('codiceInail', {
+          validate: v => isDomestico || (v && v.length > 0) || 'Seleziona la categoria INAIL',
+        })} style={{
           width: '100%', padding: '11px 14px',
           background: 'var(--color-bg-input)', color: 'var(--color-text-primary)',
           border: `1px solid ${errors.codiceInail ? 'var(--color-red)' : 'var(--color-border)'}`,
@@ -182,11 +184,12 @@ export function CalcolatoreFormStep2({ onSubmit, onBack, isLoading, contributiCc
           style={{
             width: '100%', padding: '11px 14px',
             background: 'var(--color-bg-input)', color: 'var(--color-text-primary)',
-            border: '1px solid var(--color-border)',
+            border: `1px solid ${errors.anzianitaAnni ? 'var(--color-red)' : 'var(--color-border)'}`,
             borderRadius: '6px', fontSize: '13px',
             fontFamily: "'DM Mono', monospace",
           }}
         />
+        {errors.anzianitaAnni && <p style={{ marginTop: '4px', fontSize: '11px', color: 'var(--color-red)' }}>Valore non valido (0–50 anni)</p>}
       </div>
 
       {/* Aliquota INPS (MOD3) */}
@@ -315,6 +318,15 @@ export function CalcolatoreFormStep2({ onSubmit, onBack, isLoading, contributiCc
             );
           })}
         </div>
+        {/* Nota informativa agevolazioni */}
+        <p style={{
+          marginTop: '10px', fontSize: '11px', color: 'var(--color-text-muted)',
+          lineHeight: '1.6', fontStyle: 'italic',
+          padding: '8px 10px', borderRadius: '4px',
+          background: 'var(--color-bg-elevated)', border: '1px solid var(--color-border)',
+        }}>
+          L&apos;applicazione delle agevolazioni dipende da requisiti soggettivi, oggettivi aziendali e del lavoratore, nonché dalla disponibilità dei fondi al momento della pratica.
+        </p>
       </div>
       )}
 

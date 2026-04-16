@@ -1,9 +1,9 @@
 {
   "id": "scuole_private",
-  "nome": "CCNL Scuole ed Istituti Privati (FISM — Agidae)",
-  "fonte": "https://www.agidae.it/contratto-collettivo",
-  "updatedAt": "2026-01-01T00:00:00Z",
-  "mensilita": 14,
+  "nome": "CCNL Scuole ed Istituti Privati (AGIDAE — Scuole Cattoliche e Istituti Religiosi)",
+  "fonte": "CCNL AGIDAE-ANINSEI (vigenza 2022-2026). Tabelle dall'01/09/2025. Fonte: kitech.it CodiceCateg=145",
+  "updatedAt": "2025-09-01T00:00:00Z",
+  "mensilita": 13,
   "contributiContrattuali": {
     "azienda": {
       "sanScuola": {
@@ -11,25 +11,28 @@
         "modalita": "percentuale",
         "importoMensile": null,
         "percentuale": 0.0040,
-        "descrizione": "Fondo sanitario integrativo scuola privata",
-        "notaLegge": "Art. 17 CCNL Scuole Private"
+        "descrizione": "Fondo sanitario integrativo scuola privata (0,40% quota datore)",
+        "notaLegge": "Art. 17 CCNL Scuole Private AGIDAE"
       },
       "fondoPensioneScuole": {
         "tipo": "previdenziale",
         "modalita": "percentuale",
         "importoMensile": null,
         "percentuale": 0.0100,
-        "descrizione": "Fondo pensione complementare per dipendenti scuole private (Fondo FON.TE o fondo contrattuale specifico — NON Perseo-Sirio che è riservato al pubblico impiego)",
-        "notaLegge": "CCNL Scuole Private AGIDAE/ANINSEI"
+        "descrizione": "FON.TE — Fondo pensione complementare per dipendenti scuole private (1,00% quota datore)",
+        "notaLegge": "CCNL Scuole Private AGIDAE-ANINSEI"
       }
     }
   },
   "livelli": [
-    { "codice": "D",  "descrizione": "Dirigente scolastico",      "qualifica": "Dirigente scolastico, coordinatore didattico",   "minimoTabellare": 1700.00, "moltiplicatore": 1.00 },
-    { "codice": "A",  "descrizione": "Docente laureato",          "qualifica": "Docente laureato, insegnante di ruolo",          "minimoTabellare": 1445.00, "moltiplicatore": 0.85 },
-    { "codice": "B",  "descrizione": "Docente diplomato",         "qualifica": "Docente diplomato, istruttore",                 "minimoTabellare": 1275.00, "moltiplicatore": 0.75 },
-    { "codice": "C",  "descrizione": "Personale ATA qualificato", "qualifica": "Segretario scolastico, assistente amministrativo","minimoTabellare": 1105.00, "moltiplicatore": 0.65 },
-    { "codice": "E",  "descrizione": "Personale ausiliario",      "qualifica": "Bidello, collaboratore scolastico",              "minimoTabellare": 952.00,  "moltiplicatore": 0.56 }
+    { "codice": "Lv8", "descrizione": "Livello 8", "qualifica": "Coordinatore/Direttore didattico, responsabile di istituto scolastico privato",           "minimoTabellare": 1865.46, "moltiplicatore": 1.00 },
+    { "codice": "Lv7", "descrizione": "Livello 7", "qualifica": "Insegnante laureato senior, docente con specializzazione avanzata",                        "minimoTabellare": 1824.19, "moltiplicatore": 0.98 },
+    { "codice": "Lv6", "descrizione": "Livello 6", "qualifica": "Insegnante laureato, docente di scuola dell'infanzia/primaria con laurea triennale",       "minimoTabellare": 1659.55, "moltiplicatore": 0.89 },
+    { "codice": "Lv5", "descrizione": "Livello 5", "qualifica": "Educatore diplomato senior, insegnante diplomato con esperienza pluriennale",              "minimoTabellare": 1639.76, "moltiplicatore": 0.88 },
+    { "codice": "Lv4", "descrizione": "Livello 4", "qualifica": "Insegnante diplomato, educatore di fascia superiore, impiegato di concetto",               "minimoTabellare": 1555.07, "moltiplicatore": 0.83 },
+    { "codice": "Lv3", "descrizione": "Livello 3", "qualifica": "Educatore/Assistente educativo qualificato, personale ATA di concetto",                    "minimoTabellare": 1506.86, "moltiplicatore": 0.81 },
+    { "codice": "Lv2", "descrizione": "Livello 2", "qualifica": "Personale ATA qualificato, assistente amministrativo scolastico",                          "minimoTabellare": 1504.68, "moltiplicatore": 0.81 },
+    { "codice": "Lv1", "descrizione": "Livello 1", "qualifica": "Collaboratore scolastico, addetto ai servizi ausiliari, bidello",                          "minimoTabellare": 1447.95, "moltiplicatore": 0.78 }
   ],
   "scattiAnzianita": {
     "periodicitaMesi": 24,

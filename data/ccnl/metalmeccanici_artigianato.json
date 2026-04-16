@@ -1,8 +1,8 @@
 {
   "id": "metalmeccanici_artigianato",
-  "nome": "CCNL Metalmeccanici — Artigianato (Confartigianato/CNA)",
-  "fonte": "CCNL Metalmeccanici Artigianato — Confartigianato, CNA, Casartigiani + FIOM-CGIL, FIM-CISL, UILM-UIL",
-  "updatedAt": "2026-04-14T00:00:00Z",
+  "nome": "CCNL Metalmeccanici — Artigianato (Confartigianato/CNA — Area Meccanica)",
+  "fonte": "Rinnovo CCNL 19/11/2024 (vigenza 01/01/2023 – 31/12/2026). Tabelle dal 01/03/2026. Fonte: kitech.it CodiceCateg=420",
+  "updatedAt": "2026-03-01T00:00:00Z",
   "mensilita": 13,
   "contributiContrattuali": {
     "azienda": {
@@ -11,8 +11,8 @@
         "modalita": "fisso",
         "importoMensile": 10.42,
         "percentuale": null,
-        "descrizione": "SANARTI — Fondo assistenza sanitaria integrativa artigianato (€ 10,42/mese)",
-        "notaLegge": "CCNL Metalmeccanici Artigianato — assistenza sanitaria"
+        "descrizione": "SANARTI — Fondo assistenza sanitaria integrativa artigianato (€ 10,42/mese fisso quota datore)",
+        "notaLegge": "CCNL Metalmeccanici Artigianato — assistenza sanitaria SANARTI"
       },
       "artifond": {
         "tipo": "previdenziale",
@@ -20,17 +20,19 @@
         "importoMensile": null,
         "percentuale": 0.0150,
         "descrizione": "ARTIFOND — Fondo pensione complementare artigianato (1,50% quota datore)",
-        "notaLegge": "CCNL Metalmeccanici Artigianato — previdenza complementare"
+        "notaLegge": "CCNL Metalmeccanici Artigianato — previdenza complementare ARTIFOND"
       }
     }
   },
   "livelli": [
-    { "codice": "1S", "descrizione": "1° Super",    "qualifica": "Personale con funzioni direttive e alta responsabilità", "minimoTabellare": 1700.00, "moltiplicatore": 1.00 },
-    { "codice": "1",  "descrizione": "1° livello",  "qualifica": "Tecnici con elevata professionalità e autonomia", "minimoTabellare": 1580.00, "moltiplicatore": 0.93 },
-    { "codice": "2",  "descrizione": "2° livello",  "qualifica": "Operai specializzati, impiegati qualificati", "minimoTabellare": 1420.00, "moltiplicatore": 0.84 },
-    { "codice": "3",  "descrizione": "3° livello",  "qualifica": "Operai qualificati, impiegati d'ordine", "minimoTabellare": 1280.00, "moltiplicatore": 0.75 },
-    { "codice": "4",  "descrizione": "4° livello",  "qualifica": "Operai comuni, addetti macchine base", "minimoTabellare": 1150.00, "moltiplicatore": 0.68 },
-    { "codice": "5",  "descrizione": "5° livello",  "qualifica": "Manovali, personale di primo impiego", "minimoTabellare": 1050.00, "moltiplicatore": 0.62 }
+    { "codice": "1Q",   "descrizione": "1° Super (con funz. dir.)", "qualifica": "Operaio/impiegato specializzato con funzioni direttive, capo officina, capo reparto",       "minimoTabellare": 2150.91, "moltiplicatore": 1.00 },
+    { "codice": "1",    "descrizione": "1° livello",                "qualifica": "Operaio specializzato, impiegato qualificato senior",                                       "minimoTabellare": 2080.91, "moltiplicatore": 0.97 },
+    { "codice": "2",    "descrizione": "2° livello",                "qualifica": "Operaio qualificato, meccanico, saldatore, tornio specializzato",                           "minimoTabellare": 1936.20, "moltiplicatore": 0.90 },
+    { "codice": "2bis", "descrizione": "2° livello bis",            "qualifica": "Operaio semi-qualificato (qualifica inferiore), aiuto meccanico",                          "minimoTabellare": 1828.24, "moltiplicatore": 0.85 },
+    { "codice": "3",    "descrizione": "3° livello",                "qualifica": "Operaio generico con esperienza, macchinista, addetto a mansioni operative",               "minimoTabellare": 1758.00, "moltiplicatore": 0.82 },
+    { "codice": "4",    "descrizione": "4° livello",                "qualifica": "Operaio generico base, addetto a mansioni semplici ripetitive",                            "minimoTabellare": 1656.98, "moltiplicatore": 0.77 },
+    { "codice": "5",    "descrizione": "5° livello",                "qualifica": "Lavoratore con qualifica minima di base",                                                   "minimoTabellare": 1595.91, "moltiplicatore": 0.74 },
+    { "codice": "6",    "descrizione": "6° livello",                "qualifica": "Lavoratore di primo ingresso senza qualifica, apprendista",                                "minimoTabellare": 1521.84, "moltiplicatore": 0.71 }
   ],
   "scattiAnzianita": {
     "periodicitaMesi": 24,

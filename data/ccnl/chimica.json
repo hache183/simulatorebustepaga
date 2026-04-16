@@ -1,37 +1,45 @@
 {
   "id": "chimica",
   "nome": "CCNL Chimica-Farmaceutica e Plastica (Federchimica-Farmindustria)",
-  "fonte": "https://www.federchimica.it/contratto-collettivo",
-  "updatedAt": "2026-01-01T00:00:00Z",
+  "fonte": "Rinnovo CCNL 15 aprile 2025 (vigenza 2025-2028). Tabelle dal 01/12/2025. Fonte: kitech.it CodiceCateg=105",
+  "updatedAt": "2025-12-01T00:00:00Z",
   "mensilita": 13,
   "contributiContrattuali": {
     "azienda": {
       "faschim": {
         "tipo": "sanitario",
-        "modalita": "percentuale",
-        "importoMensile": null,
-        "percentuale": 0.0065,
-        "descrizione": "Fondo sanitario integrativo Faschim",
-        "notaLegge": "Art. 11 CCNL Chimica"
+        "modalita": "fisso",
+        "importoMensile": 17.00,
+        "percentuale": null,
+        "descrizione": "FASCHIM — Fondo di Assistenza Sanitaria Chimica-Farmaceutica (€ 17/mese fisso quota datore)",
+        "notaLegge": "Art. 11 CCNL Chimica — FASCHIM"
       },
       "fonchim": {
         "tipo": "previdenziale",
         "modalita": "percentuale",
         "importoMensile": null,
         "percentuale": 0.0195,
-        "descrizione": "Fondo pensione complementare Fonchim (quota azienda)",
-        "notaLegge": "Art. 47 CCNL Chimica"
+        "descrizione": "FONCHIM — Fondo pensione complementare chimici-farmaceutici (1,95% quota datore)",
+        "notaLegge": "Art. 47 CCNL Chimica — FONCHIM"
       }
     }
   },
   "livelli": [
-    { "codice": "Q",  "descrizione": "Quadro",      "qualifica": "Responsabile di laboratorio, quadro tecnico-scientifico",       "minimoTabellare": 2050.00, "moltiplicatore": 1.00 },
-    { "codice": "A",  "descrizione": "Livello A",   "qualifica": "Ricercatore, analista chimico senior",                          "minimoTabellare": 1865.50, "moltiplicatore": 0.91 },
-    { "codice": "B",  "descrizione": "Livello B",   "qualifica": "Tecnico di laboratorio, operatore di impianto specializzato",   "minimoTabellare": 1681.00, "moltiplicatore": 0.82 },
-    { "codice": "C",  "descrizione": "Livello C",   "qualifica": "Addetto alla produzione qualificato, analista chimico junior",  "minimoTabellare": 1517.00, "moltiplicatore": 0.74 },
-    { "codice": "D",  "descrizione": "Livello D",   "qualifica": "Operatore di impianto, magazziniere chimico",                   "minimoTabellare": 1373.50, "moltiplicatore": 0.67 },
-    { "codice": "E",  "descrizione": "Livello E",   "qualifica": "Addetto al confezionamento, ausiliario di laboratorio",         "minimoTabellare": 1230.00, "moltiplicatore": 0.60 },
-    { "codice": "F",  "descrizione": "Livello F",   "qualifica": "Personale di pulizia, manovale",                                "minimoTabellare": 1107.00, "moltiplicatore": 0.54 }
+    { "codice": "A1", "descrizione": "Livello A1", "qualifica": "Personale con ampia autonomia, esperienza elevata e responsabilità di funzione complessa",      "minimoTabellare": 3438.48, "moltiplicatore": 1.00 },
+    { "codice": "A2", "descrizione": "Livello A2", "qualifica": "Personale tecnico-professionale con alta specializzazione e autonomia operativa",              "minimoTabellare": 3183.59, "moltiplicatore": 0.93 },
+    { "codice": "A3", "descrizione": "Livello A3", "qualifica": "Tecnici e impiegati specializzati con significativa autonomia ed esperienza",                   "minimoTabellare": 3117.22, "moltiplicatore": 0.91 },
+    { "codice": "B1", "descrizione": "Livello B1", "qualifica": "Operatori e tecnici con elevata specializzazione, capo turno, analista senior",                "minimoTabellare": 2881.98, "moltiplicatore": 0.84 },
+    { "codice": "B2", "descrizione": "Livello B2", "qualifica": "Tecnici di laboratorio senior, operatori di impianto specializzati",                          "minimoTabellare": 2780.61, "moltiplicatore": 0.81 },
+    { "codice": "C1", "descrizione": "Livello C1", "qualifica": "Operatori qualificati, analisti chimici, tecnici di processo",                                 "minimoTabellare": 2532.65, "moltiplicatore": 0.74 },
+    { "codice": "C2", "descrizione": "Livello C2", "qualifica": "Operatori di produzione qualificati, impiegati qualificati, tecnici di laboratorio",           "minimoTabellare": 2437.86, "moltiplicatore": 0.71 },
+    { "codice": "D1", "descrizione": "Livello D1", "qualifica": "Operatori di impianto, addetti alla produzione qualificati",                                   "minimoTabellare": 2360.26, "moltiplicatore": 0.69 },
+    { "codice": "D2", "descrizione": "Livello D2", "qualifica": "Operatori di produzione con qualifica specifica, addetti al confezionamento qualificati",      "minimoTabellare": 2254.77, "moltiplicatore": 0.66 },
+    { "codice": "D3", "descrizione": "Livello D3", "qualifica": "Operatori comuni di produzione e confezionamento",                                             "minimoTabellare": 2196.76, "moltiplicatore": 0.64 },
+    { "codice": "E1", "descrizione": "Livello E1", "qualifica": "Addetti al magazzino, ausiliari qualificati, magazzinieri chimici",                            "minimoTabellare": 2088.28, "moltiplicatore": 0.61 },
+    { "codice": "E2", "descrizione": "Livello E2", "qualifica": "Addetti alla movimentazione materiali, ausiliari di laboratorio",                              "minimoTabellare": 1981.14, "moltiplicatore": 0.58 },
+    { "codice": "E3", "descrizione": "Livello E3", "qualifica": "Personale di pulizia e manutenzione ambientale qualificato",                                   "minimoTabellare": 1911.29, "moltiplicatore": 0.56 },
+    { "codice": "E4", "descrizione": "Livello E4", "qualifica": "Addetti ai servizi generici, personale ausiliario con esperienza",                             "minimoTabellare": 1863.04, "moltiplicatore": 0.54 },
+    { "codice": "F",  "descrizione": "Livello F",  "qualifica": "Personale di primo impiego, manovalanza generica, addetto pulizie base",                       "minimoTabellare": 1781.46, "moltiplicatore": 0.52 }
   ],
   "scattiAnzianita": {
     "periodicitaMesi": 36,

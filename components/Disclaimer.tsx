@@ -14,7 +14,7 @@ export function Disclaimer({ updatedDates }: Props) {
     : 'non disponibile';
 
   const isVecchio = dataMinima
-    ? (Date.now() - dataMinima.getTime()) > 365 * 24 * 60 * 60 * 1000
+    ? (Date.now() - dataMinima.getTime()) > 730 * 24 * 60 * 60 * 1000
     : false;
 
   return (

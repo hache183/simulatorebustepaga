@@ -1,8 +1,8 @@
 {
   "id": "credito",
   "nome": "CCNL Credito (ABI — Associazione Bancaria Italiana)",
-  "fonte": "https://www.abi.it/contratto-collettivo",
-  "updatedAt": "2026-01-01T00:00:00Z",
+  "fonte": "Rinnovo CCNL giugno 2025 — ABI + FISAC-CGIL, FIRST-CISL, FABI, UILCA, UNISIN",
+  "updatedAt": "2025-06-01T00:00:00Z",
   "mensilita": 14,
   "contributiContrattuali": {
     "azienda": {
@@ -11,7 +11,7 @@
         "modalita": "percentuale",
         "importoMensile": null,
         "percentuale": 0.0090,
-        "descrizione": "Fondo assistenza sanitaria bancari CASI",
+        "descrizione": "CASI — Cassa di Assistenza Sanitaria Integrativa per i dipendenti delle aziende di credito (0,90% quota datore)",
         "notaLegge": "Art. 73 CCNL Credito ABI"
       },
       "fonteB": {
@@ -19,20 +19,21 @@
         "modalita": "percentuale",
         "importoMensile": null,
         "percentuale": 0.0280,
-        "descrizione": "Fondo pensione complementare Fonte (quota azienda)",
+        "descrizione": "Fondo pensione complementare per i dipendenti di aziende di credito (2,80% quota datore)",
         "notaLegge": "Art. 74 CCNL Credito ABI"
       }
     }
   },
   "livelli": [
-    { "codice": "Q",   "descrizione": "Quadro direttivo 4°",                   "qualifica": "Responsabile di filiale, dirigente operativo",        "minimoTabellare": 3200.00, "moltiplicatore": 1.00 },
-    { "codice": "QD3", "descrizione": "Quadro direttivo 3°",                   "qualifica": "Vicedirettore di filiale, responsabile area",         "minimoTabellare": 2880.00, "moltiplicatore": 0.90 },
-    { "codice": "QD2", "descrizione": "Quadro direttivo 2°",                   "qualifica": "Responsabile ufficio, gestore corporate",             "minimoTabellare": 2624.00, "moltiplicatore": 0.82 },
-    { "codice": "QD1", "descrizione": "Quadro direttivo 1°",                   "qualifica": "Funzionario, gestore clientela",                     "minimoTabellare": 2400.00, "moltiplicatore": 0.75 },
-    { "codice": "3A",  "descrizione": "Area professionale 3° — 3a fascia",     "qualifica": "Addetto ai servizi bancari, operatore di sportello senior", "minimoTabellare": 2176.00, "moltiplicatore": 0.68 },
-    { "codice": "3B",  "descrizione": "Area professionale 3° — 2a fascia",     "qualifica": "Cassiere, addetto back-office",                      "minimoTabellare": 1984.00, "moltiplicatore": 0.62 },
-    { "codice": "3C",  "descrizione": "Area professionale 3° — 1a fascia",     "qualifica": "Impiegato d'ordine, addetto amministrativo",          "minimoTabellare": 1824.00, "moltiplicatore": 0.57 },
-    { "codice": "2A",  "descrizione": "Area professionale 2°",                 "qualifica": "Ausiliario, commesso",                               "minimoTabellare": 1664.00, "moltiplicatore": 0.52 }
+    { "codice": "QD4", "descrizione": "Quadro direttivo 4°",                   "qualifica": "Responsabile di filiale/agenzia, dirigente operativo senior",                           "minimoTabellare": 5113.03, "moltiplicatore": 1.00 },
+    { "codice": "QD3", "descrizione": "Quadro direttivo 3°",                   "qualifica": "Vicedirettore di filiale, responsabile di area territoriale",                           "minimoTabellare": 4356.02, "moltiplicatore": 0.85 },
+    { "codice": "QD2", "descrizione": "Quadro direttivo 2°",                   "qualifica": "Responsabile ufficio senior, gestore corporate, capo settore",                         "minimoTabellare": 3926.69, "moltiplicatore": 0.77 },
+    { "codice": "QD1", "descrizione": "Quadro direttivo 1°",                   "qualifica": "Funzionario, gestore clientela private/affluent, responsabile operativo di base",      "minimoTabellare": 3706.24, "moltiplicatore": 0.72 },
+    { "codice": "3A4", "descrizione": "Area professionale 3° — 4a retribuzione","qualifica": "Addetto senior ai servizi bancari, specialista prodotti finanziari, trader",           "minimoTabellare": 3306.90, "moltiplicatore": 0.65 },
+    { "codice": "3A3", "descrizione": "Area professionale 3° — 3a retribuzione","qualifica": "Operatore di sportello senior, addetto back-office specializzato",                    "minimoTabellare": 3029.29, "moltiplicatore": 0.59 },
+    { "codice": "3A2", "descrizione": "Area professionale 3° — 2a retribuzione","qualifica": "Cassiere, addetto back-office, operatore contabilità",                               "minimoTabellare": 2861.88, "moltiplicatore": 0.56 },
+    { "codice": "3A1", "descrizione": "Area professionale 3° — 1a retribuzione","qualifica": "Impiegato d'ordine, addetto amministrativo, sportellista junior",                     "minimoTabellare": 2715.28, "moltiplicatore": 0.53 },
+    { "codice": "AU",  "descrizione": "Area professionale 2° — Area unica",    "qualifica": "Commesso bancario, ausiliario, addetto ai servizi generali",                          "minimoTabellare": 2454.98, "moltiplicatore": 0.48 }
   ],
   "scattiAnzianita": {
     "periodicitaMesi": 24,

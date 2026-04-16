@@ -1,8 +1,8 @@
 {
   "id": "vigilanza_privata",
-  "nome": "CCNL Vigilanza Privata e Servizi Fiduciari (Assiv/Univ)",
-  "fonte": "CCNL Vigilanza Privata — ANIVP, Assiv, Univ + FILCAMS-CGIL, FISASCAT-CISL, UILTuCS",
-  "updatedAt": "2026-04-14T00:00:00Z",
+  "nome": "CCNL Vigilanza Privata e Servizi Fiduciari (UNIV/Assiv)",
+  "fonte": "Accordo 30 maggio 2023 + modifica 16 febbraio 2024 (vigenza 1° giugno 2023 – 31 dicembre 2026). Fonte: kitech.it CodiceCateg=85",
+  "updatedAt": "2025-12-01T00:00:00Z",
   "mensilita": 14,
   "contributiContrattuali": {
     "azienda": {
@@ -11,7 +11,7 @@
         "modalita": "fisso",
         "importoMensile": 10.00,
         "percentuale": null,
-        "descrizione": "Fondo sanitario integrativo vigilanza privata",
+        "descrizione": "Fondo sanitario integrativo vigilanza privata (€ 10/mese fisso quota datore)",
         "notaLegge": "CCNL Vigilanza Privata — assistenza sanitaria integrativa"
       },
       "fondoPensione": {
@@ -25,13 +25,13 @@
     }
   },
   "livelli": [
-    { "codice": "Q",  "descrizione": "Quadro",      "qualifica": "Funzioni direttive istituti di vigilanza", "minimoTabellare": 1550.00, "moltiplicatore": 1.00 },
-    { "codice": "1",  "descrizione": "1° livello",  "qualifica": "GPG Ispettore, responsabile operativo", "minimoTabellare": 1400.00, "moltiplicatore": 0.90 },
-    { "codice": "2",  "descrizione": "2° livello",  "qualifica": "GPG Capo servizio, coordinatore", "minimoTabellare": 1280.00, "moltiplicatore": 0.83 },
-    { "codice": "3",  "descrizione": "3° livello",  "qualifica": "Guardia Particolare Giurata (GPG)", "minimoTabellare": 1175.00, "moltiplicatore": 0.76 },
-    { "codice": "4",  "descrizione": "4° livello",  "qualifica": "GPG base, impiegato amministrativo", "minimoTabellare": 1075.00, "moltiplicatore": 0.69 },
-    { "codice": "5",  "descrizione": "5° livello",  "qualifica": "Addetto portierato e receptionist", "minimoTabellare": 990.00, "moltiplicatore": 0.64 },
-    { "codice": "6",  "descrizione": "6° livello",  "qualifica": "Ausiliario, addetto servizi fiduciari", "minimoTabellare": 920.00, "moltiplicatore": 0.59 }
+    { "codice": "Q",  "descrizione": "Quadro",      "qualifica": "Funzioni direttive istituti di vigilanza, responsabile operativo territoriale",     "minimoTabellare": 2222.60, "moltiplicatore": 1.00 },
+    { "codice": "1",  "descrizione": "1° livello",  "qualifica": "GPG Ispettore, responsabile operativo di settore, coordinatore di turni",          "minimoTabellare": 1914.03, "moltiplicatore": 0.86 },
+    { "codice": "2",  "descrizione": "2° livello",  "qualifica": "GPG Capo servizio, guardia giurata con funzioni di coordinamento",                 "minimoTabellare": 1788.95, "moltiplicatore": 0.81 },
+    { "codice": "3",  "descrizione": "3° livello",  "qualifica": "Guardia Particolare Giurata (GPG) con esperienza consolidata",                    "minimoTabellare": 1591.31, "moltiplicatore": 0.72 },
+    { "codice": "4",  "descrizione": "4° livello",  "qualifica": "GPG di base, impiegato amministrativo istituto di vigilanza",                     "minimoTabellare": 1418.88, "moltiplicatore": 0.64 },
+    { "codice": "5",  "descrizione": "5° livello",  "qualifica": "Addetto portierato fiduciario, receptionist con funzioni di sorveglianza",        "minimoTabellare": 1346.73, "moltiplicatore": 0.61 },
+    { "codice": "6",  "descrizione": "6° livello",  "qualifica": "Ausiliario, addetto ai servizi fiduciari di base, personale di primo impiego",    "minimoTabellare": 1246.73, "moltiplicatore": 0.56 }
   ],
   "scattiAnzianita": {
     "periodicitaMesi": 36,

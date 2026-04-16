@@ -1,8 +1,8 @@
 {
   "id": "commercio_confesercenti",
   "nome": "CCNL Commercio — Confesercenti",
-  "fonte": "CCNL Commercio Confesercenti — Confesercenti + FILCAMS-CGIL, FISASCAT-CISL, UILTuCS",
-  "updatedAt": "2026-04-14T00:00:00Z",
+  "fonte": "CCNL Commercio Terziario Confesercenti. Tabella dal 01/11/2025. Fonte: kitech.it CodiceCateg=447",
+  "updatedAt": "2025-11-01T00:00:00Z",
   "mensilita": 14,
   "contributiContrattuali": {
     "azienda": {
@@ -11,7 +11,7 @@
         "modalita": "fisso",
         "importoMensile": 5.00,
         "percentuale": null,
-        "descrizione": "ASTER — Ente bilaterale territoriale Confesercenti",
+        "descrizione": "ASTER — Ente bilaterale territoriale Confesercenti (€ 5/mese fisso quota datore)",
         "notaLegge": "CCNL Commercio Confesercenti — ente bilaterale"
       },
       "fondoSanitario": {
@@ -19,7 +19,7 @@
         "modalita": "fisso",
         "importoMensile": 10.00,
         "percentuale": null,
-        "descrizione": "Fondo sanitario integrativo Confesercenti",
+        "descrizione": "Fondo sanitario integrativo Confesercenti (€ 10/mese fisso quota datore)",
         "notaLegge": "CCNL Commercio Confesercenti — assistenza sanitaria"
       },
       "fondoPensione": {
@@ -33,13 +33,14 @@
     }
   },
   "livelli": [
-    { "codice": "Q",  "descrizione": "Quadro",      "qualifica": "Funzioni direttive con responsabilità di unità organizzativa", "minimoTabellare": 2340.00, "moltiplicatore": 1.00 },
-    { "codice": "1",  "descrizione": "1° livello",  "qualifica": "Personale con funzioni ad elevata responsabilità", "minimoTabellare": 2190.00, "moltiplicatore": 0.94 },
-    { "codice": "2",  "descrizione": "2° livello",  "qualifica": "Impiegati con mansioni di concetto", "minimoTabellare": 2030.00, "moltiplicatore": 0.87 },
-    { "codice": "3",  "descrizione": "3° livello",  "qualifica": "Impiegati d'ordine, commessi qualificati", "minimoTabellare": 1890.00, "moltiplicatore": 0.81 },
-    { "codice": "4",  "descrizione": "4° livello",  "qualifica": "Commessi alla vendita, cassieri", "minimoTabellare": 1760.00, "moltiplicatore": 0.75 },
-    { "codice": "5",  "descrizione": "5° livello",  "qualifica": "Ausiliari, addetti confezionamento", "minimoTabellare": 1640.00, "moltiplicatore": 0.70 },
-    { "codice": "6",  "descrizione": "6° livello",  "qualifica": "Personale di pulizia, fattorini", "minimoTabellare": 1530.00, "moltiplicatore": 0.65 }
+    { "codice": "Q",  "descrizione": "Quadro",      "qualifica": "Funzioni direttive con responsabilità di unità organizzativa, coordinamento generale",  "minimoTabellare": 2986.30, "moltiplicatore": 1.00 },
+    { "codice": "1",  "descrizione": "1° livello",  "qualifica": "Personale con funzioni ad elevata responsabilità e autonomia operativa",                 "minimoTabellare": 2506.13, "moltiplicatore": 0.84 },
+    { "codice": "2",  "descrizione": "2° livello",  "qualifica": "Impiegati con mansioni di concetto, responsabile reparto vendite",                      "minimoTabellare": 2235.65, "moltiplicatore": 0.75 },
+    { "codice": "3",  "descrizione": "3° livello",  "qualifica": "Impiegati d'ordine qualificati, commessi qualificati con esperienza",                   "minimoTabellare": 1983.91, "moltiplicatore": 0.66 },
+    { "codice": "4",  "descrizione": "4° livello",  "qualifica": "Commessi alla vendita, cassieri, addetti al cliente",                                   "minimoTabellare": 1783.75, "moltiplicatore": 0.60 },
+    { "codice": "5",  "descrizione": "5° livello",  "qualifica": "Ausiliari, addetti al magazzino, addetti al confezionamento",                           "minimoTabellare": 1660.08, "moltiplicatore": 0.56 },
+    { "codice": "6",  "descrizione": "6° livello",  "qualifica": "Personale di pulizia, fattorini, addetti ai servizi generali",                         "minimoTabellare": 1541.77, "moltiplicatore": 0.52 },
+    { "codice": "7",  "descrizione": "7° livello",  "qualifica": "Personale di primo impiego senza qualifica, stagisti retribuiti",                       "minimoTabellare": 1392.80, "moltiplicatore": 0.47 }
   ],
   "scattiAnzianita": {
     "periodicitaMesi": 36,

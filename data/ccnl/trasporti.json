@@ -1,8 +1,8 @@
 {
   "id": "trasporti",
   "nome": "CCNL Trasporto Merci e Logistica (Conftrasporto-Confartigianato)",
-  "fonte": "https://www.conftrasporto.it/contratto-collettivo",
-  "updatedAt": "2026-01-01T00:00:00Z",
+  "fonte": "Rinnovo CCNL ottobre 2024 — Conftrasporto + FILT-CGIL, FIT-CISL, UILTRASPORTI",
+  "updatedAt": "2024-10-01T00:00:00Z",
   "mensilita": 14,
   "contributiContrattuali": {
     "azienda": {
@@ -25,12 +25,14 @@
     }
   },
   "livelli": [
-    { "codice": "Q",  "descrizione": "Quadro",                      "qualifica": "Dirigente operativo, responsabile di filiale",        "minimoTabellare": 1850.00, "moltiplicatore": 1.00 },
-    { "codice": "1",  "descrizione": "1° livello (Quadri tecnici)", "qualifica": "Capo magazziniere, responsabile turni",               "minimoTabellare": 1683.50, "moltiplicatore": 0.91 },
-    { "codice": "2",  "descrizione": "2° livello",                  "qualifica": "Autista di lungo raggio (pat. C+E), magazziniere sp.","minimoTabellare": 1517.00, "moltiplicatore": 0.82 },
-    { "codice": "3",  "descrizione": "3° livello (Autisti)",        "qualifica": "Autista, conducente di mezzi pesanti",                "minimoTabellare": 1369.00, "moltiplicatore": 0.74 },
-    { "codice": "4",  "descrizione": "4° livello",                  "qualifica": "Magazziniere, carrellista",                           "minimoTabellare": 1239.50, "moltiplicatore": 0.67 },
-    { "codice": "5",  "descrizione": "5° livello",                  "qualifica": "Facchino, operatore di carico/scarico",               "minimoTabellare": 1110.00, "moltiplicatore": 0.60 }
+    { "codice": "Q",  "descrizione": "Quadro",             "qualifica": "Dirigente operativo, responsabile di filiale logistica, direttore di magazzino",    "minimoTabellare": 2516.03, "moltiplicatore": 1.00 },
+    { "codice": "1",  "descrizione": "1° livello",         "qualifica": "Capo magazziniere, responsabile turni, coordinatore operativo senior",              "minimoTabellare": 2314.58, "moltiplicatore": 0.92 },
+    { "codice": "2",  "descrizione": "2° livello",         "qualifica": "Autista di lungo raggio (pat. C+E), magazziniere specializzato, impiegato qualif.", "minimoTabellare": 2126.25, "moltiplicatore": 0.85 },
+    { "codice": "3",  "descrizione": "3° livello",         "qualifica": "Autista patente C, conducente di mezzi pesanti, operatore logistica senior",        "minimoTabellare": 1868.40, "moltiplicatore": 0.74 },
+    { "codice": "4",  "descrizione": "4° livello",         "qualifica": "Magazziniere, carrellista, autista furgone, addetto spedizioni",                   "minimoTabellare": 1777.36, "moltiplicatore": 0.71 },
+    { "codice": "5",  "descrizione": "5° livello",         "qualifica": "Facchino, operatore carico/scarico, addetto movimentazione merci qualificato",      "minimoTabellare": 1694.40, "moltiplicatore": 0.67 },
+    { "codice": "6",  "descrizione": "6° livello",         "qualifica": "Lavoratore ausiliario, addetto pulizie e manutenzione magazzino",                   "minimoTabellare": 1584.10, "moltiplicatore": 0.63 },
+    { "codice": "6J", "descrizione": "6° livello Junior",  "qualifica": "Lavoratore di primo ingresso senza qualifica, apprendista manovalanza",             "minimoTabellare": 1449.37, "moltiplicatore": 0.58 }
   ],
   "scattiAnzianita": {
     "periodicitaMesi": 24,

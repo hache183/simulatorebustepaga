@@ -1,8 +1,8 @@
 {
   "id": "metalmeccanici",
-  "nome": "CCNL Metalmeccanici (Federmeccanica-Assistal)",
-  "fonte": "https://www.federmeccanica.it/contratto-collettivo",
-  "updatedAt": "2026-01-01T00:00:00Z",
+  "nome": "CCNL Metalmeccanici Industria (Federmeccanica-Assistal)",
+  "fonte": "Rinnovo CCNL 2021-2024. Tabelle dal 01/06/2024. Fonte: lexplain.it — tabelle-retributive-metalmeccanici-industria",
+  "updatedAt": "2024-06-01T00:00:00Z",
   "mensilita": 13,
   "contributiContrattuali": {
     "azienda": {
@@ -11,27 +11,29 @@
         "modalita": "fisso",
         "importoMensile": 12.00,
         "percentuale": null,
-        "descrizione": "Fondo sanitario Metasalute",
-        "notaLegge": "Art. 1 CCNL Metalmeccanici — importo fisso per dipendente"
+        "descrizione": "MetaSalute — Fondo sanitario integrativo metalmeccanici (€ 12/mese fisso quota datore)",
+        "notaLegge": "Art. 1 CCNL Metalmeccanici — MetaSalute"
       },
       "cometa": {
         "tipo": "previdenziale",
         "modalita": "percentuale",
         "importoMensile": null,
         "percentuale": 0.0200,
-        "descrizione": "Fondo pensione complementare Cometa (quota azienda)",
-        "notaLegge": "Art. 46 CCNL Metalmeccanici"
+        "descrizione": "COMETA — Fondo pensione complementare metalmeccanici (2,00% quota datore)",
+        "notaLegge": "Art. 46 CCNL Metalmeccanici — COMETA"
       }
     }
   },
   "livelli": [
-    { "codice": "7", "descrizione": "7° livello (Quadro)",  "qualifica": "Quadri e alte professionalità (ex D1)",                           "minimoTabellare": 2102.00, "moltiplicatore": 1.00 },
-    { "codice": "6", "descrizione": "6° livello",           "qualifica": "Impiegati direttivi, tecnici di alto livello (ex D2)",             "minimoTabellare": 1893.00, "moltiplicatore": 0.90 },
-    { "codice": "5", "descrizione": "5° livello",           "qualifica": "Impiegati di concetto con esperienza (ex C1)",                     "minimoTabellare": 1713.00, "moltiplicatore": 0.81 },
-    { "codice": "4", "descrizione": "4° livello",           "qualifica": "Operai specializzati, impiegati d'ordine qualificati (ex C2)",     "minimoTabellare": 1544.00, "moltiplicatore": 0.73 },
-    { "codice": "3", "descrizione": "3° livello",           "qualifica": "Operai qualificati (ex C3)",                                       "minimoTabellare": 1373.00, "moltiplicatore": 0.65 },
-    { "codice": "2", "descrizione": "2° livello",           "qualifica": "Operai comuni, ausiliari (ex B1)",                                  "minimoTabellare": 1226.00, "moltiplicatore": 0.58 },
-    { "codice": "1", "descrizione": "1° livello",           "qualifica": "Apprendisti, personale senza qualifica (ex B2)",                    "minimoTabellare": 1098.00, "moltiplicatore": 0.52 }
+    { "codice": "A1", "descrizione": "Livello A1", "qualifica": "Ruoli di Gestione — personale con responsabilità gestionali di alto profilo (ex 8° categoria)",         "minimoTabellare": 2800.71, "moltiplicatore": 1.00 },
+    { "codice": "B3", "descrizione": "Livello B3", "qualifica": "Ruoli Specialistici — 3° gradino, tecnici con elevata specializzazione e autonomia decisionale",      "minimoTabellare": 2735.18, "moltiplicatore": 0.98 },
+    { "codice": "B2", "descrizione": "Livello B2", "qualifica": "Ruoli Specialistici — 2° gradino, operaio altamente specializzato, impiegato tecnico senior",         "minimoTabellare": 2449.99, "moltiplicatore": 0.87 },
+    { "codice": "B1", "descrizione": "Livello B1", "qualifica": "Ruoli Specialistici — 1° gradino, operaio specializzato, impiegato di concetto",                       "minimoTabellare": 2283.65, "moltiplicatore": 0.82 },
+    { "codice": "C3", "descrizione": "Livello C3", "qualifica": "Ruoli Tecnico Specifici — 3° gradino, operaio specializzato con esperienza, impiegato d'ordine senior","minimoTabellare": 2130.56, "moltiplicatore": 0.76 },
+    { "codice": "C2", "descrizione": "Livello C2", "qualifica": "Ruoli Tecnico Specifici — 2° gradino, operaio qualificato, impiegato esecutivo qualificato",           "minimoTabellare": 1989.38, "moltiplicatore": 0.71 },
+    { "codice": "C1", "descrizione": "Livello C1", "qualifica": "Ruoli Tecnico Specifici — 1° gradino, operaio qualificato base, impiegato d'ordine",                   "minimoTabellare": 1948.18, "moltiplicatore": 0.70 },
+    { "codice": "D2", "descrizione": "Livello D2", "qualifica": "Ruoli Operativi — 2° gradino, operaio qualificato, addetto a mansioni operative con esperienza",       "minimoTabellare": 1906.99, "moltiplicatore": 0.68 },
+    { "codice": "D1", "descrizione": "Livello D1", "qualifica": "Ruoli Operativi — 1° gradino, operaio comune, lavoratore neo-assunto o senza specifica qualifica",     "minimoTabellare": 1719.67, "moltiplicatore": 0.61 }
   ],
   "scattiAnzianita": {
     "periodicitaMesi": 24,

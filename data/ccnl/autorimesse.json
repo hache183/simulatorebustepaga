@@ -1,8 +1,8 @@
 {
   "id": "autorimesse",
-  "nome": "CCNL Autorimesse e Noleggio (ANIASA)",
-  "fonte": "CCNL Autorimesse, Noleggio, Autosilos — ANIASA + FILT-CGIL, FIT-CISL, UILTRASPORTI",
-  "updatedAt": "2026-04-14T00:00:00Z",
+  "nome": "CCNL Autorimesse e Noleggio Automezzi (ANIASA)",
+  "fonte": "Rinnovo CCNL 15 dicembre 2022 (tabelle aggiornate gennaio 2026). Fonte: kitech.it CodiceCateg=327",
+  "updatedAt": "2026-01-01T00:00:00Z",
   "mensilita": 14,
   "contributiContrattuali": {
     "azienda": {
@@ -11,7 +11,7 @@
         "modalita": "fisso",
         "importoMensile": 10.00,
         "percentuale": null,
-        "descrizione": "Fondo assistenza sanitaria integrativa autorimesse",
+        "descrizione": "Fondo assistenza sanitaria integrativa autorimesse (€ 10/mese fisso quota datore)",
         "notaLegge": "CCNL Autorimesse — assistenza sanitaria integrativa"
       },
       "fondoPensione": {
@@ -25,13 +25,17 @@
     }
   },
   "livelli": [
-    { "codice": "Q",  "descrizione": "Quadro",      "qualifica": "Direttore autorimessa, responsabile operativo", "minimoTabellare": 1700.00, "moltiplicatore": 1.00 },
-    { "codice": "1",  "descrizione": "1° livello",  "qualifica": "Personale con responsabilità gestionale e coordinamento", "minimoTabellare": 1550.00, "moltiplicatore": 0.91 },
-    { "codice": "2",  "descrizione": "2° livello",  "qualifica": "Impiegati qualificati, capo officina", "minimoTabellare": 1400.00, "moltiplicatore": 0.82 },
-    { "codice": "3",  "descrizione": "3° livello",  "qualifica": "Meccanici qualificati, addetti noleggio", "minimoTabellare": 1250.00, "moltiplicatore": 0.74 },
-    { "codice": "4",  "descrizione": "4° livello",  "qualifica": "Addetti parcheggio, lavaggio, cassa", "minimoTabellare": 1100.00, "moltiplicatore": 0.65 },
-    { "codice": "5",  "descrizione": "5° livello",  "qualifica": "Guardiani, addetti movimentazione veicoli", "minimoTabellare": 1020.00, "moltiplicatore": 0.60 },
-    { "codice": "6",  "descrizione": "6° livello",  "qualifica": "Personale generico di primo impiego", "minimoTabellare": 950.00, "moltiplicatore": 0.56 }
+    { "codice": "Q1", "descrizione": "Quadro 1°",   "qualifica": "Quadro con funzioni direttive generali, responsabile operativo senior",              "minimoTabellare": 2647.58, "moltiplicatore": 1.00 },
+    { "codice": "Q2", "descrizione": "Quadro 2°",   "qualifica": "Quadro con responsabilità gestionale di struttura",                                  "minimoTabellare": 2647.58, "moltiplicatore": 1.00 },
+    { "codice": "A1", "descrizione": "Livello A1",  "qualifica": "Personale con elevata professionalità e autonomia operativa, capo officina",          "minimoTabellare": 2647.58, "moltiplicatore": 1.00 },
+    { "codice": "A2", "descrizione": "Livello A2",  "qualifica": "Impiegati direttivi, meccanico senior, responsabile parcheggio e noleggio",           "minimoTabellare": 2521.96, "moltiplicatore": 0.95 },
+    { "codice": "B1", "descrizione": "Livello B1",  "qualifica": "Impiegati qualificati, meccanici esperti, addetti noleggio senior",                  "minimoTabellare": 2343.80, "moltiplicatore": 0.89 },
+    { "codice": "B2", "descrizione": "Livello B2",  "qualifica": "Meccanici qualificati, addetti carrozzeria, impiegati qualificati d'ordine",          "minimoTabellare": 2259.92, "moltiplicatore": 0.85 },
+    { "codice": "B3", "descrizione": "Livello B3",  "qualifica": "Addetti parcheggio con specializzazione, addetti cassa, conducenti NCC",             "minimoTabellare": 2186.55, "moltiplicatore": 0.83 },
+    { "codice": "C1", "descrizione": "Livello C1",  "qualifica": "Parcheggiatori qualificati, addetti movimentazione veicoli con esperienza",           "minimoTabellare": 2124.56, "moltiplicatore": 0.80 },
+    { "codice": "C2", "descrizione": "Livello C2",  "qualifica": "Guardiani, addetti ai servizi di guardiania e controllo accessi",                    "minimoTabellare": 1946.29, "moltiplicatore": 0.74 },
+    { "codice": "C3", "descrizione": "Livello C3",  "qualifica": "Addetti alle pulizie veicoli e strutture, lavoratori generici con esperienza",       "minimoTabellare": 1841.91, "moltiplicatore": 0.70 },
+    { "codice": "C4", "descrizione": "Livello C4",  "qualifica": "Personale di primo ingresso, manovalanza generica, apprendisti",                     "minimoTabellare": 1549.82, "moltiplicatore": 0.59 }
   ],
   "scattiAnzianita": {
     "periodicitaMesi": 36,

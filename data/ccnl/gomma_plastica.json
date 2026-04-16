@@ -1,8 +1,8 @@
 {
   "id": "gomma_plastica",
-  "nome": "CCNL Gomma-Plastica (Federazione Gomma Plastica / Confindustria)",
-  "fonte": "CCNL Gomma-Plastica — Federazione Gomma Plastica + FILCTEM-CGIL, FEMCA-CISL, UILTEC-UIL",
-  "updatedAt": "2026-04-14T00:00:00Z",
+  "nome": "CCNL Gomma-Plastica Industria (Federazione Gomma Plastica / Confindustria)",
+  "fonte": "Accordo rinnovo 10/12/2025 (vigenza 2026-2028). Tabelle dal 01/01/2026. Fonte: kitech.it CodiceCateg=108",
+  "updatedAt": "2026-01-01T00:00:00Z",
   "mensilita": 13,
   "contributiContrattuali": {
     "azienda": {
@@ -11,27 +11,30 @@
         "modalita": "percentuale",
         "importoMensile": null,
         "percentuale": 0.0195,
-        "descrizione": "FONCHIM — Fondo pensione complementare chimici (1,95% quota datore)",
-        "notaLegge": "CCNL Gomma-Plastica — previdenza complementare"
+        "descrizione": "FONCHIM — Fondo pensione complementare chimici-gomma-plastica (1,95% quota datore)",
+        "notaLegge": "CCNL Gomma-Plastica — previdenza complementare FONCHIM"
       },
       "faschim": {
         "tipo": "sanitario",
         "modalita": "fisso",
         "importoMensile": 17.00,
         "percentuale": null,
-        "descrizione": "FASCHIM — Fondo assistenza sanitaria chimici (€ 17/mese)",
-        "notaLegge": "CCNL Gomma-Plastica — assistenza sanitaria integrativa"
+        "descrizione": "FASCHIM — Fondo assistenza sanitaria gomma-plastica (€ 17/mese fisso quota datore)",
+        "notaLegge": "CCNL Gomma-Plastica — assistenza sanitaria FASCHIM"
       }
     }
   },
   "livelli": [
-    { "codice": "Q", "descrizione": "Quadro",     "qualifica": "Funzioni direttive con responsabilità di unità produttiva", "minimoTabellare": 2020.00, "moltiplicatore": 1.00 },
-    { "codice": "A", "descrizione": "Livello A",   "qualifica": "Personale con alta professionalità e autonomia", "minimoTabellare": 1850.00, "moltiplicatore": 0.92 },
-    { "codice": "B", "descrizione": "Livello B",   "qualifica": "Tecnici qualificati, capireparto", "minimoTabellare": 1660.00, "moltiplicatore": 0.82 },
-    { "codice": "C", "descrizione": "Livello C",   "qualifica": "Operai specializzati, impiegati qualificati", "minimoTabellare": 1490.00, "moltiplicatore": 0.74 },
-    { "codice": "D", "descrizione": "Livello D",   "qualifica": "Operai qualificati, addetti macchine", "minimoTabellare": 1370.00, "moltiplicatore": 0.68 },
-    { "codice": "E", "descrizione": "Livello E",   "qualifica": "Operai comuni, addetti confezionamento", "minimoTabellare": 1230.00, "moltiplicatore": 0.61 },
-    { "codice": "F", "descrizione": "Livello F",   "qualifica": "Personale di primo impiego e pulizia", "minimoTabellare": 1120.00, "moltiplicatore": 0.55 }
+    { "codice": "Q",  "descrizione": "Quadro",      "qualifica": "Funzioni direttive con responsabilità di unità produttiva, quadro tecnico",                      "minimoTabellare": 2547.83, "moltiplicatore": 1.00 },
+    { "codice": "A",  "descrizione": "Livello A",   "qualifica": "Personale con alta professionalità, autonomia e responsabilità tecnica/gestionale significativa", "minimoTabellare": 2351.85, "moltiplicatore": 0.92 },
+    { "codice": "B",  "descrizione": "Livello B",   "qualifica": "Tecnici qualificati, capireparto, operai altamente specializzati con autonomia",                 "minimoTabellare": 2218.74, "moltiplicatore": 0.87 },
+    { "codice": "C",  "descrizione": "Livello C",   "qualifica": "Operai specializzati senior, impiegati qualificati con esperienza",                              "minimoTabellare": 2189.60, "moltiplicatore": 0.86 },
+    { "codice": "D",  "descrizione": "Livello D",   "qualifica": "Operai specializzati, tecnici di macchinari gomma/plastica",                                    "minimoTabellare": 2162.08, "moltiplicatore": 0.85 },
+    { "codice": "E",  "descrizione": "Livello E",   "qualifica": "Operai qualificati di produzione, addetti a macchine e impianti",                               "minimoTabellare": 2074.83, "moltiplicatore": 0.81 },
+    { "codice": "F",  "descrizione": "Livello F",   "qualifica": "Operai qualificati, addetti al confezionamento e alla finitura",                                "minimoTabellare": 2021.12, "moltiplicatore": 0.79 },
+    { "codice": "G",  "descrizione": "Livello G",   "qualifica": "Operai comuni, addetti a mansioni semplici di produzione",                                      "minimoTabellare": 1883.45, "moltiplicatore": 0.74 },
+    { "codice": "H",  "descrizione": "Livello H",   "qualifica": "Operai generici, addetti al magazzino e movimentazione materiali",                              "minimoTabellare": 1796.11, "moltiplicatore": 0.70 },
+    { "codice": "I",  "descrizione": "Livello I",   "qualifica": "Personale di primo impiego, manovalanza generica, addetto pulizie",                             "minimoTabellare": 1614.73, "moltiplicatore": 0.63 }
   ],
   "scattiAnzianita": {
     "periodicitaMesi": 24,

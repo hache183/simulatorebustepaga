@@ -1,7 +1,7 @@
 {
   "id": "telecomunicazioni",
   "nome": "CCNL Telecomunicazioni (Asstel-Assotelecomunicazioni)",
-  "fonte": "https://www.asstel.it/contratto-collettivo",
+  "fonte": "Rinnovo CCNL 11 novembre 2025 (vigenza 2025-2028). Valori tabella dal 01/01/2026. Fonte: kitech.it CodiceCateg=101",
   "updatedAt": "2026-01-01T00:00:00Z",
   "mensilita": 13,
   "contributiContrattuali": {
@@ -11,26 +11,29 @@
         "modalita": "percentuale",
         "importoMensile": null,
         "percentuale": 0.0075,
-        "descrizione": "Fondo sanitario integrativo Fastel",
-        "notaLegge": "Art. 19 CCNL Telecomunicazioni"
+        "descrizione": "FASTEL — Fondo sanitario integrativo telecomunicazioni (0,75% quota datore)",
+        "notaLegge": "Art. 19 CCNL Telecomunicazioni — FASTEL"
       },
       "telemaco": {
         "tipo": "previdenziale",
         "modalita": "percentuale",
         "importoMensile": null,
         "percentuale": 0.0200,
-        "descrizione": "Fondo pensione complementare Telemaco (quota azienda)",
-        "notaLegge": "Art. 50 CCNL Telecomunicazioni"
+        "descrizione": "TELEMACO — Fondo pensione complementare telecomunicazioni (2,00% quota datore)",
+        "notaLegge": "Art. 50 CCNL Telecomunicazioni — TELEMACO"
       }
     }
   },
   "livelli": [
-    { "codice": "Q",  "descrizione": "Quadro",      "qualifica": "Project manager, responsabile di rete",                  "minimoTabellare": 2000.00, "moltiplicatore": 1.00 },
-    { "codice": "A",  "descrizione": "Livello A",   "qualifica": "Ingegnere di rete, sviluppatore senior",                "minimoTabellare": 1800.00, "moltiplicatore": 0.90 },
-    { "codice": "B",  "descrizione": "Livello B",   "qualifica": "Tecnico di rete, analista sistemi",                     "minimoTabellare": 1620.00, "moltiplicatore": 0.81 },
-    { "codice": "C",  "descrizione": "Livello C",   "qualifica": "Operatore di call center specializzato, tecnico inst.", "minimoTabellare": 1440.00, "moltiplicatore": 0.72 },
-    { "codice": "D",  "descrizione": "Livello D",   "qualifica": "Operatore di call center, addetto amministrativo",      "minimoTabellare": 1280.00, "moltiplicatore": 0.64 },
-    { "codice": "E",  "descrizione": "Livello E",   "qualifica": "Ausiliario, addetto alla logistica",                    "minimoTabellare": 1140.00, "moltiplicatore": 0.57 }
+    { "codice": "Q",  "descrizione": "Quadro",       "qualifica": "Project manager, responsabile di rete, quadro tecnico con elevata autonomia",            "minimoTabellare": 2586.06, "moltiplicatore": 1.00 },
+    { "codice": "7",  "descrizione": "7° livello",   "qualifica": "Ingegnere di rete, sviluppatore senior, specialista sistemi complessi",                  "minimoTabellare": 2547.32, "moltiplicatore": 0.98 },
+    { "codice": "6",  "descrizione": "6° livello",   "qualifica": "Tecnico di rete senior, analista sistemi, sviluppatore applicazioni TLC",               "minimoTabellare": 2268.50, "moltiplicatore": 0.88 },
+    { "codice": "5S", "descrizione": "5° livello Super","qualifica": "Operatore call center senior specializzato, tecnico installazione reti avanzate",     "minimoTabellare": 2014.74, "moltiplicatore": 0.78 },
+    { "codice": "5",  "descrizione": "5° livello",   "qualifica": "Operatore call center specializzato, tecnico installazione e manutenzione reti",        "minimoTabellare": 1948.73, "moltiplicatore": 0.75 },
+    { "codice": "4",  "descrizione": "4° livello",   "qualifica": "Operatore call center qualificato, addetto back-office tecnico, configuratore sistemi", "minimoTabellare": 1805.89, "moltiplicatore": 0.70 },
+    { "codice": "3",  "descrizione": "3° livello",   "qualifica": "Operatore call center, addetto amministrativo, tecnico di supporto",                   "minimoTabellare": 1670.50, "moltiplicatore": 0.65 },
+    { "codice": "2",  "descrizione": "2° livello",   "qualifica": "Operatore base, addetto data entry, ausiliario tecnico",                               "minimoTabellare": 1531.85, "moltiplicatore": 0.59 },
+    { "codice": "1",  "descrizione": "1° livello",   "qualifica": "Personale di primo impiego senza qualifica specifica, addetto ai servizi generali",    "minimoTabellare": 1375.40, "moltiplicatore": 0.53 }
   ],
   "scattiAnzianita": {
     "periodicitaMesi": 24,
