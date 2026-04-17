@@ -14,6 +14,7 @@ interface Props {
 export function RisultatiCalcolatore({ risultato, onRicalcola }: Props) {
   const { costoTotaleAnnuo, costoTotaleMensile, percentualeRal, voci, agevolazioniApplicate, alertScadenze, nettoDipendente } = risultato;
   const risparmioTotale = agevolazioniApplicate.reduce((s, a) => s + a.risparmioAnnuo, 0);
+  const isDomestico = risultato.input.ccnlId === 'lavoro_domestico';
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
@@ -260,7 +261,11 @@ export function RisultatiCalcolatore({ risultato, onRicalcola }: Props) {
         <div style={{ borderRadius: '10px', overflow: 'hidden', border: '1px solid var(--color-border)' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
             <tbody>
-              {[
+              {(isDomestico ? [
+                { label: 'RAL lorda', value: nettoDipendente.ralLorda, sign: '' },
+                { label: 'Contributi INPS dipendente', value: nettoDipendente.inpsDipendente, sign: '−' },
+                { label: 'Imponibile IRPEF (= netto)', value: nettoDipendente.imponibileIrpef, sign: '=', bold: true },
+              ] : [
                 { label: 'RAL lorda', value: nettoDipendente.ralLorda, sign: '' },
                 { label: 'Contributi INPS dipendente (9,19%)', value: nettoDipendente.inpsDipendente, sign: '−' },
                 { label: 'Imponibile IRPEF', value: nettoDipendente.imponibileIrpef, sign: '=', bold: true },
@@ -269,7 +274,7 @@ export function RisultatiCalcolatore({ risultato, onRicalcola }: Props) {
                 { label: 'Bonus cuneo fiscale', value: nettoDipendente.bonusCuneoFiscale, sign: '+', color: 'var(--color-green)' },
                 { label: 'IRPEF netta', value: nettoDipendente.irpefNetta, sign: '−', bold: true },
                 { label: 'Addizionali reg./com. (stima)', value: nettoDipendente.addizionaleRegionale + nettoDipendente.addizionaleComunale, sign: '−' },
-              ].map((row, i) => (
+              ] as { label: string; value: number; sign: string; bold?: boolean; color?: string }[]).map((row, i) => (
                 <tr key={i} style={{
                   background: i % 2 === 0 ? 'var(--color-bg-surface)' : 'var(--color-bg-base)',
                   borderBottom: '1px solid var(--color-border)',

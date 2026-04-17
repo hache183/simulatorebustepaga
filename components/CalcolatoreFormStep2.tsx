@@ -15,7 +15,7 @@ const REGIONI = [
 
 const Step2Schema = z.object({
   numeroDipendenti: z.number().min(1, 'Inserisci il numero di dipendenti'),
-  regione: z.string().min(1, 'Seleziona la regione'),
+  regione: z.string(),
   codiceInail: z.string(),
   anzianitaAnni: z.number().min(0).max(50),
   agevolazioniSelezionate: z.array(z.string()),
@@ -47,7 +47,7 @@ export function CalcolatoreFormStep2({ onSubmit, onBack, isLoading, contributiCc
   const { register, handleSubmit, watch, setValue, formState: { errors } } =
     useForm<Step2Data>({
       resolver: zodResolver(Step2Schema),
-      defaultValues: { numeroDipendenti: 1, anzianitaAnni: 0, codiceInail: '', agevolazioniSelezionate: [], includiAssistenzaSanitaria: true, aliquotaInps: 28.80 },
+      defaultValues: { numeroDipendenti: 1, regione: '', anzianitaAnni: 0, codiceInail: '', agevolazioniSelezionate: [], includiAssistenzaSanitaria: true, aliquotaInps: 28.80 },
     });
 
   const agevolazioniSelezionate = watch('agevolazioniSelezionate');
@@ -87,7 +87,7 @@ export function CalcolatoreFormStep2({ onSubmit, onBack, isLoading, contributiCc
   return (
     <form onSubmit={handleSubmit((data) => {
       if (isDomestico) {
-        onSubmit({ ...data, codiceInail: '', aliquotaInps: 0, agevolazioniSelezionate: [] });
+        onSubmit({ ...data, codiceInail: '', aliquotaInps: 0, agevolazioniSelezionate: [], regione: 'N/A' });
       } else {
         onSubmit({ ...data, aliquotaInps: data.aliquotaInps / 100 });
       }
@@ -109,7 +109,8 @@ export function CalcolatoreFormStep2({ onSubmit, onBack, isLoading, contributiCc
         </h2>
       </div>
 
-      {/* Numero dipendenti */}
+      {/* Numero dipendenti — nascosto per lavoro domestico */}
+      {!isDomestico && (
       <div>
         <label htmlFor="numeroDipendenti" style={{ display: 'block', fontSize: '13px', fontWeight: 500,
           color: 'var(--color-text-secondary)', marginBottom: '6px' }}>
@@ -128,14 +129,18 @@ export function CalcolatoreFormStep2({ onSubmit, onBack, isLoading, contributiCc
         />
         {errors.numeroDipendenti && <p style={{ marginTop: '4px', fontSize: '11px', color: 'var(--color-red)' }}>{errors.numeroDipendenti.message}</p>}
       </div>
+      )}
 
-      {/* Regione */}
+      {/* Regione — nascosta per lavoro domestico */}
+      {!isDomestico && (
       <div>
         <label htmlFor="regione" style={{ display: 'block', fontSize: '13px', fontWeight: 500,
           color: 'var(--color-text-secondary)', marginBottom: '6px' }}>
           Regione
         </label>
-        <select id="regione" {...register('regione')} style={{
+        <select id="regione" {...register('regione', {
+          validate: v => isDomestico || (v && v.length > 0) || 'Seleziona la regione',
+        })} style={{
           width: '100%', padding: '11px 14px',
           background: 'var(--color-bg-input)', color: 'var(--color-text-primary)',
           border: `1px solid ${errors.regione ? 'var(--color-red)' : 'var(--color-border)'}`,
@@ -146,6 +151,7 @@ export function CalcolatoreFormStep2({ onSubmit, onBack, isLoading, contributiCc
         </select>
         {errors.regione && <p style={{ marginTop: '4px', fontSize: '11px', color: 'var(--color-red)' }}>{errors.regione.message}</p>}
       </div>
+      )}
 
       {/* Categoria INAIL */}
       {!isDomestico && (

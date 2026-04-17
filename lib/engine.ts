@@ -228,7 +228,6 @@ async function calculateCostoDomestico(input: CalcolatoreInput): Promise<Calcola
   );
   const oreAnnuali = oreSettimanali * 52;
   const inpsDatore = contributoOrarioDatore * oreAnnuali;
-  const inpsDipendente = contributoOrarioLavoratore * oreAnnuali;
 
   // TFR (Art. 2120 c.c.)
   const tfr = calcolaTfr(ralEffettiva, mensilita);
@@ -236,13 +235,13 @@ async function calculateCostoDomestico(input: CalcolatoreInput): Promise<Calcola
   // Scatti di anzianità (orari per il domestico)
   const costoScatti = calcolaScattiAnzianita(input.anzianitaAnni, ccnl.scattiAnzianita) * oreSettimanali * 52 / 12;
 
+  // Tredicesima mensilità — per il lavoro domestico è aggiuntiva rispetto alla paga oraria annua
+  const tredicesima = ralEffettiva / 12;
+
   // Totale costo datore (INAIL incluso nei contributi forfettari)
-  const costoTotaleAnnuo = ralEffettiva + inpsDatore + tfr + costoScatti;
+  const costoTotaleAnnuo = ralEffettiva + inpsDatore + tfr + costoScatti + tredicesima;
 
   const percentualeRal = ralEffettiva > 0 ? costoTotaleAnnuo / ralEffettiva : 0;
-
-  // Tredicesima (informativa)
-  const tredicesima = ralEffettiva / 12;
 
   // Voci di dettaglio
   const voci: DettaglioCosto[] = [
@@ -284,11 +283,11 @@ async function calculateCostoDomestico(input: CalcolatoreInput): Promise<Calcola
     {
       id: 'tredicesima',
       categoria: 'tredicesima',
-      descrizione: 'Tredicesima mensilità (già inclusa nella retribuzione annua)',
+      descrizione: 'Tredicesima mensilità',
       importoAnnuo: tredicesima,
       importoMensile: tredicesima / 12,
       percentualeRal: ralEffettiva > 0 ? tredicesima / ralEffettiva : 0,
-      notaLegge: 'CCNL Lavoro Domestico — tredicesima obbligatoria. Voce informativa.',
+      notaLegge: 'CCNL Lavoro Domestico — tredicesima obbligatoria.',
     },
     ...(costoScatti > 0 ? [{
       id: 'scatti_anzianita',
@@ -301,8 +300,24 @@ async function calculateCostoDomestico(input: CalcolatoreInput): Promise<Calcola
     }] : []),
   ];
 
-  // Netto dipendente
-  const nettoDipendente = calcolaNettoDipendente(ralEffettiva, mensilita, inpsDipendente / ralEffettiva, input.tipoContratto);
+  // Netto dipendente — datore privato non è sostituto d'imposta, nessuna ritenuta IRPEF
+  const inpsDipendenteDomestico = contributoOrarioLavoratore * oreAnnuali;
+  const nettoAnnuoDomestico = ralEffettiva - inpsDipendenteDomestico;
+  const nettoDipendente = {
+    ralLorda: ralEffettiva,
+    inpsDipendente: inpsDipendenteDomestico,
+    imponibileIrpef: nettoAnnuoDomestico,
+    irpefLorda: 0,
+    detrazioneLavoroDip: 0,
+    bonusCuneoFiscale: 0,
+    irpefNetta: 0,
+    addizionaleRegionale: 0,
+    addizionaleComunale: 0,
+    nettoAnnuo: nettoAnnuoDomestico,
+    nettoMensile12: nettoAnnuoDomestico / 12,
+    nettoPerMensilita: nettoAnnuoDomestico / mensilita,
+    disclaimer: 'Per il lavoro domestico il datore privato non è sostituto d\'imposta (art. 4 DPR 322/1998). IRPEF e addizionali sono gestite autonomamente dal lavoratore tramite dichiarazione dei redditi.',
+  };
 
   return {
     input,

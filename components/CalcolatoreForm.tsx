@@ -302,7 +302,7 @@ export function CalcolatoreFormStep1({ onNext }: Props) {
             />
             {errors.oreSettimanali && <p style={{ marginTop: '4px', fontSize: '11px', color: 'var(--color-red)' }}>{errors.oreSettimanali.message}</p>}
             <p style={{ marginTop: '4px', fontSize: '11px', color: 'var(--color-text-muted)' }}>
-              Oltre 24 ore/sett. il lavoratore è considerato convivente con tabella contributiva ridotta.
+              Dalla 25ª ora settimanale l&apos;aliquota contributiva è ridotta.
             </p>
           </div>
 
