@@ -128,6 +128,45 @@
       },
       "_nota": "Il settore agricolo ha un regime contributivo proprio. Le aliquote sono una stima media per salariati fissi (impiegati). Per operai agricoli a tempo determinato (OTD) il regime è diverso."
     },
+    "lavoro_domestico": {
+      "nome": "Lavoro domestico (colf, badanti, baby-sitter)",
+      "aliquotaDatore": 0,
+      "aliquotaDipendente": 0,
+      "dettaglio": {},
+      "_nota": "Il lavoro domestico ha contributi INPS forfettari (importo fisso per ora lavorata), non percentuali. Le aliquote qui sono 0 perché il calcolo avviene nel branch dedicato di engine.ts.",
+      "contributiOrari": {
+        "_fonte": "Circolare INPS per lavoro domestico — tabelle 2025 (verificare aggiornamento 2026)",
+        "tempoIndeterminato": {
+          "conCUAF": [
+            { "retribOrariaMax": 9.40, "contributoOrario": 1.66, "quotaLavoratore": 0.42 },
+            { "retribOrariaMax": 11.45, "contributoOrario": 1.88, "quotaLavoratore": 0.47 },
+            { "retribOrariaMax": 999.99, "contributoOrario": 2.29, "quotaLavoratore": 0.57 }
+          ],
+          "senzaCUAF": [
+            { "retribOrariaMax": 9.40, "contributoOrario": 1.67, "quotaLavoratore": 0.42 },
+            { "retribOrariaMax": 11.45, "contributoOrario": 1.88, "quotaLavoratore": 0.47 },
+            { "retribOrariaMax": 999.99, "contributoOrario": 2.29, "quotaLavoratore": 0.57 }
+          ],
+          "conviventiOltre24h": { "contributoOrario": 1.21, "quotaLavoratore": 0.30 }
+        },
+        "tempoDeterminato": {
+          "_nota": "Per tempo determinato si applica maggiorazione NASpI. Contributo leggermente superiore.",
+          "conCUAF": [
+            { "retribOrariaMax": 9.40, "contributoOrario": 1.80, "quotaLavoratore": 0.42 },
+            { "retribOrariaMax": 11.45, "contributoOrario": 2.03, "quotaLavoratore": 0.47 },
+            { "retribOrariaMax": 999.99, "contributoOrario": 2.47, "quotaLavoratore": 0.57 }
+          ],
+          "senzaCUAF": [
+            { "retribOrariaMax": 9.40, "contributoOrario": 1.80, "quotaLavoratore": 0.42 },
+            { "retribOrariaMax": 11.45, "contributoOrario": 2.03, "quotaLavoratore": 0.47 },
+            { "retribOrariaMax": 999.99, "contributoOrario": 2.47, "quotaLavoratore": 0.57 }
+          ],
+          "conviventiOltre24h": { "contributoOrario": 1.35, "quotaLavoratore": 0.30 }
+        }
+      },
+      "indennitaVittoAlloggioGiornaliera": 6.31,
+      "indennitaVittoAlloggioMensile": 189.30
+    },
     "apprendistato_base": {
       "nome": "Apprendistato (datori fino a 9 dipendenti, 1° anno)",
       "aliquotaDatore": 0.0350,

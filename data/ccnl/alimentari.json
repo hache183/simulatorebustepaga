@@ -1,0 +1,50 @@
+{
+  "id": "alimentari",
+  "nome": "CCNL Alimentari — Industria (Federalimentare/Confindustria)",
+  "fonte": "Rinnovo CCNL settembre 2024 — Federalimentare + FLAI-CGIL, FAI-CISL, UILA-UIL",
+  "updatedAt": "2024-09-01T00:00:00Z",
+  "mensilita": 14,
+  "contributiContrattuali": {
+    "azienda": {
+      "alifond": {
+        "tipo": "previdenziale",
+        "modalita": "percentuale",
+        "importoMensile": null,
+        "percentuale": 0.0156,
+        "descrizione": "ALIFOND — Fondo pensione complementare settore alimentare (1,56% quota datore)",
+        "notaLegge": "Art. 74 CCNL Alimentari Industria"
+      },
+      "fasa": {
+        "tipo": "sanitario",
+        "modalita": "fisso",
+        "importoMensile": 12.00,
+        "percentuale": null,
+        "descrizione": "FASA — Fondo assistenza sanitaria integrativa alimentaristi",
+        "notaLegge": "Art. 75 CCNL Alimentari Industria"
+      },
+      "enteBilaterale": {
+        "tipo": "bilaterale",
+        "modalita": "percentuale",
+        "importoMensile": null,
+        "percentuale": 0.0015,
+        "descrizione": "Ente bilaterale alimentare (0,15%)",
+        "notaLegge": "Art. 6 CCNL Alimentari Industria"
+      }
+    }
+  },
+  "livelli": [
+    { "codice": "1S", "descrizione": "1° Super (Quadro)",  "qualifica": "Funzioni direttive con ampia autonomia e responsabilità di struttura produttiva",  "minimoTabellare": 3376.55, "moltiplicatore": 1.00 },
+    { "codice": "1",  "descrizione": "1° livello",         "qualifica": "Personale con funzioni di alta responsabilità tecnica e coordinamento",            "minimoTabellare": 2914.64, "moltiplicatore": 0.86 },
+    { "codice": "2",  "descrizione": "2° livello",         "qualifica": "Impiegati con mansioni di concetto e autonomia operativa, tecnici senior",          "minimoTabellare": 2492.51, "moltiplicatore": 0.74 },
+    { "codice": "3A", "descrizione": "3° livello A",       "qualifica": "Impiegati qualificati con competenze specialistiche, operai altamente specializzati","minimoTabellare": 2251.25, "moltiplicatore": 0.67 },
+    { "codice": "3",  "descrizione": "3° livello",         "qualifica": "Impiegati d'ordine, operai specializzati di produzione",                           "minimoTabellare": 2070.35, "moltiplicatore": 0.61 },
+    { "codice": "4",  "descrizione": "4° livello",         "qualifica": "Operai qualificati, addetti alla catena di produzione e confezionamento",           "minimoTabellare": 1949.71, "moltiplicatore": 0.58 },
+    { "codice": "5",  "descrizione": "5° livello",         "qualifica": "Operai comuni, addetti a mansioni semplici e ripetitive di produzione",            "minimoTabellare": 1829.11, "moltiplicatore": 0.54 },
+    { "codice": "6",  "descrizione": "6° livello",         "qualifica": "Personale di pulizia, magazzinieri ausiliari, manovalanza generica",               "minimoTabellare": 1708.49, "moltiplicatore": 0.51 }
+  ],
+  "scattiAnzianita": {
+    "periodicitaMesi": 36,
+    "importoPerScattoEuro": 22.00,
+    "maxScatti": 5
+  }
+}

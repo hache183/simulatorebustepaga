@@ -1,0 +1,52 @@
+{
+  "id": "turismo",
+  "nome": "CCNL Turismo — Alberghi e Strutture Ricettive (Federalberghi/Confcommercio)",
+  "fonte": "Rinnovo CCNL giugno 2024 (vigenza 2024-2027). Tabella a regime novembre 2027. Fonte: lexplain.it — tabelle-retributive-ccnl-alberghi-turismo-confcommercio",
+  "updatedAt": "2024-06-01T00:00:00Z",
+  "mensilita": 14,
+  "contributiContrattuali": {
+    "azienda": {
+      "fast": {
+        "tipo": "sanitario",
+        "modalita": "fisso",
+        "importoMensile": 10.00,
+        "percentuale": null,
+        "descrizione": "FAST — Fondo assistenza sanitaria turismo (€ 10/mese fisso quota datore)",
+        "notaLegge": "Art. 183 CCNL Turismo Federalberghi"
+      },
+      "fonte": {
+        "tipo": "previdenziale",
+        "modalita": "percentuale",
+        "importoMensile": null,
+        "percentuale": 0.0155,
+        "descrizione": "FON.TE — Fondo pensione complementare turismo (1,55% quota datore)",
+        "notaLegge": "Art. 185 CCNL Turismo Federalberghi"
+      },
+      "ebtl": {
+        "tipo": "bilaterale",
+        "modalita": "percentuale",
+        "importoMensile": null,
+        "percentuale": 0.0040,
+        "descrizione": "EBTL — Ente bilaterale territoriale turismo (0,40%)",
+        "notaLegge": "Art. 8 CCNL Turismo Federalberghi"
+      }
+    }
+  },
+  "livelli": [
+    { "codice": "QA", "descrizione": "Quadro A",      "qualifica": "Funzioni direttive con piena responsabilità della struttura ricettiva (Quadro A)",      "minimoTabellare": 2495.22, "moltiplicatore": 1.00 },
+    { "codice": "QB", "descrizione": "Quadro B",      "qualifica": "Funzioni direttive con responsabilità di reparto/settore alberghiero (Quadro B)",      "minimoTabellare": 2310.11, "moltiplicatore": 0.93 },
+    { "codice": "1",  "descrizione": "1° livello",    "qualifica": "Personale con funzioni ad elevata responsabilità tecnica o gestionale",                 "minimoTabellare": 2152.32, "moltiplicatore": 0.86 },
+    { "codice": "2",  "descrizione": "2° livello",    "qualifica": "Impiegati con mansioni di concetto, receptionist senior, capo-ricevimento",            "minimoTabellare": 1967.20, "moltiplicatore": 0.79 },
+    { "codice": "3",  "descrizione": "3° livello",    "qualifica": "Receptionist, camerieri di sala capi-rango, cuoco capo partita",                      "minimoTabellare": 1855.32, "moltiplicatore": 0.74 },
+    { "codice": "4",  "descrizione": "4° livello",    "qualifica": "Camerieri, baristi, portieri d'albergo, cuoco",                                       "minimoTabellare": 1750.69, "moltiplicatore": 0.70 },
+    { "codice": "5",  "descrizione": "5° livello",    "qualifica": "Addetti alle pulizie qualificati, facchini con esperienza, commis di sala",            "minimoTabellare": 1641.85, "moltiplicatore": 0.66 },
+    { "codice": "6S", "descrizione": "6° Super",      "qualifica": "Personale ausiliario con esperienza consolidata (livello super)",                      "minimoTabellare": 1578.72, "moltiplicatore": 0.63 },
+    { "codice": "6",  "descrizione": "6° livello",    "qualifica": "Personale ausiliario di base, addetto pulizie, garzone",                               "minimoTabellare": 1556.35, "moltiplicatore": 0.62 },
+    { "codice": "7",  "descrizione": "7° livello",    "qualifica": "Personale di primo impiego senza esperienza nel settore alberghiero",                  "minimoTabellare": 1458.42, "moltiplicatore": 0.58 }
+  ],
+  "scattiAnzianita": {
+    "periodicitaMesi": 36,
+    "importoPerScattoEuro": 10.00,
+    "maxScatti": 6
+  }
+}

@@ -9,7 +9,10 @@ import {
   calcolaInpsDomestici,
   getSettoreContributivo,
 } from './contributi';
-import type { CalcolatoreInput, CalcolatoreOutput, DettaglioCosto, ContributoContrattuale, NettoDipendente } from '@/types';
+import type { CalcolatoreInput, CalcolatoreOutput, DettaglioCosto, ContributoContrattuale, NettoDipendente, AliquoteInpsData } from '@/types';
+
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const ALIQUOTE_INPS = require('../data/aliquote-inps.json') as AliquoteInpsData;
 
 // Schema di validazione Zod — rifiuta qualsiasi input malformato prima del calcolo
 const InputSchema = z.object({
@@ -64,9 +67,9 @@ function calcolaDetrazioneLavoroDip(imponibile: number, tipoContratto: string): 
   if (imponibile <= 15_000) {
     return Math.max(1955, detrazioneMinima);
   } else if (imponibile <= 28_000) {
-    return 1910 + 1190 * (28_000 - imponibile) / 13_000;
+    return Math.max(0, 1910 + 1190 * (28_000 - imponibile) / 13_000);
   } else if (imponibile <= 50_000) {
-    return 1910 * (50_000 - imponibile) / 22_000;
+    return Math.max(0, 1910 * (50_000 - imponibile) / 22_000);
   }
   return 0;
 }
@@ -147,6 +150,190 @@ function calcolaNettoDipendente(
 }
 
 /**
+ * Determina il contributo orario forfettario INPS per il lavoro domestico.
+ * Le tabelle sono in data/aliquote-inps.json → settoriContributivi.lavoro_domestico.contributiOrari
+ */
+function getContributoOrarioDomestico(
+  pagaOraria: number,
+  oreSettimanali: number,
+  convivente: boolean,
+  tipoContratto: string,
+): { contributoOrarioDatore: number; contributoOrarioLavoratore: number } {
+  const settore = ALIQUOTE_INPS.settoriContributivi['lavoro_domestico'] as unknown as Record<string, unknown>;
+  const contributiOrari = settore['contributiOrari'] as Record<string, unknown>;
+
+  const tabella = tipoContratto === 'tempo_determinato'
+    ? contributiOrari['tempoDeterminato'] as Record<string, unknown>
+    : contributiOrari['tempoIndeterminato'] as Record<string, unknown>;
+
+  // Conviventi con orario > 24h/sett → tabella ridotta
+  if (convivente && oreSettimanali > 24) {
+    const conv = tabella['conviventiOltre24h'] as { contributoOrario: number; quotaLavoratore: number };
+    return {
+      contributoOrarioDatore: conv.contributoOrario - conv.quotaLavoratore,
+      contributoOrarioLavoratore: conv.quotaLavoratore,
+    };
+  }
+
+  // Fascia retributiva con CUAF (caso standard)
+  const fasce = tabella['conCUAF'] as Array<{ retribOrariaMax: number; contributoOrario: number; quotaLavoratore: number }>;
+  for (const fascia of fasce) {
+    if (pagaOraria <= fascia.retribOrariaMax) {
+      return {
+        contributoOrarioDatore: fascia.contributoOrario - fascia.quotaLavoratore,
+        contributoOrarioLavoratore: fascia.quotaLavoratore,
+      };
+    }
+  }
+
+  // Fallback all'ultima fascia
+  const ultima = fasce[fasce.length - 1];
+  return {
+    contributoOrarioDatore: ultima.contributoOrario - ultima.quotaLavoratore,
+    contributoOrarioLavoratore: ultima.quotaLavoratore,
+  };
+}
+
+/**
+ * Calcolo dedicato per il CCNL Lavoro Domestico.
+ * I contributi sono forfettari (importo fisso per ora), non percentuali.
+ * INAIL è incluso nei contributi forfettari INPS.
+ * Non è prevista CIG/FIS.
+ */
+async function calculateCostoDomestico(input: CalcolatoreInput): Promise<CalcolatoreOutput> {
+  const ccnl = getCcnlData(input.ccnlId);
+  const livello = ccnl.livelli.find(l => l.codice === input.livello);
+  if (!livello) throw new Error(`Livello '${input.livello}' non trovato nel CCNL '${input.ccnlId}'`);
+
+  const pagaOraria = input.pagaOraria ?? livello.minimoTabellare;
+  const oreSettimanali = input.oreSettimanali ?? input.oreLavoro;
+  const convivente = input.convivente ?? false;
+  const mensilita = input.mensilita; // 13 per lavoro domestico
+
+  // Indennità vitto e alloggio per conviventi
+  const settoreDomestico = ALIQUOTE_INPS.settoriContributivi['lavoro_domestico'] as unknown as Record<string, unknown>;
+  const indennitaVAMensile = convivente ? (settoreDomestico['indennitaVittoAlloggioMensile'] as number) : 0;
+  const indennitaVAAnnua = indennitaVAMensile * 12;
+
+  // RAL = paga oraria × ore settimanali × 52 + eventuale vitto e alloggio
+  const retribuzioneBaseAnnua = pagaOraria * oreSettimanali * 52;
+  const ralEffettiva = retribuzioneBaseAnnua + indennitaVAAnnua;
+
+  // Contributi INPS forfettari (per ora lavorata)
+  const { contributoOrarioDatore, contributoOrarioLavoratore } = getContributoOrarioDomestico(
+    pagaOraria, oreSettimanali, convivente, input.tipoContratto
+  );
+  const oreAnnuali = oreSettimanali * 52;
+  const inpsDatore = contributoOrarioDatore * oreAnnuali;
+
+  // TFR (Art. 2120 c.c.)
+  const tfr = calcolaTfr(ralEffettiva, mensilita);
+
+  // Scatti di anzianità (orari per il domestico)
+  const costoScatti = calcolaScattiAnzianita(input.anzianitaAnni, ccnl.scattiAnzianita) * oreSettimanali * 52 / 12;
+
+  // Tredicesima mensilità — per il lavoro domestico è aggiuntiva rispetto alla paga oraria annua
+  const tredicesima = ralEffettiva / 12;
+
+  // Totale costo datore (INAIL incluso nei contributi forfettari)
+  const costoTotaleAnnuo = ralEffettiva + inpsDatore + tfr + costoScatti + tredicesima;
+
+  const percentualeRal = ralEffettiva > 0 ? costoTotaleAnnuo / ralEffettiva : 0;
+
+  // Voci di dettaglio
+  const voci: DettaglioCosto[] = [
+    {
+      id: 'ral',
+      categoria: 'ral',
+      descrizione: `Retribuzione annua (${fmtNum(pagaOraria)}€/ora × ${oreSettimanali}h/sett × 52 sett${convivente ? ' + vitto e alloggio' : ''})`,
+      importoAnnuo: ralEffettiva,
+      importoMensile: ralEffettiva / 12,
+      percentualeRal: 1,
+    },
+    ...(convivente ? [{
+      id: 'vitto_alloggio',
+      categoria: 'ral' as const,
+      descrizione: `Indennità vitto e alloggio convivente (${fmtNum(indennitaVAMensile)}€/mese)`,
+      importoAnnuo: indennitaVAAnnua,
+      importoMensile: indennitaVAMensile,
+      percentualeRal: ralEffettiva > 0 ? indennitaVAAnnua / ralEffettiva : 0,
+      notaLegge: 'Art. 36 CCNL Lavoro Domestico — indennità vitto e alloggio per conviventi',
+    }] : []),
+    {
+      id: 'inps',
+      categoria: 'inps_azienda',
+      descrizione: `Contributi INPS forfettari datore (${fmtNum(contributoOrarioDatore)}€/ora × ${oreAnnuali} ore)`,
+      importoAnnuo: inpsDatore,
+      importoMensile: inpsDatore / 12,
+      percentualeRal: ralEffettiva > 0 ? inpsDatore / ralEffettiva : 0,
+      notaLegge: 'Circolare INPS lavoro domestico — contributi forfettari orari (INAIL incluso)',
+    },
+    {
+      id: 'tfr',
+      categoria: 'tfr',
+      descrizione: 'TFR — accantonamento annuo',
+      importoAnnuo: tfr,
+      importoMensile: tfr / 12,
+      percentualeRal: ralEffettiva > 0 ? tfr / ralEffettiva : 0,
+      notaLegge: 'Art. 2120 c.c. — divisore 13,5',
+    },
+    {
+      id: 'tredicesima',
+      categoria: 'tredicesima',
+      descrizione: 'Tredicesima mensilità',
+      importoAnnuo: tredicesima,
+      importoMensile: tredicesima / 12,
+      percentualeRal: ralEffettiva > 0 ? tredicesima / ralEffettiva : 0,
+      notaLegge: 'CCNL Lavoro Domestico — tredicesima obbligatoria.',
+    },
+    ...(costoScatti > 0 ? [{
+      id: 'scatti_anzianita',
+      categoria: 'ccnl_contrattuale' as const,
+      descrizione: `Scatti di anzianità`,
+      importoAnnuo: costoScatti,
+      importoMensile: costoScatti / 12,
+      percentualeRal: ralEffettiva > 0 ? costoScatti / ralEffettiva : 0,
+      notaLegge: 'CCNL Lavoro Domestico — scatti biennali',
+    }] : []),
+  ];
+
+  // Netto dipendente — datore privato non è sostituto d'imposta, nessuna ritenuta IRPEF
+  const inpsDipendenteDomestico = contributoOrarioLavoratore * oreAnnuali;
+  const nettoAnnuoDomestico = ralEffettiva - inpsDipendenteDomestico;
+  const nettoDipendente = {
+    ralLorda: ralEffettiva,
+    inpsDipendente: inpsDipendenteDomestico,
+    imponibileIrpef: nettoAnnuoDomestico,
+    irpefLorda: 0,
+    detrazioneLavoroDip: 0,
+    bonusCuneoFiscale: 0,
+    irpefNetta: 0,
+    addizionaleRegionale: 0,
+    addizionaleComunale: 0,
+    nettoAnnuo: nettoAnnuoDomestico,
+    nettoMensile12: nettoAnnuoDomestico / 12,
+    nettoPerMensilita: nettoAnnuoDomestico / mensilita,
+    disclaimer: 'Per il lavoro domestico il datore privato non è sostituto d\'imposta (art. 4 DPR 322/1998). IRPEF e addizionali sono gestite autonomamente dal lavoratore tramite dichiarazione dei redditi.',
+  };
+
+  return {
+    input,
+    costoTotaleAnnuo,
+    costoTotaleMensile: costoTotaleAnnuo / 12,
+    percentualeRal,
+    voci,
+    agevolazioniApplicate: [],
+    alertScadenze: [],
+    calcolatoIl: new Date().toISOString(),
+    nettoDipendente,
+  };
+}
+
+function fmtNum(n: number): string {
+  return n.toFixed(2);
+}
+
+/**
  * Funzione principale del calcolatore.
  * Valida l'input, orchestra tutti i moduli di calcolo, restituisce il costo voce per voce.
  * @see Art. 2120 c.c., Legge 178/2020, Circ. INPS 99/2023, D.P.R. 1124/1965
@@ -156,6 +343,16 @@ function calcolaNettoDipendente(
 export async function calculateCosto(rawInput: unknown): Promise<CalcolatoreOutput> {
   // 1. Validazione input
   const input = InputSchema.parse(rawInput) as CalcolatoreInput;
+
+  // ─── BRANCH LAVORO DOMESTICO ────────────────────────────────────────────
+  if (input.ccnlId === 'lavoro_domestico') {
+    return calculateCostoDomestico(input);
+  }
+
+  // ─── BRANCH STANDARD ───────────────────────────────────────────────────
+  // Validazione aggiuntiva per CCNL standard
+  if (input.ral < 10_000) throw new Error('RAL minima: 10.000 euro');
+  if (input.codiceInail.length < 4) throw new Error('Seleziona la categoria INAIL');
 
   // 2. Carica dati CCNL
   const ccnl = getCcnlData(input.ccnlId);

@@ -4,6 +4,7 @@
   "fonte": "TODO: non disponibile PDF specifico per CCNL Edilizia ANCE Industria tra i 50 documenti (disponibili F012 Cooperative e F015 Artigianato). Usato come proxy PDF F015 — EDILIZIA - ARTIGIANATO vigente dal 01/01/2026 al 31/12/2026, stampa del 21/04/2026. Valori possono differire dalla versione ANCE Industria.",
   "updatedAt": "2026-04-21T00:00:00Z",
   "mensilita": 13,
+  "_notaImpiegati": "I valori mensili si riferiscono agli impiegati edili. Gli operai edili (muratori, carpentieri, ecc.) sono retribuiti con paga oraria definita dalle Casse Edili provinciali e non con stipendio mensile fisso.",
   "contributiContrattuali": {
     "azienda": {
       "cassaEdile": {
@@ -11,15 +12,15 @@
         "modalita": "percentuale",
         "importoMensile": null,
         "percentuale": 0.0950,
-        "descrizione": "Contributo Cassa Edile complessivo (quota azienda: include APE, ferie, gratifica, CAPE, scuola edile — media nazionale stimata 9,50%). Il contributo reale varia per provincia (dal 7% al 12%).",
-        "notaLegge": "Accordi Casse Edili provinciali — media nazionale"
+        "descrizione": "Contributo Cassa Edile complessivo — applicabile agli operai (include APE, ferie, gratifica, CAPE, scuola edile). Per gli impiegati non si applica la Cassa Edile ma il CCNL standard. Media nazionale stimata 9,50% (varia per provincia dal 7% al 12%).",
+        "notaLegge": "Accordi Casse Edili provinciali — media nazionale (solo operai)"
       },
       "formazioneEdile": {
         "tipo": "bilaterale",
         "modalita": "percentuale",
         "importoMensile": null,
         "percentuale": 0.0070,
-        "descrizione": "Contributo per la formazione professionale edile",
+        "descrizione": "Contributo formazione professionale edile (0,70%)",
         "notaLegge": "Art. 39 CCNL Edilizia ANCE"
       }
     }
@@ -35,6 +36,6 @@
     "periodicitaMesi": 24,
     "importoPerScattoEuro": 0,
     "maxScatti": 0,
-    "_nota": "Nell'edilizia non esistono scatti di anzianità tradizionali. L'anzianità professionale edile (APE) è gestita tramite la Cassa Edile ed è già inclusa nel contributo Cassa Edile."
+    "_nota": "Nell'edilizia non esistono scatti di anzianità tradizionali per operai. L'anzianità professionale (APE) è gestita tramite la Cassa Edile. Per gli impiegati si applicano scatti CCNL impiegati Confindustria."
   }
 }

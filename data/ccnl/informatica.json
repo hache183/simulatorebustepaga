@@ -11,27 +11,33 @@
         "modalita": "fisso",
         "importoMensile": 13.00,
         "percentuale": null,
-        "descrizione": "Fondo sanitario integrativo CCNL Informatica Assinform (€ 13/mese fisso)",
-        "notaLegge": "Art. 12 CCNL Informatica Assinform-Confcommercio"
+        "descrizione": "Fondo sanitario integrativo settore informatica/comunicazione (€ 13/mese fisso quota datore)",
+        "notaLegge": "CCNL Comunicazione PMI — assistenza sanitaria integrativa"
       },
       "fondoInformatica": {
         "tipo": "previdenziale",
         "modalita": "percentuale",
         "importoMensile": null,
         "percentuale": 0.0100,
-        "descrizione": "Fondo pensione complementare (quota azienda)",
-        "notaLegge": "Art. 46 CCNL Informatica"
+        "descrizione": "Fondo pensione complementare ICT/comunicazione (1,00% quota datore)",
+        "notaLegge": "CCNL Comunicazione PMI — previdenza complementare"
       }
     }
   },
   "livelli": [
-    { "codice": "Q",  "descrizione": "Quadro",      "qualifica": "IT Manager, direttore tecnico",                  "minimoTabellare": 2000.00, "moltiplicatore": 1.00 },
-    { "codice": "A1", "descrizione": "A1 livello",  "qualifica": "Analista programmatore senior, project manager",  "minimoTabellare": 1840.00, "moltiplicatore": 0.92 },
-    { "codice": "A2", "descrizione": "A2 livello",  "qualifica": "Sviluppatore software, sistemista",              "minimoTabellare": 1680.00, "moltiplicatore": 0.84 },
-    { "codice": "B1", "descrizione": "B1 livello",  "qualifica": "Programmatore, tecnico di rete",                  "minimoTabellare": 1520.00, "moltiplicatore": 0.76 },
-    { "codice": "B2", "descrizione": "B2 livello",  "qualifica": "Help desk, operatore sistemi",                    "minimoTabellare": 1360.00, "moltiplicatore": 0.68 },
-    { "codice": "C",  "descrizione": "C livello",   "qualifica": "Data entry, assistente tecnico",                  "minimoTabellare": 1220.00, "moltiplicatore": 0.61 },
-    { "codice": "D",  "descrizione": "D livello",   "qualifica": "Ausiliario, fattorino",                           "minimoTabellare": 1100.00, "moltiplicatore": 0.55 }
+    { "codice": "Q",   "descrizione": "Quadro",           "qualifica": "IT Manager, direttore tecnico, responsabile di progetto complesso",                    "minimoTabellare": 2754.74, "moltiplicatore": 1.00 },
+    { "codice": "AS",  "descrizione": "Livello A Super",  "qualifica": "Specialista senior con elevata autonomia tecnica, architetto di sistema",               "minimoTabellare": 2742.31, "moltiplicatore": 1.00 },
+    { "codice": "A",   "descrizione": "Livello A",        "qualifica": "Analista programmatore senior, project manager, sistemista esperto",                    "minimoTabellare": 2453.59, "moltiplicatore": 0.89 },
+    { "codice": "B1",  "descrizione": "Livello B1",       "qualifica": "Sviluppatore software senior, analista dati, DevOps engineer",                          "minimoTabellare": 2196.38, "moltiplicatore": 0.80 },
+    { "codice": "B2S", "descrizione": "Livello B2 Super", "qualifica": "Programmatore con specializzazione, sistemista con esperienza (livello super)",          "minimoTabellare": 2141.60, "moltiplicatore": 0.78 },
+    { "codice": "B2",  "descrizione": "Livello B2",       "qualifica": "Programmatore, tecnico di rete, sviluppatore applicazioni web/mobile",                  "minimoTabellare": 2070.71, "moltiplicatore": 0.75 },
+    { "codice": "C1S", "descrizione": "Livello C1 Super", "qualifica": "Help desk senior, tecnico di supporto IT con specializzazione (livello super)",          "minimoTabellare": 1952.42, "moltiplicatore": 0.71 },
+    { "codice": "C1",  "descrizione": "Livello C1",       "qualifica": "Help desk, operatore sistemi, tecnico supporto IT",                                      "minimoTabellare": 1881.91, "moltiplicatore": 0.68 },
+    { "codice": "C2",  "descrizione": "Livello C2",       "qualifica": "Operatore tecnico, addetto installazione hardware/software, tester",                    "minimoTabellare": 1756.17, "moltiplicatore": 0.64 },
+    { "codice": "C3",  "descrizione": "Livello C3",       "qualifica": "Assistente tecnico, addetto al customer care tecnico base",                             "minimoTabellare": 1667.45, "moltiplicatore": 0.61 },
+    { "codice": "D1",  "descrizione": "Livello D1",       "qualifica": "Data entry senior, assistente tecnico amministrativo, impiegato d'ordine",              "minimoTabellare": 1594.33, "moltiplicatore": 0.58 },
+    { "codice": "D2",  "descrizione": "Livello D2",       "qualifica": "Operatore data entry, addetto alla digitalizzazione, personale ausiliario qualificato", "minimoTabellare": 1503.99, "moltiplicatore": 0.55 },
+    { "codice": "E",   "descrizione": "Livello E",        "qualifica": "Personale ausiliario di primo impiego, magazziniere, addetto ai servizi generali",      "minimoTabellare": 1405.44, "moltiplicatore": 0.51 }
   ],
   "scattiAnzianita": {
     "periodicitaMesi": 24,

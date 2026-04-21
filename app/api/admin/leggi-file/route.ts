@@ -22,6 +22,18 @@ const FILE_WHITELIST = new Set([
   'data/ccnl/informatica.json',
   'data/ccnl/agricoltura.json',
   'data/ccnl/scuole_private.json',
+  'data/ccnl/alimentari.json',
+  'data/ccnl/turismo.json',
+  'data/ccnl/assicurazioni.json',
+  'data/ccnl/gomma_plastica.json',
+  'data/ccnl/vigilanza_privata.json',
+  'data/ccnl/legno_arredamento.json',
+  'data/ccnl/grafica_editoria.json',
+  'data/ccnl/metalmeccanici_artigianato.json',
+  'data/ccnl/commercio_confesercenti.json',
+  'data/ccnl/condomini.json',
+  'data/ccnl/autorimesse.json',
+  'data/ccnl/lavoro_domestico.json',
 ]);
 
 export async function GET(req: NextRequest) {

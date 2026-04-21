@@ -11,16 +11,16 @@
         "modalita": "percentuale",
         "importoMensile": null,
         "percentuale": 0.0040,
-        "descrizione": "Fondo sanitario integrativo scuola privata",
-        "notaLegge": "Art. 17 CCNL Scuole Private"
+        "descrizione": "Fondo sanitario integrativo scuola privata (0,40% quota datore)",
+        "notaLegge": "Art. 17 CCNL Scuole Private AGIDAE"
       },
       "fondoPensioneScuole": {
         "tipo": "previdenziale",
         "modalita": "percentuale",
         "importoMensile": null,
         "percentuale": 0.0100,
-        "descrizione": "Fondo pensione complementare per dipendenti scuole private (Fondo FON.TE o fondo contrattuale specifico — NON Perseo-Sirio che è riservato al pubblico impiego)",
-        "notaLegge": "CCNL Scuole Private AGIDAE/ANINSEI"
+        "descrizione": "FON.TE — Fondo pensione complementare per dipendenti scuole private (1,00% quota datore)",
+        "notaLegge": "CCNL Scuole Private AGIDAE-ANINSEI"
       }
     }
   },

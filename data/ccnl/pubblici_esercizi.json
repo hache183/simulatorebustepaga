@@ -8,11 +8,11 @@
     "azienda": {
       "fast": {
         "tipo": "sanitario",
-        "modalita": "percentuale",
-        "importoMensile": null,
-        "percentuale": 0.0056,
+        "modalita": "fisso",
+        "importoMensile": 9.00,
+        "percentuale": null,
         "descrizione": "Fondo assistenza sanitaria turismo FAST",
-        "notaLegge": "Art. 16 CCNL Pubblici Esercizi"
+        "notaLegge": "Art. 16 CCNL Pubblici Esercizi — contributo mensile forfettario datore"
       },
       "ebtl": {
         "tipo": "bilaterale",

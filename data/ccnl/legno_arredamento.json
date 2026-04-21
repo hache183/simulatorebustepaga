@@ -1,0 +1,46 @@
+{
+  "id": "legno_arredamento",
+  "nome": "CCNL Legno, Arredamento e Mobili — Industria (FederlegnoArredo)",
+  "fonte": "Accordo CCNL 20/06/2023 + adeguamento IPCA 27/01/2025. Tabelle dal 01/01/2025. Fonte: kitech.it CodiceCateg=134",
+  "updatedAt": "2025-01-01T00:00:00Z",
+  "mensilita": 13,
+  "contributiContrattuali": {
+    "azienda": {
+      "arco": {
+        "tipo": "previdenziale",
+        "modalita": "percentuale",
+        "importoMensile": null,
+        "percentuale": 0.0150,
+        "descrizione": "ARCO — Fondo pensione complementare legno-arredamento (1,50% quota datore)",
+        "notaLegge": "CCNL Legno-Arredamento — previdenza complementare ARCO"
+      },
+      "altea": {
+        "tipo": "sanitario",
+        "modalita": "fisso",
+        "importoMensile": 12.00,
+        "percentuale": null,
+        "descrizione": "ALTEA — Fondo assistenza sanitaria integrativa legno-arredamento (€ 12/mese fisso quota datore)",
+        "notaLegge": "CCNL Legno-Arredamento — assistenza sanitaria ALTEA"
+      }
+    }
+  },
+  "livelli": [
+    { "codice": "AD3", "descrizione": "Livello AD3", "qualifica": "Area Direttiva — Quadro/Dirigente intermedio, responsabile di unità produttiva",                          "minimoTabellare": 3104.34, "moltiplicatore": 1.00 },
+    { "codice": "AD2", "descrizione": "Livello AD2", "qualifica": "Area Direttiva — Responsabile di reparto senior, tecnico con ampia autonomia decisionale",               "minimoTabellare": 3020.46, "moltiplicatore": 0.97 },
+    { "codice": "AD1", "descrizione": "Livello AD1", "qualifica": "Area Direttiva — Personale con responsabilità gestionale significativa",                                  "minimoTabellare": 2898.82, "moltiplicatore": 0.93 },
+    { "codice": "AC5", "descrizione": "Livello AC5", "qualifica": "Area Concettuale — 5° gradino, tecnico specializzato senior, capo reparto",                               "minimoTabellare": 2778.20, "moltiplicatore": 0.90 },
+    { "codice": "AC4", "descrizione": "Livello AC4", "qualifica": "Area Concettuale — 4° gradino, operaio/impiegato con elevata professionalità",                            "minimoTabellare": 2597.38, "moltiplicatore": 0.84 },
+    { "codice": "AC3", "descrizione": "Livello AC3", "qualifica": "Area Concettuale — 3° gradino, ebanista qualificato, falegname specializzato",                           "minimoTabellare": 2416.40, "moltiplicatore": 0.78 },
+    { "codice": "AS3", "descrizione": "Livello AS3", "qualifica": "Area Specializzata — 3° gradino, operaio specializzato, addetto CNC, verniciatore esperto",              "minimoTabellare": 2326.52, "moltiplicatore": 0.75 },
+    { "codice": "AC1", "descrizione": "Livello AC1", "qualifica": "Area Concettuale — 1° gradino / Area Specializzata 2°, tecnico qualificato",                             "minimoTabellare": 2234.14, "moltiplicatore": 0.72 },
+    { "codice": "AE4", "descrizione": "Livello AE4", "qualifica": "Area Esecutiva — 4° gradino, operaio qualificato alla macchina, falegname qualificato",                  "minimoTabellare": 2162.04, "moltiplicatore": 0.70 },
+    { "codice": "AE3", "descrizione": "Livello AE3", "qualifica": "Area Esecutiva — 3° gradino, operaio qualificato, addetto montaggio con esperienza",                     "minimoTabellare": 2071.80, "moltiplicatore": 0.67 },
+    { "codice": "AE2", "descrizione": "Livello AE2", "qualifica": "Area Esecutiva — 2° gradino, operaio comune, addetto assemblaggio",                                      "minimoTabellare": 1980.99, "moltiplicatore": 0.64 },
+    { "codice": "AE1", "descrizione": "Livello AE1", "qualifica": "Area Esecutiva — 1° gradino, lavoratore di primo ingresso, apprendista mansioni esecutive",              "minimoTabellare": 1753.18, "moltiplicatore": 0.57 }
+  ],
+  "scattiAnzianita": {
+    "periodicitaMesi": 24,
+    "importoPerScattoEuro": 10.00,
+    "maxScatti": 5
+  }
+}

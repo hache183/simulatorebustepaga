@@ -11,16 +11,16 @@
         "modalita": "fisso",
         "importoMensile": 12.00,
         "percentuale": null,
-        "descrizione": "Fondo sanitario Metasalute",
-        "notaLegge": "Art. 1 CCNL Metalmeccanici — importo fisso per dipendente"
+        "descrizione": "MetaSalute — Fondo sanitario integrativo metalmeccanici (€ 12/mese fisso quota datore)",
+        "notaLegge": "Art. 1 CCNL Metalmeccanici — MetaSalute"
       },
       "cometa": {
         "tipo": "previdenziale",
         "modalita": "percentuale",
         "importoMensile": null,
         "percentuale": 0.0200,
-        "descrizione": "Fondo pensione complementare Cometa (quota azienda)",
-        "notaLegge": "Art. 46 CCNL Metalmeccanici"
+        "descrizione": "COMETA — Fondo pensione complementare metalmeccanici (2,00% quota datore)",
+        "notaLegge": "Art. 46 CCNL Metalmeccanici — COMETA"
       }
     }
   },

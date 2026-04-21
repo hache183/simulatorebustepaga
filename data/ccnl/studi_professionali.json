@@ -8,30 +8,31 @@
     "azienda": {
       "cadiProf": {
         "tipo": "sanitario",
-        "modalita": "percentuale",
-        "importoMensile": null,
-        "percentuale": 0.0050,
-        "descrizione": "Fondo sanitario CadiProf",
-        "notaLegge": "Art. 22 CCNL Studi Professionali"
+        "modalita": "fisso",
+        "importoMensile": 4.65,
+        "percentuale": null,
+        "descrizione": "CADIPROF — Cassa di Assistenza Sanitaria per i Dipendenti degli Studi Professionali (€ 4,65/mese fisso quota datore)",
+        "notaLegge": "Art. 22 CCNL Studi Professionali — CADIPROF"
       },
-      "espero": {
+      "fondapi": {
         "tipo": "previdenziale",
         "modalita": "percentuale",
         "importoMensile": null,
         "percentuale": 0.0055,
-        "descrizione": "Fondo pensione Espero (quota azienda)",
+        "descrizione": "FONDAPI — Fondo pensione complementare studi professionali (0,55% quota datore)",
         "notaLegge": "Art. 45 CCNL Studi Professionali"
       }
     }
   },
   "livelli": [
-    { "codice": "Q",  "descrizione": "Quadro",      "qualifica": "Responsabile di studio, coordinatore",                    "minimoTabellare": 1750.00, "moltiplicatore": 1.00 },
-    { "codice": "A1", "descrizione": "A1 livello",  "qualifica": "Collaboratore di studio con esperienza, praticante senior","minimoTabellare": 1610.00, "moltiplicatore": 0.92 },
-    { "codice": "A2", "descrizione": "A2 livello",  "qualifica": "Impiegato di concetto, contabile senior",                 "minimoTabellare": 1470.00, "moltiplicatore": 0.84 },
-    { "codice": "B1", "descrizione": "B1 livello",  "qualifica": "Segretario/a di studio, assistente amministrativo",       "minimoTabellare": 1330.00, "moltiplicatore": 0.76 },
-    { "codice": "B2", "descrizione": "B2 livello",  "qualifica": "Addetto alla reception, archivista",                      "minimoTabellare": 1190.00, "moltiplicatore": 0.68 },
-    { "codice": "C",  "descrizione": "C livello",   "qualifica": "Commesso, addetto alle fotocopie",                        "minimoTabellare": 1050.00, "moltiplicatore": 0.60 },
-    { "codice": "D",  "descrizione": "D livello",   "qualifica": "Personale ausiliario, fattorino",                         "minimoTabellare": 945.00,  "moltiplicatore": 0.54 }
+    { "codice": "Q",  "descrizione": "Quadro",             "qualifica": "Responsabile di studio, coordinatore di funzione con poteri di rappresentanza",     "minimoTabellare": 2408.53, "moltiplicatore": 1.00 },
+    { "codice": "1",  "descrizione": "1° livello",         "qualifica": "Collaboratore senior con elevata autonomia professionale, specialista di settore",   "minimoTabellare": 2131.39, "moltiplicatore": 0.88 },
+    { "codice": "2",  "descrizione": "2° livello",         "qualifica": "Impiegato di concetto, contabile senior, assistente professionale qualificato",      "minimoTabellare": 1856.50, "moltiplicatore": 0.77 },
+    { "codice": "3S", "descrizione": "3° livello Super",   "qualifica": "Segretario/a senior di studio, impiegato d'ordine con specializzazione",            "minimoTabellare": 1722.11, "moltiplicatore": 0.71 },
+    { "codice": "3",  "descrizione": "3° livello",         "qualifica": "Segretario/a di studio, assistente amministrativo",                                  "minimoTabellare": 1706.37, "moltiplicatore": 0.71 },
+    { "codice": "4S", "descrizione": "4° livello Super",   "qualifica": "Addetto front-office con esperienza, operatore contabile",                           "minimoTabellare": 1654.70, "moltiplicatore": 0.69 },
+    { "codice": "4",  "descrizione": "4° livello",         "qualifica": "Operatore amministrativo, archivista, addetto alla reception",                       "minimoTabellare": 1595.42, "moltiplicatore": 0.66 },
+    { "codice": "5",  "descrizione": "5° livello",         "qualifica": "Personale ausiliario, fattorino, addetto alle pulizie dello studio",                 "minimoTabellare": 1484.78, "moltiplicatore": 0.62 }
   ],
   "scattiAnzianita": {
     "periodicitaMesi": 36,

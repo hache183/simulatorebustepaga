@@ -8,19 +8,19 @@
     "azienda": {
       "sanimoda": {
         "tipo": "sanitario",
-        "modalita": "percentuale",
-        "importoMensile": null,
-        "percentuale": 0.0060,
-        "descrizione": "Fondo sanitario Sanimoda",
-        "notaLegge": "Art. 14 CCNL Tessile-Abbigliamento"
+        "modalita": "fisso",
+        "importoMensile": 5.00,
+        "percentuale": null,
+        "descrizione": "SANIMODA — Fondo sanitario integrativo tessile-abbigliamento-moda (quota mensile fissa datore)",
+        "notaLegge": "Art. 14 CCNL Tessile-Abbigliamento — SANIMODA"
       },
       "previmoda": {
         "tipo": "previdenziale",
         "modalita": "percentuale",
         "importoMensile": null,
         "percentuale": 0.0130,
-        "descrizione": "Fondo pensione complementare Previmoda (quota azienda)",
-        "notaLegge": "Art. 48 CCNL Tessile-Abbigliamento"
+        "descrizione": "PREVIMODA — Fondo pensione complementare tessile-abbigliamento (1,30% quota datore)",
+        "notaLegge": "Art. 48 CCNL Tessile-Abbigliamento — PREVIMODA"
       }
     }
   },

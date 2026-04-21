@@ -1,5 +1,3 @@
-import fs from 'fs';
-import path from 'path';
 import type {
   CalcolatoreInput,
   AgevolazioneInps,
@@ -12,10 +10,13 @@ import type {
   SettoreContributivo,
 } from '@/types';
 
-function loadJson<T>(relativePath: string): T {
-  const fullPath = path.join(process.cwd(), relativePath);
-  return JSON.parse(fs.readFileSync(fullPath, 'utf-8')) as T;
-}
+// Static requires — webpack bundles JSON at build time, no fs at runtime
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const ALIQUOTE_INPS = require('../data/aliquote-inps.json') as AliquoteInpsData;
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const INAIL_DATA = require('../data/inail.json') as InailData;
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const TFR_DATA = require('../data/tfr.json') as TfrData;
 
 /**
  * Calcola i contributi INPS datoriali lordi (prima delle agevolazioni).
@@ -23,8 +24,7 @@ function loadJson<T>(relativePath: string): T {
  */
 export function calcolaInpsBase(ral: number, aliquotaOverride?: number): number {
   if (aliquotaOverride !== undefined) return ral * aliquotaOverride;
-  const data = loadJson<AliquoteInpsData>('data/aliquote-inps.json');
-  return ral * data.aliquotaBaseAzienda;
+  return ral * ALIQUOTE_INPS.aliquotaBaseAzienda;
 }
 
 /**
@@ -35,8 +35,7 @@ export function getSettoreContributivo(
   ccnlId: string,
   numeroDipendenti: number
 ): SettoreContributivo | null {
-  const data = loadJson<AliquoteInpsData>('data/aliquote-inps.json');
-  const baseSector = data.mappaCcnlSettore[ccnlId];
+  const baseSector = ALIQUOTE_INPS.mappaCcnlSettore[ccnlId];
   if (!baseSector) return null;
 
   // Resolve size-based variant
@@ -49,7 +48,7 @@ export function getSettoreContributivo(
     settoreKey = baseSector;
   }
 
-  return data.settoriContributivi[settoreKey] ?? null;
+  return ALIQUOTE_INPS.settoriContributivi[settoreKey] ?? null;
 }
 
 /**
@@ -95,10 +94,9 @@ export function calcolaAgevolazioni(input: CalcolatoreInput): {
   risparmioTotale: number;
   alertScadenze: AlertScadenza[];
 } {
-  const data = loadJson<AliquoteInpsData>('data/aliquote-inps.json');
   const inpsBase = calcolaInpsBase(input.ral);
 
-  const tutteSelezionate = data.agevolazioni.filter(a =>
+  const tutteSelezionate = ALIQUOTE_INPS.agevolazioni.filter(a =>
     input.agevolazioniSelezionate.includes(a.id)
   );
 
@@ -166,8 +164,7 @@ export function calcolaTfr(ral: number, _mensilita?: number): number {
  * @see D.P.R. 1124/1965 — Testo Unico INAIL
  */
 export function calcolaInail(ral: number, codiceVoce: string): number {
-  const data = loadJson<InailData>('data/inail.json');
-  const voce = data.voci.find(v => v.codice === codiceVoce);
+  const voce = INAIL_DATA.voci.find(v => v.codice === codiceVoce);
   if (!voce) throw new Error(`Codice INAIL '${codiceVoce}' non trovato nelle tariffe`);
   return (ral * voce.tassoPerMille) / 1000;
 }

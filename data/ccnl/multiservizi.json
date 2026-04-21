@@ -8,10 +8,10 @@
     "azienda": {
       "fasiv": {
         "tipo": "sanitario",
-        "modalita": "percentuale",
-        "importoMensile": null,
-        "percentuale": 0.0030,
-        "descrizione": "Fondo sanitario integrativo Fasiv",
+        "modalita": "fisso",
+        "importoMensile": 5.50,
+        "percentuale": null,
+        "descrizione": "FASIV — Fondo di Assistenza Sanitaria Integrativa multiservizi (quota mensile fissa datore)",
         "notaLegge": "Art. 13 CCNL Multiservizi"
       },
       "ebms": {
@@ -19,7 +19,7 @@
         "modalita": "percentuale",
         "importoMensile": null,
         "percentuale": 0.0025,
-        "descrizione": "Ente bilaterale multiservizi",
+        "descrizione": "Ente bilaterale multiservizi EBMS (0,25%)",
         "notaLegge": "Art. 4 CCNL Multiservizi"
       }
     }

@@ -8,19 +8,19 @@
     "azienda": {
       "faschim": {
         "tipo": "sanitario",
-        "modalita": "percentuale",
-        "importoMensile": null,
-        "percentuale": 0.0065,
-        "descrizione": "Fondo sanitario integrativo Faschim",
-        "notaLegge": "Art. 11 CCNL Chimica"
+        "modalita": "fisso",
+        "importoMensile": 17.00,
+        "percentuale": null,
+        "descrizione": "FASCHIM — Fondo di Assistenza Sanitaria Chimica-Farmaceutica (€ 17/mese fisso quota datore)",
+        "notaLegge": "Art. 11 CCNL Chimica — FASCHIM"
       },
       "fonchim": {
         "tipo": "previdenziale",
         "modalita": "percentuale",
         "importoMensile": null,
         "percentuale": 0.0195,
-        "descrizione": "Fondo pensione complementare Fonchim (quota azienda)",
-        "notaLegge": "Art. 47 CCNL Chimica"
+        "descrizione": "FONCHIM — Fondo pensione complementare chimici-farmaceutici (1,95% quota datore)",
+        "notaLegge": "Art. 47 CCNL Chimica — FONCHIM"
       }
     }
   },

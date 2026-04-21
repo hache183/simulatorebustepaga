@@ -4,7 +4,7 @@
   "fonte": "PDF A11 — AGRICOLTURA - OPERAI (OTD) vigenti dal 01/01/2025 + PDF A021 — AGRICOLTURA - IMPIEGATI vigenti dal 01/07/2024 (livello Quadro). Stampa del 21/04/2026 — dati ufficiali tabelle retributive.",
   "updatedAt": "2026-04-21T00:00:00Z",
   "mensilita": 13,
-  "_notaLimitazione": "ATTENZIONE: il settore agricolo ha un sistema retributivo proprio. Gli operai agricoli (soprattutto OTD) sono pagati con paga oraria/giornaliera, non mensile. Il modello mensile qui applicato è una semplificazione valida solo per impiegati/quadri agricoli (salariati fissi). Per operai a tempo determinato il calcolo reale è diverso.",
+  "_notaLimitazione": "ATTENZIONE: il settore agricolo ha un sistema retributivo proprio. Gli operai agricoli (soprattutto OTD) sono pagati con paga oraria/giornaliera, non mensile. Il modello mensile qui applicato è una semplificazione valida solo per operai a tempo indeterminato (salariati fissi). Per OTD il calcolo reale richiede tabelle orarie provinciali.",
   "contributiContrattuali": {
     "azienda": {
       "enpaia": {
@@ -12,7 +12,7 @@
         "modalita": "percentuale",
         "importoMensile": null,
         "percentuale": 0.0156,
-        "descrizione": "Contributo ENPAIA (previdenza integrativa agricoltura)",
+        "descrizione": "ENPAIA — Ente Nazionale di Previdenza per gli Addetti e gli Impiegati in Agricoltura (1,56% quota datore)",
         "notaLegge": "Legge 111/1951 — ENPAIA"
       },
       "enbac": {
@@ -20,7 +20,7 @@
         "modalita": "percentuale",
         "importoMensile": null,
         "percentuale": 0.0020,
-        "descrizione": "Ente bilaterale agricoltura",
+        "descrizione": "ENBAC — Ente Bilaterale Nazionale per l'Agricoltura e il Cooperativismo (0,20% quota datore)",
         "notaLegge": "Art. 6 CCNL Agricoltura"
       }
     }

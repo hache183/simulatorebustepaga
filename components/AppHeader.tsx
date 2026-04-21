@@ -110,6 +110,35 @@ export function AppHeader() {
         >
           Admin
         </a>
+        <button
+          onClick={async () => {
+            await fetch('/api/auth/logout', { method: 'POST' });
+            window.location.href = '/login';
+          }}
+          style={{
+            fontSize: '12px',
+            color: 'var(--color-text-muted)',
+            textDecoration: 'none',
+            fontFamily: "'Plus Jakarta Sans', sans-serif",
+            fontWeight: 500,
+            padding: '5px 12px',
+            border: '1px solid var(--color-border)',
+            borderRadius: '6px',
+            background: 'transparent',
+            cursor: 'pointer',
+            transition: 'border-color 0.15s ease, color 0.15s ease',
+          }}
+          onMouseEnter={e => {
+            (e.target as HTMLButtonElement).style.borderColor = 'var(--color-red)';
+            (e.target as HTMLButtonElement).style.color = 'var(--color-red)';
+          }}
+          onMouseLeave={e => {
+            (e.target as HTMLButtonElement).style.borderColor = 'var(--color-border)';
+            (e.target as HTMLButtonElement).style.color = 'var(--color-text-muted)';
+          }}
+        >
+          Esci
+        </button>
       </div>
     </header>
   );

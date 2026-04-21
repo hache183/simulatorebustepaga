@@ -11,7 +11,7 @@
         "modalita": "percentuale",
         "importoMensile": null,
         "percentuale": 0.0090,
-        "descrizione": "Fondo assistenza sanitaria bancari CASI",
+        "descrizione": "CASI — Cassa di Assistenza Sanitaria Integrativa per i dipendenti delle aziende di credito (0,90% quota datore)",
         "notaLegge": "Art. 73 CCNL Credito ABI"
       },
       "fonteB": {
@@ -19,7 +19,7 @@
         "modalita": "percentuale",
         "importoMensile": null,
         "percentuale": 0.0280,
-        "descrizione": "Fondo pensione complementare Fonte (quota azienda)",
+        "descrizione": "Fondo pensione complementare per i dipendenti di aziende di credito (2,80% quota datore)",
         "notaLegge": "Art. 74 CCNL Credito ABI"
       }
     }

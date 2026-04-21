@@ -1,0 +1,41 @@
+{
+  "id": "assicurazioni",
+  "nome": "CCNL Assicurazioni — Personale Amministrativo (ANIA)",
+  "fonte": "Rinnovo CCNL ANIA dicembre 2024. Fonte: businessonline.it / ilccnl.it — tabelle dal 01/12/2024",
+  "updatedAt": "2024-12-01T00:00:00Z",
+  "mensilita": 14,
+  "contributiContrattuali": {
+    "azienda": {
+      "fondoPensione": {
+        "tipo": "previdenziale",
+        "modalita": "percentuale",
+        "importoMensile": null,
+        "percentuale": 0.0250,
+        "descrizione": "Fondo pensione complementare settore assicurativo (2,50% quota datore)",
+        "notaLegge": "CCNL Assicurazioni ANIA — previdenza complementare"
+      },
+      "fondoSanitario": {
+        "tipo": "sanitario",
+        "modalita": "percentuale",
+        "importoMensile": null,
+        "percentuale": 0.0100,
+        "descrizione": "Fondo sanitario integrativo ANIA (1,00% quota datore)",
+        "notaLegge": "CCNL Assicurazioni ANIA — assistenza sanitaria integrativa"
+      }
+    }
+  },
+  "livelli": [
+    { "codice": "7",  "descrizione": "7° livello (Funzionario)", "qualifica": "Funzionario con elevata responsabilità direttiva, responsabile di filiale o ufficio", "minimoTabellare": 2493.50, "moltiplicatore": 1.00 },
+    { "codice": "6",  "descrizione": "6° livello",              "qualifica": "Impiegati con funzioni di coordinamento e alta professionalità specialistica",       "minimoTabellare": 2106.61, "moltiplicatore": 0.84 },
+    { "codice": "5",  "descrizione": "5° livello",              "qualifica": "Impiegati con mansioni di concetto, autonomia tecnica e operativa",                  "minimoTabellare": 1974.08, "moltiplicatore": 0.79 },
+    { "codice": "4",  "descrizione": "4° livello",              "qualifica": "Impiegati qualificati con competenze specialistiche nel ramo assicurativo",          "minimoTabellare": 1862.48, "moltiplicatore": 0.75 },
+    { "codice": "3",  "descrizione": "3° livello",              "qualifica": "Impiegati d'ordine con mansioni esecutive qualificate, liquidatori base",           "minimoTabellare": 1707.13, "moltiplicatore": 0.68 },
+    { "codice": "2",  "descrizione": "2° livello",              "qualifica": "Impiegati con mansioni esecutive, addetti al front-office, amministrativi",         "minimoTabellare": 1559.57, "moltiplicatore": 0.63 },
+    { "codice": "1",  "descrizione": "1° livello",              "qualifica": "Personale ausiliario, addetto ai servizi di supporto e segreteria di base",         "minimoTabellare": 1479.29, "moltiplicatore": 0.59 }
+  ],
+  "scattiAnzianita": {
+    "periodicitaMesi": 24,
+    "importoPerScattoEuro": 38.00,
+    "maxScatti": 12
+  }
+}

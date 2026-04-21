@@ -11,16 +11,16 @@
         "modalita": "percentuale",
         "importoMensile": null,
         "percentuale": 0.0075,
-        "descrizione": "Fondo sanitario integrativo Fastel",
-        "notaLegge": "Art. 19 CCNL Telecomunicazioni"
+        "descrizione": "FASTEL — Fondo sanitario integrativo telecomunicazioni (0,75% quota datore)",
+        "notaLegge": "Art. 19 CCNL Telecomunicazioni — FASTEL"
       },
       "telemaco": {
         "tipo": "previdenziale",
         "modalita": "percentuale",
         "importoMensile": null,
         "percentuale": 0.0200,
-        "descrizione": "Fondo pensione complementare Telemaco (quota azienda)",
-        "notaLegge": "Art. 50 CCNL Telecomunicazioni"
+        "descrizione": "TELEMACO — Fondo pensione complementare telecomunicazioni (2,00% quota datore)",
+        "notaLegge": "Art. 50 CCNL Telecomunicazioni — TELEMACO"
       }
     }
   },

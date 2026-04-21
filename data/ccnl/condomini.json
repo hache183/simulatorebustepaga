@@ -1,0 +1,32 @@
+{
+  "id": "condomini",
+  "nome": "CCNL Dipendenti da Proprietari di Fabbricati (Confedilizia)",
+  "fonte": "Rinnovo CCNL 30/10/2025 (vigenza 2025-2027). Tabelle dal 01/01/2026. Fonte: kitech.it CodiceCateg=67",
+  "updatedAt": "2026-01-01T00:00:00Z",
+  "mensilita": 13,
+  "contributiContrattuali": {
+    "azienda": {
+      "fondoSanitario": {
+        "tipo": "sanitario",
+        "modalita": "fisso",
+        "importoMensile": 10.00,
+        "percentuale": null,
+        "descrizione": "Fondo sanitario integrativo dipendenti fabbricati (€ 10/mese fisso quota datore)",
+        "notaLegge": "CCNL Proprietari di Fabbricati — assistenza sanitaria"
+      }
+    }
+  },
+  "livelli": [
+    { "codice": "C1", "descrizione": "Impiegato 1° categoria", "qualifica": "Responsabile amministrativo di stabili, sovrintendente di condomini, capo portiere",     "minimoTabellare": 2391.10, "moltiplicatore": 1.00 },
+    { "codice": "C2", "descrizione": "Impiegato 2° categoria", "qualifica": "Contabile condominiale, assistente tecnico di stabili, portiere responsabile di reparto", "minimoTabellare": 2050.57, "moltiplicatore": 0.86 },
+    { "codice": "C3", "descrizione": "Impiegato 3° categoria", "qualifica": "Impiegato d'ordine, addetto alla segreteria condominiale, portiere qualificato",          "minimoTabellare": 1795.94, "moltiplicatore": 0.75 },
+    { "codice": "C4", "descrizione": "Impiegato 4° categoria", "qualifica": "Impiegato ausiliario, commesso, portiere di categoria superiore",                         "minimoTabellare": 1512.61, "moltiplicatore": 0.63 },
+    { "codice": "D",  "descrizione": "Portiere/Custode",       "qualifica": "Portiere con alloggio, custode condominiale con mansioni di vigilanza e manutenzione",    "minimoTabellare": 1498.54, "moltiplicatore": 0.63 },
+    { "codice": "A",  "descrizione": "Addetto servizi",        "qualifica": "Portiere senza alloggio, addetto alle pulizie e servizi generici condominiali",           "minimoTabellare": 1361.00, "moltiplicatore": 0.57 }
+  ],
+  "scattiAnzianita": {
+    "periodicitaMesi": 24,
+    "importoPerScattoEuro": 7.00,
+    "maxScatti": 8
+  }
+}

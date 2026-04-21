@@ -6,21 +6,21 @@
   "mensilita": 14,
   "contributiContrattuali": {
     "azienda": {
-      "fasdaC": {
+      "fasda": {
         "tipo": "sanitario",
         "modalita": "percentuale",
         "importoMensile": null,
         "percentuale": 0.0050,
-        "descrizione": "Fondo sanitario integrativo Fasda",
-        "notaLegge": "Art. 5 CCNL Sanità Privata"
+        "descrizione": "FASDA — Fondo di assistenza sanitaria integrativa sanità privata (0,50% quota datore)",
+        "notaLegge": "Art. 5 CCNL Sanità Privata AIOP-ARIS"
       },
       "previr": {
         "tipo": "previdenziale",
         "modalita": "percentuale",
         "importoMensile": null,
         "percentuale": 0.0130,
-        "descrizione": "Fondo pensione complementare Previcooper",
-        "notaLegge": "Art. 44 CCNL Sanità Privata"
+        "descrizione": "PREVIR — Fondo pensione complementare per i lavoratori della sanità privata (1,30% quota datore)",
+        "notaLegge": "Art. 44 CCNL Sanità Privata AIOP-ARIS"
       }
     }
   },
