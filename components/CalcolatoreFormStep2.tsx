@@ -32,9 +32,11 @@ interface Props {
   onBack: () => void;
   isLoading: boolean;
   contributiCcnl?: Record<string, ContributoContrattuale>;
+  ccnlId?: string;
 }
 
-export function CalcolatoreFormStep2({ onSubmit, onBack, isLoading, contributiCcnl }: Props) {
+export function CalcolatoreFormStep2({ onSubmit, onBack, isLoading, contributiCcnl, ccnlId }: Props) {
+  const isDomestici = ccnlId === 'domestici';
   const [voceInail, setVociInail] = useState<VoceInail[]>([]);
   const [agevolazioni, setAgevolazioni] = useState<AgevolazioneInps[]>([]);
   const [conflitti, setConflitti] = useState<Record<string, string>>({});
@@ -85,7 +87,14 @@ export function CalcolatoreFormStep2({ onSubmit, onBack, isLoading, contributiCc
 
   return (
     <form onSubmit={handleSubmit((data) => {
-      onSubmit({ ...data, aliquotaInps: data.aliquotaInps / 100 });
+      onSubmit({
+        ...data,
+        aliquotaInps: isDomestici ? 0 : data.aliquotaInps / 100,
+        numeroDipendenti: isDomestici ? 1 : data.numeroDipendenti,
+        codiceInail: isDomestici ? '' : data.codiceInail,
+        agevolazioniSelezionate: isDomestici ? [] : data.agevolazioniSelezionate,
+        includiAssistenzaSanitaria: isDomestici ? false : data.includiAssistenzaSanitaria,
+      });
     })} style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
 
       {/* Label sezione */}
@@ -100,11 +109,21 @@ export function CalcolatoreFormStep2({ onSubmit, onBack, isLoading, contributiCc
           fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: '18px',
           color: 'var(--color-text-primary)', marginTop: '4px',
         }}>
-          Dati aziendali
+          {isDomestici ? 'Dati del rapporto domestico' : 'Dati aziendali'}
         </h2>
+        {isDomestici && (
+          <p style={{ marginTop: '8px', fontSize: '12px', color: 'var(--color-text-muted)', lineHeight: '1.5',
+            padding: '8px 10px', borderRadius: '6px', background: 'var(--color-bg-elevated)',
+            border: '1px solid var(--color-border)' }}>
+            Per il lavoro domestico non si applicano: agevolazioni contributive imprenditoriali,
+            aliquota INPS personalizzabile (calcolata per fascia oraria — Circ. INPS n. 9/2026),
+            numero di dipendenti. Compila solo i dati rilevanti al rapporto.
+          </p>
+        )}
       </div>
 
-      {/* Numero dipendenti */}
+      {/* Numero dipendenti — nascosto per domestici */}
+      {!isDomestici && (
       <div>
         <label htmlFor="numeroDipendenti" style={{ display: 'block', fontSize: '13px', fontWeight: 500,
           color: 'var(--color-text-secondary)', marginBottom: '6px' }}>
@@ -123,6 +142,7 @@ export function CalcolatoreFormStep2({ onSubmit, onBack, isLoading, contributiCc
         />
         {errors.numeroDipendenti && <p style={{ marginTop: '4px', fontSize: '11px', color: 'var(--color-red)' }}>{errors.numeroDipendenti.message}</p>}
       </div>
+      )}
 
       {/* Regione */}
       <div>
@@ -142,8 +162,8 @@ export function CalcolatoreFormStep2({ onSubmit, onBack, isLoading, contributiCc
         {errors.regione && <p style={{ marginTop: '4px', fontSize: '11px', color: 'var(--color-red)' }}>{errors.regione.message}</p>}
       </div>
 
-      {/* Categoria INAIL */}
-      <div>
+      {/* Categoria INAIL — nascosta per domestici (contributo fisso annuo via INPS) */}
+      {!isDomestici && <div>
         <label htmlFor="codiceInail" style={{ display: 'block', fontSize: '13px', fontWeight: 500,
           color: 'var(--color-text-secondary)', marginBottom: '6px' }}>
           Categoria INAIL
@@ -162,7 +182,7 @@ export function CalcolatoreFormStep2({ onSubmit, onBack, isLoading, contributiCc
           ))}
         </select>
         {errors.codiceInail && <p style={{ marginTop: '4px', fontSize: '11px', color: 'var(--color-red)' }}>{errors.codiceInail.message}</p>}
-      </div>
+      </div>}
 
       {/* Anzianità */}
       <div>
@@ -182,8 +202,8 @@ export function CalcolatoreFormStep2({ onSubmit, onBack, isLoading, contributiCc
         />
       </div>
 
-      {/* Aliquota INPS (MOD3) */}
-      <div>
+      {/* Aliquota INPS — nascosta per domestici (engine usa per-ora Circ. n. 9/2026) */}
+      {!isDomestici && <div>
         <label htmlFor="aliquotaInps" style={{ display: 'block', fontSize: '13px', fontWeight: 500,
           color: 'var(--color-text-secondary)', marginBottom: '6px' }}>
           Aliquota INPS datoriale (%)
@@ -209,10 +229,10 @@ export function CalcolatoreFormStep2({ onSubmit, onBack, isLoading, contributiCc
           Modifica se il settore ha un&apos;aliquota diversa (es. Artigianato, Agricoltura, Credito). Verifica con il tuo consulente del lavoro.
         </p>
         {errors.aliquotaInps && <p style={{ marginTop: '4px', fontSize: '11px', color: 'var(--color-red)' }}>{errors.aliquotaInps.message}</p>}
-      </div>
+      </div>}
 
-      {/* Toggle assistenza sanitaria integrativa (MOD2) */}
-      <div>
+      {/* Toggle assistenza sanitaria — nascosto per domestici */}
+      {!isDomestici && <div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '6px' }}>
           <button type="button"
             onClick={() => setValue('includiAssistenzaSanitaria', !watch('includiAssistenzaSanitaria'))}
@@ -239,10 +259,10 @@ export function CalcolatoreFormStep2({ onSubmit, onBack, isLoading, contributiCc
           {fondoSanitarioNome ? ` (${fondoSanitarioNome})` : ' (es. Fondo Est, Metasalute, San.Arti)'}.
           Disattivalo se l&apos;azienda non aderisce al fondo sanitario.
         </p>
-      </div>
+      </div>}
 
-      {/* Agevolazioni */}
-      <div>
+      {/* Agevolazioni — nascoste per domestici (non applicabili al datore famiglia) */}
+      {!isDomestici && <div>
         <p style={{ fontSize: '13px', fontWeight: 500, color: 'var(--color-text-secondary)',
           marginBottom: '10px' }}>
           Agevolazioni contributive applicabili
@@ -305,7 +325,7 @@ export function CalcolatoreFormStep2({ onSubmit, onBack, isLoading, contributiCc
             );
           })}
         </div>
-      </div>
+      </div>}
 
       {/* Pulsanti */}
       <div style={{ display: 'flex', gap: '12px' }}>

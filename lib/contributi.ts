@@ -155,7 +155,8 @@ export function calcolaAgevolazioni(input: CalcolatoreInput): {
  * La base TFR esatta dipende dalla retribuzione utile definita da ciascun CCNL.
  * @see Art. 2120 c.c. — divisore fisso 13,5
  */
-export function calcolaTfr(ral: number, _mensilita: number): number {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function calcolaTfr(ral: number, _mensilita?: number): number {
   const data = loadJson<TfrData>('data/tfr.json');
   return ral / data.divisoreAnnuo;
 }
@@ -173,16 +174,86 @@ export function calcolaInail(ral: number, codiceVoce: string): number {
 
 /**
  * Calcola il costo annuo degli scatti di anzianità maturati.
+ * Se percentualeScatto è impostato (es. domestici 4%) usa ralEffettiva come base.
  * @see Norma contrattuale CCNL di riferimento
  */
 export function calcolaScattiAnzianita(
   anzianitaAnni: number,
-  config: ScattiAnzianita
+  config: ScattiAnzianita,
+  ralEffettiva?: number,
 ): number {
   const periodicitaAnni = config.periodicitaMesi / 12;
   const numScatti = Math.min(
     Math.floor(anzianitaAnni / periodicitaAnni),
     config.maxScatti
   );
+  if (config.percentualeScatto != null && ralEffettiva != null) {
+    // Scatto percentuale: ogni scatto aggiunge percentualeScatto × RAL (es. 4% domestici)
+    return numScatti * config.percentualeScatto * ralEffettiva;
+  }
+  if (config.importoPerScattoEuro == null) return 0;
   return numScatti * config.importoPerScattoEuro * 12; // costo annuo
+}
+
+// Tipo interno per la struttura domestici in aliquote-inps.json
+interface FasciaDomestici {
+  retribuzioneConvenzionale: number;
+  contributoOraTotal: number;
+  quotaLavoratore: number;
+  contributoAddizionale?: { contributoOraTotal: number; quotaLavoratore: number };
+}
+interface DomesticiSettoreRaw {
+  nome: string;
+  calcoloSpeciale: 'per_ora';
+  tabellaFasce2026: {
+    oltre24hSettimanali: FasciaDomestici;
+    fino961: FasciaDomestici;
+    da961a1170: FasciaDomestici;
+    oltre1170: FasciaDomestici;
+  };
+}
+
+/**
+ * Calcola i contributi INPS per lavoratori domestici (Circ. INPS n. 9/2026).
+ * La fascia è determinata da ore/settimana e retribuzione oraria effettiva.
+ * Contributi fissi per ora lavorata (non percentuale della RAL).
+ */
+export function calcolaInpsDomestici(
+  ralAnnua: number,
+  oreLavoro: number,
+  convivente: boolean = false,
+): { inpsDatore: number; inpsDipendente: number; fasciaNome: string; quotaDatorePerOra: number } {
+  const data = loadJson<AliquoteInpsData>('data/aliquote-inps.json');
+  const raw = (data.settoriContributivi as unknown as Record<string, DomesticiSettoreRaw>)['domestici'];
+  const fasce = raw.tabellaFasce2026;
+
+  const oreAnnue = oreLavoro * 52;
+  const retribuzioneOraria = oreAnnue > 0 ? ralAnnua / oreAnnue : 0;
+
+  let fascia: FasciaDomestici;
+  let fasciaNome: string;
+
+  // Conviventi o >24h/settimana → fascia ridotta (Tabella B)
+  if (convivente || oreLavoro > 24) {
+    fascia = fasce.oltre24hSettimanali;
+    const motivo = convivente ? 'convivente' : '>24h/sett.';
+    fasciaNome = `${motivo} — conv. €${fascia.retribuzioneConvenzionale}/h (Tabella B Circ. n. 9/2026)`;
+  } else if (retribuzioneOraria <= 9.61) {
+    fascia = fasce.fino961;
+    fasciaNome = `≤€9,61/h — ret. effettiva €${retribuzioneOraria.toFixed(2)}/h (Tabella A)`;
+  } else if (retribuzioneOraria <= 11.70) {
+    fascia = fasce.da961a1170;
+    fasciaNome = `€9,61–11,70/h — ret. effettiva €${retribuzioneOraria.toFixed(2)}/h (Tabella A)`;
+  } else {
+    fascia = fasce.oltre1170;
+    fasciaNome = `>€11,70/h — ret. effettiva €${retribuzioneOraria.toFixed(2)}/h (Tabella A)`;
+  }
+
+  const quotaDatorePerOra = fascia.contributoOraTotal - fascia.quotaLavoratore;
+  return {
+    inpsDatore: quotaDatorePerOra * oreAnnue,
+    inpsDipendente: fascia.quotaLavoratore * oreAnnue,
+    fasciaNome,
+    quotaDatorePerOra,
+  };
 }

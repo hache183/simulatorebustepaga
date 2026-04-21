@@ -1,8 +1,8 @@
 {
   "id": "cooperative_sociali",
   "nome": "CCNL Cooperative Sociali (Agci-Legacoop-Confcooperative)",
-  "fonte": "https://www.legacoop.coop/contratto-collettivo",
-  "updatedAt": "2026-01-01T00:00:00Z",
+  "fonte": "PDF T151 — COOPERATIVE SOCIALI. Stampa del 21/04/2026 — dati ufficiali tabelle retributive vigenti dal 01/01/2026",
+  "updatedAt": "2026-04-21T00:00:00Z",
   "mensilita": 14,
   "contributiContrattuali": {
     "azienda": {
@@ -25,13 +25,13 @@
     }
   },
   "livelli": [
-    { "codice": "Q",  "descrizione": "Quadro",      "qualifica": "Coordinatore di servizi, responsabile d'area",                    "minimoTabellare": 1700.00, "moltiplicatore": 1.00 },
-    { "codice": "1",  "descrizione": "1° livello",  "qualifica": "Educatore professionale, assistente sociale",                     "minimoTabellare": 1530.00, "moltiplicatore": 0.90 },
-    { "codice": "2",  "descrizione": "2° livello",  "qualifica": "Animatore, mediatore culturale",                                  "minimoTabellare": 1394.00, "moltiplicatore": 0.82 },
-    { "codice": "3",  "descrizione": "3° livello",  "qualifica": "Operatore socio-sanitario (OSS), operatore d'assistenza",         "minimoTabellare": 1258.00, "moltiplicatore": 0.74 },
-    { "codice": "4",  "descrizione": "4° livello",  "qualifica": "Addetto all'assistenza di base",                                  "minimoTabellare": 1139.00, "moltiplicatore": 0.67 },
-    { "codice": "5",  "descrizione": "5° livello",  "qualifica": "Operatore generico, addetto alla mensa",                          "minimoTabellare": 1020.00, "moltiplicatore": 0.60 },
-    { "codice": "6",  "descrizione": "6° livello",  "qualifica": "Ausiliario, addetto alle pulizie",                                "minimoTabellare": 918.00,  "moltiplicatore": 0.54 }
+    { "codice": "Q",  "descrizione": "Quadro (F2)", "qualifica": "Coordinatore di servizi, responsabile d'area",                    "minimoTabellare": 2504.09, "moltiplicatore": 1.00 },
+    { "codice": "1",  "descrizione": "1° livello (F1)", "qualifica": "Educatore professionale, assistente sociale",                  "minimoTabellare": 2192.54, "moltiplicatore": 0.90 },
+    { "codice": "2",  "descrizione": "2° livello (E2)", "qualifica": "Animatore, mediatore culturale",                               "minimoTabellare": 1985.42, "moltiplicatore": 0.82 },
+    { "codice": "3",  "descrizione": "3° livello (D3/E1)", "qualifica": "Operatore socio-sanitario (OSS), operatore d'assistenza",  "minimoTabellare": 1839.15, "moltiplicatore": 0.74 },
+    { "codice": "4",  "descrizione": "4° livello (D1/C3)", "qualifica": "Addetto all'assistenza di base",                            "minimoTabellare": 1637.57, "moltiplicatore": 0.67 },
+    { "codice": "5",  "descrizione": "5° livello (C1)",    "qualifica": "Operatore generico, addetto alla mensa",                   "minimoTabellare": 1545.21, "moltiplicatore": 0.60 },
+    { "codice": "6",  "descrizione": "6° livello (A1)",    "qualifica": "Ausiliario, addetto alle pulizie",                         "minimoTabellare": 1359.85, "moltiplicatore": 0.54 }
   ],
   "scattiAnzianita": {
     "periodicitaMesi": 24,

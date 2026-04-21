@@ -159,6 +159,36 @@
       "dettaglio": {
         "IVS_ridotto": 0.1000
       }
+    },
+    "domestici": {
+      "nome": "Lavoratori domestici (Circ. INPS n. 9/2026)",
+      "calcoloSpeciale": "per_ora",
+      "tabellaFasce2026": {
+        "oltre24hSettimanali": {
+          "retribuzioneConvenzionale": 6.20,
+          "contributoOraTotal": 1.24,
+          "quotaLavoratore": 0.31,
+          "contributoAddizionale": { "contributoOraTotal": 1.32, "quotaLavoratore": 0.31 }
+        },
+        "fino961": {
+          "retribuzioneConvenzionale": 8.52,
+          "contributoOraTotal": 1.70,
+          "quotaLavoratore": 0.43,
+          "contributoAddizionale": { "contributoOraTotal": 1.82, "quotaLavoratore": 0.43 }
+        },
+        "da961a1170": {
+          "retribuzioneConvenzionale": 9.61,
+          "contributoOraTotal": 1.92,
+          "quotaLavoratore": 0.48,
+          "contributoAddizionale": { "contributoOraTotal": 2.05, "quotaLavoratore": 0.48 }
+        },
+        "oltre1170": {
+          "retribuzioneConvenzionale": 11.70,
+          "contributoOraTotal": 2.34,
+          "quotaLavoratore": 0.59,
+          "contributoAddizionale": { "contributoOraTotal": 2.50, "quotaLavoratore": 0.59 }
+        }
+      }
     }
   },
   "mappaCcnlSettore": {
@@ -177,7 +207,8 @@
     "informatica": "commercio",
     "agricoltura": "agricoltura",
     "scuole_private": "commercio",
-    "sanita_privata": "commercio"
+    "sanita_privata": "commercio",
+    "domestici": "domestici"
   },
   "agevolazioni": [
     {

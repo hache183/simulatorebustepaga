@@ -1,8 +1,8 @@
 {
   "id": "tessile",
   "nome": "CCNL Tessile-Abbigliamento-Moda (SMI — Sistema Moda Italia)",
-  "fonte": "https://www.sistemamodaitalia.com/contratto-collettivo",
-  "updatedAt": "2026-01-01T00:00:00Z",
+  "fonte": "PDF D014 — ABBIGLIAMENTO - INDUSTRIA (Sistema Moda Italia). Stampa del 21/04/2026 — dati ufficiali tabelle retributive vigenti dal 01/01/2026 al 31/12/2026",
+  "updatedAt": "2026-04-21T00:00:00Z",
   "mensilita": 13,
   "contributiContrattuali": {
     "azienda": {
@@ -25,13 +25,13 @@
     }
   },
   "livelli": [
-    { "codice": "Q",  "descrizione": "Quadro",      "qualifica": "Responsabile di produzione, quadro tecnico",          "minimoTabellare": 1800.00, "moltiplicatore": 1.00 },
-    { "codice": "1",  "descrizione": "1° livello",  "qualifica": "Modellista, stilista tecnico",                        "minimoTabellare": 1638.00, "moltiplicatore": 0.91 },
-    { "codice": "2",  "descrizione": "2° livello",  "qualifica": "Tagliatore, tessitore specializzato",                 "minimoTabellare": 1494.00, "moltiplicatore": 0.83 },
-    { "codice": "3",  "descrizione": "3° livello",  "qualifica": "Cucitrice qualificata, addetto al controllo qualità", "minimoTabellare": 1350.00, "moltiplicatore": 0.75 },
-    { "codice": "4",  "descrizione": "4° livello",  "qualifica": "Operaio alla macchina, stiratrici",                   "minimoTabellare": 1206.00, "moltiplicatore": 0.67 },
-    { "codice": "5",  "descrizione": "5° livello",  "qualifica": "Confezionatore, imballatore",                         "minimoTabellare": 1080.00, "moltiplicatore": 0.60 },
-    { "codice": "6",  "descrizione": "6° livello",  "qualifica": "Ausiliario, manovale",                                "minimoTabellare": 972.00,  "moltiplicatore": 0.54 }
+    { "codice": "Q",  "descrizione": "Quadro (liv. 8)", "qualifica": "Responsabile di produzione, quadro tecnico",          "minimoTabellare": 2457.72, "moltiplicatore": 1.00 },
+    { "codice": "1",  "descrizione": "1° livello (liv. 7)", "qualifica": "Modellista, stilista tecnico",                     "minimoTabellare": 2318.50, "moltiplicatore": 0.91 },
+    { "codice": "2",  "descrizione": "2° livello (liv. 6)", "qualifica": "Tagliatore, tessitore specializzato",              "minimoTabellare": 2175.37, "moltiplicatore": 0.83 },
+    { "codice": "3",  "descrizione": "3° livello (liv. 4)", "qualifica": "Cucitrice qualificata, addetto al controllo qualità", "minimoTabellare": 1938.95, "moltiplicatore": 0.75 },
+    { "codice": "4",  "descrizione": "4° livello (liv. 3)", "qualifica": "Operaio alla macchina, stiratrici",                "minimoTabellare": 1853.17, "moltiplicatore": 0.67 },
+    { "codice": "5",  "descrizione": "5° livello (liv. 2)", "qualifica": "Confezionatore, imballatore",                      "minimoTabellare": 1760.02, "moltiplicatore": 0.60 },
+    { "codice": "6",  "descrizione": "6° livello (liv. 1)", "qualifica": "Ausiliario, manovale",                             "minimoTabellare": 1469.68, "moltiplicatore": 0.54 }
   ],
   "scattiAnzianita": {
     "periodicitaMesi": 24,

@@ -1,8 +1,8 @@
 {
   "id": "agricoltura",
   "nome": "CCNL Agricoltura (Operai Agricoli e Florovivaisti — Confagricoltura)",
-  "fonte": "https://www.confagricoltura.it/contratto-collettivo",
-  "updatedAt": "2026-01-01T00:00:00Z",
+  "fonte": "PDF A11 — AGRICOLTURA - OPERAI (OTD) vigenti dal 01/01/2025 + PDF A021 — AGRICOLTURA - IMPIEGATI vigenti dal 01/07/2024 (livello Quadro). Stampa del 21/04/2026 — dati ufficiali tabelle retributive.",
+  "updatedAt": "2026-04-21T00:00:00Z",
   "mensilita": 13,
   "_notaLimitazione": "ATTENZIONE: il settore agricolo ha un sistema retributivo proprio. Gli operai agricoli (soprattutto OTD) sono pagati con paga oraria/giornaliera, non mensile. Il modello mensile qui applicato è una semplificazione valida solo per impiegati/quadri agricoli (salariati fissi). Per operai a tempo determinato il calcolo reale è diverso.",
   "contributiContrattuali": {
@@ -26,11 +26,11 @@
     }
   },
   "livelli": [
-    { "codice": "Q",  "descrizione": "Quadro / Impiegato direttivo",    "qualifica": "Dirigente d'azienda agricola, agronomo",           "minimoTabellare": 1500.00, "moltiplicatore": 1.00 },
-    { "codice": "1",  "descrizione": "1° livello (Specializzato sup.)", "qualifica": "Trattorista specializzato, capo operaio",          "minimoTabellare": 1320.00, "moltiplicatore": 0.88 },
-    { "codice": "2",  "descrizione": "2° livello (Specializzato)",      "qualifica": "Operaio agricolo specializzato, potatore",        "minimoTabellare": 1170.00, "moltiplicatore": 0.78 },
-    { "codice": "3",  "descrizione": "3° livello (Qualificato)",        "qualifica": "Operaio agricolo qualificato, addetto alla raccolta", "minimoTabellare": 1020.00, "moltiplicatore": 0.68 },
-    { "codice": "4",  "descrizione": "4° livello (Comune)",             "qualifica": "Operaio agricolo comune, bracciante",             "minimoTabellare": 900.00,  "moltiplicatore": 0.60 }
+    { "codice": "Q",  "descrizione": "Quadro / Impiegato direttivo (da PDF Impiegati)", "qualifica": "Dirigente d'azienda agricola, agronomo",      "minimoTabellare": 1788.38, "moltiplicatore": 1.00 },
+    { "codice": "1",  "descrizione": "1° livello — Area 1 Livello 1 (OTD)", "qualifica": "Trattorista specializzato, capo operaio",       "minimoTabellare": 1458.61, "moltiplicatore": 0.88 },
+    { "codice": "2",  "descrizione": "2° livello — Area 1 Livello 2 (OTD)", "qualifica": "Operaio agricolo specializzato, potatore",      "minimoTabellare": 1458.61, "moltiplicatore": 0.78 },
+    { "codice": "3",  "descrizione": "3° livello — Area 2 Livello 3 (OTD)", "qualifica": "Operaio agricolo qualificato, addetto alla raccolta", "minimoTabellare": 1330.25, "moltiplicatore": 0.68 },
+    { "codice": "4",  "descrizione": "4° livello — Area 3 Livello 5 (OTD)", "qualifica": "Operaio agricolo comune, bracciante",           "minimoTabellare": 991.85,  "moltiplicatore": 0.60 }
   ],
   "scattiAnzianita": {
     "periodicitaMesi": 24,

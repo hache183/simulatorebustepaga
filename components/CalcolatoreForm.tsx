@@ -23,12 +23,12 @@ const CCNL_DISPONIBILI = [
   { id: 'informatica',         nome: 'Informatica e Servizi Innovativi (Assinform)' },
   { id: 'agricoltura',         nome: 'Agricoltura — Operai Agricoli (Confagricoltura)' },
   { id: 'scuole_private',      nome: 'Scuole e Istituti Privati (Agidae-FISM)' },
+  { id: 'domestici',           nome: 'Lavoro Domestico — Collaboratori familiari (FIDALDO-DOMINA)' },
 ];
 
 const TIPI_CONTRATTO = [
   { value: 'tempo_indeterminato', label: 'Tempo indeterminato' },
   { value: 'tempo_determinato',   label: 'Tempo determinato' },
-  { value: 'apprendistato',       label: 'Apprendistato' },
   { value: 'somministrazione',    label: 'Somministrazione' },
 ] as const;
 
@@ -37,14 +37,15 @@ const fmtEur = (n: number) => new Intl.NumberFormat('it-IT', { style: 'currency'
 const Step1Schema = z.object({
   ccnlId: z.string().min(1, 'Seleziona un CCNL'),
   livello: z.string().min(1, 'Seleziona il livello contrattuale'),
-  ral: z.number().min(10_000, 'Minimo 10.000 €').max(500_000, 'Massimo 500.000 €'),
-  tipoContratto: z.enum(['tempo_indeterminato', 'tempo_determinato', 'apprendistato', 'somministrazione']),
+  ral: z.number().min(1_000, 'Minimo 1.000 €').max(500_000, 'Massimo 500.000 €'),
+  tipoContratto: z.enum(['tempo_indeterminato', 'tempo_determinato', 'somministrazione']),
   oreLavoro: z.number().min(1).max(48),
   mensilita: z.number()
     .int('Le mensilità devono essere un numero intero')
     .min(13, 'Minimo 13 — la tredicesima è obbligatoria per legge (R.D.L. 1525/1937)')
     .max(16, 'Massimo 16 — oltre non esiste nel diritto del lavoro italiano'),
   retribuzionePersonalizzata: z.number().min(0).max(500_000).optional(),
+  convivente: z.boolean().optional(),
 });
 
 type Step1Data = z.infer<typeof Step1Schema>;
@@ -57,7 +58,7 @@ export function CalcolatoreFormStep1({ onNext }: Props) {
   const [livelli, setLivelli] = useState<LivelloCcnl[]>([]);
   const [loadingLivelli, setLoadingLivelli] = useState(false);
   const [ccnlMensilita, setCcnlMensilita] = useState<number>(13);
-  const [contributiCcnl, setContributiCcnl] = useState<Record<string, ContributoContrattuale>>({});
+  const [, setContributiCcnl] = useState<Record<string, ContributoContrattuale>>({});
   const [retribPersonalizzataAttiva, setRetribPersonalizzataAttiva] = useState(false);
 
   const {
@@ -76,8 +77,14 @@ export function CalcolatoreFormStep1({ onNext }: Props) {
   const livelloSelezionato = watch('livello');
   const ralWatch = watch('ral');
 
+  const isDomesticiCcnl = ccnlSelezionato === 'domestici';
   const livelloData = livelli.find(l => l.codice === livelloSelezionato);
-  const ralTabellare = livelloData ? livelloData.minimoTabellare * ccnlMensilita : 0;
+  // Per i domestici minimoTabellare è €/ora → RAL = tariffa × ore/sett × 52
+  const ralTabellare = livelloData
+    ? isDomesticiCcnl
+      ? livelloData.minimoTabellare * (oreLavoro || 20) * 52
+      : livelloData.minimoTabellare * ccnlMensilita
+    : 0;
 
   useEffect(() => {
     if (!ccnlSelezionato) return;
@@ -98,13 +105,21 @@ export function CalcolatoreFormStep1({ onNext }: Props) {
       .finally(() => setLoadingLivelli(false));
   }, [ccnlSelezionato]);
 
-  // Precompile RAL when livello changes and retrib personalizzata is off
+  // Precompile RAL when livello changes (standard CCNL — no oreRatio in form, engine adjusts)
   useEffect(() => {
-    if (livelloData && !retribPersonalizzataAttiva) {
+    if (!isDomesticiCcnl && livelloData && !retribPersonalizzataAttiva) {
       setValue('ral', Math.round(livelloData.minimoTabellare * ccnlMensilita * 100) / 100);
       setValue('retribuzionePersonalizzata', undefined);
     }
-  }, [livelloSelezionato, retribPersonalizzataAttiva, ccnlMensilita]);
+  }, [livelloSelezionato, retribPersonalizzataAttiva, ccnlMensilita, isDomesticiCcnl]);
+
+  // Precompile RAL per domestici: tariffa oraria × ore/sett × 52 (aggiorna anche al cambio ore)
+  useEffect(() => {
+    if (isDomesticiCcnl && livelloData && !retribPersonalizzataAttiva) {
+      setValue('ral', Math.round(livelloData.minimoTabellare * (oreLavoro || 20) * 52 * 100) / 100);
+      setValue('retribuzionePersonalizzata', undefined);
+    }
+  }, [isDomesticiCcnl, livelloSelezionato, retribPersonalizzataAttiva, oreLavoro]);
 
   const warningRalInferiore = retribPersonalizzataAttiva && livelloData && ralWatch && ralWatch < ralTabellare;
 
@@ -171,10 +186,13 @@ export function CalcolatoreFormStep1({ onNext }: Props) {
             {loadingLivelli ? 'Caricamento...' : livelli.length === 0 ? '— Prima seleziona il CCNL —' : '— Seleziona il livello —'}
           </option>
           {livelli.map(l => {
-            const ralAnnua = l.minimoTabellare * ccnlMensilita;
+            const ralAnnua = isDomesticiCcnl
+              ? l.minimoTabellare * (oreLavoro || 20) * 52
+              : l.minimoTabellare * ccnlMensilita;
+            const unitLabel = isDomesticiCcnl ? '/ora' : '/mese';
             return (
               <option key={l.codice} value={l.codice}>
-                Liv. {l.codice} — {l.qualifica} — Min. tab. {fmtEur(l.minimoTabellare)}/mese (RAL {fmtEur(ralAnnua)})
+                Liv. {l.codice} — {l.qualifica} — Min. tab. {fmtEur(l.minimoTabellare)}{unitLabel} (RAL {fmtEur(ralAnnua)})
               </option>
             );
           })}
@@ -191,8 +209,8 @@ export function CalcolatoreFormStep1({ onNext }: Props) {
               Liv. {livelloData.codice} — {livelloData.qualifica}
             </p>
             <div style={{ display: 'flex', gap: '16px', fontSize: '12px', color: 'var(--color-text-secondary)', fontFamily: "'DM Mono', monospace" }}>
-              <span>Min. tab. {fmtEur(livelloData.minimoTabellare)}/mese</span>
-              <span>RAL tab. {fmtEur(ralTabellare)}/anno</span>
+              <span>Min. tab. {fmtEur(livelloData.minimoTabellare)}{isDomesticiCcnl ? '/ora' : '/mese'}</span>
+              <span>RAL tab. {fmtEur(ralTabellare)}/anno{isDomesticiCcnl ? ` · ${oreLavoro}h/sett.` : ''}</span>
             </div>
           </div>
         )}
@@ -248,9 +266,14 @@ export function CalcolatoreFormStep1({ onNext }: Props) {
       {/* RAL */}
       <div>
         <label htmlFor="ral" style={{ display: 'block', fontSize: '13px', fontWeight: 500,
-          color: 'var(--color-text-secondary)', marginBottom: '6px' }}>
-          RAL annua lorda
+          color: 'var(--color-text-secondary)', marginBottom: isDomesticiCcnl ? '4px' : '6px' }}>
+          {isDomesticiCcnl ? 'Retribuzione annua lorda (tariffa oraria × ore/sett. × 52)' : 'RAL annua lorda'}
         </label>
+        {isDomesticiCcnl && (
+          <p style={{ fontSize: '11px', color: 'var(--color-text-muted)', marginBottom: '6px', lineHeight: '1.5' }}>
+            Calcolata automaticamente dal livello e dalle ore settimanali. Il contributo INPS è fisso per ora (Circ. INPS n. 9/2026 — fascia determinata dalla tariffa oraria effettiva).
+          </p>
+        )}
         <div style={{ position: 'relative' }}>
           <span style={{
             position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)',
@@ -344,7 +367,54 @@ export function CalcolatoreFormStep1({ onNext }: Props) {
           fontFamily: "'DM Mono', monospace" }}>
           <span>8h</span><span>40h</span><span>48h</span>
         </div>
+        {isDomesticiCcnl && (
+          <p style={{ marginTop: '6px', fontSize: '11px', lineHeight: '1.5',
+            color: Number(oreLavoro) > 24 ? 'var(--color-text-muted)' : 'var(--color-amber)',
+            padding: '6px 8px', borderRadius: '4px',
+            background: Number(oreLavoro) > 24 ? 'var(--color-bg-elevated)' : 'var(--color-amber-dim)',
+          }}>
+            {Number(oreLavoro) > 24
+              ? `>24h/sett. → fascia ridotta (€1,24/h datore — Tabella B Circ. n. 9/2026)`
+              : `≤24h/sett. → fascia per tariffa oraria (€1,27–€1,75/h datore — Tabella A)`}
+          </p>
+        )}
       </div>
+
+      {/* Toggle convivente — solo per domestici */}
+      {isDomesticiCcnl && (
+        <div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <button type="button"
+              onClick={() => setValue('convivente', !watch('convivente'))}
+              style={{
+                width: '40px', height: '22px', borderRadius: '11px', border: 'none', cursor: 'pointer',
+                background: watch('convivente') ? 'var(--color-accent)' : 'var(--color-bg-elevated)',
+                position: 'relative', transition: 'background 0.2s ease',
+                outline: `1px solid ${watch('convivente') ? 'var(--color-accent)' : 'var(--color-border)'}`,
+                flexShrink: 0,
+              }}>
+              <div style={{
+                width: '16px', height: '16px', borderRadius: '50%', background: 'white',
+                position: 'absolute', top: '3px',
+                left: watch('convivente') ? '21px' : '3px',
+                transition: 'left 0.2s ease',
+              }} />
+            </button>
+            <label style={{ fontSize: '13px', fontWeight: 500, color: 'var(--color-text-secondary)', cursor: 'pointer' }}
+              onClick={() => setValue('convivente', !watch('convivente'))}>
+              Lavoratore convivente (con vitto e alloggio)
+            </label>
+          </div>
+          {watch('convivente') && (
+            <p style={{ marginTop: '8px', fontSize: '11px', color: 'var(--color-text-muted)', lineHeight: '1.5',
+              padding: '6px 8px', borderRadius: '4px', background: 'var(--color-bg-elevated)',
+              border: '1px solid var(--color-border)' }}>
+              Convivente → fascia INPS ridotta (€1,24/h datore — Tabella B Circ. n. 9/2026).
+              Il vitto e l&apos;alloggio hanno valore in natura escluso dalla retribuzione imponibile.
+            </p>
+          )}
+        </div>
+      )}
 
       {/* Mensilità */}
       <div>

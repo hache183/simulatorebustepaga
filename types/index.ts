@@ -3,7 +3,6 @@
 export type TipoContratto =
   | 'tempo_indeterminato'
   | 'tempo_determinato'
-  | 'apprendistato'
   | 'somministrazione';
 
 export interface CalcolatoreInput {
@@ -21,6 +20,7 @@ export interface CalcolatoreInput {
   includiAssistenzaSanitaria: boolean; // se true, include contributi sanitari CCNL
   aliquotaInps: number;               // aliquota INPS datoriale personalizzata (es. 0.2676 per 26,76%)
   retribuzionePersonalizzata?: number; // RAL personalizzata concordata tra le parti (euro/anno)
+  convivente?: boolean;               // solo domestici: lavoratore convivente con vitto e alloggio
 }
 
 // ─── OUTPUT CALCOLATORE ───────────────────────────────────────────────────
@@ -96,6 +96,7 @@ export interface ContributoContrattuale {
   percentuale: number | null;
   descrizione: string;
   notaLegge: string;
+  perOra?: boolean; // true per contributi a tariffa oraria (es. CassaColf domestici)
 }
 
 export interface ElementoAggiuntivo {
@@ -115,7 +116,8 @@ export interface LivelloCcnl {
 
 export interface ScattiAnzianita {
   periodicitaMesi: number;
-  importoPerScattoEuro: number;
+  importoPerScattoEuro: number | null;
+  percentualeScatto?: number; // se impostato, scatto = percentualeScatto × ralEffettiva (es. domestici 4%)
   maxScatti: number;
 }
 
@@ -130,6 +132,7 @@ export interface CcnlData {
   livelli: LivelloCcnl[];
   scattiAnzianita: ScattiAnzianita;
   mensilita: number;
+  retribuzioneOraria?: boolean; // true se minimoTabellare è €/ora (es. domestici)
   elementiAggiuntivi?: Record<string, ElementoAggiuntivo>;
 }
 

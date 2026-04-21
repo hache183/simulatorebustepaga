@@ -1,8 +1,8 @@
 {
   "id": "credito",
   "nome": "CCNL Credito (ABI — Associazione Bancaria Italiana)",
-  "fonte": "https://www.abi.it/contratto-collettivo",
-  "updatedAt": "2026-01-01T00:00:00Z",
+  "fonte": "PDF J241 — BANCARI - ACRI (Associazione Casse di Risparmio Italiane). Stampa del 21/04/2026 — dati ufficiali tabelle retributive vigenti dal 01/03/2026",
+  "updatedAt": "2026-04-21T00:00:00Z",
   "mensilita": 14,
   "contributiContrattuali": {
     "azienda": {
@@ -25,14 +25,14 @@
     }
   },
   "livelli": [
-    { "codice": "Q",   "descrizione": "Quadro direttivo 4°",                   "qualifica": "Responsabile di filiale, dirigente operativo",        "minimoTabellare": 3200.00, "moltiplicatore": 1.00 },
-    { "codice": "QD3", "descrizione": "Quadro direttivo 3°",                   "qualifica": "Vicedirettore di filiale, responsabile area",         "minimoTabellare": 2880.00, "moltiplicatore": 0.90 },
-    { "codice": "QD2", "descrizione": "Quadro direttivo 2°",                   "qualifica": "Responsabile ufficio, gestore corporate",             "minimoTabellare": 2624.00, "moltiplicatore": 0.82 },
-    { "codice": "QD1", "descrizione": "Quadro direttivo 1°",                   "qualifica": "Funzionario, gestore clientela",                     "minimoTabellare": 2400.00, "moltiplicatore": 0.75 },
-    { "codice": "3A",  "descrizione": "Area professionale 3° — 3a fascia",     "qualifica": "Addetto ai servizi bancari, operatore di sportello senior", "minimoTabellare": 2176.00, "moltiplicatore": 0.68 },
-    { "codice": "3B",  "descrizione": "Area professionale 3° — 2a fascia",     "qualifica": "Cassiere, addetto back-office",                      "minimoTabellare": 1984.00, "moltiplicatore": 0.62 },
-    { "codice": "3C",  "descrizione": "Area professionale 3° — 1a fascia",     "qualifica": "Impiegato d'ordine, addetto amministrativo",          "minimoTabellare": 1824.00, "moltiplicatore": 0.57 },
-    { "codice": "2A",  "descrizione": "Area professionale 2°",                 "qualifica": "Ausiliario, commesso",                               "minimoTabellare": 1664.00, "moltiplicatore": 0.52 }
+    { "codice": "Q",   "descrizione": "Area Quadri — Livello 4",              "qualifica": "Responsabile di filiale, dirigente operativo",        "minimoTabellare": 5160.06, "moltiplicatore": 1.00 },
+    { "codice": "QD3", "descrizione": "Area Quadri — Livello 3",              "qualifica": "Vicedirettore di filiale, responsabile area",         "minimoTabellare": 4396.88, "moltiplicatore": 0.85 },
+    { "codice": "QD2", "descrizione": "Area Quadri — Livello 2",              "qualifica": "Responsabile ufficio, gestore corporate",             "minimoTabellare": 3965.48, "moltiplicatore": 0.77 },
+    { "codice": "QD1", "descrizione": "Area Quadri — Livello 1",              "qualifica": "Funzionario, gestore clientela",                     "minimoTabellare": 3743.21, "moltiplicatore": 0.73 },
+    { "codice": "3A",  "descrizione": "Area 3 — Livello 4",                   "qualifica": "Addetto ai servizi bancari, operatore di sportello senior", "minimoTabellare": 3341.90, "moltiplicatore": 0.65 },
+    { "codice": "3B",  "descrizione": "Area 3 — Livello 3",                   "qualifica": "Cassiere, addetto back-office",                      "minimoTabellare": 3059.49, "moltiplicatore": 0.59 },
+    { "codice": "3C",  "descrizione": "Area 3 — Livello 2",                   "qualifica": "Impiegato d'ordine, addetto amministrativo",          "minimoTabellare": 2890.41, "moltiplicatore": 0.56 },
+    { "codice": "2A",  "descrizione": "Area 2 (tutti i livelli)",             "qualifica": "Ausiliario, commesso, guardia notturna",             "minimoTabellare": 2479.45, "moltiplicatore": 0.48 }
   ],
   "scattiAnzianita": {
     "periodicitaMesi": 24,

@@ -1,8 +1,8 @@
 {
   "id": "scuole_private",
   "nome": "CCNL Scuole ed Istituti Privati (FISM — Agidae)",
-  "fonte": "https://www.agidae.it/contratto-collettivo",
-  "updatedAt": "2026-01-01T00:00:00Z",
+  "fonte": "PDF T231 — SCUOLE PRIVATE LAICHE. Stampa del 21/04/2026 — dati ufficiali tabelle retributive vigenti dal 01/01/2026 al 31/12/2026. Per scuole materne FISM vedi PDF T271.",
+  "updatedAt": "2026-04-21T00:00:00Z",
   "mensilita": 14,
   "contributiContrattuali": {
     "azienda": {
@@ -25,11 +25,11 @@
     }
   },
   "livelli": [
-    { "codice": "D",  "descrizione": "Dirigente scolastico",      "qualifica": "Dirigente scolastico, coordinatore didattico",   "minimoTabellare": 1700.00, "moltiplicatore": 1.00 },
-    { "codice": "A",  "descrizione": "Docente laureato",          "qualifica": "Docente laureato, insegnante di ruolo",          "minimoTabellare": 1445.00, "moltiplicatore": 0.85 },
-    { "codice": "B",  "descrizione": "Docente diplomato",         "qualifica": "Docente diplomato, istruttore",                 "minimoTabellare": 1275.00, "moltiplicatore": 0.75 },
-    { "codice": "C",  "descrizione": "Personale ATA qualificato", "qualifica": "Segretario scolastico, assistente amministrativo","minimoTabellare": 1105.00, "moltiplicatore": 0.65 },
-    { "codice": "E",  "descrizione": "Personale ausiliario",      "qualifica": "Bidello, collaboratore scolastico",              "minimoTabellare": 952.00,  "moltiplicatore": 0.56 }
+    { "codice": "D",  "descrizione": "Dirigente scolastico (liv. 8B)", "qualifica": "Dirigente scolastico, coordinatore didattico",   "minimoTabellare": 1785.91, "moltiplicatore": 1.00 },
+    { "codice": "A",  "descrizione": "Docente laureato (liv. 7)",       "qualifica": "Docente laureato, insegnante di ruolo",          "minimoTabellare": 1615.67, "moltiplicatore": 0.85 },
+    { "codice": "B",  "descrizione": "Docente diplomato (liv. 5)",      "qualifica": "Docente diplomato, istruttore",                  "minimoTabellare": 1589.64, "moltiplicatore": 0.75 },
+    { "codice": "C",  "descrizione": "Personale ATA qualificato (liv. 3)", "qualifica": "Segretario scolastico, assistente amministrativo", "minimoTabellare": 1419.45, "moltiplicatore": 0.65 },
+    { "codice": "E",  "descrizione": "Personale ausiliario (liv. 1)",   "qualifica": "Bidello, collaboratore scolastico",              "minimoTabellare": 1322.51, "moltiplicatore": 0.56 }
   ],
   "scattiAnzianita": {
     "periodicitaMesi": 24,

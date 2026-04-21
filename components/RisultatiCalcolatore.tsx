@@ -262,7 +262,12 @@ export function RisultatiCalcolatore({ risultato, onRicalcola }: Props) {
             <tbody>
               {[
                 { label: 'RAL lorda', value: nettoDipendente.ralLorda, sign: '' },
-                { label: 'Contributi INPS dipendente (9,19%)', value: nettoDipendente.inpsDipendente, sign: '−' },
+                {
+                  // Per i domestici il contributo è fisso per ora (non percentuale 9,19% della RAL).
+                  // Mostriamo la percentuale effettiva calcolata dai valori reali.
+                  label: `Contributi INPS dipendente (${pct(nettoDipendente.ralLorda > 0 ? nettoDipendente.inpsDipendente / nettoDipendente.ralLorda : 0.0919)})`,
+                  value: nettoDipendente.inpsDipendente, sign: '−'
+                },
                 { label: 'Imponibile IRPEF', value: nettoDipendente.imponibileIrpef, sign: '=', bold: true },
                 { label: 'IRPEF lorda', value: nettoDipendente.irpefLorda, sign: '−' },
                 { label: 'Detrazioni lavoro dipendente', value: nettoDipendente.detrazioneLavoroDip, sign: '+', color: 'var(--color-green)' },

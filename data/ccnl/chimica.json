@@ -1,8 +1,8 @@
 {
   "id": "chimica",
   "nome": "CCNL Chimica-Farmaceutica e Plastica (Federchimica-Farmindustria)",
-  "fonte": "https://www.federchimica.it/contratto-collettivo",
-  "updatedAt": "2026-01-01T00:00:00Z",
+  "fonte": "TODO: non disponibile PDF specifico per CCNL Chimica Federchimica tra i 50 documenti. Usato come proxy PDF B371 — GOMMA - INDUSTRIA (vigente dal 01/01/2026 al 31/03/2027, stampa del 21/04/2026), settore chimico-plastico affine. Verificare con tabella Federchimica ufficiale.",
+  "updatedAt": "2026-04-21T00:00:00Z",
   "mensilita": 13,
   "contributiContrattuali": {
     "azienda": {
@@ -25,13 +25,13 @@
     }
   },
   "livelli": [
-    { "codice": "Q",  "descrizione": "Quadro",      "qualifica": "Responsabile di laboratorio, quadro tecnico-scientifico",       "minimoTabellare": 2050.00, "moltiplicatore": 1.00 },
-    { "codice": "A",  "descrizione": "Livello A",   "qualifica": "Ricercatore, analista chimico senior",                          "minimoTabellare": 1865.50, "moltiplicatore": 0.91 },
-    { "codice": "B",  "descrizione": "Livello B",   "qualifica": "Tecnico di laboratorio, operatore di impianto specializzato",   "minimoTabellare": 1681.00, "moltiplicatore": 0.82 },
-    { "codice": "C",  "descrizione": "Livello C",   "qualifica": "Addetto alla produzione qualificato, analista chimico junior",  "minimoTabellare": 1517.00, "moltiplicatore": 0.74 },
-    { "codice": "D",  "descrizione": "Livello D",   "qualifica": "Operatore di impianto, magazziniere chimico",                   "minimoTabellare": 1373.50, "moltiplicatore": 0.67 },
-    { "codice": "E",  "descrizione": "Livello E",   "qualifica": "Addetto al confezionamento, ausiliario di laboratorio",         "minimoTabellare": 1230.00, "moltiplicatore": 0.60 },
-    { "codice": "F",  "descrizione": "Livello F",   "qualifica": "Personale di pulizia, manovale",                                "minimoTabellare": 1107.00, "moltiplicatore": 0.54 }
+    { "codice": "Q",  "descrizione": "Quadro",      "qualifica": "Responsabile di laboratorio, quadro tecnico-scientifico",       "minimoTabellare": 2497.83, "moltiplicatore": 1.00 },
+    { "codice": "A",  "descrizione": "Livello A",   "qualifica": "Ricercatore, analista chimico senior",                          "minimoTabellare": 2351.85, "moltiplicatore": 0.91 },
+    { "codice": "B",  "descrizione": "Livello B",   "qualifica": "Tecnico di laboratorio, operatore di impianto specializzato",   "minimoTabellare": 2218.74, "moltiplicatore": 0.82 },
+    { "codice": "C",  "descrizione": "Livello C",   "qualifica": "Addetto alla produzione qualificato, analista chimico junior",  "minimoTabellare": 2189.60, "moltiplicatore": 0.74 },
+    { "codice": "D",  "descrizione": "Livello D",   "qualifica": "Operatore di impianto, magazziniere chimico",                   "minimoTabellare": 2162.08, "moltiplicatore": 0.67 },
+    { "codice": "E",  "descrizione": "Livello E",   "qualifica": "Addetto al confezionamento, ausiliario di laboratorio",         "minimoTabellare": 2074.83, "moltiplicatore": 0.60 },
+    { "codice": "F",  "descrizione": "Livello F",   "qualifica": "Personale di pulizia, manovale",                                "minimoTabellare": 2021.12, "moltiplicatore": 0.54 }
   ],
   "scattiAnzianita": {
     "periodicitaMesi": 36,

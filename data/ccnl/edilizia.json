@@ -1,8 +1,8 @@
 {
   "id": "edilizia",
   "nome": "CCNL Edilizia (ANCE — Industria)",
-  "fonte": "https://www.ance.it/contratto-collettivo",
-  "updatedAt": "2026-01-01T00:00:00Z",
+  "fonte": "TODO: non disponibile PDF specifico per CCNL Edilizia ANCE Industria tra i 50 documenti (disponibili F012 Cooperative e F015 Artigianato). Usato come proxy PDF F015 — EDILIZIA - ARTIGIANATO vigente dal 01/01/2026 al 31/12/2026, stampa del 21/04/2026. Valori possono differire dalla versione ANCE Industria.",
+  "updatedAt": "2026-04-21T00:00:00Z",
   "mensilita": 13,
   "contributiContrattuali": {
     "azienda": {
@@ -25,11 +25,11 @@
     }
   },
   "livelli": [
-    { "codice": "Q",  "descrizione": "Quadro",                            "qualifica": "Capo cantiere, direttore tecnico di cantiere",       "minimoTabellare": 1850.00, "moltiplicatore": 1.00 },
-    { "codice": "1",  "descrizione": "1° livello (Operaio specializzato)", "qualifica": "Muratore specializzato, gruista, carpentiere",       "minimoTabellare": 1572.50, "moltiplicatore": 0.85 },
-    { "codice": "2",  "descrizione": "2° livello (Operaio qualificato)",   "qualifica": "Muratore qualificato, ferraiolo, piastrellista",    "minimoTabellare": 1387.50, "moltiplicatore": 0.75 },
-    { "codice": "3",  "descrizione": "3° livello (Operaio comune)",        "qualifica": "Operaio comune, aiutante muratore",                 "minimoTabellare": 1202.50, "moltiplicatore": 0.65 },
-    { "codice": "4",  "descrizione": "4° livello (Manovale)",              "qualifica": "Manovale, addetto al trasporto materiali",          "minimoTabellare": 1073.00, "moltiplicatore": 0.58 }
+    { "codice": "Q",  "descrizione": "Quadro (liv. 7)",                    "qualifica": "Capo cantiere, direttore tecnico di cantiere",       "minimoTabellare": 2218.96, "moltiplicatore": 1.00 },
+    { "codice": "1",  "descrizione": "1° livello (liv. 6 — Operaio specializzato)", "qualifica": "Muratore specializzato, gruista, carpentiere", "minimoTabellare": 1975.08, "moltiplicatore": 0.85 },
+    { "codice": "2",  "descrizione": "2° livello (liv. 4 — Operaio qualificato)",   "qualifica": "Muratore qualificato, ferraiolo, piastrellista", "minimoTabellare": 1533.88, "moltiplicatore": 0.75 },
+    { "codice": "3",  "descrizione": "3° livello (liv. 3 — Operaio comune)", "qualifica": "Operaio comune, aiutante muratore",               "minimoTabellare": 1426.72, "moltiplicatore": 0.65 },
+    { "codice": "4",  "descrizione": "4° livello (liv. 1 — Manovale)",     "qualifica": "Manovale, addetto al trasporto materiali",          "minimoTabellare": 1097.30, "moltiplicatore": 0.58 }
   ],
   "scattiAnzianita": {
     "periodicitaMesi": 24,

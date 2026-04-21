@@ -1,0 +1,38 @@
+{
+  "id": "domestici",
+  "nome": "CCNL Lavoratori Domestici — Collaboratori familiari non conviventi (FIDALDO-DOMINA / Filcams-Fisascat-Uiltucs-Federcolf)",
+  "fonte": "PDF 'collaboratori-familiari-non-conviventi-lavoro-dome.pdf' — Wolters Kluwer One Lavoro, stampa 20 Aprile 2026. Accordo 28 ottobre 2025, minimi in vigore dal 01/01/2026. Categoria: PERSONALE DOMESTICO (non conviventi).",
+  "updatedAt": "2026-04-21T00:00:00Z",
+  "mensilita": 13,
+  "retribuzioneOraria": true,
+  "contributiContrattuali": {
+    "azienda": {
+      "cassaColf": {
+        "tipo": "bilaterale",
+        "modalita": "fisso",
+        "importoMensile": 0.03,
+        "perOra": true,
+        "percentuale": null,
+        "descrizione": "Cassacolf — ente bilaterale lavoro domestico (quota oraria datoriale €0,03/h)",
+        "notaLegge": "Art. 49 CCNL Domestici"
+      }
+    }
+  },
+  "livelli": [
+    { "codice": "DS", "descrizione": "Livello DS", "qualifica": "Assistente non autosufficiente (assistenza notturna e diurna) — figura specializzata", "minimoTabellare": 9.97, "moltiplicatore": 1.00 },
+    { "codice": "D",  "descrizione": "Livello D",  "qualifica": "Governante, maggiordomo, assistente senior convivente", "minimoTabellare": 9.57, "moltiplicatore": 0.96 },
+    { "codice": "CS", "descrizione": "Livello CS", "qualifica": "Assistente familiare non autosufficiente qualificato (OSS, badante con attestato)", "minimoTabellare": 8.30, "moltiplicatore": 0.83 },
+    { "codice": "C",  "descrizione": "Livello C",  "qualifica": "Assistente familiare qualificato, colf con specializzazione cucina/cura persone", "minimoTabellare": 7.86, "moltiplicatore": 0.79 },
+    { "codice": "BS", "descrizione": "Livello BS", "qualifica": "Addetto all'assistenza di base con esperienza biennale (badante non qualificato senior)", "minimoTabellare": 7.45, "moltiplicatore": 0.75 },
+    { "codice": "B",  "descrizione": "Livello B",  "qualifica": "Addetto all'assistenza di base, colf con compiti specifici", "minimoTabellare": 7.01, "moltiplicatore": 0.70 },
+    { "codice": "AS", "descrizione": "Livello AS", "qualifica": "Collaboratore generico con 2+ anni di esperienza (pulizie, babysitter senior)", "minimoTabellare": 6.76, "moltiplicatore": 0.68 },
+    { "codice": "A",  "descrizione": "Livello A",  "qualifica": "Collaboratore generico (pulizie, babysitter, addetto servizi domestici)", "minimoTabellare": 6.51, "moltiplicatore": 0.65 }
+  ],
+  "scattiAnzianita": {
+    "periodicitaMesi": 24,
+    "importoPerScattoEuro": null,
+    "percentualeScatto": 0.04,
+    "maxScatti": 7,
+    "_nota": "Aumento del 4% sul minimo orario di retribuzione per ogni biennio di servizio (massimo 7 aumenti, in vigore fino a 5 fino al 31/3/1988). Percentuale applicata al minimoTabellare orario del livello."
+  }
+}

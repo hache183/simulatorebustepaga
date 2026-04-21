@@ -1,8 +1,8 @@
 {
   "id": "pubblici_esercizi",
   "nome": "CCNL Pubblici Esercizi, Ristorazione e Turismo (FIPE-Confcommercio)",
-  "fonte": "https://www.fipe.it/contratto-collettivo",
-  "updatedAt": "2026-01-01T00:00:00Z",
+  "fonte": "PDF 'pubblici-esercizi-ristorazione-e-turismo-pubblici-.pdf' — Wolters Kluwer One Lavoro, stampa 20 Aprile 2026. PUBBLICI ESERCIZI, RISTORAZIONE E TURISMO - Pubblici esercizi (FIPE), dati retributivi vigenti dal 01/06/2025 al 31/05/2026. Include: Alberghi diurni, Ristorazione collettiva, Rifugi alpini, Ristorazione commerciale, Stabilimenti balneari.",
+  "updatedAt": "2026-04-20T00:00:00Z",
   "mensilita": 14,
   "contributiContrattuali": {
     "azienda": {
@@ -25,17 +25,21 @@
     }
   },
   "livelli": [
-    { "codice": "Q",  "descrizione": "Quadro",      "qualifica": "Direttore di sala, responsabile di esercizio",      "minimoTabellare": 1800.00, "moltiplicatore": 1.00 },
-    { "codice": "1",  "descrizione": "1° livello",  "qualifica": "Chef de cuisine, maître d'hôtel",                   "minimoTabellare": 1656.00, "moltiplicatore": 0.92 },
-    { "codice": "2",  "descrizione": "2° livello",  "qualifica": "Cuoco capo partita, barman specializzato",           "minimoTabellare": 1512.00, "moltiplicatore": 0.84 },
-    { "codice": "3",  "descrizione": "3° livello",  "qualifica": "Cameriere di sala, cuoco",                          "minimoTabellare": 1368.00, "moltiplicatore": 0.76 },
-    { "codice": "4",  "descrizione": "4° livello",  "qualifica": "Commis di sala, addetto al banco bar",              "minimoTabellare": 1242.00, "moltiplicatore": 0.69 },
-    { "codice": "5",  "descrizione": "5° livello",  "qualifica": "Lavapiatti, addetto alle pulizie",                  "minimoTabellare": 1116.00, "moltiplicatore": 0.62 },
-    { "codice": "6",  "descrizione": "6° livello",  "qualifica": "Garzone, ausiliario",                               "minimoTabellare": 1008.00, "moltiplicatore": 0.56 }
+    { "codice": "QA", "descrizione": "Quadro A",    "qualifica": "Direttore di struttura, responsabile di esercizio con autonomia gestionale", "minimoTabellare": 1854.49, "moltiplicatore": 1.00, "scattoEuro": 40.80 },
+    { "codice": "QB", "descrizione": "Quadro B",    "qualifica": "Vice direttore, responsabile di reparto con funzioni direttive",              "minimoTabellare": 1674.63, "moltiplicatore": 0.90, "scattoEuro": 39.25 },
+    { "codice": "1",  "descrizione": "1° livello",  "qualifica": "Chef de cuisine, maître d'hôtel, responsabile di sala",                       "minimoTabellare": 1517.16, "moltiplicatore": 0.82, "scattoEuro": 37.70 },
+    { "codice": "2",  "descrizione": "2° livello",  "qualifica": "Cuoco capo partita, barman specializzato, receptionist qualificato",           "minimoTabellare": 1337.33, "moltiplicatore": 0.72, "scattoEuro": 36.15 },
+    { "codice": "3",  "descrizione": "3° livello",  "qualifica": "Cameriere di sala, cuoco, barman",                                            "minimoTabellare": 1228.88, "moltiplicatore": 0.66, "scattoEuro": 34.86 },
+    { "codice": "4",  "descrizione": "4° livello",  "qualifica": "Commis di sala, addetto al banco bar, cassiere",                               "minimoTabellare": 1127.75, "moltiplicatore": 0.61, "scattoEuro": 33.05 },
+    { "codice": "5",  "descrizione": "5° livello",  "qualifica": "Lavapiatti, aiuto cuoco, addetto alle pulizie",                               "minimoTabellare": 1021.49, "moltiplicatore": 0.55, "scattoEuro": 32.54 },
+    { "codice": "6S", "descrizione": "6° livello S","qualifica": "Ausiliario specializzato, addetto a mansioni semplici qualificate",            "minimoTabellare":  960.13, "moltiplicatore": 0.52, "scattoEuro": 31.25 },
+    { "codice": "6",  "descrizione": "6° livello",  "qualifica": "Garzone, ausiliario, fattorino",                                              "minimoTabellare":  937.80, "moltiplicatore": 0.51, "scattoEuro": 30.99 },
+    { "codice": "7",  "descrizione": "7° livello",  "qualifica": "Personale di primo impiego (mansioni elementari, senza esperienza)",           "minimoTabellare":  841.89, "moltiplicatore": 0.45, "scattoEuro": 30.47 }
   ],
   "scattiAnzianita": {
-    "periodicitaMesi": 36,
-    "importoPerScattoEuro": 8.76,
-    "maxScatti": 8
+    "periodicitaMesi": 48,
+    "importoPerScattoEuro": 34.86,
+    "maxScatti": 6,
+    "_nota": "Un aumento ogni 4 anni di servizio, fino a 6 scatti. Importo esatto varia per livello (importoPerScattoEuro = livello 3). Importi per livello nel campo scattoEuro: QA=40.80, QB=39.25, 1=37.70, 2=36.15, 3=34.86, 4=33.05, 5=32.54, 6S=31.25, 6=30.99, 7=30.47. Gli scatti sono esclusi dal calcolo della 14° mensilità (dal 1/1/2018 al 31/10/2021 anche dal TFR)."
   }
 }

@@ -9,10 +9,11 @@ import type { CalcolatoreOutput, ContributoContrattuale } from '@/types';
 
 interface Step1Data {
   ccnlId: string; livello: string; ral: number;
-  tipoContratto: 'tempo_indeterminato'|'tempo_determinato'|'apprendistato'|'somministrazione';
+  tipoContratto: 'tempo_indeterminato'|'tempo_determinato'|'somministrazione';
   oreLavoro: number;
   mensilita: number;
   retribuzionePersonalizzata?: number;
+  convivente?: boolean;
 }
 
 interface Step2Data {
@@ -142,7 +143,7 @@ export function CalcolatorePageClient({ updatedDates }: Props) {
             animation: 'fadeSlideIn 0.2s ease forwards',
           }}>
             {step === 1 && <CalcolatoreFormStep1 onNext={handleStep1} />}
-            {step === 2 && <CalcolatoreFormStep2 onSubmit={handleStep2} onBack={() => setStep(1)} isLoading={isLoading} contributiCcnl={contributiCcnl} />}
+            {step === 2 && <CalcolatoreFormStep2 onSubmit={handleStep2} onBack={() => setStep(1)} isLoading={isLoading} contributiCcnl={contributiCcnl} ccnlId={step1Data?.ccnlId} />}
           </div>
         )}
 

@@ -6,6 +6,7 @@ import {
   calcolaTfr,
   calcolaInail,
   calcolaScattiAnzianita,
+  calcolaInpsDomestici,
   getSettoreContributivo,
 } from './contributi';
 import type { CalcolatoreInput, CalcolatoreOutput, DettaglioCosto, ContributoContrattuale, NettoDipendente } from '@/types';
@@ -15,10 +16,10 @@ const InputSchema = z.object({
   ccnlId: z.string().min(1, 'Seleziona un CCNL'),
   livello: z.string().min(1, 'Seleziona il livello contrattuale'),
   ral: z.number({ error: 'La RAL deve essere un numero' })
-    .min(10_000, 'RAL minima: 10.000 euro')
+    .min(1_000, 'RAL minima: 1.000 euro')
     .max(500_000, 'RAL massima: 500.000 euro'),
   tipoContratto: z.enum(
-    ['tempo_indeterminato', 'tempo_determinato', 'apprendistato', 'somministrazione'],
+    ['tempo_indeterminato', 'tempo_determinato', 'somministrazione'],
     { error: 'Tipo di contratto non valido' }
   ),
   oreLavoro: z.number().min(1).max(48),
@@ -28,11 +29,12 @@ const InputSchema = z.object({
   anzianitaAnni: z.number().min(0).max(50),
   numeroDipendenti: z.number().min(1),
   regione: z.string().min(1, 'Seleziona la regione'),
-  codiceInail: z.string().min(4, 'Seleziona la categoria INAIL'),
+  codiceInail: z.string(),
   agevolazioniSelezionate: z.array(z.string()),
   includiAssistenzaSanitaria: z.boolean(),
   aliquotaInps: z.number().min(0).max(0.5),
   retribuzionePersonalizzata: z.number().min(0).max(500_000).optional(),
+  convivente: z.boolean().optional(),
 });
 
 // Soglie sanity check: il costo totale deve essere tra il 128% e il 150% della RAL.
@@ -160,29 +162,60 @@ export async function calculateCosto(rawInput: unknown): Promise<CalcolatoreOutp
   const livello = ccnl.livelli.find(l => l.codice === input.livello);
   if (!livello) throw new Error(`Livello '${input.livello}' non trovato nel CCNL '${input.ccnlId}'`);
 
-  // 3. Calcola RAL effettiva (aggiustata per livello e part-time)
-  const oreRatio = input.oreLavoro / 40; // 40h = full-time di riferimento
+  // Flag: il CCNL usa tariffe orarie (es. domestici). Cambia logica RAL e INPS.
+  const isDomestici = ccnl.retribuzioneOraria === true;
+
+  // 3. Calcola RAL effettiva
   let ralEffettiva: number;
   let isRetribuzionePersonalizzata = false;
-  if (input.retribuzionePersonalizzata && input.retribuzionePersonalizzata > 0) {
-    ralEffettiva = input.retribuzionePersonalizzata * oreRatio;
-    isRetribuzionePersonalizzata = true;
+
+  if (isDomestici) {
+    // Per i domestici la RAL inserita è già l'annuo corretto per le ore lavorate
+    // (tariffa oraria × ore/sett. × 52). Non si applica oreRatio.
+    if (input.retribuzionePersonalizzata && input.retribuzionePersonalizzata > 0) {
+      ralEffettiva = input.retribuzionePersonalizzata;
+      isRetribuzionePersonalizzata = true;
+    } else {
+      ralEffettiva = input.ral;
+    }
   } else {
-    ralEffettiva = input.ral * oreRatio;
+    const oreRatio = input.oreLavoro / 40; // 40h = full-time di riferimento
+    if (input.retribuzionePersonalizzata && input.retribuzionePersonalizzata > 0) {
+      ralEffettiva = input.retribuzionePersonalizzata * oreRatio;
+      isRetribuzionePersonalizzata = true;
+    } else {
+      ralEffettiva = input.ral * oreRatio;
+    }
   }
 
   // Calcola superminimo informativo
-  const ralTabellare = livello.minimoTabellare * input.mensilita;
+  const ralTabellare = isDomestici
+    ? livello.minimoTabellare * input.oreLavoro * 52
+    : livello.minimoTabellare * input.mensilita;
   const superminimo = isRetribuzionePersonalizzata
-    ? Math.max(0, input.retribuzionePersonalizzata! - ralTabellare)
+    ? Math.max(0, (input.retribuzionePersonalizzata! * (isDomestici ? 1 : input.oreLavoro / 40)) - ralTabellare)
     : 0;
 
-  // 4. Contributi INPS lordi — auto-select settore se l'utente non ha personalizzato
-  const settore = getSettoreContributivo(input.ccnlId, input.numeroDipendenti);
-  const aliquotaInpsDefault = settore ? settore.aliquotaDatore : 0.288;
-  const aliquotaDipendenteDefault = settore ? settore.aliquotaDipendente : 0.0919;
-  const aliquotaInpsEffettiva = input.aliquotaInps;
-  const inpsBase = calcolaInpsBase(ralEffettiva, aliquotaInpsEffettiva);
+  // 4. Contributi INPS
+  let inpsBase: number;
+  let aliquotaInpsDefault: number;
+  let aliquotaDipendenteDefault: number;
+  let inpsFasciaNome: string | undefined;
+
+  if (isDomestici) {
+    // Circ. INPS n. 9/2026 — contributo fisso per ora (non percentuale RAL)
+    const inpsDom = calcolaInpsDomestici(ralEffettiva, input.oreLavoro, input.convivente ?? false);
+    inpsBase = inpsDom.inpsDatore;
+    aliquotaDipendenteDefault = ralEffettiva > 0 ? inpsDom.inpsDipendente / ralEffettiva : 0;
+    aliquotaInpsDefault = ralEffettiva > 0 ? inpsDom.inpsDatore / ralEffettiva : 0;
+    inpsFasciaNome = inpsDom.fasciaNome;
+  } else {
+    const settore = getSettoreContributivo(input.ccnlId, input.numeroDipendenti);
+    aliquotaInpsDefault = settore ? settore.aliquotaDatore : 0.288;
+    aliquotaDipendenteDefault = settore ? settore.aliquotaDipendente : 0.0919;
+    const aliquotaInpsEffettiva = input.aliquotaInps;
+    inpsBase = calcolaInpsBase(ralEffettiva, aliquotaInpsEffettiva);
+  }
 
   // 5. Agevolazioni e risparmio contributivo
   const { agevolazioniApplicate, risparmioTotale, alertScadenze } =
@@ -197,8 +230,8 @@ export async function calculateCosto(rawInput: unknown): Promise<CalcolatoreOutp
   const mensilita = input.mensilita;
   const tfr = calcolaTfr(ralEffettiva, mensilita);
 
-  // 7. INAIL
-  const inail = calcolaInail(ralEffettiva, input.codiceInail);
+  // 7. INAIL — per i domestici è un contributo fisso annuo gestito via INPS, non per-mille RAL
+  const inail = isDomestici ? 0 : calcolaInail(ralEffettiva, input.codiceInail);
 
   // 8. Tredicesima (tutti i CCNL) e quattordicesima (CCNL con >=14 mensilità)
   const tredicesima = ralEffettiva / 12;
@@ -209,20 +242,22 @@ export async function calculateCosto(rawInput: unknown): Promise<CalcolatoreOutp
   const quattordicesima = mensilita >= 14 ? ralEffettiva / 12 : 0;
   const quindicesimaESedicesima = mensilita >= 15 ? (ralEffettiva / 12) * (mensilita - 14) : 0;
 
-  // 9. Contributi contrattuali specifici del CCNL (supporta fisso e percentuale)
+  // 9. Contributi contrattuali specifici del CCNL (supporta fisso, fisso/ora e percentuale)
   const contributiEntries = Object.values(ccnl.contributiContrattuali.azienda) as ContributoContrattuale[];
   const contributiAttivi = input.includiAssistenzaSanitaria
     ? contributiEntries
     : contributiEntries.filter(c => c.tipo !== 'sanitario');
+  const oreAnnue = input.oreLavoro * 52;
   const contributiCcnl = contributiAttivi.reduce((sum, c) => {
     if (c.modalita === 'fisso' && c.importoMensile != null) {
-      return sum + c.importoMensile * 12;
+      // perOra: true → tariffa oraria (es. CassaColf), altrimenti importo mensile × 12
+      return sum + c.importoMensile * (c.perOra ? oreAnnue : 12);
     }
     return sum + ralEffettiva * (c.percentuale ?? 0);
   }, 0);
 
-  // 10. Scatti di anzianità
-  const costoScatti = calcolaScattiAnzianita(input.anzianitaAnni, ccnl.scattiAnzianita);
+  // 10. Scatti di anzianità (supporta importo fisso o percentuale sulla RAL)
+  const costoScatti = calcolaScattiAnzianita(input.anzianitaAnni, ccnl.scattiAnzianita, ralEffettiva);
 
   // 10b. Elementi aggiuntivi CCNL (EDR, ex festività, contributo solidarietà, ecc.)
   let costoElementiAggiuntivi = 0;
@@ -247,7 +282,8 @@ export async function calculateCosto(rawInput: unknown): Promise<CalcolatoreOutp
   const percentualeRal = costoTotaleAnnuo / ralEffettiva;
 
   // Sanity check — logga un warning se il risultato è fuori range atteso
-  if (percentualeRal < RANGE_ATTESO.min || percentualeRal > RANGE_ATTESO.max) {
+  // Per i domestici il range è diverso (contributi più bassi), si salta il check
+  if (!isDomestici && (percentualeRal < RANGE_ATTESO.min || percentualeRal > RANGE_ATTESO.max)) {
     console.warn(
       `[engine] Attenzione: costo ${(percentualeRal * 100).toFixed(1)}% della RAL — ` +
       `fuori dal range atteso ${RANGE_ATTESO.min * 100}%-${RANGE_ATTESO.max * 100}%. ` +
@@ -256,9 +292,11 @@ export async function calculateCosto(rawInput: unknown): Promise<CalcolatoreOutp
   }
 
   // 12. Assembla le voci di dettaglio
-  const notaInps = aliquotaInpsEffettiva !== aliquotaInpsDefault
-    ? `Aliquota ${(aliquotaInpsEffettiva * 100).toFixed(2)}% — personalizzata dall'utente`
-    : 'Circ. INPS n. 99/2023 — aliquota base 28,80%';
+  const notaInps = isDomestici
+    ? `Fascia: ${inpsFasciaNome} — Circ. INPS n. 9/2026`
+    : input.aliquotaInps !== aliquotaInpsDefault
+      ? `Aliquota ${(input.aliquotaInps * 100).toFixed(2)}% — personalizzata dall'utente`
+      : 'Circ. INPS n. 99/2023 — aliquota base 28,80%';
 
   const notaRal = isRetribuzionePersonalizzata
     ? 'Retribuzione concordata tra le parti — art. 2099 c.c.'
@@ -310,11 +348,15 @@ export async function calculateCosto(rawInput: unknown): Promise<CalcolatoreOutp
     {
       id: 'inail',
       categoria: 'inail',
-      descrizione: 'Premio INAIL (tasso medio nazionale — il tasso effettivo della vostra azienda dipende dall\'oscillazione per andamento infortunistico e può variare significativamente)',
+      descrizione: isDomestici
+        ? 'INAIL domestici — contributo fisso annuo (non incluso: gestito tramite INPS-Cassa Domestici)'
+        : 'Premio INAIL (tasso medio nazionale — il tasso effettivo della vostra azienda dipende dall\'oscillazione per andamento infortunistico e può variare significativamente)',
       importoAnnuo: inail,
       importoMensile: inail / 12,
       percentualeRal: inail / ralEffettiva,
-      notaLegge: 'D.P.R. 1124/1965 — Testo Unico INAIL. Tasso medio di tariffa: l\'oscillazione individuale può variare ±40%.',
+      notaLegge: isDomestici
+        ? 'Il premio INAIL per i lavoratori domestici è un importo fisso annuo (≈€1.040/anno) versato con i contributi INPS trimestrali tramite bollettino MAV/F24.'
+        : 'D.P.R. 1124/1965 — Testo Unico INAIL. Tasso medio di tariffa: l\'oscillazione individuale può variare ±40%.',
     },
     {
       id: 'tredicesima',

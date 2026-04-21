@@ -1,8 +1,8 @@
 {
   "id": "metalmeccanici",
   "nome": "CCNL Metalmeccanici (Federmeccanica-Assistal)",
-  "fonte": "https://www.federmeccanica.it/contratto-collettivo",
-  "updatedAt": "2026-01-01T00:00:00Z",
+  "fonte": "PDF 'metalmeccanica-aziende-industriali.pdf' — Wolters Kluwer One Lavoro, stampa 20 Aprile 2026. METALMECCANICA - Aziende industriali (Federmeccanica-Assistal), dati retributivi vigenti dal 01/06/2025 al 31/05/2026.",
+  "updatedAt": "2026-04-20T00:00:00Z",
   "mensilita": 13,
   "contributiContrattuali": {
     "azienda": {
@@ -25,17 +25,20 @@
     }
   },
   "livelli": [
-    { "codice": "7", "descrizione": "7° livello (Quadro)",  "qualifica": "Quadri e alte professionalità (ex D1)",                           "minimoTabellare": 2102.00, "moltiplicatore": 1.00 },
-    { "codice": "6", "descrizione": "6° livello",           "qualifica": "Impiegati direttivi, tecnici di alto livello (ex D2)",             "minimoTabellare": 1893.00, "moltiplicatore": 0.90 },
-    { "codice": "5", "descrizione": "5° livello",           "qualifica": "Impiegati di concetto con esperienza (ex C1)",                     "minimoTabellare": 1713.00, "moltiplicatore": 0.81 },
-    { "codice": "4", "descrizione": "4° livello",           "qualifica": "Operai specializzati, impiegati d'ordine qualificati (ex C2)",     "minimoTabellare": 1544.00, "moltiplicatore": 0.73 },
-    { "codice": "3", "descrizione": "3° livello",           "qualifica": "Operai qualificati (ex C3)",                                       "minimoTabellare": 1373.00, "moltiplicatore": 0.65 },
-    { "codice": "2", "descrizione": "2° livello",           "qualifica": "Operai comuni, ausiliari (ex B1)",                                  "minimoTabellare": 1226.00, "moltiplicatore": 0.58 },
-    { "codice": "1", "descrizione": "1° livello",           "qualifica": "Apprendisti, personale senza qualifica (ex B2)",                    "minimoTabellare": 1098.00, "moltiplicatore": 0.52 }
+    { "codice": "A1", "descrizione": "A1 (ex liv. 7 — Quadro)",  "qualifica": "Quadri e alte professionalità",                              "minimoTabellare": 2837.12, "moltiplicatore": 1.00, "scattoEuro": 40.96 },
+    { "codice": "B3", "descrizione": "B3 (ex liv. 6)",           "qualifica": "Impiegati direttivi, tecnici di alto livello",               "minimoTabellare": 2770.74, "moltiplicatore": 0.90, "scattoEuro": 40.96 },
+    { "codice": "B2", "descrizione": "B2 (ex liv. 5)",           "qualifica": "Impiegati di concetto con esperienza",                       "minimoTabellare": 2481.84, "moltiplicatore": 0.81, "scattoEuro": 36.41 },
+    { "codice": "B1", "descrizione": "B1 (ex liv. 4)",           "qualifica": "Operai specializzati, impiegati d'ordine qualificati",       "minimoTabellare": 2313.34, "moltiplicatore": 0.73, "scattoEuro": 32.43 },
+    { "codice": "C3", "descrizione": "C3 (ex liv. 3)",           "qualifica": "Operai qualificati, impiegati di concetto",                  "minimoTabellare": 2158.26, "moltiplicatore": 0.65, "scattoEuro": 29.64 },
+    { "codice": "C2", "descrizione": "C2",                       "qualifica": "Operai qualificati di secondo livello, impiegati d'ordine",  "minimoTabellare": 2015.24, "moltiplicatore": 0.61, "scattoEuro": 26.75 },
+    { "codice": "C1", "descrizione": "C1 (ex liv. 2 senior)",    "qualifica": "Operai comuni, ausiliari qualificati",                       "minimoTabellare": 1973.51, "moltiplicatore": 0.58, "scattoEuro": 25.05 },
+    { "codice": "D2", "descrizione": "D2",                       "qualifica": "Operai di secondo livello, ausiliari",                       "minimoTabellare": 1931.78, "moltiplicatore": 0.56, "scattoEuro": 25.05 },
+    { "codice": "D1", "descrizione": "D1 (ex liv. 1)",           "qualifica": "Personale senza qualifica, manovale",                        "minimoTabellare": 1742.03, "moltiplicatore": 0.52, "scattoEuro": 21.59 }
   ],
   "scattiAnzianita": {
     "periodicitaMesi": 24,
-    "importoPerScattoEuro": 8.68,
-    "maxScatti": 5
+    "importoPerScattoEuro": 26.75,
+    "maxScatti": 5,
+    "_nota": "5% del minimo per ciascuno dei primi 5 bienni (importoPerScattoEuro = valore medio livello C2). Importi esatti per livello nel campo scattoEuro di ogni livello. A decorrere dal 1/6/2021 con nuova scala classificatoria: A1/B3=40.96, B2=36.41, B1=32.43, C3=29.64, C2=26.75, C1/D2=25.05, D1=21.59."
   }
 }
