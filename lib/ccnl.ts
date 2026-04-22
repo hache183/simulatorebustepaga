@@ -21,6 +21,7 @@ const CCNL_MAP: Record<string, CcnlData> = {
   grafica_editoria:          require('../data/ccnl/grafica_editoria.json'),
   informatica:               require('../data/ccnl/informatica.json'),
   lavoro_domestico:          require('../data/ccnl/lavoro_domestico.json'),
+  domestici:                 require('../data/ccnl/lavoro_domestico.json'),
   legno_arredamento:         require('../data/ccnl/legno_arredamento.json'),
   metalmeccanici:            require('../data/ccnl/metalmeccanici.json'),
   metalmeccanici_artigianato: require('../data/ccnl/metalmeccanici_artigianato.json'),
