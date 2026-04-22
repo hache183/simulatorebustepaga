@@ -20,6 +20,8 @@ export interface CalcolatoreInput {
   includiAssistenzaSanitaria: boolean; // se true, include contributi sanitari CCNL
   aliquotaInps: number;               // aliquota INPS datoriale personalizzata (es. 0.2676 per 26,76%)
   retribuzionePersonalizzata?: number; // RAL personalizzata concordata tra le parti (euro/anno)
+  pagaOraria?: number;                // solo domestici: retribuzione oraria effettiva
+  oreSettimanali?: number;            // solo domestici: ore settimanali dedicate al rapporto
   convivente?: boolean;               // solo domestici: lavoratore convivente con vitto e alloggio
 }
 

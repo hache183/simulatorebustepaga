@@ -40,6 +40,8 @@ const Step1Schema = z.object({
   ral: z.number().min(1_000, 'Minimo 1.000 €').max(500_000, 'Massimo 500.000 €'),
   tipoContratto: z.enum(['tempo_indeterminato', 'tempo_determinato', 'somministrazione']),
   oreLavoro: z.number().min(1).max(48),
+  pagaOraria: z.number().min(0).max(500).optional(),
+  oreSettimanali: z.number().int().min(1).max(54).optional(),
   mensilita: z.number()
     .int('Le mensilità devono essere un numero intero')
     .min(13, 'Minimo 13 — la tredicesima è obbligatoria per legge (R.D.L. 1525/1937)')
@@ -90,7 +92,7 @@ export function CalcolatoreFormStep1({ onNext }: Props) {
 
   useEffect(() => {
     if (!ccnlSelezionato) return;
-    const domestico = ccnlSelezionato === 'lavoro_domestico';
+    const domestico = ccnlSelezionato === 'domestici';
     setIsDomestico(domestico);
     setLoadingLivelli(true);
     fetch(`/api/ccnl/${ccnlSelezionato}/livelli`)
@@ -580,7 +582,6 @@ export function CalcolatoreFormStep1({ onNext }: Props) {
         })()}
         {errors.mensilita && <p style={{ marginTop: '4px', fontSize: '11px', color: 'var(--color-red)' }}>{errors.mensilita.message}</p>}
       </div>
-      )}
 
       {/* Pulsante */}
       <button type="submit" disabled={loadingLivelli} style={{

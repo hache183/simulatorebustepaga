@@ -155,8 +155,7 @@ export function calcolaAgevolazioni(input: CalcolatoreInput): {
  */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function calcolaTfr(ral: number, _mensilita?: number): number {
-  const data = loadJson<TfrData>('data/tfr.json');
-  return ral / data.divisoreAnnuo;
+  return ral / TFR_DATA.divisoreAnnuo;
 }
 
 /**
@@ -220,7 +219,7 @@ export function calcolaInpsDomestici(
   oreLavoro: number,
   convivente: boolean = false,
 ): { inpsDatore: number; inpsDipendente: number; fasciaNome: string; quotaDatorePerOra: number } {
-  const data = loadJson<AliquoteInpsData>('data/aliquote-inps.json');
+  const data = ALIQUOTE_INPS;
   const raw = (data.settoriContributivi as unknown as Record<string, DomesticiSettoreRaw>)['domestici'];
   const fasce = raw.tabellaFasce2026;
 

@@ -145,14 +145,14 @@ export function CalcolatoreFormStep2({ onSubmit, onBack, isLoading, contributiCc
       )}
 
       {/* Regione — nascosta per lavoro domestico */}
-      {!isDomestico && (
+      {!isDomestici && (
       <div>
         <label htmlFor="regione" style={{ display: 'block', fontSize: '13px', fontWeight: 500,
           color: 'var(--color-text-secondary)', marginBottom: '6px' }}>
           Regione
         </label>
         <select id="regione" {...register('regione', {
-          validate: v => isDomestico || (v && v.length > 0) || 'Seleziona la regione',
+          validate: v => isDomestici || (v && v.length > 0) || 'Seleziona la regione',
         })} style={{
           width: '100%', padding: '11px 14px',
           background: 'var(--color-bg-input)', color: 'var(--color-text-primary)',
@@ -173,7 +173,7 @@ export function CalcolatoreFormStep2({ onSubmit, onBack, isLoading, contributiCc
           Categoria INAIL
         </label>
         <select id="codiceInail" {...register('codiceInail', {
-          validate: v => isDomestico || (v && v.length > 0) || 'Seleziona la categoria INAIL',
+          validate: v => isDomestici || (v && v.length > 0) || 'Seleziona la categoria INAIL',
         })} style={{
           width: '100%', padding: '11px 14px',
           background: 'var(--color-bg-input)', color: 'var(--color-text-primary)',
