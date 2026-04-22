@@ -79,8 +79,6 @@ export function CalcolatoreFormStep1({ onNext }: Props) {
   const oreLavoro = watch('oreLavoro');
   const livelloSelezionato = watch('livello');
   const ralWatch = watch('ral');
-  const convivente = watch('convivente');
-
   const isDomesticiCcnl = ccnlSelezionato === 'domestici';
   const livelloData = livelli.find(l => l.codice === livelloSelezionato);
   // Per i domestici minimoTabellare è €/ora → RAL = tariffa × ore/sett × 52
@@ -282,35 +280,6 @@ export function CalcolatoreFormStep1({ onNext }: Props) {
             </p>
           </div>
 
-          {/* Convivente toggle */}
-          <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <button type="button"
-                onClick={() => setValue('convivente', !convivente)}
-                style={{
-                  width: '40px', height: '22px', borderRadius: '11px', border: 'none', cursor: 'pointer',
-                  background: convivente ? 'var(--color-accent)' : 'var(--color-bg-elevated)',
-                  position: 'relative', transition: 'background 0.2s ease',
-                  outline: `1px solid ${convivente ? 'var(--color-accent)' : 'var(--color-border)'}`,
-                }}>
-                <div style={{
-                  width: '16px', height: '16px', borderRadius: '50%', background: 'white',
-                  position: 'absolute', top: '3px',
-                  left: convivente ? '21px' : '3px',
-                  transition: 'left 0.2s ease',
-                }} />
-              </button>
-              <label style={{ fontSize: '13px', fontWeight: 500, color: 'var(--color-text-secondary)', cursor: 'pointer' }}
-                onClick={() => setValue('convivente', !convivente)}>
-                Lavoratore convivente (vitto e alloggio)
-              </label>
-            </div>
-            {convivente && (
-              <p style={{ marginTop: '6px', fontSize: '11px', color: 'var(--color-text-muted)', lineHeight: '1.5' }}>
-                Verrà aggiunta l&apos;indennità di vitto e alloggio (~€ 189,30/mese — 2025).
-              </p>
-            )}
-          </div>
         </>
       )}
 
