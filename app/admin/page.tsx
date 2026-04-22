@@ -1081,7 +1081,7 @@ function TabDocs() {
           <li><strong>Scatti</strong> — calcolati in ore: <Code>calcolaScattiAnzianita × oreSettimanali × 52 / 12</Code></li>
           <li><strong>Tredicesima</strong> — <Code>ralEffettiva / 12</Code></li>
           <li><strong>INAIL</strong> — <strong>€0</strong> nel costo datore (incluso nei contributi forfettari INPS — ≈€1.040/anno a carico lavoratore tramite MAV/F24 trimestrale)</li>
-          <li><strong>Netto dipendente</strong> <NormBadge>Art. 4 DPR 322/1998</NormBadge> — <Code>ralEffettiva − (contributoOrarioLavoratore × oreAnnuali)</Code>; no IRPEF (datore privato non è sostituto d'imposta)</li>
+          <li><strong>Netto dipendente</strong> <NormBadge>Art. 4 DPR 322/1998</NormBadge> — <Code>ralEffettiva − (contributoOrarioLavoratore × oreAnnuali)</Code>; no IRPEF (datore privato non è sostituto d&apos;imposta)</li>
           <li><strong>Totale</strong> — <Code>ralEffettiva + inpsDatore + tfr + costoScatti + tredicesima</Code></li>
         </ol>
       </AccordionSection>
