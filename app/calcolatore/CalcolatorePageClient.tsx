@@ -14,6 +14,8 @@ interface Step1Data {
   mensilita: number;
   retribuzionePersonalizzata?: number;
   convivente?: boolean;
+  pagaOraria?: number;
+  oreSettimanali?: number;
 }
 
 interface Step2Data {

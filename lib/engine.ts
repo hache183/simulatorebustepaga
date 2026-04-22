@@ -31,13 +31,15 @@ const InputSchema = z.object({
     .max(16, 'Massimo 16 mensilità — oltre non esiste nel diritto del lavoro italiano'),
   anzianitaAnni: z.number().min(0).max(50),
   numeroDipendenti: z.number().min(1),
-  regione: z.string().min(1, 'Seleziona la regione'),
+  regione: z.string(),
   codiceInail: z.string(),
   agevolazioniSelezionate: z.array(z.string()),
   includiAssistenzaSanitaria: z.boolean(),
   aliquotaInps: z.number().min(0).max(0.5),
   retribuzionePersonalizzata: z.number().min(0).max(500_000).optional(),
   convivente: z.boolean().optional(),
+  pagaOraria: z.number().min(0).max(500).optional(),
+  oreSettimanali: z.number().min(1).max(54).optional(),
 });
 
 // Soglie sanity check: il costo totale deve essere tra il 128% e il 150% della RAL.
