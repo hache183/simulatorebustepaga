@@ -522,7 +522,7 @@ function TabInail({ password }: { password: string }) {
           <tbody>
             {(raw?.voci ?? []).map((v, i) => {
               const val = parseFloat(tassi[v.codice] ?? '0');
-              const warn = warnRange(val, 0.1, 100);
+              const warn = warnRange(val, 0.1, 200); // max 200‰: edilizia industriale arriva a 110‰
               return (
                 <tr key={v.codice} style={{ background: i % 2 === 0 ? 'var(--color-bg-base)' : 'var(--color-bg-surface)', borderTop: '1px solid var(--color-border)' }}>
                   <td style={{ padding: '8px 14px', fontFamily: "'DM Mono', monospace", color: 'var(--color-accent-bright)' }}>{v.codice}</td>
@@ -895,6 +895,332 @@ function TabCcnl({ password }: { password: string }) {
   );
 }
 
+// ─── TAB 5: Documentazione Engine ────────────────────────────────────────────
+
+function TabDocs() {
+  const [openSections, setOpenSections] = useState<Record<string, boolean>>({
+    standard: false,
+    domestico: false,
+    irpef: false,
+    agevolazioni: false,
+    routing: false,
+  });
+
+  const toggle = (key: string) =>
+    setOpenSections(prev => ({ ...prev, [key]: !prev[key] }));
+
+  const Code = ({ children }: { children: React.ReactNode }) => (
+    <code style={{
+      fontFamily: "'DM Mono', monospace",
+      fontSize: '11px',
+      background: 'var(--color-bg-elevated)',
+      padding: '1px 5px',
+      borderRadius: '3px',
+      color: 'var(--color-accent-bright)',
+    }}>{children}</code>
+  );
+
+  const NormBadge = ({ children }: { children: React.ReactNode }) => (
+    <span style={{
+      fontFamily: "'DM Mono', monospace",
+      fontSize: '9px',
+      background: 'var(--color-bg-elevated)',
+      border: '1px solid var(--color-border)',
+      color: 'var(--color-text-muted)',
+      padding: '1px 6px',
+      borderRadius: '4px',
+      marginLeft: '6px',
+      verticalAlign: 'middle',
+    }}>{children}</span>
+  );
+
+  const stepStyle: React.CSSProperties = {
+    fontFamily: "'Plus Jakarta Sans', sans-serif",
+    fontSize: '13px',
+    color: 'var(--color-text-secondary)',
+    lineHeight: '1.8',
+  };
+
+  const thStyle: React.CSSProperties = {
+    padding: '8px 12px',
+    textAlign: 'left' as const,
+    fontSize: '11px',
+    fontWeight: 500,
+    color: 'var(--color-text-muted)',
+    background: 'var(--color-bg-elevated)',
+    fontFamily: "'Plus Jakarta Sans', sans-serif",
+  };
+
+  const tdBase: React.CSSProperties = {
+    padding: '8px 12px',
+    fontSize: '12px',
+    fontFamily: "'Plus Jakarta Sans', sans-serif",
+    color: 'var(--color-text-secondary)',
+    borderTop: '1px solid var(--color-border)',
+  };
+
+  const tdMono: React.CSSProperties = {
+    ...tdBase,
+    fontFamily: "'DM Mono', monospace",
+    color: 'var(--color-accent-bright)',
+    fontSize: '11px',
+  };
+
+  const tableBox: React.CSSProperties = {
+    border: '1px solid var(--color-border)',
+    borderRadius: '8px',
+    overflow: 'hidden',
+    marginBottom: '16px',
+  };
+
+  const AccordionSection = ({ id, title, children }: { id: string; title: string; children: React.ReactNode }) => {
+    const isOpen = openSections[id] ?? false;
+    return (
+      <div style={{ border: '1px solid var(--color-border)', borderRadius: '8px', overflow: 'hidden' }}>
+        <button
+          onClick={() => toggle(id)}
+          style={{
+            width: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            padding: '14px 16px',
+            background: isOpen ? 'var(--color-bg-elevated)' : 'none',
+            border: 'none',
+            cursor: 'pointer',
+            color: 'var(--color-text-primary)',
+            fontFamily: "'Plus Jakarta Sans', sans-serif",
+            fontSize: '14px',
+            fontWeight: 600,
+            textAlign: 'left',
+          }}
+        >
+          <span>{title}</span>
+          <span style={{ color: 'var(--color-text-muted)', fontSize: '12px' }}>{isOpen ? '▲' : '▼'}</span>
+        </button>
+        {isOpen && (
+          <div style={{ padding: '20px', borderTop: '1px solid var(--color-border)' }}>
+            {children}
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+
+      {/* Warning banner */}
+      <div style={{
+        padding: '10px 14px',
+        borderRadius: '8px',
+        border: '1px solid var(--color-amber)',
+        background: 'rgba(245, 158, 11, 0.07)',
+        color: 'var(--color-amber)',
+        fontSize: '12px',
+        fontFamily: "'Plus Jakarta Sans', sans-serif",
+        marginBottom: '12px',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '8px',
+      }}>
+        ⚠&nbsp; Documentazione generata dal codice sorgente — aggiornare manualmente dopo ogni modifica a <Code>lib/engine.ts</Code>
+      </div>
+
+      {/* ── 1. Branch Standard ─────────────────────────────────────── */}
+      <AccordionSection id="standard" title="1. Branch Standard — Flusso di calcolo (14 step)">
+        <ol style={{ ...stepStyle, paddingLeft: '20px', margin: 0, display: 'flex', flexDirection: 'column', gap: '7px' }}>
+          <li><strong>Validazione Zod</strong> — schema <Code>InputSchema</Code>: <Code>ral</Code> 1.000–500.000€ · <Code>mensilita</Code> 13–16 · <Code>oreLavoro</Code> 1–48</li>
+          <li><strong>RAL effettiva</strong> — <Code>ral × (oreLavoro / 40)</Code>; se <Code>retribuzionePersonalizzata &gt; 0</Code> usa quella al posto di <Code>ral</Code></li>
+          <li><strong>Superminimo</strong> — <Code>MAX(0, retribuzionePersonalizzata × oreRatio − minimoTabellare × mensilita)</Code> — solo informativo</li>
+          <li><strong>INPS datoriale</strong> — <Code>calcolaInpsBase(ralEffettiva, aliquotaInps)</Code>; <Code>aliquotaInps</Code> da <Code>aliquote-inps.json → settoriContributivi[settore]</Code> via <Code>getSettoreContributivo</Code></li>
+          <li><strong>Agevolazioni</strong> — <Code>calcolaAgevolazioni(&#123;...input, ral: ralEffettiva&#125;)</Code> → riduzione <Code>inpsBase</Code>; rispetta <Code>nonCumulabileCon</Code> e <Code>massimaleAnnuo</Code></li>
+          <li><strong>TFR</strong> <NormBadge>Art. 2120 c.c.</NormBadge> — <Code>ralEffettiva / 13.5</Code></li>
+          <li><strong>INAIL</strong> <NormBadge>D.P.R. 1124/1965</NormBadge> — <Code>(ralEffettiva × tassoPerMille) / 1000</Code></li>
+          <li><strong>Tredicesima</strong> — <Code>ralEffettiva / 12</Code> — informativa, già inclusa nella RAL</li>
+          <li><strong>Quattordicesima</strong> — <Code>ralEffettiva / 12</Code> se <Code>mensilita &gt;= 14</Code> — informativa</li>
+          <li><strong>Mensilità extra (15ª/16ª)</strong> — <Code>(ralEffettiva / 12) × (mensilita − 14)</Code> se <Code>mensilita &gt;= 15</Code></li>
+          <li><strong>Contributi CCNL</strong> — per ogni voce in <Code>ccnl.contributiContrattuali.azienda</Code>: <Code>fisso</Code> → <Code>importoMensile × 12</Code> (o <Code>× oreAnnue</Code> se <Code>perOra: true</Code>); <Code>percentuale</Code> → <Code>ralEffettiva × percentuale</Code></li>
+          <li><strong>Scatti di anzianità</strong> — <Code>Math.floor(anzianitaAnni / (periodicitaMesi/12))</Code> scatti × <Code>importoPerScattoEuro × 12</Code> (oppure <Code>percentualeScatto × ralEffettiva</Code>)</li>
+          <li><strong>Elementi aggiuntivi CCNL</strong> — <Code>elementiAggiuntivi[*].importoMensile × mensilita</Code> (solo quelli senza <Code>condizione</Code>)</li>
+          <li><strong>Totale</strong> — <Code>ralEffettiva + inpsNetto + tfr + inail + contributiCcnl + costoScatti + costoElementiAggiuntivi</Code></li>
+        </ol>
+        <div style={{
+          marginTop: '16px',
+          padding: '10px 14px',
+          borderRadius: '6px',
+          background: 'var(--color-bg-elevated)',
+          border: '1px solid var(--color-border)',
+          fontSize: '12px',
+          color: 'var(--color-text-muted)',
+          fontFamily: "'Plus Jakarta Sans', sans-serif",
+          lineHeight: '1.6',
+        }}>
+          ⚠ Tredicesima, quattordicesima e mensilità extra sono <strong>voci informative</strong> — non si sommano al totale perché già incluse nella RAL.
+          &nbsp;·&nbsp;
+          <strong>Sanity check:</strong> se <Code>costoTotale / ralEffettiva</Code> è fuori da <Code>[1.28, 1.60]</Code> viene loggato un warning in console.
+        </div>
+      </AccordionSection>
+
+      {/* ── 2. Branch Domestico ────────────────────────────────────── */}
+      <AccordionSection id="domestico" title="2. Branch Domestico — Flusso di calcolo">
+        <ol style={{ ...stepStyle, paddingLeft: '20px', margin: 0, display: 'flex', flexDirection: 'column', gap: '7px' }}>
+          <li><strong>Input specifici</strong> — <Code>pagaOraria</Code> (default: <Code>livello.minimoTabellare</Code>), <Code>oreSettimanali</Code> (default: <Code>oreLavoro</Code>), <Code>convivente</Code></li>
+          <li><strong>RAL base</strong> — <Code>pagaOraria × oreSettimanali × 52</Code></li>
+          <li><strong>Indennità vitto e alloggio</strong> — solo se <Code>convivente === true</Code>: da <Code>aliquote-inps.json → settoriContributivi.lavoro_domestico.indennitaVittoAlloggioMensile × 12</Code></li>
+          <li><strong>RAL effettiva</strong> — <Code>retribuzioneBaseAnnua + indennitaVAAnnua</Code></li>
+          <li>
+            <strong>Contributi INPS forfettari</strong> <NormBadge>Circ. INPS n. 9/2026</NormBadge> — da <Code>contributiOrari</Code>:
+            <ul style={{ paddingLeft: '18px', marginTop: '6px', display: 'flex', flexDirection: 'column', gap: '3px' }}>
+              <li>Se <Code>convivente &amp;&amp; oreSettimanali &gt; 24</Code> → tabella <Code>conviventiOltre24h</Code></li>
+              <li>Altrimenti → tabella <Code>conCUAF</Code> per fascia di <Code>pagaOraria</Code></li>
+              <li>Importo: <Code>contributoOrarioDatore × oreSettimanali × 52</Code></li>
+            </ul>
+          </li>
+          <li><strong>TFR</strong> <NormBadge>Art. 2120 c.c.</NormBadge> — <Code>ralEffettiva / 13.5</Code></li>
+          <li><strong>Scatti</strong> — calcolati in ore: <Code>calcolaScattiAnzianita × oreSettimanali × 52 / 12</Code></li>
+          <li><strong>Tredicesima</strong> — <Code>ralEffettiva / 12</Code></li>
+          <li><strong>INAIL</strong> — <strong>€0</strong> nel costo datore (incluso nei contributi forfettari INPS — ≈€1.040/anno a carico lavoratore tramite MAV/F24 trimestrale)</li>
+          <li><strong>Netto dipendente</strong> <NormBadge>Art. 4 DPR 322/1998</NormBadge> — <Code>ralEffettiva − (contributoOrarioLavoratore × oreAnnuali)</Code>; no IRPEF (datore privato non è sostituto d'imposta)</li>
+          <li><strong>Totale</strong> — <Code>ralEffettiva + inpsDatore + tfr + costoScatti + tredicesima</Code></li>
+        </ol>
+      </AccordionSection>
+
+      {/* ── 3. IRPEF ──────────────────────────────────────────────── */}
+      <AccordionSection id="irpef" title="3. Calcolo IRPEF dipendente — Branch Standard">
+        <p style={{ ...stepStyle, marginBottom: '10px' }}>
+          Sequenza in <Code>calcolaNettoDipendente</Code>:
+        </p>
+        <ol style={{ ...stepStyle, paddingLeft: '20px', margin: '0 0 16px', display: 'flex', flexDirection: 'column', gap: '5px' }}>
+          <li><Code>inpsDipendente = ral × aliquotaInpsDipendente</Code></li>
+          <li><Code>imponibileIrpef = ral − inpsDipendente</Code></li>
+        </ol>
+
+        <p style={{ ...stepStyle, fontWeight: 600, marginBottom: '8px' }}>
+          Scaglioni IRPEF lorda <NormBadge>L.207/2024 + L.199/2025</NormBadge>
+        </p>
+        <div style={tableBox}>
+          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+            <thead>
+              <tr>
+                <th style={thStyle}>Reddito imponibile</th>
+                <th style={{ ...thStyle, textAlign: 'right' }}>Aliquota</th>
+                <th style={thStyle}>Formula</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style={tdBase}>≤ 28.000€</td>
+                <td style={{ ...tdMono, textAlign: 'right' }}>23%</td>
+                <td style={tdBase}>imponibile × 23%</td>
+              </tr>
+              <tr>
+                <td style={tdBase}>28.001€ – 50.000€</td>
+                <td style={{ ...tdMono, textAlign: 'right' }}>33%</td>
+                <td style={tdBase}>28.000 × 23% + eccedenza × 33%</td>
+              </tr>
+              <tr>
+                <td style={tdBase}>&gt; 50.000€</td>
+                <td style={{ ...tdMono, textAlign: 'right' }}>43%</td>
+                <td style={tdBase}>+ ulteriore eccedenza × 43%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p style={{ ...stepStyle, fontWeight: 600, marginBottom: '8px' }}>
+          Detrazione lavoro dipendente <NormBadge>Art. 13 TUIR</NormBadge>
+        </p>
+        <div style={tableBox}>
+          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+            <thead>
+              <tr>
+                <th style={thStyle}>Reddito</th>
+                <th style={thStyle}>Detrazione</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td style={tdBase}>≤ 15.000€</td><td style={tdMono}>MAX(1.955, detrazioneMinima)</td></tr>
+              <tr><td style={tdBase}>15.001€ – 28.000€</td><td style={tdMono}>MAX(0, 1.910 + 1.190 × (28.000 − reddito) / 13.000)</td></tr>
+              <tr><td style={tdBase}>28.001€ – 50.000€</td><td style={tdMono}>MAX(0, 1.910 × (50.000 − reddito) / 22.000)</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p style={{ fontSize: '11px', color: 'var(--color-text-muted)', fontFamily: "'DM Mono', monospace", marginBottom: '16px' }}>
+          detrazioneMinima: 690€ (contratto a tempo indeterminato) / 1.380€ (determinato)
+        </p>
+
+        <p style={{ ...stepStyle, fontWeight: 600, marginBottom: '8px' }}>
+          Bonus cuneo fiscale 2025 <NormBadge>L.207/2024 art. 1 cc. 4-9</NormBadge>
+        </p>
+        <div style={tableBox}>
+          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+            <thead>
+              <tr>
+                <th style={thStyle}>Reddito</th>
+                <th style={thStyle}>Bonus</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td style={tdBase}>≤ 8.500€</td><td style={tdMono}>7,1%</td></tr>
+              <tr><td style={tdBase}>8.501€ – 15.000€</td><td style={tdMono}>603,50€ + eccedenza × 5,3%</td></tr>
+              <tr><td style={tdBase}>15.001€ – 20.000€</td><td style={tdMono}>948,00€ + eccedenza × 4,8%</td></tr>
+              <tr><td style={tdBase}>20.001€ – 32.000€</td><td style={tdMono}>1.000€ fisso</td></tr>
+              <tr><td style={tdBase}>32.001€ – 40.000€</td><td style={tdMono}>1.000€ × (40.000 − reddito) / 8.000</td></tr>
+              <tr><td style={tdBase}>&gt; 40.000€</td><td style={tdMono}>0€</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <ol start={6} style={{ ...stepStyle, paddingLeft: '20px', margin: 0, display: 'flex', flexDirection: 'column', gap: '5px' }}>
+          <li><Code>irpefNetta = MAX(0, irpefLorda − detrazioneLavoroDip − bonusCuneoFiscale)</Code></li>
+          <li><Code>addizionaleRegionale = imponibile × 1,73%</Code> (media nazionale stimata)</li>
+          <li><Code>addizionaleComunale = imponibile × 0,80%</Code> (media nazionale stimata)</li>
+          <li><Code>nettoAnnuo = ral − inpsDipendente − irpefNetta − addRegionale − addComunale</Code></li>
+        </ol>
+      </AccordionSection>
+
+      {/* ── 4. Agevolazioni ───────────────────────────────────────── */}
+      <AccordionSection id="agevolazioni" title="4. Agevolazioni contributive — Logica di calcolo">
+        <p style={{ ...stepStyle, marginBottom: '10px' }}>
+          Logica in <Code>calcolaAgevolazioni</Code> (<Code>lib/contributi.ts</Code>):
+        </p>
+        <ul style={{ ...stepStyle, paddingLeft: '20px', margin: 0, display: 'flex', flexDirection: 'column', gap: '7px' }}>
+          <li>Le agevolazioni disponibili arrivano da <Code>aliquote-inps.json → agevolazioni[]</Code></li>
+          <li>Conflitti (<Code>nonCumulabileCon</Code>): si ordina per <Code>massimaleAnnuo DESC</Code> (<Code>null = 999.999€</Code>), si applica la più vantaggiosa, si escludono le conflittuali</li>
+          <li>Per ogni agevolazione: <Code>risparmio = MIN(inpsBase × percentualeEsonero, massimaleAnnuo ?? ∞)</Code></li>
+          <li>Alert scadenza: se <Code>scadenzaAlertGiorni != null</Code> e la scadenza è entro 90 giorni</li>
+        </ul>
+      </AccordionSection>
+
+      {/* ── 5. Routing ────────────────────────────────────────────── */}
+      <AccordionSection id="routing" title="5. Regole di routing — Selezione branch">
+        <div style={tableBox}>
+          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+            <thead>
+              <tr>
+                <th style={thStyle}>Condizione</th>
+                <th style={thStyle}>Branch</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style={tdMono}>{`ccnlId === 'domestici' || ccnlId === 'lavoro_domestico'`}</td>
+                <td style={{ ...tdBase, color: 'var(--color-green)', fontFamily: "'DM Mono', monospace", fontSize: '12px' }}>calculateCostoDomestico</td>
+              </tr>
+              <tr>
+                <td style={tdBase}>Tutti gli altri CCNL</td>
+                <td style={{ ...tdBase, color: 'var(--color-accent-bright)', fontFamily: "'DM Mono', monospace", fontSize: '12px' }}>calculateCosto (standard)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </AccordionSection>
+
+    </div>
+  );
+}
+
 // ─── Save button ──────────────────────────────────────────────────────────────
 
 function SaveButton({ label, salvando, onClick }: { label: string; salvando: boolean; onClick: () => void }) {
@@ -927,7 +1253,7 @@ export default function AdminPage() {
   const [password, setPassword] = useState('');
   const [autenticato, setAutenticato] = useState(false);
   const [erroreLogin, setErroreLogin] = useState('');
-  const [tabAttivo, setTabAttivo] = useState<'inps' | 'inail' | 'tfr' | 'ccnl'>('inps');
+  const [tabAttivo, setTabAttivo] = useState<'inps' | 'inail' | 'tfr' | 'ccnl' | 'docs'>('inps');
 
   if (!autenticato) {
     return (
@@ -979,11 +1305,12 @@ export default function AdminPage() {
     );
   }
 
-  const TABS: { id: 'inps' | 'inail' | 'tfr' | 'ccnl'; label: string }[] = [
+  const TABS: { id: 'inps' | 'inail' | 'tfr' | 'ccnl' | 'docs'; label: string }[] = [
     { id: 'inps',  label: 'INPS & Agevolazioni' },
     { id: 'inail', label: 'Tariffe INAIL' },
     { id: 'tfr',   label: 'TFR' },
     { id: 'ccnl',  label: 'CCNL' },
+    { id: 'docs',  label: 'Documentazione Engine' },
   ];
 
   return (
@@ -1052,6 +1379,7 @@ export default function AdminPage() {
           {tabAttivo === 'inail' && <TabInail password={password} />}
           {tabAttivo === 'tfr'   && <TabTfr   password={password} />}
           {tabAttivo === 'ccnl'  && <TabCcnl  password={password} />}
+          {tabAttivo === 'docs'  && <TabDocs />}
         </div>
 
       </div>
