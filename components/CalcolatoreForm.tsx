@@ -126,6 +126,7 @@ export function CalcolatoreFormStep1({ onNext }: Props) {
   // Precompile RAL per domestici: tariffa oraria × ore/sett × 52 (aggiorna anche al cambio ore)
   useEffect(() => {
     if (isDomesticiCcnl && livelloData && !retribPersonalizzataAttiva) {
+      setValue('pagaOraria', livelloData.minimoTabellare);
       setValue('ral', Math.round(livelloData.minimoTabellare * (oreLavoro || 20) * 52 * 100) / 100);
       setValue('retribuzionePersonalizzata', undefined);
     }
