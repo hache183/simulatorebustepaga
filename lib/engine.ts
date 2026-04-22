@@ -347,7 +347,7 @@ export async function calculateCosto(rawInput: unknown): Promise<CalcolatoreOutp
   const input = InputSchema.parse(rawInput) as CalcolatoreInput;
 
   // ─── BRANCH LAVORO DOMESTICO ────────────────────────────────────────────
-  if (input.ccnlId === 'lavoro_domestico') {
+  if (input.ccnlId === 'lavoro_domestico' || input.ccnlId === 'domestici') {
     return calculateCostoDomestico(input);
   }
 
