@@ -1,7 +1,7 @@
 {
   "id": "trasporti",
   "nome": "CCNL Trasporto Merci e Logistica (Conftrasporto-Confartigianato)",
-  "fonte": "TODO: non disponibile PDF specifico per CCNL Trasporti-Logistica Industria tra i 50 documenti. Usato come proxy PDF I100 — AUTOTRASPORTO MERCI - ART. (Artigianato, vigente dal 01/01/2026 al 31/12/2026, stampa del 21/04/2026). Valori possono differire dalla versione Conftrasporto-Industria.",
+  "fonte": "LAVORO/I100 Trasporto Merci e Logistica.pdf — tabella retributiva livelli vigente 2026",
   "updatedAt": "2026-04-21T00:00:00Z",
   "mensilita": 14,
   "contributiContrattuali": {
@@ -29,7 +29,7 @@
     { "codice": "1",  "descrizione": "1° livello (Quadri tecnici)", "qualifica": "Capo magazziniere, responsabile turni",               "minimoTabellare": 2374.79, "moltiplicatore": 0.91 },
     { "codice": "2",  "descrizione": "2° livello",                  "qualifica": "Autista di lungo raggio (pat. C+E), magazziniere sp.","minimoTabellare": 2181.55, "moltiplicatore": 0.82 },
     { "codice": "3",  "descrizione": "3° livello (Autisti)",        "qualifica": "Autista, conducente di mezzi pesanti",                "minimoTabellare": 1916.84, "moltiplicatore": 0.74 },
-    { "codice": "4",  "descrizione": "4° livello",                  "qualifica": "Magazziniere, carrellista",                           "minimoTabellare": 1776.25, "moltiplicatore": 0.67 },
+    { "codice": "4",  "descrizione": "4° livello",                  "qualifica": "Magazziniere, carrellista",                           "minimoTabellare": 1823.56, "moltiplicatore": 0.67 },
     { "codice": "5",  "descrizione": "5° livello",                  "qualifica": "Facchino, operatore di carico/scarico",               "minimoTabellare": 1738.31, "moltiplicatore": 0.60 }
   ],
   "scattiAnzianita": {

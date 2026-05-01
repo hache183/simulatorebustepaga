@@ -1,0 +1,23 @@
+{
+  "id": "autoscuole",
+  "nome": "CCNL Autoscuole",
+  "fonte": "LAVORO/IC91 Autoscuole.pdf — dati retributivi in vigore dal 01/02/2022",
+  "updatedAt": "2026-04-25T00:00:00Z",
+  "mensilita": 14,
+  "contributiContrattuali": {
+    "azienda": {}
+  },
+  "livelli": [
+    { "codice": "Q", "descrizione": "Quadro", "qualifica": "Quadro", "minimoTabellare": 2066.17, "moltiplicatore": 1.00 },
+    { "codice": "5", "descrizione": "Livello 5", "qualifica": "Livello 5", "minimoTabellare": 1684.04, "moltiplicatore": 0.82 },
+    { "codice": "4", "descrizione": "Livello 4", "qualifica": "Livello 4", "minimoTabellare": 1509.81, "moltiplicatore": 0.73 },
+    { "codice": "3", "descrizione": "Livello 3", "qualifica": "Livello 3", "minimoTabellare": 1437.20, "moltiplicatore": 0.70 },
+    { "codice": "2", "descrizione": "Livello 2", "qualifica": "Livello 2", "minimoTabellare": 1388.57, "moltiplicatore": 0.67 },
+    { "codice": "1", "descrizione": "Livello 1", "qualifica": "Livello 1", "minimoTabellare": 1236.50, "moltiplicatore": 0.60 }
+  ],
+  "scattiAnzianita": {
+    "periodicitaMesi": 24,
+    "importoPerScattoEuro": null,
+    "maxScatti": 5
+  }
+}

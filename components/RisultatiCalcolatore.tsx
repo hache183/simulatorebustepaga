@@ -14,7 +14,7 @@ interface Props {
 export function RisultatiCalcolatore({ risultato, onRicalcola }: Props) {
   const { costoTotaleAnnuo, costoTotaleMensile, percentualeRal, voci, agevolazioniApplicate, alertScadenze, nettoDipendente } = risultato;
   const risparmioTotale = agevolazioniApplicate.reduce((s, a) => s + a.risparmioAnnuo, 0);
-  const isDomestico = risultato.input.ccnlId === 'lavoro_domestico';
+  const isDomestico = ['domestici', 'domestici_conviventi', 'domestici_non_conviventi'].includes(risultato.input.ccnlId);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>

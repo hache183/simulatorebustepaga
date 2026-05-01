@@ -84,22 +84,41 @@ type FeedbackState = { tipo: 'ok' | 'errore'; messaggio: string } | null;
 // ─── CCNL list ────────────────────────────────────────────────────────────────
 
 const CCNL_LIST = [
-  { id: 'commercio',          nome: 'Commercio',            path: 'data/ccnl/commercio.json' },
-  { id: 'metalmeccanici',     nome: 'Metalmeccanici',       path: 'data/ccnl/metalmeccanici.json' },
-  { id: 'edilizia',           nome: 'Edilizia',             path: 'data/ccnl/edilizia.json' },
-  { id: 'sanita_privata',     nome: 'Sanità Privata',       path: 'data/ccnl/sanita_privata.json' },
+  { id: 'acconciatura_estetica', nome: 'Acconciatura ed Estetica', path: 'data/ccnl/acconciatura_estetica.json' },
+  { id: 'agricoltura_impiegati', nome: 'Agricoltura Impiegati', path: 'data/ccnl/agricoltura_impiegati.json' },
+  { id: 'agricoltura_operai', nome: 'Agricoltura Operai', path: 'data/ccnl/agricoltura_operai.json' },
+  { id: 'alimentari_industria', nome: 'Alimentari Industria', path: 'data/ccnl/alimentari_industria.json' },
+  { id: 'alimentari_artigianato', nome: 'Alimentari Artigianato', path: 'data/ccnl/alimentari_artigianato.json' },
+  { id: 'assicurazioni',        nome: 'Assicurazioni (ANAPA)', path: 'data/ccnl/assicurazioni.json' },
+  { id: 'autorimesse',          nome: 'Autorimesse e Noleggio', path: 'data/ccnl/autorimesse.json' },
+  { id: 'autoscuole',           nome: 'Autoscuole', path: 'data/ccnl/autoscuole.json' },
+  { id: 'calzature',            nome: 'Calzature', path: 'data/ccnl/calzature.json' },
+  { id: 'chimica',              nome: 'Chimica', path: 'data/ccnl/chimica.json' },
+  { id: 'commercio',            nome: 'Commercio', path: 'data/ccnl/commercio.json' },
+  { id: 'edilizia_industria',   nome: 'Edilizia Industria', path: 'data/ccnl/edilizia_industria.json' },
+  { id: 'edilizia_artigianato', nome: 'Edilizia Artigianato', path: 'data/ccnl/edilizia_artigianato.json' },
+  { id: 'facility_management',  nome: 'Facility Management', path: 'data/ccnl/facility_management.json' },
+  { id: 'farmacie_private',     nome: 'Farmacie Private', path: 'data/ccnl/farmacie_private.json' },
+  { id: 'gomma_plastica',       nome: 'Gomma Plastica', path: 'data/ccnl/gomma_plastica.json' },
+  { id: 'igiene_ambientale_private', nome: 'Igiene Ambientale (Aziende Private)', path: 'data/ccnl/igiene_ambientale_private.json' },
+  { id: 'lavanderie_artigiane', nome: 'Lavanderie (Artigiane)', path: 'data/ccnl/lavanderie_artigiane.json' },
+  { id: 'lavanderie_industriali', nome: 'Lavanderie (Industriali)', path: 'data/ccnl/lavanderie_industriali.json' },
+  { id: 'legno_arredamento',    nome: 'Legno Arredamento', path: 'data/ccnl/legno_arredamento.json' },
+  { id: 'metalmeccanici',       nome: 'Metalmeccanici', path: 'data/ccnl/metalmeccanici.json' },
+  { id: 'sanita_privata_unipresa', nome: 'Sanità Privata (Unipresa)', path: 'data/ccnl/sanita_privata.json' },
+  { id: 'case_di_cura_private', nome: 'Case di Cura Private', path: 'data/ccnl/case_di_cura_private.json' },
+  { id: 'servizi_postali_appalto', nome: 'Servizi Postali in Appalto', path: 'data/ccnl/servizi_postali_appalto.json' },
   { id: 'studi_professionali',nome: 'Studi Professionali',  path: 'data/ccnl/studi_professionali.json' },
   { id: 'cooperative_sociali',nome: 'Cooperative Sociali',  path: 'data/ccnl/cooperative_sociali.json' },
   { id: 'trasporti',          nome: 'Trasporti',            path: 'data/ccnl/trasporti.json' },
-  { id: 'pubblici_esercizi',  nome: 'Pubblici Esercizi',    path: 'data/ccnl/pubblici_esercizi.json' },
-  { id: 'chimica',            nome: 'Chimica-Farm.',        path: 'data/ccnl/chimica.json' },
   { id: 'credito',            nome: 'Credito (ABI)',        path: 'data/ccnl/credito.json' },
   { id: 'multiservizi',       nome: 'Multiservizi',         path: 'data/ccnl/multiservizi.json' },
   { id: 'telecomunicazioni',  nome: 'Telecomunicazioni',    path: 'data/ccnl/telecomunicazioni.json' },
-  { id: 'tessile',            nome: 'Tessile',              path: 'data/ccnl/tessile.json' },
-  { id: 'informatica',        nome: 'Informatica',          path: 'data/ccnl/informatica.json' },
-  { id: 'agricoltura',        nome: 'Agricoltura',          path: 'data/ccnl/agricoltura.json' },
+  { id: 'informatica',        nome: 'Informatica (ICT - Cifa)', path: 'data/ccnl/informatica.json' },
   { id: 'scuole_private',     nome: 'Scuole Private',       path: 'data/ccnl/scuole_private.json' },
+  { id: 'tessile',            nome: 'Tessile',              path: 'data/ccnl/tessile.json' },
+  { id: 'vigilanza_privata',  nome: 'Vigilanza Privata',    path: 'data/ccnl/vigilanza_privata.json' },
+  { id: 'domestici',          nome: 'Lavoro Domestico',     path: 'data/ccnl/domestici.json' },
 ];
 
 // ─── Shared helpers ───────────────────────────────────────────────────────────
@@ -1067,7 +1086,7 @@ function TabDocs() {
         <ol style={{ ...stepStyle, paddingLeft: '20px', margin: 0, display: 'flex', flexDirection: 'column', gap: '7px' }}>
           <li><strong>Input specifici</strong> — <Code>pagaOraria</Code> (default: <Code>livello.minimoTabellare</Code>), <Code>oreSettimanali</Code> (default: <Code>oreLavoro</Code>), <Code>convivente</Code></li>
           <li><strong>RAL base</strong> — <Code>pagaOraria × oreSettimanali × 52</Code></li>
-          <li><strong>Indennità vitto e alloggio</strong> — solo se <Code>convivente === true</Code>: da <Code>aliquote-inps.json → settoriContributivi.lavoro_domestico.indennitaVittoAlloggioMensile × 12</Code></li>
+          <li><strong>Indennità vitto e alloggio</strong> — solo se <Code>convivente === true</Code>: da <Code>aliquote-inps.json → settoriContributivi.domestici.indennitaVittoAlloggioMensile × 12</Code></li>
           <li><strong>RAL effettiva</strong> — <Code>retribuzioneBaseAnnua + indennitaVAAnnua</Code></li>
           <li>
             <strong>Contributi INPS forfettari</strong> <NormBadge>Circ. INPS n. 9/2026</NormBadge> — da <Code>contributiOrari</Code>:
@@ -1205,7 +1224,7 @@ function TabDocs() {
             </thead>
             <tbody>
               <tr>
-                <td style={tdMono}>{`ccnlId === 'domestici' || ccnlId === 'lavoro_domestico'`}</td>
+                <td style={tdMono}>{`ccnlId === 'domestici'`}</td>
                 <td style={{ ...tdBase, color: 'var(--color-green)', fontFamily: "'DM Mono', monospace", fontSize: '12px' }}>calculateCostoDomestico</td>
               </tr>
               <tr>

@@ -1,0 +1,26 @@
+{
+  "id": "facility_management",
+  "nome": "CCNL Facility Management",
+  "fonte": "LAVORO/K593 Multiservizi - Pulizie e Facility Management.pdf — dati retributivi in vigore dal 01/05/2019",
+  "updatedAt": "2026-04-25T00:00:00Z",
+  "mensilita": 14,
+  "contributiContrattuali": {
+    "azienda": {}
+  },
+  "livelli": [
+    { "codice": "Q", "descrizione": "Quadro", "qualifica": "Quadro", "minimoTabellare": 1879.20, "moltiplicatore": 1.00 },
+    { "codice": "1", "descrizione": "Livello 1", "qualifica": "Livello 1", "minimoTabellare": 1774.79, "moltiplicatore": 0.94 },
+    { "codice": "2", "descrizione": "Livello 2", "qualifica": "Livello 2", "minimoTabellare": 1670.41, "moltiplicatore": 0.89 },
+    { "codice": "3", "descrizione": "Livello 3", "qualifica": "Livello 3", "minimoTabellare": 1566.00, "moltiplicatore": 0.83 },
+    { "codice": "4", "descrizione": "Livello 4", "qualifica": "Livello 4", "minimoTabellare": 1461.59, "moltiplicatore": 0.78 },
+    { "codice": "5", "descrizione": "Livello 5", "qualifica": "Livello 5", "minimoTabellare": 1357.21, "moltiplicatore": 0.72 },
+    { "codice": "6", "descrizione": "Livello 6", "qualifica": "Livello 6", "minimoTabellare": 1252.80, "moltiplicatore": 0.67 },
+    { "codice": "7", "descrizione": "Livello 7", "qualifica": "Livello 7", "minimoTabellare": 1148.39, "moltiplicatore": 0.61 },
+    { "codice": "8", "descrizione": "Livello 8", "qualifica": "Livello 8", "minimoTabellare": 1044.01, "moltiplicatore": 0.56 }
+  ],
+  "scattiAnzianita": {
+    "periodicitaMesi": 24,
+    "importoPerScattoEuro": null,
+    "maxScatti": 5
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "id": "case_di_cura_private",
+  "nome": "CCNL Case di Cura Private - Personale non medico",
+  "fonte": "LAVORO/T011 Case di Cura Private-Personale non medico.pdf — tabelle retributive in vigore dal 01/07/2020",
+  "updatedAt": "2026-04-25T00:00:00Z",
+  "mensilita": 13,
+  "contributiContrattuali": {
+    "azienda": {}
+  },
+  "livelli": [
+    { "codice": "E2", "descrizione": "Livello E2", "qualifica": "Personale non medico - livello E2", "minimoTabellare": 3554.39, "moltiplicatore": 1.00 },
+    { "codice": "E1", "descrizione": "Livello E1", "qualifica": "Personale non medico - livello E1", "minimoTabellare": 2936.33, "moltiplicatore": 0.83 },
+    { "codice": "E",  "descrizione": "Livello E",  "qualifica": "Personale non medico - livello E",  "minimoTabellare": 2410.22, "moltiplicatore": 0.68 },
+    { "codice": "DS4", "descrizione": "Livello DS4", "qualifica": "Personale non medico - livello DS4", "minimoTabellare": 2418.05, "moltiplicatore": 0.68 },
+    { "codice": "DS3", "descrizione": "Livello DS3", "qualifica": "Personale non medico - livello DS3", "minimoTabellare": 2345.38, "moltiplicatore": 0.66 },
+    { "codice": "DS2", "descrizione": "Livello DS2", "qualifica": "Personale non medico - livello DS2", "minimoTabellare": 2261.56, "moltiplicatore": 0.64 },
+    { "codice": "DS1", "descrizione": "Livello DS1", "qualifica": "Personale non medico - livello DS1", "minimoTabellare": 2180.26, "moltiplicatore": 0.61 },
+    { "codice": "DS", "descrizione": "Livello DS", "qualifica": "Personale non medico - livello DS", "minimoTabellare": 2101.08, "moltiplicatore": 0.59 },
+    { "codice": "D4", "descrizione": "Livello D4", "qualifica": "Personale non medico - livello D4", "minimoTabellare": 2209.98, "moltiplicatore": 0.62 },
+    { "codice": "D3", "descrizione": "Livello D3", "qualifica": "Personale non medico - livello D3", "minimoTabellare": 2147.12, "moltiplicatore": 0.60 },
+    { "codice": "D2", "descrizione": "Livello D2", "qualifica": "Personale non medico - livello D2", "minimoTabellare": 2084.77, "moltiplicatore": 0.59 },
+    { "codice": "D1", "descrizione": "Livello D1", "qualifica": "Personale non medico - livello D1", "minimoTabellare": 2022.94, "moltiplicatore": 0.57 },
+    { "codice": "D", "descrizione": "Livello D", "qualifica": "Personale non medico - livello D", "minimoTabellare": 1953.87, "moltiplicatore": 0.55 },
+    { "codice": "C4", "descrizione": "Livello C4", "qualifica": "Personale non medico - livello C4", "minimoTabellare": 2076.38, "moltiplicatore": 0.58 },
+    { "codice": "C3", "descrizione": "Livello C3", "qualifica": "Personale non medico - livello C3", "minimoTabellare": 1984.10, "moltiplicatore": 0.56 },
+    { "codice": "C2", "descrizione": "Livello C2", "qualifica": "Personale non medico - livello C2", "minimoTabellare": 1921.25, "moltiplicatore": 0.54 },
+    { "codice": "C1", "descrizione": "Livello C1", "qualifica": "Personale non medico - livello C1", "minimoTabellare": 1857.14, "moltiplicatore": 0.52 },
+    { "codice": "C", "descrizione": "Livello C", "qualifica": "Personale non medico - livello C", "minimoTabellare": 1803.61, "moltiplicatore": 0.51 },
+    { "codice": "B4", "descrizione": "Livello B4", "qualifica": "Personale non medico - livello B4", "minimoTabellare": 1733.54, "moltiplicatore": 0.49 },
+    { "codice": "B3", "descrizione": "Livello B3", "qualifica": "Personale non medico - livello B3", "minimoTabellare": 1697.76, "moltiplicatore": 0.48 },
+    { "codice": "B2", "descrizione": "Livello B2", "qualifica": "Personale non medico - livello B2", "minimoTabellare": 1669.36, "moltiplicatore": 0.47 },
+    { "codice": "B1", "descrizione": "Livello B1", "qualifica": "Personale non medico - livello B1", "minimoTabellare": 1624.54, "moltiplicatore": 0.46 },
+    { "codice": "B", "descrizione": "Livello B", "qualifica": "Personale non medico - livello B", "minimoTabellare": 1579.86, "moltiplicatore": 0.44 },
+    { "codice": "A4", "descrizione": "Livello A4", "qualifica": "Personale non medico - livello A4", "minimoTabellare": 1592.19, "moltiplicatore": 0.45 },
+    { "codice": "A3", "descrizione": "Livello A3", "qualifica": "Personale non medico - livello A3", "minimoTabellare": 1566.67, "moltiplicatore": 0.44 },
+    { "codice": "A2", "descrizione": "Livello A2", "qualifica": "Personale non medico - livello A2", "minimoTabellare": 1544.35, "moltiplicatore": 0.43 },
+    { "codice": "A1", "descrizione": "Livello A1", "qualifica": "Personale non medico - livello A1", "minimoTabellare": 1506.44, "moltiplicatore": 0.42 },
+    { "codice": "A", "descrizione": "Livello A", "qualifica": "Personale non medico - livello A", "minimoTabellare": 1467.45, "moltiplicatore": 0.41 }
+  ],
+  "scattiAnzianita": {
+    "periodicitaMesi": 24,
+    "importoPerScattoEuro": null,
+    "maxScatti": 8
+  }
+}

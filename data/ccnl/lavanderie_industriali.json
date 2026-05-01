@@ -1,0 +1,27 @@
+{
+  "id": "lavanderie_industriali",
+  "nome": "CCNL Lavanderie - Industriali",
+  "fonte": "LAVORO/D0L1.pdf — vigore dal 01/04/2025 (qualificati assunti 09/98)",
+  "updatedAt": "2026-05-01T00:00:00Z",
+  "mensilita": 13,
+  "contributiContrattuali": {
+    "azienda": {}
+  },
+  "livelli": [
+    { "codice": "D2", "descrizione": "Area Direttiva Centrato", "qualifica": "Area Direttiva", "minimoTabellare": 3110.35, "moltiplicatore": 1.00 },
+    { "codice": "C3", "descrizione": "Area Tecnica Consolidato", "qualifica": "Area Tecnica", "minimoTabellare": 2980.35, "moltiplicatore": 0.96 },
+    { "codice": "C2", "descrizione": "Area Tecnica Centrato", "qualifica": "Area Tecnica", "minimoTabellare": 2552.44, "moltiplicatore": 0.82 },
+    { "codice": "C1", "descrizione": "Area Tecnica Base", "qualifica": "Area Tecnica Base", "minimoTabellare": 2264.95, "moltiplicatore": 0.73 },
+    { "codice": "B3", "descrizione": "Area Qualificata Consolidato", "qualifica": "Area Qualificata", "minimoTabellare": 2189.87, "moltiplicatore": 0.70 },
+    { "codice": "B2", "descrizione": "Area Qualificata Centrato", "qualifica": "Area Qualificata", "minimoTabellare": 2002.77, "moltiplicatore": 0.64 },
+    { "codice": "B1", "descrizione": "Area Qualificata Base", "qualifica": "Area Qualificata Base", "minimoTabellare": 1907.30, "moltiplicatore": 0.61 },
+    { "codice": "A3", "descrizione": "Area Operativa Consolidato", "qualifica": "Area Operativa", "minimoTabellare": 1871.16, "moltiplicatore": 0.60 },
+    { "codice": "A2", "descrizione": "Area Operativa Centrato", "qualifica": "Area Operativa", "minimoTabellare": 1775.74, "moltiplicatore": 0.57 },
+    { "codice": "A1", "descrizione": "Area Operativa Base", "qualifica": "Area Operativa Base", "minimoTabellare": 1523.77, "moltiplicatore": 0.49 }
+  ],
+  "scattiAnzianita": {
+    "periodicitaMesi": 24,
+    "importoPerScattoEuro": null,
+    "maxScatti": 5
+  }
+}

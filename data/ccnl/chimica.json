@@ -1,8 +1,8 @@
 {
   "id": "chimica",
-  "nome": "CCNL Chimica-Farmaceutica e Plastica (Federchimica-Farmindustria)",
-  "fonte": "TODO: non disponibile PDF specifico per CCNL Chimica Federchimica tra i 50 documenti. Usato come proxy PDF B371 — GOMMA - INDUSTRIA (vigente dal 01/01/2026 al 31/03/2027, stampa del 21/04/2026), settore chimico-plastico affine. Verificare con tabella Federchimica ufficiale.",
-  "updatedAt": "2026-04-21T00:00:00Z",
+  "nome": "CCNL Chimica Farmaceutica e Plastica",
+  "fonte": "LAVORO/B011.pdf — dati retributivi in vigore dal 01/01/2026",
+  "updatedAt": "2026-05-01T00:00:00Z",
   "mensilita": 13,
   "contributiContrattuali": {
     "azienda": {
@@ -25,13 +25,19 @@
     }
   },
   "livelli": [
-    { "codice": "Q",  "descrizione": "Quadro",      "qualifica": "Responsabile di laboratorio, quadro tecnico-scientifico",       "minimoTabellare": 2497.83, "moltiplicatore": 1.00 },
-    { "codice": "A",  "descrizione": "Livello A",   "qualifica": "Ricercatore, analista chimico senior",                          "minimoTabellare": 2351.85, "moltiplicatore": 0.91 },
-    { "codice": "B",  "descrizione": "Livello B",   "qualifica": "Tecnico di laboratorio, operatore di impianto specializzato",   "minimoTabellare": 2218.74, "moltiplicatore": 0.82 },
-    { "codice": "C",  "descrizione": "Livello C",   "qualifica": "Addetto alla produzione qualificato, analista chimico junior",  "minimoTabellare": 2189.60, "moltiplicatore": 0.74 },
-    { "codice": "D",  "descrizione": "Livello D",   "qualifica": "Operatore di impianto, magazziniere chimico",                   "minimoTabellare": 2162.08, "moltiplicatore": 0.67 },
-    { "codice": "E",  "descrizione": "Livello E",   "qualifica": "Addetto al confezionamento, ausiliario di laboratorio",         "minimoTabellare": 2074.83, "moltiplicatore": 0.60 },
-    { "codice": "F",  "descrizione": "Livello F",   "qualifica": "Personale di pulizia, manovale",                                "minimoTabellare": 2021.12, "moltiplicatore": 0.54 }
+    { "codice": "A1", "descrizione": "Livello A1", "qualifica": "Livello A1", "minimoTabellare": 3152.98, "moltiplicatore": 1.00 },
+    { "codice": "B1", "descrizione": "Livello B1", "qualifica": "Livello B1", "minimoTabellare": 2636.42, "moltiplicatore": 0.84 },
+    { "codice": "B2", "descrizione": "Livello B2", "qualifica": "Livello B2", "minimoTabellare": 2461.43, "moltiplicatore": 0.78 },
+    { "codice": "C1", "descrizione": "Livello C1", "qualifica": "Livello C1", "minimoTabellare": 2282.55, "moltiplicatore": 0.72 },
+    { "codice": "C2", "descrizione": "Livello C2", "qualifica": "Livello C2", "minimoTabellare": 2223.51, "moltiplicatore": 0.71 },
+    { "codice": "C3", "descrizione": "Livello C3", "qualifica": "Livello C3", "minimoTabellare": 2164.97, "moltiplicatore": 0.69 },
+    { "codice": "D1", "descrizione": "Livello D1", "qualifica": "Livello D1", "minimoTabellare": 2114.50, "moltiplicatore": 0.67 },
+    { "codice": "D2", "descrizione": "Livello D2", "qualifica": "Livello D2", "minimoTabellare": 1967.47, "moltiplicatore": 0.62 },
+    { "codice": "D3", "descrizione": "Livello D3", "qualifica": "Livello D3", "minimoTabellare": 1922.59, "moltiplicatore": 0.61 },
+    { "codice": "E1", "descrizione": "Livello E1", "qualifica": "Livello E1", "minimoTabellare": 1867.21, "moltiplicatore": 0.59 },
+    { "codice": "E2", "descrizione": "Livello E2", "qualifica": "Livello E2", "minimoTabellare": 1759.26, "moltiplicatore": 0.56 },
+    { "codice": "E3", "descrizione": "Livello E3", "qualifica": "Livello E3", "minimoTabellare": 1718.12, "moltiplicatore": 0.54 },
+    { "codice": "F1", "descrizione": "Livello F1", "qualifica": "Livello F1", "minimoTabellare": 1674.78, "moltiplicatore": 0.53 }
   ],
   "scattiAnzianita": {
     "periodicitaMesi": 36,

@@ -7,29 +7,47 @@ import { useState, useEffect } from 'react';
 import type { LivelloCcnl, ContributoContrattuale } from '@/types';
 
 const CCNL_DISPONIBILI = [
-  { id: 'commercio',           nome: 'Commercio — Terziario Distribuzione e Servizi (Confcommercio)' },
-  { id: 'metalmeccanici',      nome: 'Metalmeccanici — Industria (Federmeccanica-Assistal)' },
-  { id: 'edilizia',            nome: 'Edilizia — Industria (ANCE)' },
-  { id: 'sanita_privata',      nome: 'Sanità Privata (Aiop-Aris)' },
-  { id: 'studi_professionali', nome: 'Studi Professionali (Confprofessioni)' },
+  { id: 'acconciatura_estetica', nome: 'Acconciatura ed Estetica' },
+  { id: 'agricoltura_impiegati', nome: 'Agricoltura — Impiegati' },
+  { id: 'agricoltura_operai', nome: 'Agricoltura — Operai' },
+  { id: 'alimentari_industria', nome: 'Alimentari — Industria' },
+  { id: 'alimentari_artigianato', nome: 'Alimentari — Artigianato' },
+  { id: 'assicurazioni',       nome: 'Assicurazioni (ANAPA)' },
+  { id: 'autorimesse',         nome: 'Autorimesse e Noleggio Automezzi' },
+  { id: 'autoscuole',          nome: 'Autoscuole' },
+  { id: 'case_di_cura_private', nome: 'Case di Cura Private (non medico)' },
+  { id: 'calzature',           nome: 'Calzature — Industria' },
+  { id: 'chimica',             nome: 'Chimica Farmaceutica e Plastica' },
+  { id: 'commercio',           nome: 'Commercio (Terziario Servizi)' },
   { id: 'cooperative_sociali', nome: 'Cooperative Sociali (Legacoop-Agci-Confcooperative)' },
-  { id: 'trasporti',           nome: 'Trasporto Merci e Logistica (Conftrasporto)' },
-  { id: 'pubblici_esercizi',   nome: 'Pubblici Esercizi, Ristorazione e Turismo (FIPE)' },
-  { id: 'chimica',             nome: 'Chimica-Farmaceutica e Plastica (Federchimica)' },
   { id: 'credito',             nome: 'Credito — Banche (ABI)' },
+  { id: 'domestici_conviventi', nome: 'Domestici — Collaboratori Familiari Conviventi' },
+  { id: 'domestici_non_conviventi', nome: 'Domestici — Collaboratori Familiari Non Conviventi' },
+  { id: 'edilizia_industria',  nome: 'Edilizia — Industria' },
+  { id: 'edilizia_artigianato', nome: 'Edilizia — Artigianato' },
+  { id: 'farmacie_private',    nome: 'Farmacie — Aziende Private Urbane' },
+  { id: 'facility_management', nome: 'Facility Management' },
+  { id: 'gomma_plastica',      nome: 'Gomma e Plastica — Industria' },
+  { id: 'igiene_ambientale_private', nome: 'Igiene Ambientale (Aziende Private)' },
+  { id: 'informatica',         nome: 'Informatica e Servizi Innovativi (ICT - Cifa)' },
+  { id: 'lavanderie_artigiane', nome: 'Lavanderie (Aziende Artigiane)' },
+  { id: 'lavanderie_industriali', nome: 'Lavanderie (Industriali)' },
+  { id: 'legno_arredamento',   nome: 'Legno e Arredamento' },
+  { id: 'metalmeccanici',      nome: 'Metalmeccanici — Industria' },
   { id: 'multiservizi',        nome: 'Multiservizi — Pulizie e Facility (Ancst)' },
-  { id: 'telecomunicazioni',   nome: 'Telecomunicazioni (Asstel)' },
-  { id: 'tessile',             nome: 'Tessile-Abbigliamento-Moda (SMI)' },
-  { id: 'informatica',         nome: 'Informatica e Servizi Innovativi (Assinform)' },
-  { id: 'agricoltura',         nome: 'Agricoltura — Operai Agricoli (Confagricoltura)' },
+  { id: 'sanita_privata_unipresa', nome: 'Sanità Privata (Unipresa)' },
   { id: 'scuole_private',      nome: 'Scuole e Istituti Privati (Agidae-FISM)' },
-  { id: 'domestici',           nome: 'Lavoro Domestico — Collaboratori familiari (FIDALDO-DOMINA)' },
-];
+  { id: 'servizi_postali_appalto', nome: 'Servizi Postali in Appalto' },
+  { id: 'studi_professionali', nome: 'Studi Professionali (Confprofessioni)' },
+  { id: 'telecomunicazioni',   nome: 'Telecomunicazioni (Asstel)' },
+  { id: 'tessile',             nome: 'Tessile — Abbigliamento Industria' },
+  { id: 'trasporti',           nome: 'Trasporto Merci e Logistica (Conftrasporto)' },
+  { id: 'vigilanza_privata',   nome: 'Vigilanza Privata — Servizi Fiduciari' },
+].sort((a, b) => a.nome.localeCompare(b.nome, 'it'));
 
 const TIPI_CONTRATTO = [
   { value: 'tempo_indeterminato', label: 'Tempo indeterminato' },
   { value: 'tempo_determinato',   label: 'Tempo determinato' },
-  { value: 'somministrazione',    label: 'Somministrazione' },
 ] as const;
 
 const fmtEur = (n: number) => new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR', minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n);
@@ -38,7 +56,7 @@ const Step1Schema = z.object({
   ccnlId: z.string().min(1, 'Seleziona un CCNL'),
   livello: z.string().min(1, 'Seleziona il livello contrattuale'),
   ral: z.number().min(1_000, 'Minimo 1.000 €').max(500_000, 'Massimo 500.000 €'),
-  tipoContratto: z.enum(['tempo_indeterminato', 'tempo_determinato', 'somministrazione']),
+  tipoContratto: z.enum(['tempo_indeterminato', 'tempo_determinato']),
   oreLavoro: z.number().min(1).max(48),
   pagaOraria: z.number().min(0).max(500).optional(),
   oreSettimanali: z.number().int().min(1).max(54).optional(),
@@ -79,7 +97,7 @@ export function CalcolatoreFormStep1({ onNext }: Props) {
   const oreLavoro = watch('oreLavoro');
   const livelloSelezionato = watch('livello');
   const ralWatch = watch('ral');
-  const isDomesticiCcnl = ccnlSelezionato === 'domestici';
+  const isDomesticiCcnl = ['domestici', 'domestici_conviventi', 'domestici_non_conviventi'].includes(ccnlSelezionato ?? '');
   const livelloData = livelli.find(l => l.codice === livelloSelezionato);
   // Per i domestici minimoTabellare è €/ora → RAL = tariffa × ore/sett × 52
   const ralTabellare = livelloData
@@ -90,7 +108,7 @@ export function CalcolatoreFormStep1({ onNext }: Props) {
 
   useEffect(() => {
     if (!ccnlSelezionato) return;
-    const domestico = ccnlSelezionato === 'domestici';
+    const domestico = ['domestici', 'domestici_conviventi', 'domestici_non_conviventi'].includes(ccnlSelezionato);
     setIsDomestico(domestico);
     setLoadingLivelli(true);
     fetch(`/api/ccnl/${ccnlSelezionato}/livelli`)
@@ -107,7 +125,7 @@ export function CalcolatoreFormStep1({ onNext }: Props) {
         // Per lavoro domestico, pre-imposta paga oraria e ore
         if (domestico) {
           setValue('oreSettimanali', 25);
-          setValue('convivente', false);
+          setValue('convivente', ccnlSelezionato === 'domestici_conviventi');
         }
       })
       .catch(() => setLivelli([]))
@@ -451,8 +469,8 @@ export function CalcolatoreFormStep1({ onNext }: Props) {
       </div>
       )}
 
-      {/* Toggle convivente — solo per domestici */}
-      {isDomesticiCcnl && (
+      {/* Toggle convivente — solo per voce legacy "domestici" */}
+      {ccnlSelezionato === 'domestici' && (
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <button type="button"

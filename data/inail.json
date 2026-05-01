@@ -36,7 +36,7 @@
     },
     {
       "codice": "0210",
-      "settore": "Ristorazione con somministrazione, mense, catering",
+      "settore": "Ristorazione, mense, catering",
       "gestione": "terziario",
       "tassoPerMille": 9.91,
       "rangeOscillazione": { "min": 6.94, "max": 14.87 },

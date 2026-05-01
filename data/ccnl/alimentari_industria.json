@@ -1,0 +1,25 @@
+{
+  "id": "alimentari_industria",
+  "nome": "CCNL Alimentari - Industria",
+  "fonte": "LAVORO/E012.pdf — dati retributivi in vigore dal 01/01/2026",
+  "updatedAt": "2026-05-01T00:00:00Z",
+  "mensilita": 14,
+  "contributiContrattuali": {
+    "azienda": {}
+  },
+  "livelli": [
+    { "codice": "1S", "descrizione": "1S", "qualifica": "Quadro", "minimoTabellare": 3578.01, "moltiplicatore": 1.00 },
+    { "codice": "1", "descrizione": "1", "qualifica": "Livello 1", "minimoTabellare": 3089.82, "moltiplicatore": 0.86 },
+    { "codice": "2", "descrizione": "2", "qualifica": "Livello 2", "minimoTabellare": 2637.04, "moltiplicatore": 0.74 },
+    { "codice": "3A", "descrizione": "3A", "qualifica": "Livello 3A", "minimoTabellare": 2378.26, "moltiplicatore": 0.66 },
+    { "codice": "3", "descrizione": "3", "qualifica": "Livello 3", "minimoTabellare": 2184.23, "moltiplicatore": 0.61 },
+    { "codice": "4", "descrizione": "4", "qualifica": "Livello 4", "minimoTabellare": 2054.82, "moltiplicatore": 0.57 },
+    { "codice": "5", "descrizione": "5", "qualifica": "Livello 5", "minimoTabellare": 1925.46, "moltiplicatore": 0.54 },
+    { "codice": "6", "descrizione": "6", "qualifica": "Livello 6", "minimoTabellare": 1796.08, "moltiplicatore": 0.50 }
+  ],
+  "scattiAnzianita": {
+    "periodicitaMesi": 24,
+    "importoPerScattoEuro": null,
+    "maxScatti": 5
+  }
+}

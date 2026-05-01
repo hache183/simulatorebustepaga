@@ -26,9 +26,9 @@
   },
   "livelli": [
     { "codice": "Q",  "descrizione": "Quadro",         "qualifica": "Project manager, responsabile di rete",                  "minimoTabellare": 1946.69, "moltiplicatore": 1.00 },
-    { "codice": "A",  "descrizione": "Livello A (liv. 6)", "qualifica": "Ingegnere di rete, sviluppatore senior",              "minimoTabellare": 1731.19, "moltiplicatore": 0.90 },
+    { "codice": "A",  "descrizione": "Livello A (liv. 6)", "qualifica": "Ingegnere di rete, sviluppatore senior",              "minimoTabellare": 1731.18, "moltiplicatore": 0.90 },
     { "codice": "B",  "descrizione": "Livello B (liv. 5)", "qualifica": "Tecnico di rete, analista sistemi",                   "minimoTabellare": 1417.32, "moltiplicatore": 0.81 },
-    { "codice": "C",  "descrizione": "Livello C (liv. 4)", "qualifica": "Operatore di call center specializzato, tecnico inst.", "minimoTabellare": 1277.74, "moltiplicatore": 0.72 },
+    { "codice": "C",  "descrizione": "Livello C (liv. 4)", "qualifica": "Operatore di call center specializzato, tecnico inst.", "minimoTabellare": 1277.73, "moltiplicatore": 0.72 },
     { "codice": "D",  "descrizione": "Livello D (liv. 3)", "qualifica": "Operatore di call center, addetto amministrativo",    "minimoTabellare": 1144.10, "moltiplicatore": 0.64 },
     { "codice": "E",  "descrizione": "Livello E (liv. 1)", "qualifica": "Ausiliario, addetto alla logistica",                  "minimoTabellare": 853.81,  "moltiplicatore": 0.57 }
   ],

@@ -1,8 +1,8 @@
 {
   "id": "autorimesse",
-  "nome": "CCNL Autorimesse e Noleggio Automezzi (ANIASA)",
-  "fonte": "Rinnovo CCNL 15 dicembre 2022 (tabelle aggiornate gennaio 2026). Fonte: kitech.it CodiceCateg=327",
-  "updatedAt": "2026-01-01T00:00:00Z",
+  "nome": "CCNL Autorimesse e Noleggio Automezzi",
+  "fonte": "LAVORO/IC35 Autorimesse e Noleggio Automezzi.pdf — dati retributivi in vigore dal 01/01/2026",
+  "updatedAt": "2026-04-25T00:00:00Z",
   "mensilita": 14,
   "contributiContrattuali": {
     "azienda": {
@@ -25,21 +25,21 @@
     }
   },
   "livelli": [
-    { "codice": "Q1", "descrizione": "Quadro 1°",   "qualifica": "Quadro con funzioni direttive generali, responsabile operativo senior",              "minimoTabellare": 2647.58, "moltiplicatore": 1.00 },
-    { "codice": "Q2", "descrizione": "Quadro 2°",   "qualifica": "Quadro con responsabilità gestionale di struttura",                                  "minimoTabellare": 2647.58, "moltiplicatore": 1.00 },
-    { "codice": "A1", "descrizione": "Livello A1",  "qualifica": "Personale con elevata professionalità e autonomia operativa, capo officina",          "minimoTabellare": 2647.58, "moltiplicatore": 1.00 },
-    { "codice": "A2", "descrizione": "Livello A2",  "qualifica": "Impiegati direttivi, meccanico senior, responsabile parcheggio e noleggio",           "minimoTabellare": 2521.96, "moltiplicatore": 0.95 },
-    { "codice": "B1", "descrizione": "Livello B1",  "qualifica": "Impiegati qualificati, meccanici esperti, addetti noleggio senior",                  "minimoTabellare": 2343.80, "moltiplicatore": 0.89 },
-    { "codice": "B2", "descrizione": "Livello B2",  "qualifica": "Meccanici qualificati, addetti carrozzeria, impiegati qualificati d'ordine",          "minimoTabellare": 2259.92, "moltiplicatore": 0.85 },
-    { "codice": "B3", "descrizione": "Livello B3",  "qualifica": "Addetti parcheggio con specializzazione, addetti cassa, conducenti NCC",             "minimoTabellare": 2186.55, "moltiplicatore": 0.83 },
-    { "codice": "C1", "descrizione": "Livello C1",  "qualifica": "Parcheggiatori qualificati, addetti movimentazione veicoli con esperienza",           "minimoTabellare": 2124.56, "moltiplicatore": 0.80 },
-    { "codice": "C2", "descrizione": "Livello C2",  "qualifica": "Guardiani, addetti ai servizi di guardiania e controllo accessi",                    "minimoTabellare": 1946.29, "moltiplicatore": 0.74 },
-    { "codice": "C3", "descrizione": "Livello C3",  "qualifica": "Addetti alle pulizie veicoli e strutture, lavoratori generici con esperienza",       "minimoTabellare": 1841.91, "moltiplicatore": 0.70 },
-    { "codice": "C4", "descrizione": "Livello C4",  "qualifica": "Personale di primo ingresso, manovalanza generica, apprendisti",                     "minimoTabellare": 1549.82, "moltiplicatore": 0.59 }
+    { "codice": "Q1", "descrizione": "Quadro 1°", "qualifica": "Livello Q1", "minimoTabellare": 2741.03, "moltiplicatore": 1.00 },
+    { "codice": "Q2", "descrizione": "Quadro 2°", "qualifica": "Livello Q2", "minimoTabellare": 2725.03, "moltiplicatore": 0.99 },
+    { "codice": "A1", "descrizione": "Livello A1", "qualifica": "Livello A1", "minimoTabellare": 2674.03, "moltiplicatore": 0.98 },
+    { "codice": "A2", "descrizione": "Livello A2", "qualifica": "Livello A2", "minimoTabellare": 2544.07, "moltiplicatore": 0.93 },
+    { "codice": "B1", "descrizione": "Livello B1", "qualifica": "Livello B1", "minimoTabellare": 2350.21, "moltiplicatore": 0.86 },
+    { "codice": "B2", "descrizione": "Livello B2", "qualifica": "Livello B2", "minimoTabellare": 2263.44, "moltiplicatore": 0.83 },
+    { "codice": "B3", "descrizione": "Livello B3", "qualifica": "Livello B3", "minimoTabellare": 2187.54, "moltiplicatore": 0.80 },
+    { "codice": "C1", "descrizione": "Livello C1", "qualifica": "Livello C1", "minimoTabellare": 2152.01, "moltiplicatore": 0.78 },
+    { "codice": "C2", "descrizione": "Livello C2", "qualifica": "Livello C2", "minimoTabellare": 1958.04, "moltiplicatore": 0.71 },
+    { "codice": "C3", "descrizione": "Livello C3", "qualifica": "Livello C3", "minimoTabellare": 1859.59, "moltiplicatore": 0.68 },
+    { "codice": "C4", "descrizione": "Livello C4", "qualifica": "Livello C4", "minimoTabellare": 1586.00, "moltiplicatore": 0.58 }
   ],
   "scattiAnzianita": {
     "periodicitaMesi": 36,
-    "importoPerScattoEuro": 10.00,
+    "importoPerScattoEuro": null,
     "maxScatti": 5
   }
 }

@@ -1,0 +1,25 @@
+{
+  "id": "servizi_postali_appalto",
+  "nome": "CCNL Servizi Postali in Appalto",
+  "fonte": "LAVORO/K721 Servizi Postali in Appalto.pdf — dati retributivi in vigore dal 01/12/2025",
+  "updatedAt": "2026-04-25T00:00:00Z",
+  "mensilita": 14,
+  "contributiContrattuali": {
+    "azienda": {}
+  },
+  "livelli": [
+    { "codice": "1Q", "descrizione": "Livello 1Q", "qualifica": "Livello 1Q", "minimoTabellare": 1937.93, "moltiplicatore": 1.00 },
+    { "codice": "1", "descrizione": "Livello 1", "qualifica": "Livello 1", "minimoTabellare": 1886.28, "moltiplicatore": 0.97 },
+    { "codice": "2", "descrizione": "Livello 2", "qualifica": "Livello 2", "minimoTabellare": 1661.07, "moltiplicatore": 0.86 },
+    { "codice": "3S", "descrizione": "Livello 3S", "qualifica": "Livello 3S", "minimoTabellare": 1560.05, "moltiplicatore": 0.80 },
+    { "codice": "3", "descrizione": "Livello 3", "qualifica": "Livello 3", "minimoTabellare": 1519.42, "moltiplicatore": 0.78 },
+    { "codice": "4S", "descrizione": "Livello 4S", "qualifica": "Livello 4S", "minimoTabellare": 1468.23, "moltiplicatore": 0.76 },
+    { "codice": "4", "descrizione": "Livello 4", "qualifica": "Livello 4", "minimoTabellare": 1419.52, "moltiplicatore": 0.73 },
+    { "codice": "5", "descrizione": "Livello 5", "qualifica": "Livello 5", "minimoTabellare": 1336.02, "moltiplicatore": 0.69 }
+  ],
+  "scattiAnzianita": {
+    "periodicitaMesi": 24,
+    "importoPerScattoEuro": null,
+    "maxScatti": 10
+  }
+}

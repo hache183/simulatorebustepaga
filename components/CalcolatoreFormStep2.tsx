@@ -36,7 +36,7 @@ interface Props {
 }
 
 export function CalcolatoreFormStep2({ onSubmit, onBack, isLoading, contributiCcnl, ccnlId }: Props) {
-  const isDomestici = ccnlId === 'domestici';
+  const isDomestici = ['domestici', 'domestici_conviventi', 'domestici_non_conviventi'].includes(ccnlId ?? '');
   const [voceInail, setVociInail] = useState<VoceInail[]>([]);
   const [agevolazioni, setAgevolazioni] = useState<AgevolazioneInps[]>([]);
   const [conflitti, setConflitti] = useState<Record<string, string>>({});

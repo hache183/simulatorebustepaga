@@ -1,7 +1,7 @@
 {
   "id": "informatica",
-  "nome": "CCNL Informatica e Servizi Innovativi (Assinform-Confcommercio)",
-  "fonte": "Nessun PDF specifico per CCNL Informatica Assinform (Assinform-Confcommercio) tra i 50 documenti forniti (LAVORO/). Valori stimati — da aggiornare con tabella retributiva Assinform ufficiale 2026 quando disponibile.",
+  "nome": "CCNL Information and Communication Technologies (ICT - Cifa)",
+  "fonte": "LAVORO/H640 Informatica e Servizi Innovativi.pdf — tabelle retributive in vigore dal 01/11/2025",
   "updatedAt": "2026-04-21T00:00:00Z",
   "mensilita": 13,
   "contributiContrattuali": {
@@ -25,19 +25,14 @@
     }
   },
   "livelli": [
-    { "codice": "Q",   "descrizione": "Quadro",           "qualifica": "IT Manager, direttore tecnico, responsabile di progetto complesso",                    "minimoTabellare": 2754.74, "moltiplicatore": 1.00 },
-    { "codice": "AS",  "descrizione": "Livello A Super",  "qualifica": "Specialista senior con elevata autonomia tecnica, architetto di sistema",               "minimoTabellare": 2742.31, "moltiplicatore": 1.00 },
-    { "codice": "A",   "descrizione": "Livello A",        "qualifica": "Analista programmatore senior, project manager, sistemista esperto",                    "minimoTabellare": 2453.59, "moltiplicatore": 0.89 },
-    { "codice": "B1",  "descrizione": "Livello B1",       "qualifica": "Sviluppatore software senior, analista dati, DevOps engineer",                          "minimoTabellare": 2196.38, "moltiplicatore": 0.80 },
-    { "codice": "B2S", "descrizione": "Livello B2 Super", "qualifica": "Programmatore con specializzazione, sistemista con esperienza (livello super)",          "minimoTabellare": 2141.60, "moltiplicatore": 0.78 },
-    { "codice": "B2",  "descrizione": "Livello B2",       "qualifica": "Programmatore, tecnico di rete, sviluppatore applicazioni web/mobile",                  "minimoTabellare": 2070.71, "moltiplicatore": 0.75 },
-    { "codice": "C1S", "descrizione": "Livello C1 Super", "qualifica": "Help desk senior, tecnico di supporto IT con specializzazione (livello super)",          "minimoTabellare": 1952.42, "moltiplicatore": 0.71 },
-    { "codice": "C1",  "descrizione": "Livello C1",       "qualifica": "Help desk, operatore sistemi, tecnico supporto IT",                                      "minimoTabellare": 1881.91, "moltiplicatore": 0.68 },
-    { "codice": "C2",  "descrizione": "Livello C2",       "qualifica": "Operatore tecnico, addetto installazione hardware/software, tester",                    "minimoTabellare": 1756.17, "moltiplicatore": 0.64 },
-    { "codice": "C3",  "descrizione": "Livello C3",       "qualifica": "Assistente tecnico, addetto al customer care tecnico base",                             "minimoTabellare": 1667.45, "moltiplicatore": 0.61 },
-    { "codice": "D1",  "descrizione": "Livello D1",       "qualifica": "Data entry senior, assistente tecnico amministrativo, impiegato d'ordine",              "minimoTabellare": 1594.33, "moltiplicatore": 0.58 },
-    { "codice": "D2",  "descrizione": "Livello D2",       "qualifica": "Operatore data entry, addetto alla digitalizzazione, personale ausiliario qualificato", "minimoTabellare": 1503.99, "moltiplicatore": 0.55 },
-    { "codice": "E",   "descrizione": "Livello E",        "qualifica": "Personale ausiliario di primo impiego, magazziniere, addetto ai servizi generali",      "minimoTabellare": 1405.44, "moltiplicatore": 0.51 }
+    { "codice": "Q",  "descrizione": "Quadro",     "qualifica": "Quadro ICT",                               "minimoTabellare": 2990.00, "moltiplicatore": 1.00 },
+    { "codice": "1",  "descrizione": "1° livello", "qualifica": "Specialista ICT senior",                   "minimoTabellare": 2510.00, "moltiplicatore": 0.84 },
+    { "codice": "2A", "descrizione": "2A livello", "qualifica": "Analista/Sviluppatore ICT",                "minimoTabellare": 2240.00, "moltiplicatore": 0.75 },
+    { "codice": "2B", "descrizione": "2B livello", "qualifica": "Tecnico ICT",                              "minimoTabellare": 2020.00, "moltiplicatore": 0.68 },
+    { "codice": "3",  "descrizione": "3° livello", "qualifica": "Operatore ICT qualificato",                "minimoTabellare": 1790.00, "moltiplicatore": 0.60 },
+    { "codice": "4A", "descrizione": "4A livello", "qualifica": "Addetto ICT operativo",                    "minimoTabellare": 1660.00, "moltiplicatore": 0.56 },
+    { "codice": "4B", "descrizione": "4B livello", "qualifica": "Addetto ICT junior",                       "minimoTabellare": 1560.00, "moltiplicatore": 0.52 },
+    { "codice": "5",  "descrizione": "5° livello", "qualifica": "Personale di supporto",                    "minimoTabellare": 1430.00, "moltiplicatore": 0.48 }
   ],
   "scattiAnzianita": {
     "periodicitaMesi": 24,

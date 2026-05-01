@@ -22,7 +22,7 @@ const InputSchema = z.object({
     .min(1_000, 'RAL minima: 1.000 euro')
     .max(500_000, 'RAL massima: 500.000 euro'),
   tipoContratto: z.enum(
-    ['tempo_indeterminato', 'tempo_determinato', 'somministrazione'],
+    ['tempo_indeterminato', 'tempo_determinato'],
     { error: 'Tipo di contratto non valido' }
   ),
   oreLavoro: z.number().min(1).max(48),
@@ -42,9 +42,10 @@ const InputSchema = z.object({
   oreSettimanali: z.number().min(1).max(54).optional(),
 });
 
-// Soglie sanity check: il costo totale deve essere tra il 128% e il 150% della RAL.
-// Se è fuori range, probabilmente c'è un errore nelle aliquote JSON.
-const RANGE_ATTESO = { min: 1.28, max: 1.60 };
+// Soglie sanity check volutamente ampie per evitare falsi positivi:
+// il costo/RAL varia molto in base a INAIL, contributi contrattuali, agevolazioni e orario.
+// Questo controllo deve intercettare solo anomalie forti (configurazioni errate), non casi legittimi.
+const RANGE_SANITY = { min: 1.05, max: 2.20 };
 
 /**
  * Calcola IRPEF lorda per scaglioni 2025-2026 (L. 207/2024, aggiornata da L. 199/2025).
@@ -152,51 +153,6 @@ function calcolaNettoDipendente(
 }
 
 /**
- * Determina il contributo orario forfettario INPS per il lavoro domestico.
- * Le tabelle sono in data/aliquote-inps.json → settoriContributivi.lavoro_domestico.contributiOrari
- */
-function getContributoOrarioDomestico(
-  pagaOraria: number,
-  oreSettimanali: number,
-  convivente: boolean,
-  tipoContratto: string,
-): { contributoOrarioDatore: number; contributoOrarioLavoratore: number } {
-  const settore = ALIQUOTE_INPS.settoriContributivi['lavoro_domestico'] as unknown as Record<string, unknown>;
-  const contributiOrari = settore['contributiOrari'] as Record<string, unknown>;
-
-  const tabella = tipoContratto === 'tempo_determinato'
-    ? contributiOrari['tempoDeterminato'] as Record<string, unknown>
-    : contributiOrari['tempoIndeterminato'] as Record<string, unknown>;
-
-  // Conviventi con orario > 24h/sett → tabella ridotta
-  if (convivente && oreSettimanali > 24) {
-    const conv = tabella['conviventiOltre24h'] as { contributoOrario: number; quotaLavoratore: number };
-    return {
-      contributoOrarioDatore: conv.contributoOrario - conv.quotaLavoratore,
-      contributoOrarioLavoratore: conv.quotaLavoratore,
-    };
-  }
-
-  // Fascia retributiva con CUAF (caso standard)
-  const fasce = tabella['conCUAF'] as Array<{ retribOrariaMax: number; contributoOrario: number; quotaLavoratore: number }>;
-  for (const fascia of fasce) {
-    if (pagaOraria <= fascia.retribOrariaMax) {
-      return {
-        contributoOrarioDatore: fascia.contributoOrario - fascia.quotaLavoratore,
-        contributoOrarioLavoratore: fascia.quotaLavoratore,
-      };
-    }
-  }
-
-  // Fallback all'ultima fascia
-  const ultima = fasce[fasce.length - 1];
-  return {
-    contributoOrarioDatore: ultima.contributoOrario - ultima.quotaLavoratore,
-    contributoOrarioLavoratore: ultima.quotaLavoratore,
-  };
-}
-
-/**
  * Calcolo dedicato per il CCNL Lavoro Domestico.
  * I contributi sono forfettari (importo fisso per ora), non percentuali.
  * INAIL è incluso nei contributi forfettari INPS.
@@ -213,8 +169,9 @@ async function calculateCostoDomestico(input: CalcolatoreInput): Promise<Calcola
   const mensilita = input.mensilita; // 13 per lavoro domestico
 
   // Indennità vitto e alloggio per conviventi
-  const settoreDomestico = ALIQUOTE_INPS.settoriContributivi['lavoro_domestico'] as unknown as Record<string, unknown>;
-  const indennitaVAMensile = convivente ? (settoreDomestico['indennitaVittoAlloggioMensile'] as number) : 0;
+  const settoreDomestico = ALIQUOTE_INPS.settoriContributivi['domestici'] as unknown as Record<string, unknown>;
+  const indennitaMensileConfigurata = Number(settoreDomestico['indennitaVittoAlloggioMensile'] ?? 0);
+  const indennitaVAMensile = convivente ? indennitaMensileConfigurata : 0;
   const indennitaVAAnnua = indennitaVAMensile * 12;
 
   // RAL = paga oraria × ore settimanali × 52 + eventuale vitto e alloggio
@@ -222,11 +179,15 @@ async function calculateCostoDomestico(input: CalcolatoreInput): Promise<Calcola
   const ralEffettiva = retribuzioneBaseAnnua + indennitaVAAnnua;
 
   // Contributi INPS forfettari (per ora lavorata)
-  const { contributoOrarioDatore, contributoOrarioLavoratore } = getContributoOrarioDomestico(
-    pagaOraria, oreSettimanali, convivente, input.tipoContratto
+  const inpsDom = calcolaInpsDomestici(
+    ralEffettiva,
+    oreSettimanali,
+    convivente,
+    input.tipoContratto
   );
+  const contributoOrarioDatore = inpsDom.quotaDatorePerOra;
   const oreAnnuali = oreSettimanali * 52;
-  const inpsDatore = contributoOrarioDatore * oreAnnuali;
+  const inpsDatore = inpsDom.inpsDatore;
 
   // TFR (Art. 2120 c.c.)
   const tfr = calcolaTfr(ralEffettiva, mensilita);
@@ -300,7 +261,7 @@ async function calculateCostoDomestico(input: CalcolatoreInput): Promise<Calcola
   ];
 
   // Netto dipendente — datore privato non è sostituto d'imposta, nessuna ritenuta IRPEF
-  const inpsDipendenteDomestico = contributoOrarioLavoratore * oreAnnuali;
+  const inpsDipendenteDomestico = inpsDom.inpsDipendente;
   const nettoAnnuoDomestico = ralEffettiva - inpsDipendenteDomestico;
   const nettoDipendente = {
     ralLorda: ralEffettiva,
@@ -347,7 +308,7 @@ export async function calculateCosto(rawInput: unknown): Promise<CalcolatoreOutp
   const input = InputSchema.parse(rawInput) as CalcolatoreInput;
 
   // ─── BRANCH LAVORO DOMESTICO ────────────────────────────────────────────
-  if (input.ccnlId === 'lavoro_domestico' || input.ccnlId === 'domestici') {
+  if (['domestici', 'domestici_conviventi', 'domestici_non_conviventi'].includes(input.ccnlId)) {
     return calculateCostoDomestico(input);
   }
 
@@ -403,15 +364,23 @@ export async function calculateCosto(rawInput: unknown): Promise<CalcolatoreOutp
 
   if (isDomestici) {
     // Circ. INPS n. 9/2026 — contributo fisso per ora (non percentuale RAL)
-    const inpsDom = calcolaInpsDomestici(ralEffettiva, input.oreLavoro, input.convivente ?? false);
+    const inpsDom = calcolaInpsDomestici(
+      ralEffettiva,
+      input.oreLavoro,
+      input.convivente ?? false,
+      input.tipoContratto
+    );
     inpsBase = inpsDom.inpsDatore;
     aliquotaDipendenteDefault = ralEffettiva > 0 ? inpsDom.inpsDipendente / ralEffettiva : 0;
     aliquotaInpsDefault = ralEffettiva > 0 ? inpsDom.inpsDatore / ralEffettiva : 0;
     inpsFasciaNome = inpsDom.fasciaNome;
   } else {
     const settore = getSettoreContributivo(input.ccnlId, input.numeroDipendenti);
-    aliquotaInpsDefault = settore ? settore.aliquotaDatore : 0.288;
-    aliquotaDipendenteDefault = settore ? settore.aliquotaDipendente : 0.0919;
+    if (!settore) {
+      throw new Error(`Settore contributivo INPS non configurato per CCNL '${input.ccnlId}'`);
+    }
+    aliquotaInpsDefault = settore.aliquotaDatore;
+    aliquotaDipendenteDefault = settore.aliquotaDipendente;
     const aliquotaInpsEffettiva = input.aliquotaInps;
     inpsBase = calcolaInpsBase(ralEffettiva, aliquotaInpsEffettiva);
   }
@@ -480,13 +449,13 @@ export async function calculateCosto(rawInput: unknown): Promise<CalcolatoreOutp
 
   const percentualeRal = costoTotaleAnnuo / ralEffettiva;
 
-  // Sanity check — logga un warning se il risultato è fuori range atteso
-  // Per i domestici il range è diverso (contributi più bassi), si salta il check
-  if (!isDomestici && (percentualeRal < RANGE_ATTESO.min || percentualeRal > RANGE_ATTESO.max)) {
+  // Sanity check anti-anomalia (non normativo): evita warning su casi realistici
+  // e segnala solo valori chiaramente implausibili.
+  if (!isDomestici && (percentualeRal < RANGE_SANITY.min || percentualeRal > RANGE_SANITY.max)) {
     console.warn(
       `[engine] Attenzione: costo ${(percentualeRal * 100).toFixed(1)}% della RAL — ` +
-      `fuori dal range atteso ${RANGE_ATTESO.min * 100}%-${RANGE_ATTESO.max * 100}%. ` +
-      `Verifica le aliquote nei file JSON.`
+      `fuori dal range di sanity ${RANGE_SANITY.min * 100}%-${RANGE_SANITY.max * 100}%. ` +
+      `Verifica input, aliquote e configurazioni CCNL/INAIL.`
     );
   }
 

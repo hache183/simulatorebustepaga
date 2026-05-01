@@ -1,0 +1,26 @@
+{
+  "id": "farmacie_private",
+  "nome": "CCNL Farmacie - Aziende Private Urbane",
+  "fonte": "LAVORO/H121.pdf — dati retributivi in vigore dal 01/11/2021",
+  "updatedAt": "2026-05-01T00:00:00Z",
+  "mensilita": 14,
+  "contributiContrattuali": {
+    "azienda": {}
+  },
+  "livelli": [
+    { "codice": "Q1", "descrizione": "Quadro 1", "qualifica": "Quadro 1", "minimoTabellare": 2345.37, "moltiplicatore": 1.00 },
+    { "codice": "Q2", "descrizione": "Quadro 2", "qualifica": "Quadro 2", "minimoTabellare": 2169.97, "moltiplicatore": 0.93 },
+    { "codice": "Q3", "descrizione": "Quadro 3", "qualifica": "Quadro 3", "minimoTabellare": 2099.97, "moltiplicatore": 0.90 },
+    { "codice": "1", "descrizione": "Livello 1", "qualifica": "Livello 1", "minimoTabellare": 1969.97, "moltiplicatore": 0.84 },
+    { "codice": "2", "descrizione": "Livello 2", "qualifica": "Livello 2", "minimoTabellare": 1747.88, "moltiplicatore": 0.75 },
+    { "codice": "3", "descrizione": "Livello 3", "qualifica": "Livello 3", "minimoTabellare": 1659.50, "moltiplicatore": 0.71 },
+    { "codice": "4", "descrizione": "Livello 4", "qualifica": "Livello 4", "minimoTabellare": 1542.75, "moltiplicatore": 0.66 },
+    { "codice": "5", "descrizione": "Livello 5", "qualifica": "Livello 5", "minimoTabellare": 1421.37, "moltiplicatore": 0.61 },
+    { "codice": "6", "descrizione": "Livello 6", "qualifica": "Livello 6", "minimoTabellare": 1327.25, "moltiplicatore": 0.57 }
+  ],
+  "scattiAnzianita": {
+    "periodicitaMesi": 24,
+    "importoPerScattoEuro": null,
+    "maxScatti": 10
+  }
+}

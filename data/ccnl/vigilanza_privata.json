@@ -1,8 +1,8 @@
 {
   "id": "vigilanza_privata",
-  "nome": "CCNL Vigilanza Privata e Servizi Fiduciari (UNIV/Assiv)",
-  "fonte": "Accordo 30 maggio 2023 + modifica 16 febbraio 2024 (vigenza 1° giugno 2023 – 31 dicembre 2026). Fonte: kitech.it CodiceCateg=85",
-  "updatedAt": "2025-12-01T00:00:00Z",
+  "nome": "CCNL Vigilanza Privata - Servizi Fiduciari",
+  "fonte": "LAVORO/HV17 Vigilanza Privata Servizi Fiduciari.pdf — dati retributivi in vigore dal 01/04/2026",
+  "updatedAt": "2026-04-25T00:00:00Z",
   "mensilita": 14,
   "contributiContrattuali": {
     "azienda": {
@@ -25,17 +25,15 @@
     }
   },
   "livelli": [
-    { "codice": "Q",  "descrizione": "Quadro",      "qualifica": "Funzioni direttive istituti di vigilanza, responsabile operativo territoriale",     "minimoTabellare": 2222.60, "moltiplicatore": 1.00 },
-    { "codice": "1",  "descrizione": "1° livello",  "qualifica": "GPG Ispettore, responsabile operativo di settore, coordinatore di turni",          "minimoTabellare": 1914.03, "moltiplicatore": 0.86 },
-    { "codice": "2",  "descrizione": "2° livello",  "qualifica": "GPG Capo servizio, guardia giurata con funzioni di coordinamento",                 "minimoTabellare": 1788.95, "moltiplicatore": 0.81 },
-    { "codice": "3",  "descrizione": "3° livello",  "qualifica": "Guardia Particolare Giurata (GPG) con esperienza consolidata",                    "minimoTabellare": 1591.31, "moltiplicatore": 0.72 },
-    { "codice": "4",  "descrizione": "4° livello",  "qualifica": "GPG di base, impiegato amministrativo istituto di vigilanza",                     "minimoTabellare": 1418.88, "moltiplicatore": 0.64 },
-    { "codice": "5",  "descrizione": "5° livello",  "qualifica": "Addetto portierato fiduciario, receptionist con funzioni di sorveglianza",        "minimoTabellare": 1346.73, "moltiplicatore": 0.61 },
-    { "codice": "6",  "descrizione": "6° livello",  "qualifica": "Ausiliario, addetto ai servizi fiduciari di base, personale di primo impiego",    "minimoTabellare": 1246.73, "moltiplicatore": 0.56 }
+    { "codice": "A", "descrizione": "Livello A", "qualifica": "Livello A", "minimoTabellare": 2003.05, "moltiplicatore": 1.00 },
+    { "codice": "B", "descrizione": "Livello B", "qualifica": "Livello B", "minimoTabellare": 1822.65, "moltiplicatore": 0.91 },
+    { "codice": "C", "descrizione": "Livello C", "qualifica": "Livello C", "minimoTabellare": 1534.00, "moltiplicatore": 0.77 },
+    { "codice": "D", "descrizione": "Livello D", "qualifica": "Livello D", "minimoTabellare": 1281.43, "moltiplicatore": 0.64 },
+    { "codice": "E", "descrizione": "Livello E", "qualifica": "Livello E", "minimoTabellare": 1188.57, "moltiplicatore": 0.59 }
   ],
   "scattiAnzianita": {
     "periodicitaMesi": 36,
-    "importoPerScattoEuro": 10.00,
-    "maxScatti": 7
+    "importoPerScattoEuro": null,
+    "maxScatti": 6
   }
 }

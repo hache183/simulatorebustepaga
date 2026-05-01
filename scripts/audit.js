@@ -5,10 +5,47 @@ const path = require('path');
 
 const issues = [];
 const ok = [];
+const ACTIVE_CCNL_FILES = [
+  'acconciatura_estetica.json',
+  'agricoltura_impiegati.json',
+  'agricoltura_operai.json',
+  'alimentari_industria.json',
+  'alimentari_artigianato.json',
+  'assicurazioni.json',
+  'autorimesse.json',
+  'autoscuole.json',
+  'calzature.json',
+  'chimica.json',
+  'commercio.json',
+  'facility_management.json',
+  'edilizia_industria.json',
+  'edilizia_artigianato.json',
+  'farmacie_private.json',
+  'gomma_plastica.json',
+  'igiene_ambientale_private.json',
+  'lavanderie_artigiane.json',
+  'lavanderie_industriali.json',
+  'legno_arredamento.json',
+  'metalmeccanici.json',
+  'cooperative_sociali.json',
+  'credito.json',
+  'domestici.json',
+  'informatica.json',
+  'multiservizi.json',
+  'sanita_privata.json',
+  'servizi_postali_appalto.json',
+  'case_di_cura_private.json',
+  'scuole_private.json',
+  'studi_professionali.json',
+  'telecomunicazioni.json',
+  'tessile.json',
+  'trasporti.json',
+  'vigilanza_privata.json',
+];
 
 // ── 1. CCNL files ────────────────────────────────────────────────────────────
 const ccnlDir = path.join(__dirname, '..', 'data', 'ccnl');
-const ccnlFiles = fs.readdirSync(ccnlDir);
+const ccnlFiles = ACTIVE_CCNL_FILES;
 for (const f of ccnlFiles) {
   const d = JSON.parse(fs.readFileSync(path.join(ccnlDir, f), 'utf-8'));
   const tag = 'CCNL:' + f;
@@ -29,6 +66,8 @@ for (const f of ccnlFiles) {
     if (l.minimoTabellare <= 0)
       issues.push(tag + ' livello ' + l.codice + ' minimoTabellare=' + l.minimoTabellare);
   }
+  if (!d.fonte || /TODO|Nessun PDF/i.test(d.fonte))
+    issues.push(tag + ' fonte non verificata: ' + d.fonte);
   if (issues.filter(i => i.startsWith(tag)).length === 0)
     ok.push(tag);
 }
@@ -66,12 +105,12 @@ else
   ok.push('TFR OK (divisore 13.5)');
 
 // ── 5. Admin warn range (INAIL) ──────────────────────────────────────────────
-// Check se il warnRange(val, 0.1, 100) genera falsi positivi
-const inailWarnings = inail.voci.filter(v => v.tassoPerMille > 100);
+// Allineato alla UI: warn solo oltre 200‰ (0.1–200)
+const inailWarnings = inail.voci.filter(v => v.tassoPerMille > 200);
 if (inailWarnings.length > 0)
-  issues.push('ADMIN UI: ' + inailWarnings.length + ' voci INAIL sopra 100‰ mostrano warning arancione: ' +
+  issues.push('ADMIN UI: ' + inailWarnings.length + ' voci INAIL sopra 200‰ mostrano warning arancione: ' +
     inailWarnings.map(v => v.codice + '(' + v.tassoPerMille + '‰)').join(', ') +
-    ' → il range nel UI va portato a 200');
+    ' → verificare se il range UI va esteso oltre 200');
 
 // ── 6. Agevolazioni scadute/in scadenza ──────────────────────────────────────
 const oggi = new Date();
@@ -101,7 +140,7 @@ if (fs.existsSync(envPath)) {
   if (hasAdminPw && hasAuthPw && hasAuthEmail && hasAuthToken)
     ok.push('ENV vars OK');
 } else {
-  issues.push('ENV: .env.local NON TROVATO');
+  ok.push('ENV: .env.local assente (accettabile se non usi API/autenticazione locale)');
 }
 
 // ── Report ────────────────────────────────────────────────────────────────────

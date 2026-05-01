@@ -1,0 +1,24 @@
+{
+  "id": "agricoltura_impiegati",
+  "nome": "CCNL Agricoltura - Impiegati",
+  "fonte": "LAVORO/A021.pdf — dati retributivi in vigore dal 01/07/2024",
+  "updatedAt": "2026-05-01T00:00:00Z",
+  "mensilita": 13,
+  "contributiContrattuali": {
+    "azienda": {}
+  },
+  "livelli": [
+    { "codice": "Q", "descrizione": "Quadro", "qualifica": "Quadro impiegati agricoltura", "minimoTabellare": 1973.38, "moltiplicatore": 1.00 },
+    { "codice": "1", "descrizione": "Livello 1", "qualifica": "Livello 1", "minimoTabellare": 1686.76, "moltiplicatore": 0.85 },
+    { "codice": "2", "descrizione": "Livello 2", "qualifica": "Livello 2", "minimoTabellare": 1541.41, "moltiplicatore": 0.78 },
+    { "codice": "3", "descrizione": "Livello 3", "qualifica": "Livello 3", "minimoTabellare": 1417.89, "moltiplicatore": 0.72 },
+    { "codice": "4", "descrizione": "Livello 4", "qualifica": "Livello 4", "minimoTabellare": 1335.93, "moltiplicatore": 0.68 },
+    { "codice": "5", "descrizione": "Livello 5", "qualifica": "Livello 5", "minimoTabellare": 1278.60, "moltiplicatore": 0.65 },
+    { "codice": "6", "descrizione": "Livello 6", "qualifica": "Livello 6", "minimoTabellare": 1217.23, "moltiplicatore": 0.62 }
+  ],
+  "scattiAnzianita": {
+    "periodicitaMesi": 24,
+    "importoPerScattoEuro": null,
+    "maxScatti": 8
+  }
+}

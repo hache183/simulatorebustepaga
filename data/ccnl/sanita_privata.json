@@ -1,7 +1,7 @@
 {
-  "id": "sanita_privata",
-  "nome": "CCNL Sanità Privata (Aiop-Aris)",
-  "fonte": "PDF H442 — AMBULATORI SANITARI. Stampa del 21/04/2026 — dati ufficiali tabelle retributive vigenti dal 01/10/2025 al 30/11/2026",
+  "id": "sanita_privata_unipresa",
+  "nome": "CCNL Sanità Privata (Unipresa - personale non medico)",
+  "fonte": "LAVORO/T037 Sanità Privata.pdf — tabelle retributive in vigore dal 01/03/2025",
   "updatedAt": "2026-04-21T00:00:00Z",
   "mensilita": 14,
   "contributiContrattuali": {
@@ -25,12 +25,18 @@
     }
   },
   "livelli": [
-    { "codice": "DS", "descrizione": "Dirigente sanitario (Quadro A)", "qualifica": "Dirigente sanitario, medico responsabile",              "minimoTabellare": 2408.53, "moltiplicatore": 1.00 },
-    { "codice": "B",  "descrizione": "Categoria B — Liv. 1",           "qualifica": "Infermiere professionale, ostetrica laureata",           "minimoTabellare": 2131.39, "moltiplicatore": 0.88 },
-    { "codice": "C",  "descrizione": "Categoria C — Liv. 2",           "qualifica": "Tecnico sanitario di laboratorio, tecnico di radiologia","minimoTabellare": 1856.50, "moltiplicatore": 0.76 },
-    { "codice": "D",  "descrizione": "Categoria D — Liv. 3",           "qualifica": "Assistente sanitario, operatore tecnico specializzato",  "minimoTabellare": 1706.37, "moltiplicatore": 0.67 },
-    { "codice": "E",  "descrizione": "Categoria E — Liv. 4",           "qualifica": "Operatore socio-sanitario (OSS)",                       "minimoTabellare": 1595.42, "moltiplicatore": 0.60 },
-    { "codice": "F",  "descrizione": "Categoria F — Liv. 5",           "qualifica": "Ausiliario, portantino",                                "minimoTabellare": 1484.78, "moltiplicatore": 0.54 }
+    { "codice": "H",  "descrizione": "Livello H",  "qualifica": "Responsabile sanitario apicale",             "minimoTabellare": 3451.61, "moltiplicatore": 1.00 },
+    { "codice": "G",  "descrizione": "Livello G",  "qualifica": "Quadro sanitario",                           "minimoTabellare": 2829.49, "moltiplicatore": 0.82 },
+    { "codice": "F",  "descrizione": "Livello F",  "qualifica": "Professionista sanitario senior",            "minimoTabellare": 2157.12, "moltiplicatore": 0.62 },
+    { "codice": "E3", "descrizione": "Livello E3", "qualifica": "Professionista sanitario specializzato",     "minimoTabellare": 1708.89, "moltiplicatore": 0.50 },
+    { "codice": "E2", "descrizione": "Livello E2", "qualifica": "Professionista sanitario qualificato",       "minimoTabellare": 1652.86, "moltiplicatore": 0.48 },
+    { "codice": "E1", "descrizione": "Livello E1", "qualifica": "Professionista sanitario",                   "minimoTabellare": 1596.83, "moltiplicatore": 0.46 },
+    { "codice": "D3", "descrizione": "Livello D3", "qualifica": "Tecnico assistenziale senior",               "minimoTabellare": 1540.79, "moltiplicatore": 0.45 },
+    { "codice": "D2", "descrizione": "Livello D2", "qualifica": "Tecnico assistenziale",                      "minimoTabellare": 1507.16, "moltiplicatore": 0.44 },
+    { "codice": "D1", "descrizione": "Livello D1", "qualifica": "Operatore assistenziale qualificato",        "minimoTabellare": 1462.33, "moltiplicatore": 0.42 },
+    { "codice": "C",  "descrizione": "Livello C",  "qualifica": "Operatore assistenziale",                    "minimoTabellare": 1462.40, "moltiplicatore": 0.42 },
+    { "codice": "B",  "descrizione": "Livello B",  "qualifica": "Ausiliario qualificato",                     "minimoTabellare": 1350.30, "moltiplicatore": 0.39 },
+    { "codice": "A",  "descrizione": "Livello A",  "qualifica": "Ausiliario",                                 "minimoTabellare": 1260.65, "moltiplicatore": 0.37 }
   ],
   "scattiAnzianita": {
     "periodicitaMesi": 24,

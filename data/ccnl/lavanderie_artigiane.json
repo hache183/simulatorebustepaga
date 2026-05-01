@@ -1,0 +1,24 @@
+{
+  "id": "lavanderie_artigiane",
+  "nome": "CCNL Lavanderie - Aziende Artigiane",
+  "fonte": "LAVORO/V751 Lavanderie Aziende Artigiane.pdf — dati retributivi in vigore dal 01/10/2025",
+  "updatedAt": "2026-04-25T00:00:00Z",
+  "mensilita": 13,
+  "contributiContrattuali": {
+    "azienda": {}
+  },
+  "livelli": [
+    { "codice": "6S", "descrizione": "Livello 6S", "qualifica": "Livello 6S", "minimoTabellare": 2062.31, "moltiplicatore": 1.00 },
+    { "codice": "6", "descrizione": "Livello 6", "qualifica": "Livello 6", "minimoTabellare": 1926.25, "moltiplicatore": 0.93 },
+    { "codice": "5", "descrizione": "Livello 5", "qualifica": "Livello 5", "minimoTabellare": 1753.22, "moltiplicatore": 0.85 },
+    { "codice": "4", "descrizione": "Livello 4", "qualifica": "Livello 4", "minimoTabellare": 1617.68, "moltiplicatore": 0.78 },
+    { "codice": "3", "descrizione": "Livello 3", "qualifica": "Livello 3", "minimoTabellare": 1550.83, "moltiplicatore": 0.75 },
+    { "codice": "2", "descrizione": "Livello 2", "qualifica": "Livello 2", "minimoTabellare": 1487.56, "moltiplicatore": 0.72 },
+    { "codice": "1", "descrizione": "Livello 1", "qualifica": "Livello 1", "minimoTabellare": 1406.64, "moltiplicatore": 0.68 }
+  ],
+  "scattiAnzianita": {
+    "periodicitaMesi": 24,
+    "importoPerScattoEuro": null,
+    "maxScatti": 5
+  }
+}

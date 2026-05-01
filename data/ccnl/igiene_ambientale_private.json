@@ -1,0 +1,33 @@
+{
+  "id": "igiene_ambientale_private",
+  "nome": "CCNL Igiene Ambientale - Aziende Private",
+  "fonte": "LAVORO/K540 Igiene Ambientale Aziende Private.pdf — dati retributivi in vigore dal 01/02/2026",
+  "updatedAt": "2026-04-25T00:00:00Z",
+  "mensilita": 14,
+  "contributiContrattuali": {
+    "azienda": {}
+  },
+  "livelli": [
+    { "codice": "Q", "descrizione": "Quadro", "qualifica": "Quadro", "minimoTabellare": 3713.74, "moltiplicatore": 1.00 },
+    { "codice": "A1", "descrizione": "Livello A1", "qualifica": "Livello A1", "minimoTabellare": 3258.89, "moltiplicatore": 0.88 },
+    { "codice": "A2s", "descrizione": "Livello A2s", "qualifica": "Livello A2s", "minimoTabellare": 3009.54, "moltiplicatore": 0.81 },
+    { "codice": "A2", "descrizione": "Livello A2", "qualifica": "Livello A2", "minimoTabellare": 2864.83, "moltiplicatore": 0.77 },
+    { "codice": "B1s", "descrizione": "Livello B1s", "qualifica": "Livello B1s", "minimoTabellare": 2728.55, "moltiplicatore": 0.73 },
+    { "codice": "B1", "descrizione": "Livello B1", "qualifica": "Livello B1", "minimoTabellare": 2605.62, "moltiplicatore": 0.70 },
+    { "codice": "B2s", "descrizione": "Livello B2s", "qualifica": "Livello B2s", "minimoTabellare": 2479.89, "moltiplicatore": 0.67 },
+    { "codice": "B2", "descrizione": "Livello B2", "qualifica": "Livello B2", "minimoTabellare": 2377.06, "moltiplicatore": 0.64 },
+    { "codice": "C1s", "descrizione": "Livello C1s", "qualifica": "Livello C1s", "minimoTabellare": 2276.46, "moltiplicatore": 0.61 },
+    { "codice": "C1", "descrizione": "Livello C1", "qualifica": "Livello C1", "minimoTabellare": 2209.10, "moltiplicatore": 0.59 },
+    { "codice": "C2s", "descrizione": "Livello C2s", "qualifica": "Livello C2s", "minimoTabellare": 2140.52, "moltiplicatore": 0.58 },
+    { "codice": "C2", "descrizione": "Livello C2", "qualifica": "Livello C2", "minimoTabellare": 2067.43, "moltiplicatore": 0.56 },
+    { "codice": "D1s", "descrizione": "Livello D1s", "qualifica": "Livello D1s", "minimoTabellare": 2059.43, "moltiplicatore": 0.55 },
+    { "codice": "D1", "descrizione": "Livello D1", "qualifica": "Livello D1", "minimoTabellare": 1867.54, "moltiplicatore": 0.50 },
+    { "codice": "D2s", "descrizione": "Livello D2s", "qualifica": "Livello D2s", "minimoTabellare": 1691.59, "moltiplicatore": 0.46 },
+    { "codice": "D2", "descrizione": "Livello D2", "qualifica": "Livello D2", "minimoTabellare": 1354.72, "moltiplicatore": 0.36 }
+  ],
+  "scattiAnzianita": {
+    "periodicitaMesi": 24,
+    "importoPerScattoEuro": null,
+    "maxScatti": 6
+  }
+}

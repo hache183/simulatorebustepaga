@@ -1,0 +1,25 @@
+{
+  "id": "alimentari_artigianato",
+  "nome": "CCNL Alimentari - Artigianato",
+  "fonte": "LAVORO/E015.pdf — dati retributivi in vigore dal 01/01/2026",
+  "updatedAt": "2026-05-01T00:00:00Z",
+  "mensilita": 13,
+  "contributiContrattuali": {
+    "azienda": {}
+  },
+  "livelli": [
+    { "codice": "1S", "descrizione": "1S", "qualifica": "Quadro", "minimoTabellare": 2273.75, "moltiplicatore": 1.00 },
+    { "codice": "1", "descrizione": "1", "qualifica": "Livello 1", "minimoTabellare": 2009.01, "moltiplicatore": 0.88 },
+    { "codice": "2", "descrizione": "2", "qualifica": "Livello 2", "minimoTabellare": 1839.16, "moltiplicatore": 0.81 },
+    { "codice": "3A", "descrizione": "3A", "qualifica": "Livello 3A", "minimoTabellare": 1713.85, "moltiplicatore": 0.75 },
+    { "codice": "3", "descrizione": "3", "qualifica": "Livello 3", "minimoTabellare": 1621.06, "moltiplicatore": 0.71 },
+    { "codice": "4", "descrizione": "4", "qualifica": "Livello 4", "minimoTabellare": 1554.94, "moltiplicatore": 0.68 },
+    { "codice": "5", "descrizione": "5", "qualifica": "Livello 5", "minimoTabellare": 1483.14, "moltiplicatore": 0.65 },
+    { "codice": "6", "descrizione": "6", "qualifica": "Livello 6", "minimoTabellare": 1387.62, "moltiplicatore": 0.61 }
+  ],
+  "scattiAnzianita": {
+    "periodicitaMesi": 24,
+    "importoPerScattoEuro": null,
+    "maxScatti": 5
+  }
+}

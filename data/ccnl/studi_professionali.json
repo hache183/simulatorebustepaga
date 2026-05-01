@@ -1,7 +1,7 @@
 {
   "id": "studi_professionali",
   "nome": "CCNL Studi Professionali (Confprofessioni)",
-  "fonte": "Nessun PDF specifico per CCNL Studi Professionali (Confprofessioni) tra i 50 documenti forniti (LAVORO/). Valori stimati — da aggiornare con tabella retributiva Confprofessioni ufficiale 2026 quando disponibile.",
+  "fonte": "LAVORO/H442 Studi Professionali.pdf — tabella retributiva livelli vigente 2026",
   "updatedAt": "2026-04-21T00:00:00Z",
   "mensilita": 14,
   "contributiContrattuali": {
@@ -28,7 +28,7 @@
     { "codice": "Q",  "descrizione": "Quadro",             "qualifica": "Responsabile di studio, coordinatore di funzione con poteri di rappresentanza",     "minimoTabellare": 2408.53, "moltiplicatore": 1.00 },
     { "codice": "1",  "descrizione": "1° livello",         "qualifica": "Collaboratore senior con elevata autonomia professionale, specialista di settore",   "minimoTabellare": 2131.39, "moltiplicatore": 0.88 },
     { "codice": "2",  "descrizione": "2° livello",         "qualifica": "Impiegato di concetto, contabile senior, assistente professionale qualificato",      "minimoTabellare": 1856.50, "moltiplicatore": 0.77 },
-    { "codice": "3S", "descrizione": "3° livello Super",   "qualifica": "Segretario/a senior di studio, impiegato d'ordine con specializzazione",            "minimoTabellare": 1722.11, "moltiplicatore": 0.71 },
+    { "codice": "3S", "descrizione": "3° livello Super",   "qualifica": "Segretario/a senior di studio, impiegato d'ordine con specializzazione",            "minimoTabellare": 1722.01, "moltiplicatore": 0.71 },
     { "codice": "3",  "descrizione": "3° livello",         "qualifica": "Segretario/a di studio, assistente amministrativo",                                  "minimoTabellare": 1706.37, "moltiplicatore": 0.71 },
     { "codice": "4S", "descrizione": "4° livello Super",   "qualifica": "Addetto front-office con esperienza, operatore contabile",                           "minimoTabellare": 1654.70, "moltiplicatore": 0.69 },
     { "codice": "4",  "descrizione": "4° livello",         "qualifica": "Operatore amministrativo, archivista, addetto alla reception",                       "minimoTabellare": 1595.42, "moltiplicatore": 0.66 },

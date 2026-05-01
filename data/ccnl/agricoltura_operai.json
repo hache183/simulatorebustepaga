@@ -1,0 +1,20 @@
+{
+  "id": "agricoltura_operai",
+  "nome": "CCNL Agricoltura - Operai",
+  "fonte": "LAVORO/A11.pdf — dati retributivi in vigore dal 01/01/2025",
+  "updatedAt": "2026-05-01T00:00:00Z",
+  "mensilita": 13,
+  "contributiContrattuali": {
+    "azienda": {}
+  },
+  "livelli": [
+    { "codice": "1", "descrizione": "Area 1", "qualifica": "Operai specializzati", "minimoTabellare": 1458.61, "moltiplicatore": 1.00 },
+    { "codice": "2", "descrizione": "Area 2", "qualifica": "Operai qualificati", "minimoTabellare": 1330.25, "moltiplicatore": 0.91 },
+    { "codice": "3", "descrizione": "Area 3", "qualifica": "Operai comuni", "minimoTabellare": 991.85, "moltiplicatore": 0.68 }
+  ],
+  "scattiAnzianita": {
+    "periodicitaMesi": 24,
+    "importoPerScattoEuro": null,
+    "maxScatti": 5
+  }
+}

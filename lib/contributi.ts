@@ -218,6 +218,7 @@ export function calcolaInpsDomestici(
   ralAnnua: number,
   oreLavoro: number,
   convivente: boolean = false,
+  tipoContratto: 'tempo_indeterminato' | 'tempo_determinato' = 'tempo_indeterminato',
 ): { inpsDatore: number; inpsDipendente: number; fasciaNome: string; quotaDatorePerOra: number } {
   const data = ALIQUOTE_INPS;
   const raw = (data.settoriContributivi as unknown as Record<string, DomesticiSettoreRaw>)['domestici'];
@@ -245,10 +246,16 @@ export function calcolaInpsDomestici(
     fasciaNome = `>€11,70/h — ret. effettiva €${retribuzioneOraria.toFixed(2)}/h (Tabella A)`;
   }
 
-  const quotaDatorePerOra = fascia.contributoOraTotal - fascia.quotaLavoratore;
+  const totaleOrario = tipoContratto === 'tempo_determinato' && fascia.contributoAddizionale
+    ? fascia.contributoAddizionale.contributoOraTotal
+    : fascia.contributoOraTotal;
+  const quotaLavoratoreOraria = tipoContratto === 'tempo_determinato' && fascia.contributoAddizionale
+    ? fascia.contributoAddizionale.quotaLavoratore
+    : fascia.quotaLavoratore;
+  const quotaDatorePerOra = totaleOrario - quotaLavoratoreOraria;
   return {
     inpsDatore: quotaDatorePerOra * oreAnnue,
-    inpsDipendente: fascia.quotaLavoratore * oreAnnue,
+    inpsDipendente: quotaLavoratoreOraria * oreAnnue,
     fasciaNome,
     quotaDatorePerOra,
   };

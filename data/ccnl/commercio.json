@@ -1,8 +1,8 @@
 {
   "id": "commercio",
   "nome": "CCNL Terziario Distribuzione e Servizi (Commercio)",
-  "fonte": "Nessun PDF specifico per CCNL Commercio Terziario Distribuzione e Servizi (Confcommercio) tra i 50 documenti forniti (LAVORO/). Presenti solo PDF di settori commerciali specifici: H052 Alberghi Confcommercio, H02D Terziario Avanzato ANPIT-CISAL, H021 Dirigenti Aziende Commerciali — nessuno corrisponde al CCNL principale. Valori derivano da Rinnovo CCNL 22/03/2024. Da aggiornare con tabella Confcommercio ufficiale 2026.",
-  "updatedAt": "2026-04-21T00:00:00Z",
+  "fonte": "LAVORO/H011.pdf — dati retributivi in vigore dal 01/01/2026",
+  "updatedAt": "2026-05-01T00:00:00Z",
   "mensilita": 14,
   "contributiContrattuali": {
     "azienda": {
@@ -33,13 +33,14 @@
     }
   },
   "livelli": [
-    { "codice": "Q",  "descrizione": "Quadro",      "qualifica": "Funzioni direttive con responsabilità di unità organizzativa",          "minimoTabellare": 2357.28, "moltiplicatore": 1.00, "_nota": "Valore da rinnovo CCNL 22/03/2024 — PDF CCNL Commercio Confcommercio non incluso nei documenti forniti. Da verificare con tabelle ufficiali 2026." },
-    { "codice": "1",  "descrizione": "1° livello",  "qualifica": "Personale con funzioni ad elevata responsabilità",                      "minimoTabellare": 2209.90, "moltiplicatore": 0.94, "_nota": "Valore da rinnovo CCNL 22/03/2024 — PDF CCNL Commercio Confcommercio non incluso nei documenti forniti. Da verificare con tabelle ufficiali 2026." },
-    { "codice": "2",  "descrizione": "2° livello",  "qualifica": "Impiegati con mansioni di concetto",                                    "minimoTabellare": 2045.94, "moltiplicatore": 0.86, "_nota": "Valore da rinnovo CCNL 22/03/2024 — PDF CCNL Commercio Confcommercio non incluso nei documenti forniti. Da verificare con tabelle ufficiali 2026." },
-    { "codice": "3",  "descrizione": "3° livello",  "qualifica": "Impiegati d'ordine, commessi qualificati",                              "minimoTabellare": 1904.00, "moltiplicatore": 0.79, "_nota": "Valore da rinnovo CCNL 22/03/2024 — PDF CCNL Commercio Confcommercio non incluso nei documenti forniti. Da verificare con tabelle ufficiali 2026." },
-    { "codice": "4",  "descrizione": "4° livello",  "qualifica": "Commessi alla vendita, cassieri, contabili d'ordine",                   "minimoTabellare": 1777.47, "moltiplicatore": 0.72, "_nota": "Valore da rinnovo CCNL 22/03/2024 — PDF CCNL Commercio Confcommercio non incluso nei documenti forniti. Da verificare con tabelle ufficiali 2026." },
-    { "codice": "5",  "descrizione": "5° livello",  "qualifica": "Ausiliari, addetti al confezionamento",                                 "minimoTabellare": 1652.35, "moltiplicatore": 0.65, "_nota": "Valore da rinnovo CCNL 22/03/2024 — PDF CCNL Commercio Confcommercio non incluso nei documenti forniti. Da verificare con tabelle ufficiali 2026." },
-    { "codice": "6",  "descrizione": "6° livello",  "qualifica": "Personale di pulizia, fattorini",                                       "minimoTabellare": 1541.77, "moltiplicatore": 0.60 }
+    { "codice": "Q",  "descrizione": "Quadro",      "qualifica": "Quadro",                              "minimoTabellare": 2984.23, "moltiplicatore": 1.00 },
+    { "codice": "1",  "descrizione": "1° livello",  "qualifica": "1° livello",                          "minimoTabellare": 2504.06, "moltiplicatore": 0.84 },
+    { "codice": "2",  "descrizione": "2° livello",  "qualifica": "2° livello",                          "minimoTabellare": 2274.90, "moltiplicatore": 0.76 },
+    { "codice": "3",  "descrizione": "3° livello",  "qualifica": "3° livello",                          "minimoTabellare": 1981.84, "moltiplicatore": 0.66 },
+    { "codice": "4",  "descrizione": "4° livello",  "qualifica": "4° livello",                          "minimoTabellare": 1781.68, "moltiplicatore": 0.60 },
+    { "codice": "5",  "descrizione": "5° livello",  "qualifica": "5° livello",                          "minimoTabellare": 1658.01, "moltiplicatore": 0.56 },
+    { "codice": "6",  "descrizione": "6° livello",  "qualifica": "6° livello",                          "minimoTabellare": 1539.70, "moltiplicatore": 0.52 },
+    { "codice": "7",  "descrizione": "7° livello",  "qualifica": "7° livello",                          "minimoTabellare": 1395.89, "moltiplicatore": 0.47 }
   ],
   "scattiAnzianita": {
     "periodicitaMesi": 36,

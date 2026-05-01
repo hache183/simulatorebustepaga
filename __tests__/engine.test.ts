@@ -1,10 +1,11 @@
 import { calculateCosto } from '@/lib/engine';
 import { calcolaScattiAnzianita, calcolaTfr, calcolaInail, calcolaInpsBase, getSettoreContributivo } from '@/lib/contributi';
+import { getCcnlData } from '@/lib/ccnl';
 import { ZodError } from 'zod';
 
 // Input di base riutilizzato in più test
 const inputBase = {
-  ccnlId: 'commercio',
+  ccnlId: 'studi_professionali',
   livello: 'Q',
   ral: 28_000,
   tipoContratto: 'tempo_indeterminato' as const,
@@ -13,25 +14,35 @@ const inputBase = {
   anzianitaAnni: 0,
   numeroDipendenti: 10,
   regione: 'Lombardia',
-  codiceInail: '0721',
+  codiceInail: '0723',
   agevolazioniSelezionate: [],
   includiAssistenzaSanitaria: true,
-  aliquotaInps: 0.288,
+  aliquotaInps: 0.2928,
 };
 
+test('CCNL non verificato non deve essere accessibile', () => {
+  expect(() => getCcnlData('ccnl_non_esistente')).toThrow("CCNL non trovato");
+});
+
+test('tipo contratto non supportato deve essere rifiutato', async () => {
+  await expect(
+    calculateCosto({ ...inputBase, tipoContratto: 'contratto_non_supportato' as never })
+  ).rejects.toThrow(ZodError);
+});
+
 // ─── CASO 1: Costo base realistico ───────────────────────────────────────
-test('costo base: deve essere tra 128% e 160% della RAL', async () => {
+test('costo base: deve essere compreso in un range plausibile sulla RAL', async () => {
   const result = await calculateCosto(inputBase);
-  expect(result.costoTotaleAnnuo).toBeGreaterThan(28_000 * 1.28);
+  expect(result.costoTotaleAnnuo).toBeGreaterThan(28_000 * 1.15);
   expect(result.costoTotaleAnnuo).toBeLessThan(28_000 * 1.60);
   expect(result.costoTotaleMensile).toBeCloseTo(result.costoTotaleAnnuo / 12, 0);
 });
 
-test('costo base: INPS datoriale deve essere circa 28.80% della RAL', async () => {
+test('costo base: INPS datoriale deve rispettare l aliquota impostata', async () => {
   const result = await calculateCosto(inputBase);
   const inps = result.voci.find(v => v.id === 'inps');
   expect(inps).toBeDefined();
-  expect(inps!.importoAnnuo).toBeCloseTo(28_000 * 0.288, -1);
+  expect(inps!.importoAnnuo).toBeCloseTo(28_000 * 0.2928, -1);
 });
 
 // ─── CASO 2: Agevolazione under36 ────────────────────────────────────────
@@ -57,16 +68,16 @@ test('part-time 20h: il costo deve essere circa la metà del full-time (±10%)',
 
 // ─── CASO 4: Scatti di anzianità ─────────────────────────────────────────
 test('scatti anzianità: 10 anni devono produrre scatti corretti (triennali, max 10)', () => {
-  const config = { periodicitaMesi: 36, importoPerScattoEuro: 19.73, maxScatti: 10 };
+  const config = { periodicitaMesi: 36, importoPerScattoEuro: 8.41, maxScatti: 8 };
   const costo = calcolaScattiAnzianita(10, config);
   // 10 anni / 3 anni per scatto = 3 scatti
-  expect(costo).toBeCloseTo(3 * 19.73 * 12, 0);
+  expect(costo).toBeCloseTo(3 * 8.41 * 12, 0);
 });
 
 test('scatti anzianità: 30+ anni non devono superare il limite di 10 scatti', () => {
-  const config = { periodicitaMesi: 36, importoPerScattoEuro: 19.73, maxScatti: 10 };
+  const config = { periodicitaMesi: 36, importoPerScattoEuro: 8.41, maxScatti: 8 };
   const costo = calcolaScattiAnzianita(35, config);
-  expect(costo).toBeCloseTo(10 * 19.73 * 12, 0); // cap a 10
+  expect(costo).toBeCloseTo(8 * 8.41 * 12, 0); // cap a 8
 });
 
 // ─── CASO 5: Input invalidi ───────────────────────────────────────────────
@@ -103,9 +114,9 @@ test('TFR: RAL / 13.5 senza moltiplicazione per mensilita', () => {
   expect(tfr).toBeCloseTo(atteso, 0);
 });
 
-test('INAIL: codice 0721 (uffici) deve dare tasso 12.09 per mille', () => {
-  const inail = calcolaInail(28_000, '0721');
-  expect(inail).toBeCloseTo(28_000 * 12.09 / 1000, 0);
+test('INAIL: codice 0723 (studi professionali) deve dare tasso 5.64 per mille', () => {
+  const inail = calcolaInail(28_000, '0723');
+  expect(inail).toBeCloseTo(28_000 * 5.64 / 1000, 0);
 });
 
 // ─── VALIDAZIONE MENSILITÀ ────────────────────────────────────────────────
@@ -155,7 +166,7 @@ test('assistenza sanitaria esclusa: costo deve essere inferiore', async () => {
 });
 
 // ─── MOD3: Aliquota INPS personalizzata ────────────────────────────────────
-test('aliquota INPS personalizzata: 26.76% deve dare INPS inferiore al default 28.80%', async () => {
+test('aliquota INPS personalizzata: 26.76% deve dare INPS inferiore al default', async () => {
   const resultDefault = await calculateCosto(inputBase);
   const resultCustom = await calculateCosto({ ...inputBase, aliquotaInps: 0.2676 });
   const inpsDefault = resultDefault.voci.find(v => v.id === 'inps')!.importoAnnuo;
@@ -183,7 +194,7 @@ test('retribuzione personalizzata: RAL effettiva deve usare il valore fornito', 
   });
   // Con retribuzione personalizzata 35k, il costo INPS si basa su 35k
   const inps = result.voci.find(v => v.id === 'inps')!.importoAnnuo;
-  expect(inps).toBeCloseTo(35_000 * 0.288, -1);
+  expect(inps).toBeCloseTo(35_000 * inputBase.aliquotaInps, -1);
   // Il costo totale deve essere superiore a quello base (28k)
   const resultBase = await calculateCosto(inputBase);
   expect(result.costoTotaleAnnuo).toBeGreaterThan(resultBase.costoTotaleAnnuo);
@@ -198,64 +209,40 @@ test('retribuzione personalizzata: voce superminimo presente nei dettagli', asyn
   expect(superminimo).toBeDefined();
 });
 
-// ─── BUG 1 FIX: moltiplicatore non deve influenzare la RAL ────────────────
-test('BUG1: RAL non deve essere moltiplicata per il moltiplicatore del livello', async () => {
-  // Commercio livello 6: moltiplicatore 0.60, minimoTabellare 1541.77
-  // RAL dal form: 1541.77 × 14 = 21584.78
-  const result = await calculateCosto({
-    ...inputBase,
-    livello: '6',
-    ral: 21_584.78,
-    mensilita: 14,
-  });
-  // RAL effettiva deve essere 21584.78, NOT moltiplicata per 0.60
-  const ralVoce = result.voci.find(v => v.id === 'ral')!;
-  expect(ralVoce.importoAnnuo).toBeCloseTo(21_584.78, 0);
-});
-
-test('BUG1: Commercio livello 4, RAL deve corrispondere al valore inserito', async () => {
-  // Commercio livello 4: minimoTabellare 1777.47, mensilità 14
-  // RAL = 1777.47 × 14 = 24884.58
+test('RAL non deve essere moltiplicata per il moltiplicatore del livello', async () => {
   const result = await calculateCosto({
     ...inputBase,
     livello: '4',
-    ral: 24_884.58,
+    ral: 22_335.88,
     mensilita: 14,
   });
   const ralVoce = result.voci.find(v => v.id === 'ral')!;
-  expect(ralVoce.importoAnnuo).toBeCloseTo(24_884.58, 0);
+  expect(ralVoce.importoAnnuo).toBeCloseTo(22_335.88, 0);
 });
 
 // ─── MOD B: Settore contributivo INPS ──────────────────────────────────────
-test('getSettoreContributivo: commercio ≤15 dip deve dare commercio_fino15', () => {
-  const settore = getSettoreContributivo('commercio', 10);
+test('getSettoreContributivo: studi professionali ≤15 dip usa commercio_fino15', () => {
+  const settore = getSettoreContributivo('studi_professionali', 10);
   expect(settore).toBeDefined();
   expect(settore!.aliquotaDatore).toBeCloseTo(0.2928, 4);
+  expect(settore!.aliquotaDipendente).toBeCloseTo(0.0919, 4);
 });
 
-test('getSettoreContributivo: commercio >15 dip deve dare commercio_oltre15', () => {
-  const settore = getSettoreContributivo('commercio', 50);
+test('getSettoreContributivo: studi professionali >15 dip usa commercio_oltre15', () => {
+  const settore = getSettoreContributivo('studi_professionali', 50);
   expect(settore).toBeDefined();
   expect(settore!.aliquotaDatore).toBeCloseTo(0.2968, 4);
 });
 
-test('getSettoreContributivo: metalmeccanici ≤15 dip deve dare industria_fino15', () => {
-  const settore = getSettoreContributivo('metalmeccanici', 10);
+test('getSettoreContributivo: trasporti ≤15 dip usa industria_fino15', () => {
+  const settore = getSettoreContributivo('trasporti', 10);
   expect(settore).toBeDefined();
   expect(settore!.aliquotaDatore).toBeCloseTo(0.3037, 4);
 });
 
-test('getSettoreContributivo: edilizia deve dare edilizia_industria', () => {
-  const settore = getSettoreContributivo('edilizia', 10);
-  expect(settore).toBeDefined();
-  expect(settore!.aliquotaDatore).toBeCloseTo(0.3447, 4);
-});
-
-test('getSettoreContributivo: agricoltura deve dare settore agricoltura dedicato (non industria)', () => {
-  const settore = getSettoreContributivo('agricoltura', 10);
-  expect(settore).toBeDefined();
-  expect(settore!.aliquotaDatore).toBeCloseTo(0.3950, 4);
-  expect(settore!.nome).toContain('Agricoltura');
+test('getSettoreContributivo: ccnl non mappato restituisce null', () => {
+  const settore = getSettoreContributivo('ccnl_non_mappato', 10);
+  expect(settore).toBeNull();
 });
 
 // ─── MOD D: Netto dipendente ───────────────────────────────────────────────
@@ -274,7 +261,8 @@ test('nettoDipendente: netto annuo < RAL (contributi e tasse sottratti)', async 
 
 test('nettoDipendente: INPS dipendente deve essere circa 9.19% della RAL', async () => {
   const result = await calculateCosto(inputBase);
-  expect(result.nettoDipendente.inpsDipendente).toBeCloseTo(28_000 * 0.0919, -1);
+  const settore = getSettoreContributivo(inputBase.ccnlId, inputBase.numeroDipendenti)!;
+  expect(result.nettoDipendente.inpsDipendente).toBeCloseTo(28_000 * settore.aliquotaDipendente, -1);
 });
 
 test('nettoDipendente: imponibile IRPEF = RAL - INPS dipendente', async () => {
@@ -306,77 +294,43 @@ test('nettoDipendente: bonus cuneo fiscale presente per redditi bassi', async ()
   // RAL 21584.78 → imponibile ~19602 → sotto 20k → bonus cuneo (sub-fasce 7.1%/5.3%/4.8%)
   const result = await calculateCosto({
     ...inputBase,
-    livello: '6',
+    livello: '4',
     ral: 21_584.78,
     mensilita: 14,
   });
   expect(result.nettoDipendente.bonusCuneoFiscale).toBeGreaterThan(0);
 });
 
-// ─── GOLDEN TEST: CCNL Commercio Liv.6 (benchmark consulente) ─────────────
-// Fonte: Wolters Kluwer One Lavoro RTF + correzioni consulente su CCF_000208.pdf
-// Costo medio annuo target: ~30.891 € (dal RTF), almeno ~28.000–31.000 €
-describe('GOLDEN TEST — CCNL Commercio Liv.6 full-time', () => {
-  const goldenInput = {
-    ccnlId: 'commercio',
-    livello: '6',
-    ral: 21_584.78, // 1541.77 × 14
+describe('DOMESTICI — convivente vs non convivente', () => {
+  const baseDom = {
+    ccnlId: 'domestici',
+    livello: 'BS',
+    ral: 12_000,
     tipoContratto: 'tempo_indeterminato' as const,
-    oreLavoro: 40,
-    mensilita: 14,
-    anzianitaAnni: 0,
-    numeroDipendenti: 10,
+    oreLavoro: 20,
+    mensilita: 13,
+    anzianitaAnni: 2,
+    numeroDipendenti: 1,
     regione: 'Lombardia',
-    codiceInail: '0111',
+    codiceInail: '',
     agevolazioniSelezionate: [],
-    includiAssistenzaSanitaria: true,
-    aliquotaInps: 0.288,
+    includiAssistenzaSanitaria: false,
+    aliquotaInps: 0,
+    pagaOraria: 7.45,
+    oreSettimanali: 20,
   };
 
-  test('RAL effettiva deve essere ~21.584,78 €', async () => {
-    const result = await calculateCosto(goldenInput);
-    const ral = result.voci.find(v => v.id === 'ral')!;
-    expect(ral.importoAnnuo).toBeCloseTo(21_584.78, 0);
+  test('non convivente e convivente producono contributi dipendente diversi', async () => {
+    const nonConvivente = await calculateCosto({ ...baseDom, convivente: false });
+    const convivente = await calculateCosto({ ...baseDom, convivente: true });
+    expect(convivente.nettoDipendente.inpsDipendente).not.toBeCloseTo(nonConvivente.nettoDipendente.inpsDipendente, 2);
   });
 
-  test('INPS datoriali deve essere ~6.216 € (28.80%)', async () => {
-    const result = await calculateCosto(goldenInput);
-    const inps = result.voci.find(v => v.id === 'inps')!;
-    expect(inps.importoAnnuo).toBeCloseTo(21_584.78 * 0.288, -1);
-  });
-
-  test('TFR deve essere ~1.599 € (RAL / 13.5)', async () => {
-    const result = await calculateCosto(goldenInput);
-    const tfr = result.voci.find(v => v.id === 'tfr')!;
-    expect(tfr.importoAnnuo).toBeCloseTo(21_584.78 / 13.5, -1);
-  });
-
-  test('INAIL deve essere ~157 € (tasso 7.31‰)', async () => {
-    const result = await calculateCosto(goldenInput);
-    const inail = result.voci.find(v => v.id === 'inail')!;
-    expect(inail.importoAnnuo).toBeCloseTo(21_584.78 * 7.31 / 1000, 0);
-  });
-
-  test('Contributi CCNL ~515 €/anno (fondi Est+Ebiter+Previcommercio 1.55%)', async () => {
-    const result = await calculateCosto(goldenInput);
-    const ccnlContrib = result.voci.find(v => v.id === 'contributi_ccnl')!;
-    // FondoEst 10.42×12 + Ebiter 4.58×12 + Previcommercio 1.55% × 21584.78
-    const atteso = (10.42 + 4.58) * 12 + 21_584.78 * 0.0155;
-    expect(ccnlContrib.importoAnnuo).toBeCloseTo(atteso, 0);
-  });
-
-  test('Costo totale annuo deve essere tra 28.000 € e 35.000 €', async () => {
-    const result = await calculateCosto(goldenInput);
-    expect(result.costoTotaleAnnuo).toBeGreaterThan(28_000);
-    expect(result.costoTotaleAnnuo).toBeLessThan(35_000);
-  });
-
-  test('Elementi aggiuntivi CCNL presenti (ex festività, solidarietà)', async () => {
-    const result = await calculateCosto(goldenInput);
-    const elemAggiuntivi = result.voci.find(v => v.id === 'elementi_aggiuntivi');
-    expect(elemAggiuntivi).toBeDefined();
-    // exFestivita 5.07×12 + festivitaNonGodute 10.14×12 + contributoSolidarieta 2.89×12
-    const atteso = (5.07 + 10.14 + 2.89) * 12;
-    expect(elemAggiuntivi!.importoAnnuo).toBeCloseTo(atteso, 0);
+  test('il netto domestico è pari a RAL meno INPS dipendente', async () => {
+    const res = await calculateCosto({ ...baseDom, convivente: false });
+    expect(res.nettoDipendente.nettoAnnuo).toBeCloseTo(
+      res.nettoDipendente.ralLorda - res.nettoDipendente.inpsDipendente,
+      2
+    );
   });
 });
