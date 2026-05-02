@@ -4,8 +4,11 @@ import { useState } from 'react';
 import { CalcolatoreFormStep1 } from '@/components/CalcolatoreForm';
 import { CalcolatoreFormStep2 } from '@/components/CalcolatoreFormStep2';
 import { RisultatiCalcolatore } from '@/components/RisultatiCalcolatore';
+import { SociAmministratoriTab } from '@/components/SociAmministratoriTab';
 import { Disclaimer } from '@/components/Disclaimer';
 import type { CalcolatoreOutput, ContributoContrattuale } from '@/types';
+
+type PaginaTab = 'dipendenti' | 'soci';
 
 interface Step1Data {
   ccnlId: string; livello: string; ral: number;
@@ -27,6 +30,7 @@ interface Step2Data {
 interface Props { updatedDates: string[]; }
 
 export function CalcolatorePageClient({ updatedDates }: Props) {
+  const [paginaTab, setPaginaTab] = useState<PaginaTab>('dipendenti');
   const [step, setStep] = useState<1 | 2 | 'risultati'>(1);
   const [step1Data, setStep1Data] = useState<Step1Data | null>(null);
   const [risultato, setRisultato] = useState<CalcolatoreOutput | null>(null);
@@ -73,56 +77,107 @@ export function CalcolatorePageClient({ updatedDates }: Props) {
   return (
     <div className="print-unlock" style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
 
-      {/* Step indicator bar — sotto l'header */}
+      {/* Tab principali: dipendenti vs Soci e Amministratori (modalità isolate) */}
       <div className="no-print" style={{
         paddingTop: '56px',
         background: 'var(--color-bg-surface)',
         borderBottom: '1px solid var(--color-border)',
       }}>
-        <div style={{
-          maxWidth: '1400px', margin: '0 auto',
-          padding: '0 32px',
-          display: 'flex', alignItems: 'center', gap: '8px',
-          height: '44px',
-        }}>
-          {[
-            { n: 1, label: 'Assunzione',  done: step !== 1 },
-            { n: 2, label: 'Azienda',     done: step === 'risultati' },
-            { n: 3, label: 'Risultati',   done: false },
-          ].map((s, i) => {
-            const isActive = (step === 1 && s.n === 1) || (step === 2 && s.n === 2) || (step === 'risultati' && s.n === 3);
-            return (
-              <div key={s.n} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <div style={{
-                    width: '22px', height: '22px', borderRadius: '50%',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    fontSize: '11px', fontFamily: "'DM Mono', monospace", fontWeight: 500,
-                    background: s.done ? 'var(--color-green)' : isActive ? 'var(--color-accent)' : 'var(--color-bg-elevated)',
-                    color: (s.done || isActive) ? 'white' : 'var(--color-text-muted)',
-                    border: `1px solid ${s.done ? 'var(--color-green)' : isActive ? 'var(--color-accent)' : 'var(--color-border)'}`,
-                    transition: 'all 0.2s ease',
-                  }}>
-                    {s.done ? '✓' : s.n}
-                  </div>
-                  <span style={{
-                    fontSize: '13px', fontFamily: "'Plus Jakarta Sans', sans-serif",
-                    color: isActive ? 'var(--color-text-primary)' : s.done ? 'var(--color-green)' : 'var(--color-text-muted)',
-                    fontWeight: isActive ? 600 : 400,
-                  }}>
-                    {s.label}
-                  </span>
-                </div>
-                {i < 2 && (
-                  <span style={{ color: 'var(--color-border-bright)', fontSize: '12px' }}>›</span>
-                )}
-              </div>
-            );
-          })}
+        <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '12px 32px 0' }}>
+          <div style={{ display: 'flex', gap: '4px', marginBottom: paginaTab === 'dipendenti' ? '0' : '12px' }}>
+            {([
+              { id: 'dipendenti' as const, label: 'Dipendenti' },
+              { id: 'soci' as const, label: 'Soci e Amministratori' },
+            ]).map(t => (
+              <button key={t.id} type="button" onClick={() => setPaginaTab(t.id)}
+                style={{
+                  padding: '10px 18px', borderRadius: '8px 8px 0 0',
+                  border: '1px solid var(--color-border)',
+                  borderBottom: paginaTab === t.id ? '1px solid var(--color-bg-surface)' : undefined,
+                  marginBottom: paginaTab === t.id ? '-1px' : 0,
+                  background: paginaTab === t.id ? 'var(--color-bg-base)' : 'var(--color-bg-elevated)',
+                  color: paginaTab === t.id ? 'var(--color-text-primary)' : 'var(--color-text-muted)',
+                  fontWeight: paginaTab === t.id ? 600 : 500,
+                  fontSize: '13px',
+                  fontFamily: "'Plus Jakarta Sans', sans-serif",
+                  cursor: 'pointer',
+                }}>
+                {t.label}
+              </button>
+            ))}
+          </div>
         </div>
+
+        {paginaTab === 'dipendenti' && (
+          <div style={{
+            maxWidth: '1400px', margin: '0 auto',
+            padding: '0 32px',
+            display: 'flex', alignItems: 'center', gap: '8px',
+            height: '44px',
+          }}>
+            {[
+              { n: 1, label: 'Assunzione',  done: step !== 1 },
+              { n: 2, label: 'Azienda',     done: step === 'risultati' },
+              { n: 3, label: 'Risultati',   done: false },
+            ].map((s, i) => {
+              const isActive = (step === 1 && s.n === 1) || (step === 2 && s.n === 2) || (step === 'risultati' && s.n === 3);
+              return (
+                <div key={s.n} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <div style={{
+                      width: '22px', height: '22px', borderRadius: '50%',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      fontSize: '11px', fontFamily: "'DM Mono', monospace", fontWeight: 500,
+                      background: s.done ? 'var(--color-green)' : isActive ? 'var(--color-accent)' : 'var(--color-bg-elevated)',
+                      color: (s.done || isActive) ? 'white' : 'var(--color-text-muted)',
+                      border: `1px solid ${s.done ? 'var(--color-green)' : isActive ? 'var(--color-accent)' : 'var(--color-border)'}`,
+                      transition: 'all 0.2s ease',
+                    }}>
+                      {s.done ? '✓' : s.n}
+                    </div>
+                    <span style={{
+                      fontSize: '13px', fontFamily: "'Plus Jakarta Sans', sans-serif",
+                      color: isActive ? 'var(--color-text-primary)' : s.done ? 'var(--color-green)' : 'var(--color-text-muted)',
+                      fontWeight: isActive ? 600 : 400,
+                    }}>
+                      {s.label}
+                    </span>
+                  </div>
+                  {i < 2 && (
+                    <span style={{ color: 'var(--color-border-bright)', fontSize: '12px' }}>›</span>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        )}
       </div>
 
-      {/* Contenuto principale — due colonne */}
+      {paginaTab === 'soci' && (
+        <div className="print-unlock" style={{
+          flex: 1,
+          maxWidth: '1400px', margin: '0 auto',
+          width: '100%',
+          padding: '24px 32px',
+          overflowY: 'auto',
+          background: 'var(--color-bg-base)',
+        }}>
+          <div style={{ marginBottom: '20px' }}>
+            <h1 style={{
+              fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: '20px',
+              color: 'var(--color-text-primary)', marginBottom: '6px',
+            }}>
+              Soci e Amministratori
+            </h1>
+            <p style={{ fontSize: '13px', color: 'var(--color-text-muted)', lineHeight: 1.55, maxWidth: '720px' }}>
+              Simulazione isolata dal calcolo dipendenti: compenso annuo oppure solo rimborsi. INPS sul lordo secondo schema consulente; IRPEF con la stessa logica IRPEF/detrazioni/cuneo/addizionali medi del motore dipendenti.
+            </p>
+          </div>
+          <SociAmministratoriTab />
+        </div>
+      )}
+
+      {paginaTab === 'dipendenti' && (
       <div className="print-unlock" style={{
         flex: 1,
         maxWidth: '1400px', margin: '0 auto',
@@ -135,7 +190,6 @@ export function CalcolatorePageClient({ updatedDates }: Props) {
         overflowY: 'auto',
       }}>
 
-        {/* Colonna sinistra — form */}
         {step !== 'risultati' && (
           <div style={{
             background: 'var(--color-bg-surface)',
@@ -149,10 +203,8 @@ export function CalcolatorePageClient({ updatedDates }: Props) {
           </div>
         )}
 
-        {/* Colonna destra — risultati o placeholder o skeleton */}
         <div style={{ animation: 'fadeSlideIn 0.2s ease forwards' }}>
 
-          {/* Placeholder iniziale */}
           {step === 1 && !risultato && (
             <div style={{
               background: 'var(--color-bg-surface)',
@@ -183,7 +235,6 @@ export function CalcolatorePageClient({ updatedDates }: Props) {
             </div>
           )}
 
-          {/* Skeleton loader */}
           {isLoading && (
             <div style={{
               background: 'var(--color-bg-surface)',
@@ -203,7 +254,6 @@ export function CalcolatorePageClient({ updatedDates }: Props) {
             </div>
           )}
 
-          {/* Errore */}
           {errore && !isLoading && (
             <div style={{
               background: 'var(--color-red-dim)',
@@ -220,7 +270,6 @@ export function CalcolatorePageClient({ updatedDates }: Props) {
             </div>
           )}
 
-          {/* Risultati */}
           {step === 'risultati' && risultato && (
             <div style={{ animation: 'fadeSlideIn 0.2s ease forwards' }}>
               <RisultatiCalcolatore risultato={risultato} onRicalcola={ricalcola} />
@@ -228,6 +277,7 @@ export function CalcolatorePageClient({ updatedDates }: Props) {
           )}
         </div>
       </div>
+      )}
 
       {/* Disclaimer fisso in fondo */}
       <div className="no-print" style={{

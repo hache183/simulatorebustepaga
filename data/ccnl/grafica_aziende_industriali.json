@@ -1,0 +1,28 @@
+{
+  "id": "grafica_aziende_industriali",
+  "nome": "CCNL Grafica — Carta e piccola industria (G011)",
+  "fonte": "LAVORO/G011 Grafica - Carta Piccola Industria.pdf — qualificativi CARTA - PICCOLA INDUSTRIA, vigenti dal 01/01/2026 al 31/12/2026 (colonna TOTALE)",
+  "updatedAt": "2026-05-02T00:00:00Z",
+  "mensilita": 13,
+  "contributiContrattuali": { "azienda": {} },
+  "livelli": [
+    { "codice": "Quadro", "descrizione": "Quadro", "qualifica": "Quadro", "minimoTabellare": 2754.74, "moltiplicatore": 1.00 },
+    { "codice": "A Super", "descrizione": "A Super", "qualifica": "A Super", "minimoTabellare": 2742.31, "moltiplicatore": 0.9955 },
+    { "codice": "A", "descrizione": "A", "qualifica": "A", "minimoTabellare": 2453.59, "moltiplicatore": 0.8907 },
+    { "codice": "B/1", "descrizione": "B/1", "qualifica": "B/1", "minimoTabellare": 2196.38, "moltiplicatore": 0.7973 },
+    { "codice": "B/2 Super", "descrizione": "B/2 Super", "qualifica": "B/2 Super", "minimoTabellare": 2141.60, "moltiplicatore": 0.7774 },
+    { "codice": "B/2", "descrizione": "B/2", "qualifica": "B/2", "minimoTabellare": 2070.71, "moltiplicatore": 0.7517 },
+    { "codice": "C/1 Super", "descrizione": "C/1 Super", "qualifica": "C/1 Super", "minimoTabellare": 1952.42, "moltiplicatore": 0.7087 },
+    { "codice": "C/1", "descrizione": "C/1", "qualifica": "C/1", "minimoTabellare": 1881.91, "moltiplicatore": 0.6832 },
+    { "codice": "C/2", "descrizione": "C/2", "qualifica": "C/2", "minimoTabellare": 1756.17, "moltiplicatore": 0.6375 },
+    { "codice": "C/3", "descrizione": "C/3", "qualifica": "C/3", "minimoTabellare": 1667.45, "moltiplicatore": 0.6053 },
+    { "codice": "D/1", "descrizione": "D/1", "qualifica": "D/1", "minimoTabellare": 1594.33, "moltiplicatore": 0.5788 },
+    { "codice": "D/2", "descrizione": "D/2", "qualifica": "D/2", "minimoTabellare": 1503.99, "moltiplicatore": 0.546 },
+    { "codice": "E", "descrizione": "E", "qualifica": "E", "minimoTabellare": 1405.44, "moltiplicatore": 0.5102 }
+  ],
+  "scattiAnzianita": {
+    "periodicitaMesi": 36,
+    "importoPerScattoEuro": null,
+    "maxScatti": 10
+  }
+}

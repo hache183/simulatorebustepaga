@@ -1,0 +1,25 @@
+{
+  "id": "pubblici_esercizi_turismo",
+  "nome": "CCNL Pubblici esercizi e turismo (H05Y / Confcommercio)",
+  "fonte": "LAVORO/H05Y Pubblici Esercizi - Turismo.pdf — PUBBLICI ESERCIZI - CONFCOMMERCIO, vigenti dal 01/06/2025 al 31/05/2026 (colonna TOTALE; livelli Quadro A/B numerici e varianti operative)",
+  "updatedAt": "2026-05-02T00:00:00Z",
+  "mensilita": 14,
+  "contributiContrattuali": { "azienda": {} },
+  "livelli": [
+    { "codice": "QA", "descrizione": "Quadro A", "qualifica": "Quadro A", "minimoTabellare": 2472.19, "moltiplicatore": 1.00 },
+    { "codice": "QB", "descrizione": "Quadro B", "qualifica": "Quadro B", "minimoTabellare": 2282.22, "moltiplicatore": 0.9232 },
+    { "codice": "1", "descrizione": "Livello 1", "qualifica": "1", "minimoTabellare": 2053.87, "moltiplicatore": 0.8308 },
+    { "codice": "2", "descrizione": "Livello 2", "qualifica": "2", "minimoTabellare": 1868.92, "moltiplicatore": 0.756 },
+    { "codice": "3", "descrizione": "Livello 3", "qualifica": "3", "minimoTabellare": 1757.14, "moltiplicatore": 0.7108 },
+    { "codice": "4", "descrizione": "Livello 4", "qualifica": "4", "minimoTabellare": 1652.69, "moltiplicatore": 0.6685 },
+    { "codice": "5", "descrizione": "Livello 5", "qualifica": "5", "minimoTabellare": 1543.86, "moltiplicatore": 0.6245 },
+    { "codice": "6S", "descrizione": "Livello 6 Super", "qualifica": "6 Super", "minimoTabellare": 1480.77, "moltiplicatore": 0.599 },
+    { "codice": "6", "descrizione": "Livello 6", "qualifica": "6", "minimoTabellare": 1458.31, "moltiplicatore": 0.5899 },
+    { "codice": "7", "descrizione": "Livello 7", "qualifica": "7", "minimoTabellare": 1360.34, "moltiplicatore": 0.5503 }
+  ],
+  "scattiAnzianita": {
+    "periodicitaMesi": 36,
+    "importoPerScattoEuro": null,
+    "maxScatti": 10
+  }
+}

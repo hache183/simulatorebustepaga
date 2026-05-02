@@ -9,7 +9,8 @@ import {
   calcolaInpsDomestici,
   getSettoreContributivo,
 } from './contributi';
-import type { CalcolatoreInput, CalcolatoreOutput, DettaglioCosto, ContributoContrattuale, NettoDipendente, AliquoteInpsData } from '@/types';
+import type { CalcolatoreInput, CalcolatoreOutput, DettaglioCosto, ContributoContrattuale, AliquoteInpsData } from '@/types';
+import { calcolaNettoDaRedditoLordoEinpsPerc, DISCLAIMER_NETTO_DIPENDENTE } from '@/lib/irpef-lavoro-dipendente';
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const ALIQUOTE_INPS = require('../data/aliquote-inps.json') as AliquoteInpsData;
@@ -46,111 +47,6 @@ const InputSchema = z.object({
 // il costo/RAL varia molto in base a INAIL, contributi contrattuali, agevolazioni e orario.
 // Questo controllo deve intercettare solo anomalie forti (configurazioni errate), non casi legittimi.
 const RANGE_SANITY = { min: 1.05, max: 2.20 };
-
-/**
- * Calcola IRPEF lorda per scaglioni 2025-2026 (L. 207/2024, aggiornata da L. 199/2025).
- * Dal 2025 il secondo scaglione passa dal 35% al 33% (art. 1 L. 199/2025).
- */
-function calcolaIrpefLorda(imponibile: number): number {
-  if (imponibile <= 28_000) {
-    return imponibile * 0.23;
-  } else if (imponibile <= 50_000) {
-    return 28_000 * 0.23 + (imponibile - 28_000) * 0.33;
-  } else {
-    return 28_000 * 0.23 + 22_000 * 0.33 + (imponibile - 50_000) * 0.43;
-  }
-}
-
-/**
- * Calcola detrazione per lavoro dipendente (art. 13 TUIR post-riforma).
- * La detrazione minima è 690€ per tempo indeterminato, 1.380€ per tempo determinato.
- */
-function calcolaDetrazioneLavoroDip(imponibile: number, tipoContratto: string): number {
-  const detrazioneMinima = tipoContratto === 'tempo_determinato' ? 1380 : 690;
-  if (imponibile <= 15_000) {
-    return Math.max(1955, detrazioneMinima);
-  } else if (imponibile <= 28_000) {
-    return Math.max(0, 1910 + 1190 * (28_000 - imponibile) / 13_000);
-  } else if (imponibile <= 50_000) {
-    return Math.max(0, 1910 * (50_000 - imponibile) / 22_000);
-  }
-  return 0;
-}
-
-/**
- * Calcola bonus cuneo fiscale 2025 (L. 207/2024, art. 1 cc. 4-9).
- * Sostituisce il taglio contributivo. Per redditi fino a 20k è un bonus non tassabile
- * con tre sotto-fasce (7.1%, 5.3%, 4.8%), per redditi 20k-40k è una detrazione IRPEF aggiuntiva.
- */
-function calcolaBonusCuneoFiscale(redditoComplessivo: number): number {
-  if (redditoComplessivo <= 8_500) {
-    return redditoComplessivo * 0.071;
-  } else if (redditoComplessivo <= 15_000) {
-    return 8_500 * 0.071 + (redditoComplessivo - 8_500) * 0.053;
-  } else if (redditoComplessivo <= 20_000) {
-    return 8_500 * 0.071 + 6_500 * 0.053 + (redditoComplessivo - 15_000) * 0.048;
-  } else if (redditoComplessivo <= 32_000) {
-    return 1_000;
-  } else if (redditoComplessivo <= 40_000) {
-    return 1_000 * (40_000 - redditoComplessivo) / 8_000;
-  }
-  return 0;
-}
-
-/**
- * Calcola il netto mensile stimato del dipendente.
- */
-function calcolaNettoDipendente(
-  ral: number,
-  mensilita: number,
-  aliquotaInpsDipendente: number,
-  tipoContratto: string,
-): NettoDipendente {
-  // STEP 2 — Contributi INPS dipendente
-  const inpsDipendente = ral * aliquotaInpsDipendente;
-
-  // STEP 3 — Imponibile IRPEF
-  const imponibileIrpef = ral - inpsDipendente;
-
-  // STEP 4 — IRPEF lorda
-  const irpefLorda = calcolaIrpefLorda(imponibileIrpef);
-
-  // STEP 5 — Detrazioni lavoro dipendente
-  const detrazioneLavoroDip = calcolaDetrazioneLavoroDip(imponibileIrpef, tipoContratto);
-
-  // STEP 6 — Bonus cuneo fiscale 2025
-  const bonusCuneoFiscale = calcolaBonusCuneoFiscale(imponibileIrpef);
-
-  // STEP 7 — IRPEF netta
-  const irpefNetta = Math.max(0, irpefLorda - detrazioneLavoroDip - bonusCuneoFiscale);
-
-  // STEP 8 — Addizionali (stima media nazionale — varia per regione/comune.
-  // Regionale: da 0,90% (Bolzano) a 3,33% (Lazio/Campania fascia alta). Media ~1,73%.
-  // Comunale: da 0% a 0,90%. Media ~0,80%.
-  const addizionaleRegionale = imponibileIrpef * 0.0173;
-  const addizionaleComunale = imponibileIrpef * 0.008;
-
-  // STEP 9 — Netto
-  const nettoAnnuo = ral - inpsDipendente - irpefNetta - addizionaleRegionale - addizionaleComunale;
-  const nettoMensile12 = nettoAnnuo / 12;
-  const nettoPerMensilita = nettoAnnuo / mensilita;
-
-  return {
-    ralLorda: ral,
-    inpsDipendente,
-    imponibileIrpef,
-    irpefLorda,
-    detrazioneLavoroDip,
-    bonusCuneoFiscale,
-    irpefNetta,
-    addizionaleRegionale,
-    addizionaleComunale,
-    nettoAnnuo,
-    nettoMensile12,
-    nettoPerMensilita,
-    disclaimer: 'Il netto è una stima indicativa. Il calcolo esatto dipende dalla situazione fiscale personale del dipendente (carichi familiari, detrazioni aggiuntive, addizionali comunali/regionali specifiche).',
-  };
-}
 
 /**
  * Calcolo dedicato per il CCNL Lavoro Domestico.
@@ -589,7 +485,13 @@ export async function calculateCosto(rawInput: unknown): Promise<CalcolatoreOutp
   ];
 
   // 13. Calcolo netto dipendente
-  const nettoDipendente = calcolaNettoDipendente(ralEffettiva, mensilita, aliquotaDipendenteDefault, input.tipoContratto);
+  const nettoDipendente = calcolaNettoDaRedditoLordoEinpsPerc(
+    ralEffettiva,
+    aliquotaDipendenteDefault,
+    input.tipoContratto,
+    mensilita,
+    DISCLAIMER_NETTO_DIPENDENTE,
+  );
 
   return {
     input,

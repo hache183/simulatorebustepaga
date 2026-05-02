@@ -1,0 +1,24 @@
+{
+  "id": "comunicazione_grafica_editoria",
+  "nome": "CCNL Comunicazione — Grafica ed editoria (G029)",
+  "fonte": "LAVORO/G029 Comunicazione - Grafica ed Editoria.pdf — EDITORIA - INDUSTRIA, vigente dal 01/10/2025 al 30/06/2026 (colonna TOTALE)",
+  "updatedAt": "2026-05-02T00:00:00Z",
+  "mensilita": 13,
+  "contributiContrattuali": { "azienda": {} },
+  "livelli": [
+    { "codice": "Quadro", "descrizione": "Quadro", "qualifica": "Quadro", "minimoTabellare": 2729.00, "moltiplicatore": 1.00 },
+    { "codice": "1", "descrizione": "Livello 1", "qualifica": "Livello 1", "minimoTabellare": 2718.67, "moltiplicatore": 0.9962 },
+    { "codice": "2", "descrizione": "Livello 2", "qualifica": "Livello 2", "minimoTabellare": 2374.32, "moltiplicatore": 0.87 },
+    { "codice": "3", "descrizione": "Livello 3", "qualifica": "Livello 3", "minimoTabellare": 2257.09, "moltiplicatore": 0.8271 },
+    { "codice": "4", "descrizione": "Livello 4", "qualifica": "Livello 4", "minimoTabellare": 2141.01, "moltiplicatore": 0.7845 },
+    { "codice": "5", "descrizione": "Livello 5", "qualifica": "Livello 5", "minimoTabellare": 2021.59, "moltiplicatore": 0.7408 },
+    { "codice": "6", "descrizione": "Livello 6", "qualifica": "Livello 6", "minimoTabellare": 1765.86, "moltiplicatore": 0.6471 },
+    { "codice": "7", "descrizione": "Livello 7", "qualifica": "Livello 7", "minimoTabellare": 1566.18, "moltiplicatore": 0.5739 },
+    { "codice": "8", "descrizione": "Livello 8", "qualifica": "Livello 8", "minimoTabellare": 1399.54, "moltiplicatore": 0.5128 }
+  ],
+  "scattiAnzianita": {
+    "periodicitaMesi": 36,
+    "importoPerScattoEuro": null,
+    "maxScatti": 10
+  }
+}

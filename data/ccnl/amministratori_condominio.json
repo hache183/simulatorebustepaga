@@ -1,0 +1,23 @@
+{
+  "id": "amministratori_condominio",
+  "nome": "CCNL Amministratori di condominio — UNAI (H404)",
+  "fonte": "LAVORO/H404 Amministratori di Condominio.pdf — AMMINISTRATORI CONDOMINIO - UNAI, qualificativi dal 01/01/2012 (colonna TOTALE)",
+  "updatedAt": "2026-05-02T00:00:00Z",
+  "mensilita": 13,
+  "contributiContrattuali": { "azienda": {} },
+  "livelli": [
+    { "codice": "Quadro", "descrizione": "Quadro", "qualifica": "Quadro", "minimoTabellare": 1975.20, "moltiplicatore": 1.00 },
+    { "codice": "1", "descrizione": "Livello 1", "qualifica": "1", "minimoTabellare": 1830.02, "moltiplicatore": 0.9265 },
+    { "codice": "2", "descrizione": "Livello 2", "qualifica": "2", "minimoTabellare": 1650.54, "moltiplicatore": 0.8356 },
+    { "codice": "3", "descrizione": "Livello 3", "qualifica": "3", "minimoTabellare": 1483.49, "moltiplicatore": 0.7511 },
+    { "codice": "4", "descrizione": "Livello 4", "qualifica": "4", "minimoTabellare": 1350.68, "moltiplicatore": 0.6838 },
+    { "codice": "5", "descrizione": "Livello 5", "qualifica": "5", "minimoTabellare": 1268.61, "moltiplicatore": 0.6423 },
+    { "codice": "6", "descrizione": "Livello 6", "qualifica": "6", "minimoTabellare": 1190.12, "moltiplicatore": 0.6025 },
+    { "codice": "7", "descrizione": "Livello 7", "qualifica": "7", "minimoTabellare": 1091.43, "moltiplicatore": 0.5526 }
+  ],
+  "scattiAnzianita": {
+    "periodicitaMesi": 36,
+    "importoPerScattoEuro": null,
+    "maxScatti": 10
+  }
+}
