@@ -1,7 +1,7 @@
 {
   "id": "tessile",
   "nome": "CCNL Tessile-Abbigliamento-Moda (SMI — Sistema Moda Italia)",
-  "fonte": "PDF D014 — ABBIGLIAMENTO - INDUSTRIA (Sistema Moda Italia). Stampa del 21/04/2026 — dati ufficiali tabelle retributive vigenti dal 01/01/2026 al 31/12/2026",
+  "fonte": "LAVORO/D014.pdf — qualificativi ABBIGLIAMENTO - IND.(APP. ASSUNTI 09/98) vigenti dal 01/01/2026 al 31/12/2026 (colonna TOTALE). ATTENZIONE: PDF copre uno scaglione storico del CCNL Abbigliamento Industria (apprendisti assunti nel 09/1998); contributi SANIMODA/PREVIMODA non citati nel PDF.",
   "updatedAt": "2026-04-21T00:00:00Z",
   "mensilita": 13,
   "contributiContrattuali": {
@@ -25,7 +25,7 @@
     }
   },
   "livelli": [
-    { "codice": "Q",  "descrizione": "Quadro (liv. 8)", "qualifica": "Responsabile di produzione, quadro tecnico",          "minimoTabellare": 2457.72, "moltiplicatore": 1.00 },
+    { "codice": "Q",  "descrizione": "Quadro (liv. 8)", "qualifica": "Responsabile di produzione, quadro tecnico",          "minimoTabellare": 2509.37, "moltiplicatore": 1.00 },
     { "codice": "1",  "descrizione": "1° livello (liv. 7)", "qualifica": "Modellista, stilista tecnico",                     "minimoTabellare": 2318.50, "moltiplicatore": 0.91 },
     { "codice": "2",  "descrizione": "2° livello (liv. 6)", "qualifica": "Tagliatore, tessitore specializzato",              "minimoTabellare": 2175.37, "moltiplicatore": 0.83 },
     { "codice": "3",  "descrizione": "3° livello (liv. 4)", "qualifica": "Cucitrice qualificata, addetto al controllo qualità", "minimoTabellare": 1938.95, "moltiplicatore": 0.75 },

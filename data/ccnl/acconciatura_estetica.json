@@ -11,7 +11,7 @@
     { "codice": "1", "descrizione": "Livello 1", "qualifica": "Livello 1", "minimoTabellare": 1699.67, "moltiplicatore": 1.00 },
     { "codice": "2", "descrizione": "Livello 2", "qualifica": "Livello 2", "minimoTabellare": 1552.68, "moltiplicatore": 0.91 },
     { "codice": "3", "descrizione": "Livello 3", "qualifica": "Livello 3", "minimoTabellare": 1472.00, "moltiplicatore": 0.87 },
-    { "codice": "4", "descrizione": "Livello 4", "qualifica": "Livello 4", "minimoTabellare": 1319.78, "moltiplicatore": 0.78 }
+    { "codice": "4", "descrizione": "Livello 4", "qualifica": "Livello 4", "minimoTabellare": 1387.87, "moltiplicatore": 0.82 }
   ],
   "scattiAnzianita": {
     "periodicitaMesi": 24,

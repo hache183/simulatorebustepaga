@@ -1,7 +1,7 @@
 {
   "id": "legno_arredamento",
   "nome": "CCNL Legno, Arredamento e Mobili — Industria (FederlegnoArredo)",
-  "fonte": "LAVORO/F051.pdf — dati retributivi in vigore dal 01/01/2025",
+  "fonte": "LAVORO/F051.pdf — qualificativi settore BOSCHI E FORESTE - INDUSTRIA vigenti dal 01/01/2025 (colonna TOTALE). ATTENZIONE: PDF copre BOSCHI E FORESTE, non il CCNL Legno-Arredamento FederlegnoArredo; mappatura codici 5/4/2/3/1 a 'Area Coordinamento 5/4/2'/'Area Specialistica 2'/'Area Esecutiva 1' è approssimativa; contributi ARCO/ALTEA non sono citati nel PDF F051.",
   "updatedAt": "2026-05-01T00:00:00Z",
   "mensilita": 13,
   "contributiContrattuali": {

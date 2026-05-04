@@ -1,21 +1,23 @@
 {
   "id": "calzature",
   "nome": "CCNL Calzature - Industria",
-  "fonte": "LAVORO/D121.pdf — dati retributivi in vigore dal 01/01/2026",
-  "updatedAt": "2026-05-01T00:00:00Z",
+  "fonte": "LAVORO/D121.pdf — qualificativi vigenti dal 01/08/2025 al 31/07/2026 (colonna TOTALE)",
+  "updatedAt": "2026-05-04T00:00:00Z",
   "mensilita": 13,
   "contributiContrattuali": {
     "azienda": {}
   },
   "livelli": [
-    { "codice": "8", "descrizione": "Livello 8", "qualifica": "Livello 8", "minimoTabellare": 2488.95, "moltiplicatore": 1.00 },
-    { "codice": "7", "descrizione": "Livello 7", "qualifica": "Livello 7", "minimoTabellare": 2295.70, "moltiplicatore": 0.92 },
-    { "codice": "6", "descrizione": "Livello 6", "qualifica": "Livello 6", "minimoTabellare": 2109.29, "moltiplicatore": 0.85 },
-    { "codice": "5", "descrizione": "Livello 5", "qualifica": "Livello 5", "minimoTabellare": 2002.93, "moltiplicatore": 0.80 },
-    { "codice": "4", "descrizione": "Livello 4", "qualifica": "Livello 4", "minimoTabellare": 1884.57, "moltiplicatore": 0.76 },
-    { "codice": "3", "descrizione": "Livello 3", "qualifica": "Livello 3", "minimoTabellare": 1787.21, "moltiplicatore": 0.72 },
-    { "codice": "2", "descrizione": "Livello 2", "qualifica": "Livello 2", "minimoTabellare": 1751.40, "moltiplicatore": 0.70 },
-    { "codice": "1", "descrizione": "Livello 1", "qualifica": "Livello 1", "minimoTabellare": 1530.00, "moltiplicatore": 0.61 }
+    { "codice": "8",  "descrizione": "Livello 8",  "qualifica": "Livello 8",  "minimoTabellare": 2488.95, "moltiplicatore": 1.00 },
+    { "codice": "7",  "descrizione": "Livello 7",  "qualifica": "Livello 7",  "minimoTabellare": 2295.70, "moltiplicatore": 0.92 },
+    { "codice": "6",  "descrizione": "Livello 6",  "qualifica": "Livello 6",  "minimoTabellare": 2109.29, "moltiplicatore": 0.85 },
+    { "codice": "5",  "descrizione": "Livello 5",  "qualifica": "Livello 5",  "minimoTabellare": 2002.93, "moltiplicatore": 0.80 },
+    { "codice": "4",  "descrizione": "Livello 4",  "qualifica": "Livello 4",  "minimoTabellare": 1930.50, "moltiplicatore": 0.78 },
+    { "codice": "3S", "descrizione": "Livello 3 Super", "qualifica": "Livello 3 Super", "minimoTabellare": 1884.57, "moltiplicatore": 0.76 },
+    { "codice": "3",  "descrizione": "Livello 3",  "qualifica": "Livello 3",  "minimoTabellare": 1843.95, "moltiplicatore": 0.74 },
+    { "codice": "2S", "descrizione": "Livello 2 Super", "qualifica": "Livello 2 Super", "minimoTabellare": 1787.21, "moltiplicatore": 0.72 },
+    { "codice": "2",  "descrizione": "Livello 2",  "qualifica": "Livello 2",  "minimoTabellare": 1751.40, "moltiplicatore": 0.70 },
+    { "codice": "1",  "descrizione": "Livello 1",  "qualifica": "Livello 1",  "minimoTabellare": 1530.00, "moltiplicatore": 0.61 }
   ],
   "scattiAnzianita": {
     "periodicitaMesi": 24,

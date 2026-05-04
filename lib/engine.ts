@@ -59,10 +59,23 @@ async function calculateCostoDomestico(input: CalcolatoreInput): Promise<Calcola
   const livello = ccnl.livelli.find(l => l.codice === input.livello);
   if (!livello) throw new Error(`Livello '${input.livello}' non trovato nel CCNL '${input.ccnlId}'`);
 
-  const pagaOraria = input.pagaOraria ?? livello.minimoTabellare;
+  // I CCNL domestici conviventi hanno minimi MENSILI (PDF H501 Conviventi);
+  // i non conviventi hanno minimi ORARI (PDF H501 Non Conviventi).
+  // Il flag `retribuzioneOraria` sul JSON del CCNL discrimina i due casi.
+  const isRetribuzioneMensile = ccnl.retribuzioneOraria === false;
   const oreSettimanali = input.oreSettimanali ?? input.oreLavoro;
   const convivente = input.convivente ?? false;
   const mensilita = input.mensilita; // 13 per lavoro domestico
+
+  // Paga oraria: usata per la voce "ral" e per tracciare la tariffa effettiva.
+  // Per i mensili, se l'utente non la sovrascrive, non è il valore primario (la RAL
+  // parte dal minimo mensile); la calcoliamo come tariffa equivalente solo a scopo
+  // informativo/descrittivo.
+  const pagaOraria = input.pagaOraria ?? (
+    isRetribuzioneMensile
+      ? (oreSettimanali > 0 ? (livello.minimoTabellare * mensilita) / (oreSettimanali * 52) : 0)
+      : livello.minimoTabellare
+  );
 
   // Indennità vitto e alloggio per conviventi
   const settoreDomestico = ALIQUOTE_INPS.settoriContributivi['domestici'] as unknown as Record<string, unknown>;
@@ -70,8 +83,12 @@ async function calculateCostoDomestico(input: CalcolatoreInput): Promise<Calcola
   const indennitaVAMensile = convivente ? indennitaMensileConfigurata : 0;
   const indennitaVAAnnua = indennitaVAMensile * 12;
 
-  // RAL = paga oraria × ore settimanali × 52 + eventuale vitto e alloggio
-  const retribuzioneBaseAnnua = pagaOraria * oreSettimanali * 52;
+  // RAL base:
+  //  - mensili (conviventi): minimoTabellare × mensilità (dal PDF H501 Conviventi)
+  //  - orari (non conviventi): pagaOraria × ore settimanali × 52
+  const retribuzioneBaseAnnua = isRetribuzioneMensile
+    ? livello.minimoTabellare * mensilita
+    : pagaOraria * oreSettimanali * 52;
   const ralEffettiva = retribuzioneBaseAnnua + indennitaVAAnnua;
 
   // Contributi INPS forfettari (per ora lavorata)
@@ -104,7 +121,9 @@ async function calculateCostoDomestico(input: CalcolatoreInput): Promise<Calcola
     {
       id: 'ral',
       categoria: 'ral',
-      descrizione: `Retribuzione annua (${fmtNum(pagaOraria)}€/ora × ${oreSettimanali}h/sett × 52 sett${convivente ? ' + vitto e alloggio' : ''})`,
+      descrizione: isRetribuzioneMensile
+        ? `Retribuzione annua (${fmtNum(livello.minimoTabellare)}€/mese × ${mensilita} mensilità${convivente ? ' + vitto e alloggio' : ''})`
+        : `Retribuzione annua (${fmtNum(pagaOraria)}€/ora × ${oreSettimanali}h/sett × 52 sett${convivente ? ' + vitto e alloggio' : ''})`,
       importoAnnuo: ralEffettiva,
       importoMensile: ralEffettiva / 12,
       percentualeRal: 1,

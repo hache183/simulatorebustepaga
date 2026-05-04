@@ -34,7 +34,7 @@ const CCNL_MAP: Record<string, CcnlData> = {
   credito:                   require('../data/ccnl/credito.json'),
   informatica:               require('../data/ccnl/informatica.json'),
   domestici:                 require('../data/ccnl/domestici.json'),
-  domestici_conviventi:      require('../data/ccnl/domestici.json'),
+  domestici_conviventi:      require('../data/ccnl/domestici_conviventi.json'),
   domestici_non_conviventi:  require('../data/ccnl/domestici.json'),
   multiservizi:              require('../data/ccnl/multiservizi.json'),
   pubblici_esercizi_turismo: require('../data/ccnl/pubblici_esercizi_turismo.json'),

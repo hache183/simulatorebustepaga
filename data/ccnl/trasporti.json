@@ -1,8 +1,8 @@
 {
   "id": "trasporti",
   "nome": "CCNL Trasporto Merci e Logistica (Conftrasporto-Confartigianato)",
-  "fonte": "LAVORO/I100 Trasporto Merci e Logistica.pdf — tabella retributiva livelli vigente 2026",
-  "updatedAt": "2026-04-21T00:00:00Z",
+  "fonte": "LAVORO/I100 Trasporto Merci e Logistica.pdf — AUTOTRASPORTO MERCI E LOGISTICA, tabelle retributive in vigore dal 01/01/2026 (colonna TOTALE)",
+  "updatedAt": "2026-05-04T00:00:00Z",
   "mensilita": 14,
   "contributiContrattuali": {
     "azienda": {
@@ -12,7 +12,7 @@
         "importoMensile": null,
         "percentuale": 0.0060,
         "descrizione": "Fondo sanitario integrativo trasportatori",
-        "notaLegge": "Art. 28 CCNL Trasporti"
+        "notaLegge": "Art. 28 CCNL Trasporti (non risulta nel PDF I100: conferma da accordo bilaterale esterno)"
       },
       "enbic": {
         "tipo": "bilaterale",
@@ -20,17 +20,20 @@
         "importoMensile": null,
         "percentuale": 0.0020,
         "descrizione": "Ente bilaterale trasporti ENBIC",
-        "notaLegge": "Art. 5 CCNL Trasporti"
+        "notaLegge": "Art. 5 CCNL Trasporti (non risulta nel PDF I100: conferma da accordo bilaterale esterno)"
       }
     }
   },
   "livelli": [
-    { "codice": "Q",  "descrizione": "Quadro",                      "qualifica": "Dirigente operativo, responsabile di filiale",        "minimoTabellare": 2528.31, "moltiplicatore": 1.00 },
-    { "codice": "1",  "descrizione": "1° livello (Quadri tecnici)", "qualifica": "Capo magazziniere, responsabile turni",               "minimoTabellare": 2374.79, "moltiplicatore": 0.91 },
-    { "codice": "2",  "descrizione": "2° livello",                  "qualifica": "Autista di lungo raggio (pat. C+E), magazziniere sp.","minimoTabellare": 2181.55, "moltiplicatore": 0.82 },
-    { "codice": "3",  "descrizione": "3° livello (Autisti)",        "qualifica": "Autista, conducente di mezzi pesanti",                "minimoTabellare": 1916.84, "moltiplicatore": 0.74 },
-    { "codice": "4",  "descrizione": "4° livello",                  "qualifica": "Magazziniere, carrellista",                           "minimoTabellare": 1823.56, "moltiplicatore": 0.67 },
-    { "codice": "5",  "descrizione": "5° livello",                  "qualifica": "Facchino, operatore di carico/scarico",               "minimoTabellare": 1738.31, "moltiplicatore": 0.60 }
+    { "codice": "Q",  "descrizione": "Quadri",                       "qualifica": "Dirigente operativo, responsabile di filiale",        "minimoTabellare": 2639.43, "moltiplicatore": 1.00 },
+    { "codice": "1",  "descrizione": "1° livello",                   "qualifica": "Capo magazziniere, responsabile turni",               "minimoTabellare": 2423.51, "moltiplicatore": 0.92 },
+    { "codice": "2",  "descrizione": "2° livello",                   "qualifica": "Autista di lungo raggio (pat. C+E), magazziniere sp.","minimoTabellare": 2229.28, "moltiplicatore": 0.84 },
+    { "codice": "3S", "descrizione": "3° livello Super",             "qualifica": "Autista senior, conducente esperto",                  "minimoTabellare": 2010.37, "moltiplicatore": 0.76 },
+    { "codice": "3",  "descrizione": "3° livello (Autisti)",         "qualifica": "Autista, conducente di mezzi pesanti",                "minimoTabellare": 1956.54, "moltiplicatore": 0.74 },
+    { "codice": "4",  "descrizione": "4° livello",                   "qualifica": "Magazziniere, carrellista",                           "minimoTabellare": 1859.47, "moltiplicatore": 0.70 },
+    { "codice": "4J", "descrizione": "4° livello junior",            "qualifica": "Magazziniere junior",                                 "minimoTabellare": 1811.94, "moltiplicatore": 0.69 },
+    { "codice": "5",  "descrizione": "5° livello",                   "qualifica": "Facchino, operatore di carico/scarico",               "minimoTabellare": 1770.43, "moltiplicatore": 0.67 },
+    { "codice": "6",  "descrizione": "6° livello",                   "qualifica": "Manovale, addetto semplice",                          "minimoTabellare": 1657.00, "moltiplicatore": 0.63 }
   ],
   "scattiAnzianita": {
     "periodicitaMesi": 24,

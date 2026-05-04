@@ -1,8 +1,8 @@
 {
   "id": "telecomunicazioni",
   "nome": "CCNL Telecomunicazioni (Asstel-Assotelecomunicazioni)",
-  "fonte": "PDF K411 — TELECOMUNICAZIONI (Asstel-Assotelecomunicazioni). Stampa del 21/04/2026 — dati ufficiali tabelle retributive vigenti dal 01/01/2026 al 30/06/2026",
-  "updatedAt": "2026-04-21T00:00:00Z",
+  "fonte": "LAVORO/K411 Telecomunicazioni (Asstel).pdf — TELECOMUNICAZIONI - Servizi di telefonia, tabelle retributive in vigore dal 01/01/2026 al 30/06/2026 (colonna TOTALE)",
+  "updatedAt": "2026-05-04T00:00:00Z",
   "mensilita": 13,
   "contributiContrattuali": {
     "azienda": {
@@ -12,7 +12,7 @@
         "importoMensile": null,
         "percentuale": 0.0075,
         "descrizione": "FASTEL — Fondo sanitario integrativo telecomunicazioni (0,75% quota datore)",
-        "notaLegge": "Art. 19 CCNL Telecomunicazioni — FASTEL"
+        "notaLegge": "Art. 19 CCNL Telecomunicazioni — FASTEL (non risulta nel PDF K411: conferma da accordo bilaterale esterno)"
       },
       "telemaco": {
         "tipo": "previdenziale",
@@ -20,17 +20,20 @@
         "importoMensile": null,
         "percentuale": 0.0200,
         "descrizione": "TELEMACO — Fondo pensione complementare telecomunicazioni (2,00% quota datore)",
-        "notaLegge": "Art. 50 CCNL Telecomunicazioni — TELEMACO"
+        "notaLegge": "Art. 50 CCNL Telecomunicazioni — TELEMACO (non risulta nel PDF K411: conferma da accordo bilaterale esterno)"
       }
     }
   },
   "livelli": [
-    { "codice": "Q",  "descrizione": "Quadro",         "qualifica": "Project manager, responsabile di rete",                  "minimoTabellare": 1946.69, "moltiplicatore": 1.00 },
-    { "codice": "A",  "descrizione": "Livello A (liv. 6)", "qualifica": "Ingegnere di rete, sviluppatore senior",              "minimoTabellare": 1731.18, "moltiplicatore": 0.90 },
-    { "codice": "B",  "descrizione": "Livello B (liv. 5)", "qualifica": "Tecnico di rete, analista sistemi",                   "minimoTabellare": 1417.32, "moltiplicatore": 0.81 },
-    { "codice": "C",  "descrizione": "Livello C (liv. 4)", "qualifica": "Operatore di call center specializzato, tecnico inst.", "minimoTabellare": 1277.73, "moltiplicatore": 0.72 },
-    { "codice": "D",  "descrizione": "Livello D (liv. 3)", "qualifica": "Operatore di call center, addetto amministrativo",    "minimoTabellare": 1144.10, "moltiplicatore": 0.64 },
-    { "codice": "E",  "descrizione": "Livello E (liv. 1)", "qualifica": "Ausiliario, addetto alla logistica",                  "minimoTabellare": 853.81,  "moltiplicatore": 0.57 }
+    { "codice": "7Q", "descrizione": "7 Quadro", "qualifica": "Quadro direttivo",                                                          "minimoTabellare": 2641.05, "moltiplicatore": 1.00 },
+    { "codice": "7",  "descrizione": "Livello 7",      "qualifica": "Project manager, responsabile di rete",                         "minimoTabellare": 2602.31, "moltiplicatore": 0.99 },
+    { "codice": "6",  "descrizione": "Livello 6",      "qualifica": "Ingegnere di rete, sviluppatore senior",                        "minimoTabellare": 2317.44, "moltiplicatore": 0.88 },
+    { "codice": "5S", "descrizione": "Livello 5 Super","qualifica": "Tecnico senior di rete",                                        "minimoTabellare": 2056.60, "moltiplicatore": 0.78 },
+    { "codice": "5",  "descrizione": "Livello 5",      "qualifica": "Tecnico di rete, analista sistemi",                             "minimoTabellare": 1988.73, "moltiplicatore": 0.75 },
+    { "codice": "4",  "descrizione": "Livello 4",      "qualifica": "Operatore di call center specializzato, tecnico installazione", "minimoTabellare": 1841.94, "moltiplicatore": 0.70 },
+    { "codice": "3",  "descrizione": "Livello 3",      "qualifica": "Operatore di call center, addetto amministrativo",              "minimoTabellare": 1702.98, "moltiplicatore": 0.64 },
+    { "codice": "2",  "descrizione": "Livello 2",      "qualifica": "Addetto qualificato",                                           "minimoTabellare": 1560.50, "moltiplicatore": 0.59 },
+    { "codice": "1",  "descrizione": "Livello 1",      "qualifica": "Ausiliario, addetto alla logistica",                            "minimoTabellare": 1399.68, "moltiplicatore": 0.53 }
   ],
   "scattiAnzianita": {
     "periodicitaMesi": 24,

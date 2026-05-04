@@ -23,7 +23,7 @@
     { "codice": "D1s", "descrizione": "Livello D1s", "qualifica": "Livello D1s", "minimoTabellare": 2059.43, "moltiplicatore": 0.55 },
     { "codice": "D1", "descrizione": "Livello D1", "qualifica": "Livello D1", "minimoTabellare": 1867.54, "moltiplicatore": 0.50 },
     { "codice": "D2s", "descrizione": "Livello D2s", "qualifica": "Livello D2s", "minimoTabellare": 1691.59, "moltiplicatore": 0.46 },
-    { "codice": "D2", "descrizione": "Livello D2", "qualifica": "Livello D2", "minimoTabellare": 1354.72, "moltiplicatore": 0.36 }
+    { "codice": "D2", "descrizione": "Livello D2", "qualifica": "Livello D2", "minimoTabellare": 1499.69, "moltiplicatore": 0.40 }
   ],
   "scattiAnzianita": {
     "periodicitaMesi": 24,

@@ -1,8 +1,8 @@
 {
   "id": "multiservizi",
   "nome": "CCNL Multiservizi (Pulizie, Servizi Integrati e Facility Management)",
-  "fonte": "PDF K511 — PULIZIA (Multiservizi integrati). Stampa del 21/04/2026 — dati ufficiali tabelle retributive vigenti dal 01/07/2025 al 30/04/2026",
-  "updatedAt": "2026-04-21T00:00:00Z",
+  "fonte": "LAVORO/K511 Servizi di Pulizia.pdf — SERVIZI DI PULIZIA - Aziende industriali, tabelle retributive in vigore dal 01/07/2025 (colonna TOTALE)",
+  "updatedAt": "2026-05-04T00:00:00Z",
   "mensilita": 13,
   "contributiContrattuali": {
     "azienda": {
@@ -12,7 +12,7 @@
         "importoMensile": 5.50,
         "percentuale": null,
         "descrizione": "FASIV — Fondo di Assistenza Sanitaria Integrativa multiservizi (quota mensile fissa datore)",
-        "notaLegge": "Art. 13 CCNL Multiservizi"
+        "notaLegge": "Art. 13 CCNL Multiservizi (non risulta nel PDF K511: conferma da accordo bilaterale esterno)"
       },
       "ebms": {
         "tipo": "bilaterale",
@@ -20,17 +20,17 @@
         "importoMensile": null,
         "percentuale": 0.0025,
         "descrizione": "Ente bilaterale multiservizi EBMS (0,25%)",
-        "notaLegge": "Art. 4 CCNL Multiservizi"
+        "notaLegge": "Art. 4 CCNL Multiservizi (non risulta nel PDF K511: conferma da accordo bilaterale esterno)"
       }
     }
   },
   "livelli": [
-    { "codice": "Q",  "descrizione": "Quadro",      "qualifica": "Responsabile di commessa, capo squadra",                 "minimoTabellare": 1653.44, "moltiplicatore": 1.00 },
-    { "codice": "1",  "descrizione": "1° livello (liv. 7)", "qualifica": "Operatore specializzato, tecnico impianti",      "minimoTabellare": 1510.64, "moltiplicatore": 0.89 },
-    { "codice": "2",  "descrizione": "2° livello (liv. 6)", "qualifica": "Addetto alle pulizie specializzato, operaio qualificato", "minimoTabellare": 1307.72, "moltiplicatore": 0.80 },
-    { "codice": "3",  "descrizione": "3° livello (liv. 4)", "qualifica": "Addetto alle pulizie, operatore generico",       "minimoTabellare": 962.00,  "moltiplicatore": 0.71 },
-    { "codice": "4",  "descrizione": "4° livello (liv. 2)", "qualifica": "Ausiliario, facchino",                           "minimoTabellare": 819.21,  "moltiplicatore": 0.63 },
-    { "codice": "5",  "descrizione": "5° livello (liv. 1)", "qualifica": "Manovale, guardiano",                            "minimoTabellare": 751.57,  "moltiplicatore": 0.56 }
+    { "codice": "Q",  "descrizione": "Quadro",              "qualifica": "Responsabile di commessa, capo squadra",                 "minimoTabellare": 2221.65, "moltiplicatore": 1.00 },
+    { "codice": "1",  "descrizione": "1° livello (liv. 7)", "qualifica": "Operatore specializzato, tecnico impianti",              "minimoTabellare": 2053.03, "moltiplicatore": 0.92 },
+    { "codice": "2",  "descrizione": "2° livello (liv. 6)", "qualifica": "Addetto alle pulizie specializzato, operaio qualificato", "minimoTabellare": 1842.82, "moltiplicatore": 0.83 },
+    { "codice": "3",  "descrizione": "3° livello (liv. 4)", "qualifica": "Addetto alle pulizie, operatore generico",               "minimoTabellare": 1489.83, "moltiplicatore": 0.67 },
+    { "codice": "4",  "descrizione": "4° livello (liv. 2)", "qualifica": "Ausiliario, facchino",                                   "minimoTabellare": 1343.50, "moltiplicatore": 0.60 },
+    { "codice": "5",  "descrizione": "5° livello (liv. 1)", "qualifica": "Manovale, guardiano",                                    "minimoTabellare": 1274.61, "moltiplicatore": 0.57 }
   ],
   "scattiAnzianita": {
     "periodicitaMesi": 24,

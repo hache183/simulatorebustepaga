@@ -1,0 +1,28 @@
+{
+  "id": "domestici_conviventi",
+  "nome": "CCNL Lavoratori Domestici — Collaboratori familiari conviventi (FIDALDO-DOMINA / Filcams-Fisascat-Uiltucs-Federcolf)",
+  "fonte": "LAVORO/H501 Collaboratori Familiari Conviventi.pdf — tabelle retributive mensili in vigore dal 01/01/2026 (accordo 28/10/2025, rivalutazione inflattiva Commissione ministeriale)",
+  "updatedAt": "2026-05-04T00:00:00Z",
+  "mensilita": 13,
+  "retribuzioneOraria": false,
+  "contributiContrattuali": {
+    "azienda": {}
+  },
+  "livelli": [
+    { "codice": "DS", "descrizione": "Livello DS — convivente", "qualifica": "Assistente a persone non autosufficienti (include indennità di funzione €207,69/mese: minimo €1.474,73 + ind. funz. €207,69)", "minimoTabellare": 1682.42, "moltiplicatore": 1.00 },
+    { "codice": "D",  "descrizione": "Livello D — convivente",  "qualifica": "Governante, maggiordomo, assistente senior (include indennità di funzione €207,69/mese: minimo €1.404,51 + ind. funz. €207,69)", "minimoTabellare": 1612.20, "moltiplicatore": 0.96 },
+    { "codice": "CS", "descrizione": "Livello CS — convivente", "qualifica": "Assistente a persone non autosufficienti qualificato (OSS/badante con attestato)", "minimoTabellare": 1193.84, "moltiplicatore": 0.71 },
+    { "codice": "C",  "descrizione": "Livello C — convivente",  "qualifica": "Assistente familiare qualificato / colf specializzata", "minimoTabellare": 1123.63, "moltiplicatore": 0.67 },
+    { "codice": "BS", "descrizione": "Livello BS — convivente", "qualifica": "Addetto all'assistenza di base con esperienza biennale", "minimoTabellare": 1053.39, "moltiplicatore": 0.63 },
+    { "codice": "B",  "descrizione": "Livello B — convivente",  "qualifica": "Addetto all'assistenza di base, colf con compiti specifici", "minimoTabellare": 983.16,  "moltiplicatore": 0.58 },
+    { "codice": "AS", "descrizione": "Livello AS — convivente", "qualifica": "Collaboratore generico con 2+ anni di esperienza", "minimoTabellare": 958.55,  "moltiplicatore": 0.57 },
+    { "codice": "A",  "descrizione": "Livello A — convivente",  "qualifica": "Collaboratore generico (pulizie, babysitter, addetto servizi domestici)", "minimoTabellare": 908.10,  "moltiplicatore": 0.54 }
+  ],
+  "scattiAnzianita": {
+    "periodicitaMesi": 24,
+    "importoPerScattoEuro": null,
+    "percentualeScatto": 0.04,
+    "maxScatti": 7,
+    "_nota": "Aumento del 4% sul minimo mensile di retribuzione per ogni biennio di servizio (max 7; 5 fino al 31/3/1988). Percentuale applicata al minimoTabellare mensile del livello."
+  }
+}

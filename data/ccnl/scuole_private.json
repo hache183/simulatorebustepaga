@@ -1,7 +1,7 @@
 {
   "id": "scuole_private",
   "nome": "CCNL Scuole ed Istituti Privati (FISM — Agidae)",
-  "fonte": "PDF T231 — SCUOLE PRIVATE LAICHE. Stampa del 21/04/2026 — dati ufficiali tabelle retributive vigenti dal 01/01/2026 al 31/12/2026. Per scuole materne FISM vedi PDF T271.",
+  "fonte": "LAVORO/T231 Scuole e Istituti Privati.pdf — SCUOLE PRIVATE - Laiche, tabelle retributive in vigore dal 01/01/2026 (colonna TOTALE). Il JSON include solo 5 dei 9 livelli del PDF (omessi 8A, 6, 4, 2). Contributi sanitario/FON.TE non citati nel PDF: conferma da accordo bilaterale esterno.",
   "updatedAt": "2026-04-21T00:00:00Z",
   "mensilita": 14,
   "contributiContrattuali": {

@@ -1,7 +1,7 @@
 {
   "id": "credito",
   "nome": "CCNL Credito (ABI — Associazione Bancaria Italiana)",
-  "fonte": "PDF J241 — BANCARI - ACRI (Associazione Casse di Risparmio Italiane). Stampa del 21/04/2026 — dati ufficiali tabelle retributive vigenti dal 01/03/2026",
+  "fonte": "LAVORO/J241 Credito - Banche.pdf — CREDITO, tabelle retributive in vigore dal 01/03/2026 (colonna TOTALE). Il PDF non include livello 3/1 (inserimento professionale, abrogato dal 19/12/2019). Contributi CASI/Fonte non citati nel PDF: conferma da accordo bilaterale esterno.",
   "updatedAt": "2026-04-21T00:00:00Z",
   "mensilita": 14,
   "contributiContrattuali": {

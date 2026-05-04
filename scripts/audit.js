@@ -33,6 +33,7 @@ const ACTIVE_CCNL_FILES = [
   'cooperative_sociali.json',
   'credito.json',
   'domestici.json',
+  'domestici_conviventi.json',
   'informatica.json',
   'multiservizi.json',
   'pubblici_esercizi_turismo.json',

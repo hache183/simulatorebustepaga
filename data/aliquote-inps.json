@@ -1,6 +1,6 @@
 {
   "updatedAt": "2026-01-01T00:00:00Z",
-  "fonte": "Circolare INPS n. 19/2025 — L. 207/2024 (Legge di Bilancio 2025)",
+  "fonte": "Aliquote generali: Circolare INPS n. 19/2025 — L. 207/2024 (Legge di Bilancio 2025). Contributi orari lavoratori domestici 2026: `LAVORO/Circolare numero 9 del 03-02-2026 _ Det...Circolari, Messaggi e Normativa _ INPS.pdf` (Circ. n. 9/2026), verificati su tab. §2 A–B colonne senza quota CUAF; tab. B = addizionale tempo determinato (L. 92/2012).",
   "aliquotaBaseAzienda": 0.288,
   "aliquotaBaseDipendente": 0.0919,
   "settoriContributivi": {
@@ -163,6 +163,8 @@
     "domestici": {
       "nome": "Lavoratori domestici (Circ. INPS n. 9/2026)",
       "calcoloSpeciale": "per_ora",
+      "_fonteTabellaContributi2026": "LAVORO/Circolare numero 9 del 03-02-2026 _ Det...Circolari, Messaggi e Normativa _ INPS.pdf — §2 importo contributi decorrenza 01/01/2026–31/12/2026; valori €/ora = colonna «Senza quota CUAF» (tab. A tempo indeterminato / tab. B tempo determinato addizionale); quota tra parentesi = carico lavoratore.",
+      "_notaIndennitaVittoAlloggio": "Importi sostitutivi vitto/alloggio: CCNL in `LAVORO/H501 Collaboratori Familiari Conviventi.pdf` (importi giornalieri da 1.1.2026: pasto €2,33, alloggio €2,00). Mensilità equivalente non esplicitata nel PDF estratto: `indennitaVittoAlloggioMensile` non impostata (resta 0 in engine).",
       "tabellaFasce2026": {
         "oltre24hSettimanali": {
           "retribuzioneConvenzionale": 6.20,
