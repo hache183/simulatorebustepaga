@@ -6,13 +6,6 @@ function round2(n: number): number {
   return Math.round(n * 100) / 100;
 }
 
-function getAddizionaleRegionale(_regione: string): number {
-  return ADDIZIONALE_REGIONALE;
-}
-
-function getAddizionaleComunale(): number {
-  return ADDIZIONALE_COMUNALE;
-}
 
 /* eslint-disable @typescript-eslint/no-require-imports */
 const GS = require('../data/gestione-separata.json') as GestioneSeparataData;
@@ -167,8 +160,8 @@ function irpefComeDipendenti(
     : 0;
 
   const irpefNetta = Math.max(0, irpefLorda - detrazioneLavoroDip - bonusCuneoFiscale);
-  const addizionaleRegionale = imponibile * getAddizionaleRegionale('');
-  const addizionaleComunale = imponibile * getAddizionaleComunale();
+  const addizionaleRegionale = imponibile * ADDIZIONALE_REGIONALE;
+  const addizionaleComunale = imponibile * ADDIZIONALE_COMUNALE;
   const nettoAnnuo = ral - inpsDipendente - irpefNetta - addizionaleRegionale - addizionaleComunale;
 
   return {
@@ -387,8 +380,8 @@ export function calcolaCompensiSocietari(input: SocietariInput): SocietariOutput
 
   const imponibileIrpef = Math.max(0, lordo - gsPercipiente);
   const irpefLorda = irpefLordaScaglioni(imponibileIrpef);
-  const addReg = imponibileIrpef * getAddizionaleRegionale(input.regione ?? '');
-  const addCom = imponibileIrpef * getAddizionaleComunale();
+  const addReg = imponibileIrpef * ADDIZIONALE_REGIONALE;
+  const addCom = imponibileIrpef * ADDIZIONALE_COMUNALE;
 
   return {
     ...base,
