@@ -88,7 +88,7 @@ export function listCcnlIdsUi(): string[] {
 export function listCcnlUi(): { id: string; nome: string; fonte: string; validitaAl?: string | null }[] {
   return listCcnlIdsUi()
     .map(id => {
-      const c = CCNL_MAP[id];
+      const c = CCNL_MAP[id] as CcnlData & { validitaAl?: string | null };
       return { id, nome: c.nome, fonte: c.fonte, validitaAl: c.validitaAl ?? null };
     })
     .sort((a, b) => a.nome.localeCompare(b.nome, 'it'));

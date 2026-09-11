@@ -97,10 +97,10 @@ export function CalcolatorePageClient() {
     const daElenco = CCNL_UI.find(c => c.id === step1Data.ccnlId);
     return {
       nome: daElenco?.nome ?? step1Data.ccnlId,
-      fonte: risultato?.fonteCcnl ?? daElenco?.fonte,
-      validitaAl: risultato ? risultato.validitaAl ?? null : daElenco?.validitaAl ?? null,
+      fonte: daElenco?.fonte,
+      validitaAl: daElenco?.validitaAl ?? null,
     };
-  }, [step1Data, risultato]);
+  }, [step1Data]);
 
   return (
     <div className="print-unlock" style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
@@ -223,7 +223,7 @@ export function CalcolatorePageClient() {
             animation: 'fadeSlideIn 0.2s ease forwards',
           }}>
             {step === 1 && <CalcolatoreFormStep1 onNext={handleStep1} />}
-            {step === 2 && <CalcolatoreFormStep2 onSubmit={handleStep2} onBack={() => setStep(1)} isLoading={isLoading} contributiCcnl={contributiCcnl} ccnlId={step1Data?.ccnlId} tipoContratto={step1Data?.tipoContratto} />}
+            {step === 2 && <CalcolatoreFormStep2 onSubmit={handleStep2} onBack={() => setStep(1)} isLoading={isLoading} contributiCcnl={contributiCcnl} ccnlId={step1Data?.ccnlId} />}
           </div>
         )}
 

@@ -1,4 +1,18 @@
-import { getAddizionaleRegionale, getAddizionaleComunale, round2 } from './contributi';
+// Stesse medie usate dal netto dipendenti (`lib/irpef-lavoro-dipendente.ts`).
+const ADDIZIONALE_REGIONALE = 0.0173;
+const ADDIZIONALE_COMUNALE = 0.008;
+
+function round2(n: number): number {
+  return Math.round(n * 100) / 100;
+}
+
+function getAddizionaleRegionale(_regione: string): number {
+  return ADDIZIONALE_REGIONALE;
+}
+
+function getAddizionaleComunale(): number {
+  return ADDIZIONALE_COMUNALE;
+}
 
 /* eslint-disable @typescript-eslint/no-require-imports */
 const GS = require('../data/gestione-separata.json') as GestioneSeparataData;

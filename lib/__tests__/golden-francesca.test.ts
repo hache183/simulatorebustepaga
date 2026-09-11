@@ -2,8 +2,18 @@ import { calculateCosto } from '@/lib/engine';
 import { getLivello, listCcnlIds, listCcnlIdsUi } from '@/lib/ccnl';
 import { getSettoreContributivo } from '@/lib/contributi';
 import { calcolaCompensiSocietari } from '@/lib/societari';
+import type { CalcolatoreOutput, LivelloCcnl } from '@/types';
 
 const round2 = (n: number) => Math.round(n * 100) / 100;
+
+type LivelloExtra = LivelloCcnl & {
+  retribuzioneMensileTabella?: number;
+  scattoEuro?: number;
+};
+
+type OutputExtra = CalcolatoreOutput & {
+  scomposizioneLivello?: { totale: number };
+};
 
 describe('GOLDEN D1 — Domestici non conviventi liv. A, 25h, TI', () => {
   // 6,51 €/h × 25 h × 52 sett. = 8.463,00
@@ -97,8 +107,8 @@ describe('GOLDEN D-CONV-A — Convivente liv. A, 54h, 13 mensilità, no CassaCol
 });
 
 describe('GOLDEN C1 — Commercio 4°, 40h, 14 mensilità, 0 scatti, 10 dip., INAIL 0111', () => {
-  const liv4 = getLivello('commercio', '4');
-  const ral = round2(liv4.retribuzioneMensileTabella * 14);
+  const liv4 = getLivello('commercio', '4') as LivelloExtra;
+  const ral = round2((liv4.retribuzioneMensileTabella ?? liv4.minimoTabellare) * 14);
   const settore = getSettoreContributivo('commercio', 10)!;
   const input = {
     ccnlId: 'commercio',
@@ -118,7 +128,7 @@ describe('GOLDEN C1 — Commercio 4°, 40h, 14 mensilità, 0 scatti, 10 dip., IN
   };
 
   test('usa colonna TOTALE 1.783,75 (non solo paga base 1.257,46)', () => {
-    expect(liv4.retribuzioneMensileTabella).toBeCloseTo(1783.75, 2);
+    expect(liv4.retribuzioneMensileTabella ?? 0).toBeCloseTo(1783.75, 2);
     expect(liv4.minimoTabellare).toBeCloseTo(1257.46, 2);
     expect(ral).toBeCloseTo(24_972.50, 2);
   });
@@ -135,12 +145,12 @@ describe('GOLDEN C1 — Commercio 4°, 40h, 14 mensilità, 0 scatti, 10 dip., IN
 });
 
 describe('GOLDEN M1 — Metalmeccanici C3, 40h, 13 mensilità, 2 scatti', () => {
-  const liv = getLivello('metalmeccanici', 'C3');
+  const liv = getLivello('metalmeccanici', 'C3') as LivelloExtra;
   // 4 anni / periodicità 24 mesi = 2 scatti
   const input = {
     ccnlId: 'metalmeccanici',
     livello: 'C3',
-    ral: round2(liv.retribuzioneMensileTabella * 13),
+    ral: round2((liv.retribuzioneMensileTabella ?? liv.minimoTabellare) * 13),
     tipoContratto: 'tempo_indeterminato' as const,
     oreLavoro: 40,
     mensilita: 13,
@@ -154,19 +164,19 @@ describe('GOLDEN M1 — Metalmeccanici C3, 40h, 13 mensilità, 2 scatti', () => 
   };
 
   test('scatti = 2 × scattoEuro C3 29,64 × 12 = 711,36', async () => {
-    expect(liv.scattoEuro).toBeCloseTo(29.64, 2);
+    expect(liv.scattoEuro ?? 0).toBeCloseTo(29.64, 2);
     const result = await calculateCosto(input);
     expect(result.voci.find(v => v.id === 'scatti_anzianita')!.importoAnnuo).toBeCloseTo(2 * 29.64 * 12, 2);
   });
 });
 
 describe('GOLDEN P1 — FIPE QA usa colonna TOTALE WK', () => {
-  const liv = getLivello('pubblici_esercizi', 'QA');
-  const ralTotale = round2(liv.retribuzioneMensileTabella * 14);
+  const liv = getLivello('pubblici_esercizi', 'QA') as LivelloExtra;
+  const ralTotale = round2((liv.retribuzioneMensileTabella ?? liv.minimoTabellare) * 14);
   const ralSoloMinimo = round2(liv.minimoTabellare * 14);
 
   test('TOTALE 2.472,19 ≠ minimo 1.854,49', () => {
-    expect(liv.retribuzioneMensileTabella).toBeCloseTo(2472.19, 2);
+    expect(liv.retribuzioneMensileTabella ?? 0).toBeCloseTo(2472.19, 2);
     expect(liv.minimoTabellare).toBeCloseTo(1854.49, 2);
     expect(ralTotale).toBeCloseTo(34_610.66, 2);
     expect(ralTotale).toBeGreaterThan(ralSoloMinimo);
@@ -189,7 +199,7 @@ describe('GOLDEN P1 — FIPE QA usa colonna TOTALE WK', () => {
       aliquotaInps: 0.288,
     });
     expect(result.voci.find(v => v.id === 'ral')!.importoAnnuo).toBeCloseTo(34_610.66, 2);
-    expect(result.scomposizioneLivello?.totale).toBeCloseTo(2472.19, 2);
+    expect((result as OutputExtra).scomposizioneLivello?.totale).toBeCloseTo(2472.19, 2);
   });
 });
 
