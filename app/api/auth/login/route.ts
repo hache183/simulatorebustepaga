@@ -2,6 +2,18 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createHash, timingSafeEqual } from 'crypto';
 import { LRUCache } from 'lru-cache';
 
+/**
+ * Confronto a tempo costante fra hash, non fra stringhe: gli hash hanno
+ * sempre la stessa lunghezza, quindi non serve un ramo di fallback che
+ * reintrodurrebbe una differenza di tempo sulla lunghezza del segreto.
+ */
+function confrontoSicuro(a: string, b: string): boolean {
+  return timingSafeEqual(
+    createHash('sha256').update(a).digest(),
+    createHash('sha256').update(b).digest(),
+  );
+}
+
 // Rate limiter: max 5 tentativi login per 15 minuti per IP
 const loginLimiter = new LRUCache<string, number[]>({ max: 500, ttl: 900_000 });
 
@@ -40,13 +52,11 @@ export async function POST(request: NextRequest) {
     // Confronto timing-safe per evitare timing attacks
     const emailNorm = (email ?? '').toLowerCase().trim();
     const expectedEmailNorm = expectedEmail.toLowerCase().trim();
-    let match = true;
-    try {
-      if (!timingSafeEqual(Buffer.from(emailNorm), Buffer.from(expectedEmailNorm))) match = false;
-    } catch { match = false; }
-    try {
-      if (!timingSafeEqual(Buffer.from(password ?? ''), Buffer.from(expectedPassword))) match = false;
-    } catch { match = false; }
+    // Entrambi i confronti sono sempre eseguiti: con && in linea il secondo
+    // verrebbe saltato, rivelando dai tempi se l'email era corretta.
+    const emailOk = confrontoSicuro(emailNorm, expectedEmailNorm);
+    const passwordOk = confrontoSicuro(password ?? '', expectedPassword);
+    const match = emailOk && passwordOk;
 
     if (!match) {
       return NextResponse.json(

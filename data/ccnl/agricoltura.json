@@ -1,8 +1,8 @@
 {
   "id": "agricoltura",
   "nome": "CCNL Agricoltura (Operai Agricoli e Florovivaisti — Confagricoltura)",
-  "fonte": "PDF A11 — AGRICOLTURA - OPERAI (OTD) vigenti dal 01/01/2025 + PDF A021 — AGRICOLTURA - IMPIEGATI vigenti dal 01/07/2024 (livello Quadro). Stampa del 21/04/2026 — dati ufficiali tabelle retributive.",
-  "updatedAt": "2026-04-21T00:00:00Z",
+  "fonte": "PDF LAVORO/A021.pdf IMPIEGATI (01/07/2024) + A11.pdf OPERAI OTD (01/01/2025). Quadro: TOTALE con indennità 185 €. Operai: minimo = totale.",
+  "updatedAt": "2026-09-11T00:00:00Z",
   "mensilita": 13,
   "_notaLimitazione": "ATTENZIONE: il settore agricolo ha un sistema retributivo proprio. Gli operai agricoli (soprattutto OTD) sono pagati con paga oraria/giornaliera, non mensile. Il modello mensile qui applicato è una semplificazione valida solo per operai a tempo indeterminato (salariati fissi). Per OTD il calcolo reale richiede tabelle orarie provinciali.",
   "contributiContrattuali": {
@@ -13,28 +13,81 @@
         "importoMensile": null,
         "percentuale": 0.0156,
         "descrizione": "ENPAIA — Ente Nazionale di Previdenza per gli Addetti e gli Impiegati in Agricoltura (1,56% quota datore)",
-        "notaLegge": "Legge 111/1951 — ENPAIA"
+        "notaLegge": "Legge 111/1951 — ENPAIA",
+        "scalaConPartTime": true
       },
       "enbac": {
         "tipo": "bilaterale",
         "modalita": "percentuale",
         "importoMensile": null,
-        "percentuale": 0.0020,
+        "percentuale": 0.002,
         "descrizione": "ENBAC — Ente Bilaterale Nazionale per l'Agricoltura e il Cooperativismo (0,20% quota datore)",
-        "notaLegge": "Art. 6 CCNL Agricoltura"
+        "notaLegge": "Art. 6 CCNL Agricoltura",
+        "scalaConPartTime": true
       }
     }
   },
   "livelli": [
-    { "codice": "Q",  "descrizione": "Quadro / Impiegato direttivo (da PDF Impiegati)", "qualifica": "Dirigente d'azienda agricola, agronomo",      "minimoTabellare": 1788.38, "moltiplicatore": 1.00 },
-    { "codice": "1",  "descrizione": "1° livello — Area 1 Livello 1 (OTD)", "qualifica": "Trattorista specializzato, capo operaio",       "minimoTabellare": 1458.61, "moltiplicatore": 0.88 },
-    { "codice": "2",  "descrizione": "2° livello — Area 1 Livello 2 (OTD)", "qualifica": "Operaio agricolo specializzato, potatore",      "minimoTabellare": 1458.61, "moltiplicatore": 0.78 },
-    { "codice": "3",  "descrizione": "3° livello — Area 2 Livello 3 (OTD)", "qualifica": "Operaio agricolo qualificato, addetto alla raccolta", "minimoTabellare": 1330.25, "moltiplicatore": 0.68 },
-    { "codice": "4",  "descrizione": "4° livello — Area 3 Livello 5 (OTD)", "qualifica": "Operaio agricolo comune, bracciante",           "minimoTabellare": 991.85,  "moltiplicatore": 0.60 }
+    {
+      "codice": "Q",
+      "descrizione": "Quadro / Impiegato direttivo (da PDF Impiegati)",
+      "qualifica": "Dirigente d'azienda agricola, agronomo",
+      "minimoTabellare": 1788.38,
+      "moltiplicatore": 1.0,
+      "contingenza": 0,
+      "edr": 0,
+      "altreIndennitaFisse": 185.0,
+      "retribuzioneMensileTabella": 1973.38
+    },
+    {
+      "codice": "1",
+      "descrizione": "1° livello — Area 1 Livello 1 (OTD)",
+      "qualifica": "Trattorista specializzato, capo operaio",
+      "minimoTabellare": 1458.61,
+      "moltiplicatore": 0.88,
+      "contingenza": 0,
+      "edr": 0,
+      "altreIndennitaFisse": 0,
+      "retribuzioneMensileTabella": 1458.61
+    },
+    {
+      "codice": "2",
+      "descrizione": "2° livello — Area 1 Livello 2 (OTD)",
+      "qualifica": "Operaio agricolo specializzato, potatore",
+      "minimoTabellare": 1458.61,
+      "moltiplicatore": 0.78,
+      "contingenza": 0,
+      "edr": 0,
+      "altreIndennitaFisse": 0,
+      "retribuzioneMensileTabella": 1458.61
+    },
+    {
+      "codice": "3",
+      "descrizione": "3° livello — Area 2 Livello 3 (OTD)",
+      "qualifica": "Operaio agricolo qualificato, addetto alla raccolta",
+      "minimoTabellare": 1330.25,
+      "moltiplicatore": 0.68,
+      "contingenza": 0,
+      "edr": 0,
+      "altreIndennitaFisse": 0,
+      "retribuzioneMensileTabella": 1330.25
+    },
+    {
+      "codice": "4",
+      "descrizione": "4° livello — Area 3 Livello 5 (OTD)",
+      "qualifica": "Operaio agricolo comune, bracciante",
+      "minimoTabellare": 991.85,
+      "moltiplicatore": 0.6,
+      "contingenza": 0,
+      "edr": 0,
+      "altreIndennitaFisse": 0,
+      "retribuzioneMensileTabella": 991.85
+    }
   ],
   "scattiAnzianita": {
     "periodicitaMesi": 24,
     "importoPerScattoEuro": 7.23,
     "maxScatti": 8
-  }
+  },
+  "orarioSettimanalePieno": 40
 }

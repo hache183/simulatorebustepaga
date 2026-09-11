@@ -9,24 +9,86 @@
       "fondoSanitario": {
         "tipo": "sanitario",
         "modalita": "fisso",
-        "importoMensile": 10.00,
+        "importoMensile": 10.0,
         "percentuale": null,
         "descrizione": "Fondo sanitario integrativo dipendenti fabbricati (€ 10/mese fisso quota datore)",
-        "notaLegge": "CCNL Proprietari di Fabbricati — assistenza sanitaria"
+        "notaLegge": "CCNL Proprietari di Fabbricati — assistenza sanitaria",
+        "scalaConPartTime": false
       }
     }
   },
   "livelli": [
-    { "codice": "C1", "descrizione": "Impiegato 1° categoria", "qualifica": "Responsabile amministrativo di stabili, sovrintendente di condomini, capo portiere",     "minimoTabellare": 2391.10, "moltiplicatore": 1.00 },
-    { "codice": "C2", "descrizione": "Impiegato 2° categoria", "qualifica": "Contabile condominiale, assistente tecnico di stabili, portiere responsabile di reparto", "minimoTabellare": 2050.57, "moltiplicatore": 0.86 },
-    { "codice": "C3", "descrizione": "Impiegato 3° categoria", "qualifica": "Impiegato d'ordine, addetto alla segreteria condominiale, portiere qualificato",          "minimoTabellare": 1795.94, "moltiplicatore": 0.75 },
-    { "codice": "C4", "descrizione": "Impiegato 4° categoria", "qualifica": "Impiegato ausiliario, commesso, portiere di categoria superiore",                         "minimoTabellare": 1512.61, "moltiplicatore": 0.63 },
-    { "codice": "D",  "descrizione": "Portiere/Custode",       "qualifica": "Portiere con alloggio, custode condominiale con mansioni di vigilanza e manutenzione",    "minimoTabellare": 1498.54, "moltiplicatore": 0.63 },
-    { "codice": "A",  "descrizione": "Addetto servizi",        "qualifica": "Portiere senza alloggio, addetto alle pulizie e servizi generici condominiali",           "minimoTabellare": 1361.00, "moltiplicatore": 0.57 }
+    {
+      "codice": "C1",
+      "descrizione": "Impiegato 1° categoria",
+      "qualifica": "Responsabile amministrativo di stabili, sovrintendente di condomini, capo portiere",
+      "minimoTabellare": 2391.1,
+      "moltiplicatore": 1.0,
+      "contingenza": 0,
+      "edr": 0,
+      "altreIndennitaFisse": 0,
+      "retribuzioneMensileTabella": 2391.1
+    },
+    {
+      "codice": "C2",
+      "descrizione": "Impiegato 2° categoria",
+      "qualifica": "Contabile condominiale, assistente tecnico di stabili, portiere responsabile di reparto",
+      "minimoTabellare": 2050.57,
+      "moltiplicatore": 0.86,
+      "contingenza": 0,
+      "edr": 0,
+      "altreIndennitaFisse": 0,
+      "retribuzioneMensileTabella": 2050.57
+    },
+    {
+      "codice": "C3",
+      "descrizione": "Impiegato 3° categoria",
+      "qualifica": "Impiegato d'ordine, addetto alla segreteria condominiale, portiere qualificato",
+      "minimoTabellare": 1795.94,
+      "moltiplicatore": 0.75,
+      "contingenza": 0,
+      "edr": 0,
+      "altreIndennitaFisse": 0,
+      "retribuzioneMensileTabella": 1795.94
+    },
+    {
+      "codice": "C4",
+      "descrizione": "Impiegato 4° categoria",
+      "qualifica": "Impiegato ausiliario, commesso, portiere di categoria superiore",
+      "minimoTabellare": 1512.61,
+      "moltiplicatore": 0.63,
+      "contingenza": 0,
+      "edr": 0,
+      "altreIndennitaFisse": 0,
+      "retribuzioneMensileTabella": 1512.61
+    },
+    {
+      "codice": "D",
+      "descrizione": "Portiere/Custode",
+      "qualifica": "Portiere con alloggio, custode condominiale con mansioni di vigilanza e manutenzione",
+      "minimoTabellare": 1498.54,
+      "moltiplicatore": 0.63,
+      "contingenza": 0,
+      "edr": 0,
+      "altreIndennitaFisse": 0,
+      "retribuzioneMensileTabella": 1498.54
+    },
+    {
+      "codice": "A",
+      "descrizione": "Addetto servizi",
+      "qualifica": "Portiere senza alloggio, addetto alle pulizie e servizi generici condominiali",
+      "minimoTabellare": 1361.0,
+      "moltiplicatore": 0.57,
+      "contingenza": 0,
+      "edr": 0,
+      "altreIndennitaFisse": 0,
+      "retribuzioneMensileTabella": 1361.0
+    }
   ],
   "scattiAnzianita": {
     "periodicitaMesi": 24,
-    "importoPerScattoEuro": 7.00,
+    "importoPerScattoEuro": 7.0,
     "maxScatti": 8
-  }
+  },
+  "orarioSettimanalePieno": 40
 }

@@ -79,6 +79,30 @@ export function listCcnlIds(): string[] {
   return Object.keys(CCNL_MAP);
 }
 
+const ALIAS_INTERNI = new Set(['domestici_non_conviventi', 'domestici_conviventi']);
+
+export function listCcnlIdsUi(): string[] {
+  return Object.keys(CCNL_MAP).filter(id => !ALIAS_INTERNI.has(id));
+}
+
+export function listCcnlUi(): { id: string; nome: string; fonte: string; validitaAl?: string | null }[] {
+  return listCcnlIdsUi()
+    .map(id => {
+      const c = CCNL_MAP[id];
+      return { id, nome: c.nome, fonte: c.fonte, validitaAl: c.validitaAl ?? null };
+    })
+    .sort((a, b) => a.nome.localeCompare(b.nome, 'it'));
+}
+
+export function fonteNonVerificata(fonte: string | undefined): boolean {
+  return Boolean(fonte && /NON VERIFICATO|PROXY/i.test(fonte));
+}
+
+export function tabellaScaduta(validitaAl: string | null | undefined, oggi = new Date()): boolean {
+  if (!validitaAl) return false;
+  return new Date(validitaAl).getTime() < oggi.getTime();
+}
+
 /** Restituisce un livello contrattuale o lancia errore se non esiste */
 export function getLivello(ccnlId: string, codice: string): LivelloCcnl {
   const ccnl = getCcnlData(ccnlId);

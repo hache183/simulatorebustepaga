@@ -79,7 +79,16 @@ interface CcnlData {
   };
 }
 
-type FeedbackState = { tipo: 'ok' | 'errore'; messaggio: string } | null;
+interface TabProps {
+  password: string;
+  /** Ambiente serverless: si esporta il JSON invece di scriverlo su disco. */
+  solaLettura: boolean;
+}
+
+type FeedbackState =
+  | { tipo: 'ok' | 'errore'; messaggio: string }
+  | { tipo: 'export'; messaggio: string; filePath: string; contenuto: string }
+  | null;
 
 // ─── CCNL list ────────────────────────────────────────────────────────────────
 
@@ -156,6 +165,7 @@ function WarningInline({ show, msg }: { show: boolean; msg: string }) {
 
 function FeedbackBanner({ feedback }: { feedback: FeedbackState }) {
   if (!feedback) return null;
+  if (feedback.tipo === 'export') return <ExportPanel feedback={feedback} />;
   const ok = feedback.tipo === 'ok';
   return (
     <div style={{
@@ -169,6 +179,88 @@ function FeedbackBanner({ feedback }: { feedback: FeedbackState }) {
       marginTop: '12px',
     }}>
       {ok ? '✓' : '✕'} {feedback.messaggio}
+    </div>
+  );
+}
+
+// Ambiente in sola lettura: il JSON validato esce di qui e rientra via commit.
+function ExportPanel({
+  feedback,
+}: {
+  feedback: { messaggio: string; filePath: string; contenuto: string };
+}) {
+  const [copiato, setCopiato] = useState(false);
+
+  const scarica = () => {
+    const blob = new Blob([feedback.contenuto], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = feedback.filePath.split('/').pop() ?? 'dati.json';
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const copia = () => {
+    void navigator.clipboard.writeText(feedback.contenuto).then(() => {
+      setCopiato(true);
+      setTimeout(() => setCopiato(false), 2500);
+    });
+  };
+
+  const bottone: React.CSSProperties = {
+    padding: '8px 16px',
+    borderRadius: '6px',
+    border: '1px solid var(--color-accent)',
+    background: 'var(--color-accent-glow)',
+    color: 'var(--color-accent-bright)',
+    fontFamily: "'Plus Jakarta Sans', sans-serif",
+    fontSize: '12px',
+    fontWeight: 600,
+    cursor: 'pointer',
+  };
+
+  return (
+    <div style={{
+      padding: '14px',
+      borderRadius: '8px',
+      border: '1px solid var(--color-amber)',
+      background: 'var(--color-amber-dim)',
+      marginTop: '12px',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '10px',
+    }}>
+      <p style={{ fontSize: '13px', color: 'var(--color-amber)', fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600 }}>
+        JSON validato — da committare in repo
+      </p>
+      <p style={{ fontSize: '12px', color: 'var(--color-text-secondary)', fontFamily: "'Plus Jakarta Sans', sans-serif", lineHeight: 1.5 }}>
+        {feedback.messaggio}
+      </p>
+      <p style={{ fontSize: '11px', fontFamily: "'DM Mono', monospace", color: 'var(--color-text-muted)' }}>
+        Destinazione: {feedback.filePath}
+      </p>
+      <div style={{ display: 'flex', gap: '8px' }}>
+        <button onClick={scarica} style={bottone}>Scarica JSON</button>
+        <button onClick={copia} style={bottone}>{copiato ? 'Copiato ✓' : 'Copia negli appunti'}</button>
+      </div>
+      <textarea
+        readOnly
+        value={feedback.contenuto}
+        rows={10}
+        onFocus={e => e.currentTarget.select()}
+        style={{
+          fontFamily: "'DM Mono', monospace",
+          fontSize: '11px',
+          padding: '10px',
+          background: 'var(--color-bg-input)',
+          border: '1px solid var(--color-border)',
+          borderRadius: '6px',
+          color: 'var(--color-text-secondary)',
+          width: '100%',
+          resize: 'vertical',
+        }}
+      />
     </div>
   );
 }
@@ -263,7 +355,20 @@ function SectionTitle({ children }: { children: React.ReactNode }) {
   );
 }
 
-// ─── Save helper shared by all tabs ──────────────────────────────────────────
+// ─── Network helpers shared by all tabs ──────────────────────────────────────
+
+// La password va nel body: in query string finirebbe nei log di accesso.
+async function apiLeggi(password: string, filePath: string): Promise<string> {
+  const res = await fetch('/api/admin/leggi-file', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ password, filePath }),
+  });
+  const json = await res.json() as { contenuto?: string; errore?: string };
+  if (!res.ok) throw new Error(json.errore ?? `HTTP ${res.status}`);
+  if (!json.contenuto) throw new Error('Contenuto mancante');
+  return json.contenuto;
+}
 
 async function apiSalva(
   password: string,
@@ -280,10 +385,28 @@ async function apiSalva(
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ password, filePath, content }),
     });
-    const json = await res.json() as { errore?: string; updatedAt?: string };
+    const json = await res.json() as {
+      errore?: string;
+      updatedAt?: string;
+      solaLettura?: boolean;
+      contenuto?: string;
+      messaggio?: string;
+    };
     if (!res.ok) throw new Error(json.errore ?? 'Errore sconosciuto');
+    if (json.solaLettura && json.contenuto) {
+      setFeedback({
+        tipo: 'export',
+        messaggio: json.messaggio ?? 'Ambiente in sola lettura: file validato ma non salvato.',
+        filePath,
+        contenuto: json.contenuto,
+      });
+      return;
+    }
     const when = json.updatedAt ? new Date(json.updatedAt).toLocaleString('it-IT') : '';
-    setFeedback({ tipo: 'ok', messaggio: `Salvato · updatedAt: ${when}` });
+    setFeedback({
+      tipo: 'ok',
+      messaggio: `Salvato su disco · updatedAt: ${when} — i calcoli usano i nuovi valori dopo il riavvio del server.`,
+    });
   } catch (e) {
     setFeedback({ tipo: 'errore', messaggio: e instanceof Error ? e.message : 'Errore sconosciuto' });
   } finally {
@@ -293,7 +416,7 @@ async function apiSalva(
 
 // ─── TAB 1: INPS & Agevolazioni ───────────────────────────────────────────────
 
-function TabInps({ password }: { password: string }) {
+function TabInps({ password, solaLettura }: TabProps) {
   const [raw, setRaw] = useState<AliquoteInps | null>(null);
   const [aliqAzienda, setAliqAzienda] = useState('');
   const [aliqDip, setAliqDip] = useState('');
@@ -304,11 +427,7 @@ function TabInps({ password }: { password: string }) {
 
   const carica = useCallback(async () => {
     try {
-      const r = await fetch(`/api/admin/leggi-file?path=${encodeURIComponent('data/aliquote-inps.json')}&password=${encodeURIComponent(password)}`);
-      const d = await r.json() as { contenuto?: string; errore?: string };
-      if (!r.ok) throw new Error(d.errore ?? `HTTP ${r.status}`);
-      if (!d.contenuto) throw new Error('Contenuto mancante');
-      const parsed: AliquoteInps = JSON.parse(d.contenuto);
+      const parsed: AliquoteInps = JSON.parse(await apiLeggi(password, 'data/aliquote-inps.json'));
       setAliqAzienda(String(+(parsed.aliquotaBaseAzienda * 100).toFixed(4)));
       setAliqDip(String(+(parsed.aliquotaBaseDipendente * 100).toFixed(4)));
       const st: Record<string, { esonero: string; massimale: string; scadenza: string }> = {};
@@ -485,14 +604,14 @@ function TabInps({ password }: { password: string }) {
       </div>
 
       <FeedbackBanner feedback={feedback} />
-      <SaveButton label="Salva INPS" salvando={salvando} onClick={() => { void salva(); }} />
+      <SaveButton label="Salva INPS" solaLettura={solaLettura} salvando={salvando} onClick={() => { void salva(); }} />
     </div>
   );
 }
 
 // ─── TAB 2: Tariffe INAIL ─────────────────────────────────────────────────────
 
-function TabInail({ password }: { password: string }) {
+function TabInail({ password, solaLettura }: TabProps) {
   const [raw, setRaw] = useState<InailData | null>(null);
   const [tassi, setTassi] = useState<Record<string, string>>({});
   const [salvando, setSalvando] = useState(false);
@@ -500,11 +619,7 @@ function TabInail({ password }: { password: string }) {
 
   const carica = useCallback(async () => {
     try {
-      const r = await fetch(`/api/admin/leggi-file?path=${encodeURIComponent('data/inail.json')}&password=${encodeURIComponent(password)}`);
-      const d = await r.json() as { contenuto?: string; errore?: string };
-      if (!r.ok) throw new Error(d.errore ?? `HTTP ${r.status}`);
-      if (!d.contenuto) throw new Error('Contenuto mancante');
-      const parsed: InailData = JSON.parse(d.contenuto);
+      const parsed: InailData = JSON.parse(await apiLeggi(password, 'data/inail.json'));
       const t: Record<string, string> = {};
       for (const v of parsed.voci ?? []) t[v.codice] = String(v.tassoPerMille);
       setTassi(t);
@@ -580,14 +695,14 @@ function TabInail({ password }: { password: string }) {
         </table>
       </div>
       <FeedbackBanner feedback={feedback} />
-      <SaveButton label="Salva INAIL" salvando={salvando} onClick={() => { void salva(); }} />
+      <SaveButton label="Salva INAIL" solaLettura={solaLettura} salvando={salvando} onClick={() => { void salva(); }} />
     </div>
   );
 }
 
 // ─── TAB 3: TFR ──────────────────────────────────────────────────────────────
 
-function TabTfr({ password }: { password: string }) {
+function TabTfr({ password, solaLettura }: TabProps) {
   const [raw, setRaw] = useState<TfrData | null>(null);
   const [divisore, setDivisore] = useState('');
   const [quotaFissa, setQuotaFissa] = useState('');
@@ -597,11 +712,7 @@ function TabTfr({ password }: { password: string }) {
 
   const carica = useCallback(async () => {
     try {
-      const r = await fetch(`/api/admin/leggi-file?path=${encodeURIComponent('data/tfr.json')}&password=${encodeURIComponent(password)}`);
-      const d = await r.json() as { contenuto?: string; errore?: string };
-      if (!r.ok) throw new Error(d.errore ?? `HTTP ${r.status}`);
-      if (!d.contenuto) throw new Error('Contenuto mancante');
-      const parsed: TfrData = JSON.parse(d.contenuto);
+      const parsed: TfrData = JSON.parse(await apiLeggi(password, 'data/tfr.json'));
       setDivisore(String(parsed.divisoreAnnuo));
       setQuotaFissa(String(+(parsed.rivalutazione.quotaFissa * 100).toFixed(4)));
       setQuotaCpi(String(+(parsed.rivalutazione.quotaVariabileCpi * 100).toFixed(4)));
@@ -663,14 +774,14 @@ function TabTfr({ password }: { password: string }) {
         Art. 2120 c.c. — normalmente divisore 13.5, quota fissa 1.5%, quota variabile CPI 75%
       </p>
       <FeedbackBanner feedback={feedback} />
-      <SaveButton label="Salva TFR" salvando={salvando} onClick={() => { void salva(); }} />
+      <SaveButton label="Salva TFR" solaLettura={solaLettura} salvando={salvando} onClick={() => { void salva(); }} />
     </div>
   );
 }
 
 // ─── TAB 4: CCNL ─────────────────────────────────────────────────────────────
 
-function TabCcnl({ password }: { password: string }) {
+function TabCcnl({ password, solaLettura }: TabProps) {
   const [selectedId, setSelectedId] = useState(CCNL_LIST[0].id);
   const [raw, setRaw] = useState<CcnlData | null>(null);
   const [mensilita, setMensilita] = useState('13');
@@ -688,11 +799,7 @@ function TabCcnl({ password }: { password: string }) {
     setRaw(null);
     setFeedback(null);
     try {
-      const r = await fetch(`/api/admin/leggi-file?path=${encodeURIComponent(selectedCcnl.path)}&password=${encodeURIComponent(password)}`);
-      const d = await r.json() as { contenuto?: string; errore?: string };
-      if (!r.ok) throw new Error(d.errore ?? `HTTP ${r.status}`);
-      if (!d.contenuto) throw new Error('Contenuto mancante');
-      const parsed: CcnlData = JSON.parse(d.contenuto);
+      const parsed: CcnlData = JSON.parse(await apiLeggi(password, selectedCcnl.path));
       setMensilita(String(parsed.mensilita));
       const lv: Record<string, string> = {};
       for (const l of parsed.livelli ?? []) lv[l.codice] = String(l.moltiplicatore);
@@ -906,7 +1013,7 @@ function TabCcnl({ password }: { password: string }) {
           )}
 
           <FeedbackBanner feedback={feedback} />
-          <SaveButton label={`Salva CCNL ${raw.nome}`} salvando={salvando} onClick={() => { void salva(); }} />
+          <SaveButton label={`Salva CCNL ${raw.nome}`} solaLettura={solaLettura} salvando={salvando} onClick={() => { void salva(); }} />
         </>
       )}
 
@@ -1246,7 +1353,13 @@ function TabDocs() {
 
 // ─── Save button ──────────────────────────────────────────────────────────────
 
-function SaveButton({ label, salvando, onClick }: { label: string; salvando: boolean; onClick: () => void }) {
+function SaveButton({ label, salvando, solaLettura, onClick }: {
+  label: string;
+  salvando: boolean;
+  solaLettura: boolean;
+  onClick: () => void;
+}) {
+  const testo = solaLettura ? 'Genera JSON da committare' : label;
   return (
     <button
       onClick={onClick}
@@ -1265,7 +1378,7 @@ function SaveButton({ label, salvando, onClick }: { label: string; salvando: boo
         alignSelf: 'flex-start',
       }}
     >
-      {salvando ? 'Salvataggio...' : label}
+      {salvando ? 'Elaborazione...' : testo}
     </button>
   );
 }
@@ -1275,8 +1388,36 @@ function SaveButton({ label, salvando, onClick }: { label: string; salvando: boo
 export default function AdminPage() {
   const [password, setPassword] = useState('');
   const [autenticato, setAutenticato] = useState(false);
+  const [solaLettura, setSolaLettura] = useState(false);
+  const [verificaInCorso, setVerificaInCorso] = useState(false);
   const [erroreLogin, setErroreLogin] = useState('');
   const [tabAttivo, setTabAttivo] = useState<'inps' | 'inail' | 'tfr' | 'ccnl' | 'docs'>('inps');
+
+  // La password è verificata dal server prima di entrare: così un errore di
+  // battitura non si manifesta come banner rosso dentro ogni tab.
+  const accedi = async () => {
+    if (!password.trim()) {
+      setErroreLogin('Inserisci la password');
+      return;
+    }
+    setVerificaInCorso(true);
+    setErroreLogin('');
+    try {
+      const res = await fetch('/api/admin/stato', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password }),
+      });
+      const json = await res.json() as { ok?: boolean; solaLettura?: boolean; errore?: string };
+      if (!res.ok || !json.ok) throw new Error(json.errore ?? 'Accesso non riuscito');
+      setSolaLettura(Boolean(json.solaLettura));
+      setAutenticato(true);
+    } catch (e) {
+      setErroreLogin(e instanceof Error ? e.message : 'Accesso non riuscito');
+    } finally {
+      setVerificaInCorso(false);
+    }
+  };
 
   if (!autenticato) {
     return (
@@ -1302,26 +1443,27 @@ export default function AdminPage() {
             type="password"
             value={password}
             onChange={e => setPassword(e.target.value)}
-            onKeyDown={e => e.key === 'Enter' && (password.trim() ? setAutenticato(true) : setErroreLogin('Inserisci la password'))}
+            onKeyDown={e => { if (e.key === 'Enter') void accedi(); }}
             placeholder="Password admin"
             style={{ padding: '11px 14px', borderRadius: '8px', fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: '13px' }}
           />
           {erroreLogin && <p style={{ fontSize: '12px', color: 'var(--color-red)', fontFamily: "'Plus Jakarta Sans', sans-serif", margin: 0 }}>{erroreLogin}</p>}
           <button
-            onClick={() => { if (password.trim()) setAutenticato(true); else setErroreLogin('Inserisci la password'); }}
+            onClick={() => { void accedi(); }}
+            disabled={verificaInCorso}
             style={{
               padding: '11px',
-              background: 'var(--color-accent)',
-              color: 'white',
+              background: verificaInCorso ? 'var(--color-bg-elevated)' : 'var(--color-accent)',
+              color: verificaInCorso ? 'var(--color-text-muted)' : 'white',
               border: 'none',
               borderRadius: '8px',
-              cursor: 'pointer',
+              cursor: verificaInCorso ? 'not-allowed' : 'pointer',
               fontFamily: "'Plus Jakarta Sans', sans-serif",
               fontSize: '13px',
               fontWeight: 600,
             }}
           >
-            Accedi
+            {verificaInCorso ? 'Verifica...' : 'Accedi'}
           </button>
         </div>
       </main>
@@ -1351,18 +1493,32 @@ export default function AdminPage() {
           </a>
         </div>
 
-        {/* Warning banner */}
+        {/* Warning banner — il flusso cambia a seconda dell'ambiente */}
         <div style={{
-          padding: '10px 14px',
+          padding: '12px 14px',
           borderRadius: '8px',
-          border: '1px solid var(--color-border)',
-          background: 'var(--color-bg-elevated)',
-          color: 'var(--color-text-secondary)',
+          border: `1px solid ${solaLettura ? 'var(--color-amber)' : 'var(--color-border)'}`,
+          background: solaLettura ? 'var(--color-amber-dim)' : 'var(--color-bg-elevated)',
+          color: solaLettura ? 'var(--color-amber)' : 'var(--color-text-secondary)',
           fontSize: '12px',
+          lineHeight: 1.6,
           fontFamily: "'Plus Jakarta Sans', sans-serif",
           marginBottom: '24px',
         }}>
-          ⚠ Le modifiche vengono applicate immediatamente. Verifica i valori prima di salvare.
+          {solaLettura ? (
+            <>
+              ⚠ <strong>Ambiente in sola lettura.</strong> I file di dati sono inclusi nel bundle
+              al momento del deploy, quindi qui non possono essere riscritti. Il pannello valida
+              le modifiche e produce il JSON da sostituire in repo: dopo il commit e il nuovo
+              deploy i calcoli useranno i valori aggiornati.
+            </>
+          ) : (
+            <>
+              ⚠ Le modifiche vengono scritte sul file in <code>data/</code>. I JSON sono letti
+              all&apos;avvio del server: i calcoli useranno i nuovi valori dopo il riavvio.
+              Verifica i valori prima di salvare.
+            </>
+          )}
         </div>
 
         {/* Tab navigation */}
@@ -1398,10 +1554,10 @@ export default function AdminPage() {
 
         {/* Tab content */}
         <div style={{ background: 'var(--color-bg-surface)', borderRadius: '10px', border: '1px solid var(--color-border)', padding: '28px' }}>
-          {tabAttivo === 'inps'  && <TabInps  password={password} />}
-          {tabAttivo === 'inail' && <TabInail password={password} />}
-          {tabAttivo === 'tfr'   && <TabTfr   password={password} />}
-          {tabAttivo === 'ccnl'  && <TabCcnl  password={password} />}
+          {tabAttivo === 'inps'  && <TabInps  password={password} solaLettura={solaLettura} />}
+          {tabAttivo === 'inail' && <TabInail password={password} solaLettura={solaLettura} />}
+          {tabAttivo === 'tfr'   && <TabTfr   password={password} solaLettura={solaLettura} />}
+          {tabAttivo === 'ccnl'  && <TabCcnl  password={password} solaLettura={solaLettura} />}
           {tabAttivo === 'docs'  && <TabDocs />}
         </div>
 

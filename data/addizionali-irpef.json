@@ -1,0 +1,28 @@
+{
+  "updatedAt": "2026-09-11T00:00:00Z",
+  "fonte": "Stima aliquota ordinaria / prima fascia addizionale regionale IRPEF 2026. NON VERIFICATO per scaglioni regionali differenziati. Comunale: media nazionale 0,80%.",
+  "aliquotaComunaleDefault": 0.008,
+  "aliquotaRegionaleDefault": 0.0173,
+  "regioni": {
+    "Abruzzo": 0.0173,
+    "Basilicata": 0.0123,
+    "Calabria": 0.0173,
+    "Campania": 0.0203,
+    "Emilia-Romagna": 0.0133,
+    "Friuli-Venezia Giulia": 0.0123,
+    "Lazio": 0.0173,
+    "Liguria": 0.0123,
+    "Lombardia": 0.0123,
+    "Marche": 0.0123,
+    "Molise": 0.0203,
+    "Piemonte": 0.0162,
+    "Puglia": 0.0133,
+    "Sardegna": 0.0123,
+    "Sicilia": 0.0123,
+    "Toscana": 0.0142,
+    "Trentino-Alto Adige": 0.0123,
+    "Umbria": 0.0123,
+    "Valle d'Aosta": 0.0123,
+    "Veneto": 0.0123
+  }
+}

@@ -12,31 +12,114 @@
         "importoMensile": 10.42,
         "percentuale": null,
         "descrizione": "SANARTI — Fondo assistenza sanitaria integrativa artigianato (€ 10,42/mese fisso quota datore)",
-        "notaLegge": "CCNL Metalmeccanici Artigianato — assistenza sanitaria SANARTI"
+        "notaLegge": "CCNL Metalmeccanici Artigianato — assistenza sanitaria SANARTI",
+        "scalaConPartTime": false
       },
       "artifond": {
         "tipo": "previdenziale",
         "modalita": "percentuale",
         "importoMensile": null,
-        "percentuale": 0.0150,
+        "percentuale": 0.015,
         "descrizione": "ARTIFOND — Fondo pensione complementare artigianato (1,50% quota datore)",
-        "notaLegge": "CCNL Metalmeccanici Artigianato — previdenza complementare ARTIFOND"
+        "notaLegge": "CCNL Metalmeccanici Artigianato — previdenza complementare ARTIFOND",
+        "scalaConPartTime": true
       }
     }
   },
   "livelli": [
-    { "codice": "1Q",   "descrizione": "1° Super (con funz. dir.)", "qualifica": "Operaio/impiegato specializzato con funzioni direttive, capo officina, capo reparto",       "minimoTabellare": 2150.91, "moltiplicatore": 1.00 },
-    { "codice": "1",    "descrizione": "1° livello",                "qualifica": "Operaio specializzato, impiegato qualificato senior",                                       "minimoTabellare": 2080.91, "moltiplicatore": 0.97 },
-    { "codice": "2",    "descrizione": "2° livello",                "qualifica": "Operaio qualificato, meccanico, saldatore, tornio specializzato",                           "minimoTabellare": 1936.20, "moltiplicatore": 0.90 },
-    { "codice": "2bis", "descrizione": "2° livello bis",            "qualifica": "Operaio semi-qualificato (qualifica inferiore), aiuto meccanico",                          "minimoTabellare": 1828.24, "moltiplicatore": 0.85 },
-    { "codice": "3",    "descrizione": "3° livello",                "qualifica": "Operaio generico con esperienza, macchinista, addetto a mansioni operative",               "minimoTabellare": 1758.00, "moltiplicatore": 0.82 },
-    { "codice": "4",    "descrizione": "4° livello",                "qualifica": "Operaio generico base, addetto a mansioni semplici ripetitive",                            "minimoTabellare": 1656.98, "moltiplicatore": 0.77 },
-    { "codice": "5",    "descrizione": "5° livello",                "qualifica": "Lavoratore con qualifica minima di base",                                                   "minimoTabellare": 1595.91, "moltiplicatore": 0.74 },
-    { "codice": "6",    "descrizione": "6° livello",                "qualifica": "Lavoratore di primo ingresso senza qualifica, apprendista",                                "minimoTabellare": 1521.84, "moltiplicatore": 0.71 }
+    {
+      "codice": "1Q",
+      "descrizione": "1° Super (con funz. dir.)",
+      "qualifica": "Operaio/impiegato specializzato con funzioni direttive, capo officina, capo reparto",
+      "minimoTabellare": 2150.91,
+      "moltiplicatore": 1.0,
+      "contingenza": 0,
+      "edr": 0,
+      "altreIndennitaFisse": 0,
+      "retribuzioneMensileTabella": 2150.91
+    },
+    {
+      "codice": "1",
+      "descrizione": "1° livello",
+      "qualifica": "Operaio specializzato, impiegato qualificato senior",
+      "minimoTabellare": 2080.91,
+      "moltiplicatore": 0.97,
+      "contingenza": 0,
+      "edr": 0,
+      "altreIndennitaFisse": 0,
+      "retribuzioneMensileTabella": 2080.91
+    },
+    {
+      "codice": "2",
+      "descrizione": "2° livello",
+      "qualifica": "Operaio qualificato, meccanico, saldatore, tornio specializzato",
+      "minimoTabellare": 1936.2,
+      "moltiplicatore": 0.9,
+      "contingenza": 0,
+      "edr": 0,
+      "altreIndennitaFisse": 0,
+      "retribuzioneMensileTabella": 1936.2
+    },
+    {
+      "codice": "2bis",
+      "descrizione": "2° livello bis",
+      "qualifica": "Operaio semi-qualificato (qualifica inferiore), aiuto meccanico",
+      "minimoTabellare": 1828.24,
+      "moltiplicatore": 0.85,
+      "contingenza": 0,
+      "edr": 0,
+      "altreIndennitaFisse": 0,
+      "retribuzioneMensileTabella": 1828.24
+    },
+    {
+      "codice": "3",
+      "descrizione": "3° livello",
+      "qualifica": "Operaio generico con esperienza, macchinista, addetto a mansioni operative",
+      "minimoTabellare": 1758.0,
+      "moltiplicatore": 0.82,
+      "contingenza": 0,
+      "edr": 0,
+      "altreIndennitaFisse": 0,
+      "retribuzioneMensileTabella": 1758.0
+    },
+    {
+      "codice": "4",
+      "descrizione": "4° livello",
+      "qualifica": "Operaio generico base, addetto a mansioni semplici ripetitive",
+      "minimoTabellare": 1656.98,
+      "moltiplicatore": 0.77,
+      "contingenza": 0,
+      "edr": 0,
+      "altreIndennitaFisse": 0,
+      "retribuzioneMensileTabella": 1656.98
+    },
+    {
+      "codice": "5",
+      "descrizione": "5° livello",
+      "qualifica": "Lavoratore con qualifica minima di base",
+      "minimoTabellare": 1595.91,
+      "moltiplicatore": 0.74,
+      "contingenza": 0,
+      "edr": 0,
+      "altreIndennitaFisse": 0,
+      "retribuzioneMensileTabella": 1595.91
+    },
+    {
+      "codice": "6",
+      "descrizione": "6° livello",
+      "qualifica": "Lavoratore di primo ingresso senza qualifica, apprendista",
+      "minimoTabellare": 1521.84,
+      "moltiplicatore": 0.71,
+      "contingenza": 0,
+      "edr": 0,
+      "altreIndennitaFisse": 0,
+      "retribuzioneMensileTabella": 1521.84
+    }
   ],
   "scattiAnzianita": {
     "periodicitaMesi": 24,
-    "importoPerScattoEuro": 8.00,
+    "importoPerScattoEuro": 8.0,
     "maxScatti": 5
-  }
+  },
+  "orarioSettimanalePieno": 40
 }

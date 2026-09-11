@@ -40,7 +40,11 @@ export function middleware(request: NextRequest) {
     return response;
   }
 
-  return NextResponse.next();
+  // Tutto ciò che sta dietro il login contiene dati di clienti reali: nessuna
+  // cache condivisa o del browser deve conservarne copia.
+  const response = NextResponse.next();
+  response.headers.set('Cache-Control', 'no-store, must-revalidate');
+  return response;
 }
 
 export const config = {

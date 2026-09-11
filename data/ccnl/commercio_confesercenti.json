@@ -9,18 +9,20 @@
       "aster": {
         "tipo": "bilaterale",
         "modalita": "fisso",
-        "importoMensile": 5.00,
+        "importoMensile": 5.0,
         "percentuale": null,
         "descrizione": "ASTER — Ente bilaterale territoriale Confesercenti (€ 5/mese fisso quota datore)",
-        "notaLegge": "CCNL Commercio Confesercenti — ente bilaterale"
+        "notaLegge": "CCNL Commercio Confesercenti — ente bilaterale",
+        "scalaConPartTime": false
       },
       "fondoSanitario": {
         "tipo": "sanitario",
         "modalita": "fisso",
-        "importoMensile": 10.00,
+        "importoMensile": 10.0,
         "percentuale": null,
         "descrizione": "Fondo sanitario integrativo Confesercenti (€ 10/mese fisso quota datore)",
-        "notaLegge": "CCNL Commercio Confesercenti — assistenza sanitaria"
+        "notaLegge": "CCNL Commercio Confesercenti — assistenza sanitaria",
+        "scalaConPartTime": false
       },
       "fondoPensione": {
         "tipo": "previdenziale",
@@ -28,23 +30,105 @@
         "importoMensile": null,
         "percentuale": 0.0155,
         "descrizione": "Fondo pensione complementare (1,55% quota datore)",
-        "notaLegge": "CCNL Commercio Confesercenti — previdenza complementare"
+        "notaLegge": "CCNL Commercio Confesercenti — previdenza complementare",
+        "scalaConPartTime": true
       }
     }
   },
   "livelli": [
-    { "codice": "Q",  "descrizione": "Quadro",      "qualifica": "Funzioni direttive con responsabilità di unità organizzativa, coordinamento generale",  "minimoTabellare": 2986.30, "moltiplicatore": 1.00 },
-    { "codice": "1",  "descrizione": "1° livello",  "qualifica": "Personale con funzioni ad elevata responsabilità e autonomia operativa",                 "minimoTabellare": 2506.13, "moltiplicatore": 0.84 },
-    { "codice": "2",  "descrizione": "2° livello",  "qualifica": "Impiegati con mansioni di concetto, responsabile reparto vendite",                      "minimoTabellare": 2235.65, "moltiplicatore": 0.75 },
-    { "codice": "3",  "descrizione": "3° livello",  "qualifica": "Impiegati d'ordine qualificati, commessi qualificati con esperienza",                   "minimoTabellare": 1983.91, "moltiplicatore": 0.66 },
-    { "codice": "4",  "descrizione": "4° livello",  "qualifica": "Commessi alla vendita, cassieri, addetti al cliente",                                   "minimoTabellare": 1783.75, "moltiplicatore": 0.60 },
-    { "codice": "5",  "descrizione": "5° livello",  "qualifica": "Ausiliari, addetti al magazzino, addetti al confezionamento",                           "minimoTabellare": 1660.08, "moltiplicatore": 0.56 },
-    { "codice": "6",  "descrizione": "6° livello",  "qualifica": "Personale di pulizia, fattorini, addetti ai servizi generali",                         "minimoTabellare": 1541.77, "moltiplicatore": 0.52 },
-    { "codice": "7",  "descrizione": "7° livello",  "qualifica": "Personale di primo impiego senza qualifica, stagisti retribuiti",                       "minimoTabellare": 1392.80, "moltiplicatore": 0.47 }
+    {
+      "codice": "Q",
+      "descrizione": "Quadro",
+      "qualifica": "Funzioni direttive con responsabilità di unità organizzativa, coordinamento generale",
+      "minimoTabellare": 2986.3,
+      "moltiplicatore": 1.0,
+      "contingenza": 0,
+      "edr": 0,
+      "altreIndennitaFisse": 0,
+      "retribuzioneMensileTabella": 2986.3
+    },
+    {
+      "codice": "1",
+      "descrizione": "1° livello",
+      "qualifica": "Personale con funzioni ad elevata responsabilità e autonomia operativa",
+      "minimoTabellare": 2506.13,
+      "moltiplicatore": 0.84,
+      "contingenza": 0,
+      "edr": 0,
+      "altreIndennitaFisse": 0,
+      "retribuzioneMensileTabella": 2506.13
+    },
+    {
+      "codice": "2",
+      "descrizione": "2° livello",
+      "qualifica": "Impiegati con mansioni di concetto, responsabile reparto vendite",
+      "minimoTabellare": 2235.65,
+      "moltiplicatore": 0.75,
+      "contingenza": 0,
+      "edr": 0,
+      "altreIndennitaFisse": 0,
+      "retribuzioneMensileTabella": 2235.65
+    },
+    {
+      "codice": "3",
+      "descrizione": "3° livello",
+      "qualifica": "Impiegati d'ordine qualificati, commessi qualificati con esperienza",
+      "minimoTabellare": 1983.91,
+      "moltiplicatore": 0.66,
+      "contingenza": 0,
+      "edr": 0,
+      "altreIndennitaFisse": 0,
+      "retribuzioneMensileTabella": 1983.91
+    },
+    {
+      "codice": "4",
+      "descrizione": "4° livello",
+      "qualifica": "Commessi alla vendita, cassieri, addetti al cliente",
+      "minimoTabellare": 1783.75,
+      "moltiplicatore": 0.6,
+      "contingenza": 0,
+      "edr": 0,
+      "altreIndennitaFisse": 0,
+      "retribuzioneMensileTabella": 1783.75
+    },
+    {
+      "codice": "5",
+      "descrizione": "5° livello",
+      "qualifica": "Ausiliari, addetti al magazzino, addetti al confezionamento",
+      "minimoTabellare": 1660.08,
+      "moltiplicatore": 0.56,
+      "contingenza": 0,
+      "edr": 0,
+      "altreIndennitaFisse": 0,
+      "retribuzioneMensileTabella": 1660.08
+    },
+    {
+      "codice": "6",
+      "descrizione": "6° livello",
+      "qualifica": "Personale di pulizia, fattorini, addetti ai servizi generali",
+      "minimoTabellare": 1541.77,
+      "moltiplicatore": 0.52,
+      "contingenza": 0,
+      "edr": 0,
+      "altreIndennitaFisse": 0,
+      "retribuzioneMensileTabella": 1541.77
+    },
+    {
+      "codice": "7",
+      "descrizione": "7° livello",
+      "qualifica": "Personale di primo impiego senza qualifica, stagisti retribuiti",
+      "minimoTabellare": 1392.8,
+      "moltiplicatore": 0.47,
+      "contingenza": 0,
+      "edr": 0,
+      "altreIndennitaFisse": 0,
+      "retribuzioneMensileTabella": 1392.8
+    }
   ],
   "scattiAnzianita": {
     "periodicitaMesi": 36,
-    "importoPerScattoEuro": 19.00,
+    "importoPerScattoEuro": 19.0,
     "maxScatti": 10
-  }
+  },
+  "orarioSettimanalePieno": 40
 }

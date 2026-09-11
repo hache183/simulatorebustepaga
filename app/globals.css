@@ -135,6 +135,32 @@ input[type="range"]::-webkit-slider-thumb {
 .step-done    { color: var(--color-green); }
 .step-pending { color: var(--color-text-muted); }
 
+/* Tab Dipendenti | Soci e Amministratori */
+.modulo-tab {
+  appearance: none;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  height: 44px;
+  margin-bottom: -1px;
+  padding: 0 16px;
+}
+.modulo-tab:hover { color: var(--color-text-primary); }
+.modulo-tab.active {
+  border-bottom-color: var(--color-accent);
+  color: var(--color-text-primary);
+  font-weight: 600;
+}
+
+@media (max-width: 900px) {
+  .soci-layout { grid-template-columns: 1fr !important; }
+}
+
 /* Print */
 @media print {
   @page { margin: 12mm 10mm; }
@@ -174,5 +200,27 @@ input[type="range"]::-webkit-slider-thumb {
   /* Evita che le card KPI si spezzino */
   [style*="gridTemplateColumns"] {
     page-break-inside: avoid;
+  }
+
+  /* La regola `*` qui sopra azzera sfondi e bordi: senza queste eccezioni gli
+     avvisi su tabelle scadute o fonti non verificate diventerebbero testo
+     nero su bianco, indistinguibile dal resto del preventivo stampato. */
+  .avviso-dati {
+    border: 2px solid #111 !important;
+    border-left: 6px solid #111 !important;
+    padding: 10px 12px !important;
+    page-break-inside: avoid;
+  }
+
+  .avviso-dati p {
+    color: #111 !important;
+    font-weight: 600 !important;
+  }
+
+  /* Stesso trattamento per i banner con stile inline dei form e dei risultati. */
+  [style*="--color-amber"],
+  [style*="--color-red"] {
+    border: 2px solid #111 !important;
+    font-weight: 600 !important;
   }
 }

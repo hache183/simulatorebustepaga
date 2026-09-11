@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { Suspense, useState, useEffect, type ReactNode } from 'react';
+import { usePathname, useSearchParams } from 'next/navigation';
 
 export function AppHeader() {
   const [ora, setOra] = useState('');
@@ -86,6 +87,14 @@ export function AppHeader() {
         }}>
           {ora}
         </span>
+        <Suspense fallback={
+          <>
+            <HeaderModuloLink href="/calcolatore" active={false}>Costo lavoro</HeaderModuloLink>
+            <HeaderModuloLink href="/calcolatore?tab=soci" active={false}>Compensi societari</HeaderModuloLink>
+          </>
+        }>
+          <HeaderModuloLinks />
+        </Suspense>
         <a
           href="/admin"
           style={{
@@ -141,5 +150,40 @@ export function AppHeader() {
         </button>
       </div>
     </header>
+  );
+}
+
+function HeaderModuloLinks() {
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const isSoci = pathname === '/calcolatore' && searchParams.get('tab') === 'soci';
+  const isDipendenti = pathname === '/calcolatore' && !isSoci;
+  return (
+    <>
+      <HeaderModuloLink href="/calcolatore" active={isDipendenti}>Costo lavoro</HeaderModuloLink>
+      <HeaderModuloLink href="/calcolatore?tab=soci" active={isSoci}>Compensi societari</HeaderModuloLink>
+    </>
+  );
+}
+
+function HeaderModuloLink({
+  href, active, children,
+}: { href: string; active: boolean; children: ReactNode }) {
+  return (
+    <a
+      href={href}
+      style={{
+        fontSize: '12px',
+        color: active ? 'var(--color-text-primary)' : 'var(--color-text-secondary)',
+        textDecoration: 'none',
+        fontFamily: "'Plus Jakarta Sans', sans-serif",
+        fontWeight: 500,
+        padding: '5px 12px',
+        border: `1px solid ${active ? 'var(--color-accent)' : 'var(--color-border)'}`,
+        borderRadius: '6px',
+      }}
+    >
+      {children}
+    </a>
   );
 }

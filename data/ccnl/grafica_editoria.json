@@ -12,35 +12,158 @@
         "importoMensile": null,
         "percentuale": 0.0165,
         "descrizione": "BYBLOS — Fondo pensione complementare grafica-editoria (1,65% quota datore)",
-        "notaLegge": "CCNL Grafica Editoria — previdenza complementare"
+        "notaLegge": "CCNL Grafica Editoria — previdenza complementare",
+        "scalaConPartTime": true
       },
       "saluteSempre": {
         "tipo": "sanitario",
         "modalita": "fisso",
-        "importoMensile": 12.00,
+        "importoMensile": 12.0,
         "percentuale": null,
         "descrizione": "Salute Sempre — Fondo assistenza sanitaria grafica (€ 12/mese fisso quota datore)",
-        "notaLegge": "CCNL Grafica Editoria — assistenza sanitaria integrativa"
+        "notaLegge": "CCNL Grafica Editoria — assistenza sanitaria integrativa",
+        "scalaConPartTime": false
       }
     }
   },
   "livelli": [
-    { "codice": "Q",   "descrizione": "Quadro",             "qualifica": "Quadro direttivo, responsabile di produzione grafica, direttore tecnico",         "minimoTabellare": 2805.94, "moltiplicatore": 1.00 },
-    { "codice": "AS",  "descrizione": "Livello A Super",    "qualifica": "Impiegato/operaio con elevatissima professionalità, capo processo, pre-stampista", "minimoTabellare": 2795.37, "moltiplicatore": 1.00 },
-    { "codice": "A",   "descrizione": "Livello A",          "qualifica": "Personale con elevata professionalità, tecnico grafico senior, impaginatore expert","minimoTabellare": 2440.17, "moltiplicatore": 0.87 },
-    { "codice": "B1S", "descrizione": "Livello B1 Super",   "qualifica": "Tecnico specializzato senior, compositore/impaginatore digitale esperto",          "minimoTabellare": 2363.92, "moltiplicatore": 0.84 },
-    { "codice": "B1",  "descrizione": "Livello B1",         "qualifica": "Tecnico specializzato, operatore digitale, impaginatore, fotolitografista",        "minimoTabellare": 2311.15, "moltiplicatore": 0.82 },
-    { "codice": "B2",  "descrizione": "Livello B2",         "qualifica": "Tecnico qualificato, stampatore su macchina, operatore reparti stampa",            "minimoTabellare": 2196.05, "moltiplicatore": 0.78 },
-    { "codice": "B3",  "descrizione": "Livello B3",         "qualifica": "Operaio qualificato, addetto alla rilegatura, finitura, confezione libri",         "minimoTabellare": 2074.85, "moltiplicatore": 0.74 },
-    { "codice": "C1",  "descrizione": "Livello C1",         "qualifica": "Operaio comune qualificato, addetto stampa digitale, operatore in linea",          "minimoTabellare": 1954.44, "moltiplicatore": 0.70 },
-    { "codice": "C2",  "descrizione": "Livello C2",         "qualifica": "Operaio semi-qualificato, confezionatore, addetto alla spedizione",                "minimoTabellare": 1784.84, "moltiplicatore": 0.64 },
-    { "codice": "D1",  "descrizione": "Livello D1",         "qualifica": "Operaio generico con esperienza, addetto magazzino, imbustatore",                  "minimoTabellare": 1663.88, "moltiplicatore": 0.59 },
-    { "codice": "D2",  "descrizione": "Livello D2",         "qualifica": "Operaio ausiliario, addetto ai servizi di supporto alla produzione",               "minimoTabellare": 1559.92, "moltiplicatore": 0.56 },
-    { "codice": "E",   "descrizione": "Livello E",          "qualifica": "Personale di pulizia, manovale, addetto ai servizi generali di stabilimento",      "minimoTabellare": 1430.24, "moltiplicatore": 0.51 }
+    {
+      "codice": "Q",
+      "descrizione": "Quadro",
+      "qualifica": "Quadro direttivo, responsabile di produzione grafica, direttore tecnico",
+      "minimoTabellare": 2805.94,
+      "moltiplicatore": 1.0,
+      "contingenza": 0,
+      "edr": 0,
+      "altreIndennitaFisse": 0,
+      "retribuzioneMensileTabella": 2805.94
+    },
+    {
+      "codice": "AS",
+      "descrizione": "Livello A Super",
+      "qualifica": "Impiegato/operaio con elevatissima professionalità, capo processo, pre-stampista",
+      "minimoTabellare": 2795.37,
+      "moltiplicatore": 1.0,
+      "contingenza": 0,
+      "edr": 0,
+      "altreIndennitaFisse": 0,
+      "retribuzioneMensileTabella": 2795.37
+    },
+    {
+      "codice": "A",
+      "descrizione": "Livello A",
+      "qualifica": "Personale con elevata professionalità, tecnico grafico senior, impaginatore expert",
+      "minimoTabellare": 2440.17,
+      "moltiplicatore": 0.87,
+      "contingenza": 0,
+      "edr": 0,
+      "altreIndennitaFisse": 0,
+      "retribuzioneMensileTabella": 2440.17
+    },
+    {
+      "codice": "B1S",
+      "descrizione": "Livello B1 Super",
+      "qualifica": "Tecnico specializzato senior, compositore/impaginatore digitale esperto",
+      "minimoTabellare": 2363.92,
+      "moltiplicatore": 0.84,
+      "contingenza": 0,
+      "edr": 0,
+      "altreIndennitaFisse": 0,
+      "retribuzioneMensileTabella": 2363.92
+    },
+    {
+      "codice": "B1",
+      "descrizione": "Livello B1",
+      "qualifica": "Tecnico specializzato, operatore digitale, impaginatore, fotolitografista",
+      "minimoTabellare": 2311.15,
+      "moltiplicatore": 0.82,
+      "contingenza": 0,
+      "edr": 0,
+      "altreIndennitaFisse": 0,
+      "retribuzioneMensileTabella": 2311.15
+    },
+    {
+      "codice": "B2",
+      "descrizione": "Livello B2",
+      "qualifica": "Tecnico qualificato, stampatore su macchina, operatore reparti stampa",
+      "minimoTabellare": 2196.05,
+      "moltiplicatore": 0.78,
+      "contingenza": 0,
+      "edr": 0,
+      "altreIndennitaFisse": 0,
+      "retribuzioneMensileTabella": 2196.05
+    },
+    {
+      "codice": "B3",
+      "descrizione": "Livello B3",
+      "qualifica": "Operaio qualificato, addetto alla rilegatura, finitura, confezione libri",
+      "minimoTabellare": 2074.85,
+      "moltiplicatore": 0.74,
+      "contingenza": 0,
+      "edr": 0,
+      "altreIndennitaFisse": 0,
+      "retribuzioneMensileTabella": 2074.85
+    },
+    {
+      "codice": "C1",
+      "descrizione": "Livello C1",
+      "qualifica": "Operaio comune qualificato, addetto stampa digitale, operatore in linea",
+      "minimoTabellare": 1954.44,
+      "moltiplicatore": 0.7,
+      "contingenza": 0,
+      "edr": 0,
+      "altreIndennitaFisse": 0,
+      "retribuzioneMensileTabella": 1954.44
+    },
+    {
+      "codice": "C2",
+      "descrizione": "Livello C2",
+      "qualifica": "Operaio semi-qualificato, confezionatore, addetto alla spedizione",
+      "minimoTabellare": 1784.84,
+      "moltiplicatore": 0.64,
+      "contingenza": 0,
+      "edr": 0,
+      "altreIndennitaFisse": 0,
+      "retribuzioneMensileTabella": 1784.84
+    },
+    {
+      "codice": "D1",
+      "descrizione": "Livello D1",
+      "qualifica": "Operaio generico con esperienza, addetto magazzino, imbustatore",
+      "minimoTabellare": 1663.88,
+      "moltiplicatore": 0.59,
+      "contingenza": 0,
+      "edr": 0,
+      "altreIndennitaFisse": 0,
+      "retribuzioneMensileTabella": 1663.88
+    },
+    {
+      "codice": "D2",
+      "descrizione": "Livello D2",
+      "qualifica": "Operaio ausiliario, addetto ai servizi di supporto alla produzione",
+      "minimoTabellare": 1559.92,
+      "moltiplicatore": 0.56,
+      "contingenza": 0,
+      "edr": 0,
+      "altreIndennitaFisse": 0,
+      "retribuzioneMensileTabella": 1559.92
+    },
+    {
+      "codice": "E",
+      "descrizione": "Livello E",
+      "qualifica": "Personale di pulizia, manovale, addetto ai servizi generali di stabilimento",
+      "minimoTabellare": 1430.24,
+      "moltiplicatore": 0.51,
+      "contingenza": 0,
+      "edr": 0,
+      "altreIndennitaFisse": 0,
+      "retribuzioneMensileTabella": 1430.24
+    }
   ],
   "scattiAnzianita": {
     "periodicitaMesi": 24,
-    "importoPerScattoEuro": 12.00,
+    "importoPerScattoEuro": 12.0,
     "maxScatti": 5
-  }
+  },
+  "orarioSettimanalePieno": 40
 }

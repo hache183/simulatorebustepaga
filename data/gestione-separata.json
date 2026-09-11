@@ -1,0 +1,40 @@
+{
+  "updatedAt": "2026-09-11T00:00:00Z",
+  "fonte": "Circolare INPS n. 8 del 03/02/2026 — Gestione separata. Aliquote su redditi e compensi 2026.",
+  "minimaleReddito": 18808,
+  "massimaleReddito": 122295,
+  "sogliaMaggiorazioneArtigianiCommercianti": 56224,
+  "amministratoreSenzaAltraCopertura": {
+    "aliquotaTotale": 0.3503,
+    "dettaglio": {
+      "IVS": 0.33,
+      "malattiaMaternitaANF": 0.005,
+      "maternitaDM2007": 0.0022,
+      "DIS_COLL": 0.0131
+    },
+    "quotaCommittente": 0.6666666667,
+    "quotaPercipiente": 0.3333333333
+  },
+  "amministratoreConAltraCoperturaOPensionato": {
+    "aliquotaTotale": 0.24,
+    "dettaglio": { "IVS": 0.24 },
+    "quotaCommittente": 0.6666666667,
+    "quotaPercipiente": 0.3333333333,
+    "_nota": "IVS ridotta 24% per iscritti ad altra gestione obbligatoria o pensionati (Circ. 8/2026)."
+  },
+  "artigiani": {
+    "aliquota": 0.24,
+    "comingSoon": true,
+    "_nota": "Gestione IVS artigiani sul reddito d'impresa, non sul compenso mensile da dipendente."
+  },
+  "commercianti": {
+    "aliquota": 0.2448,
+    "comingSoon": true,
+    "_nota": "Gestione IVS commercianti sul reddito d'impresa. +1 punto oltre soglia 56.224 €."
+  },
+  "ritenutaSostitutiva8": {
+    "aliquota": 0.08,
+    "validitaAl": "2026-12-31",
+    "nota": "Ritenuta 8% ridotta unica INPS fino al 31/12/2026. Costo datore = lordo + rimborsi, senza quota 2/3 Gestione separata."
+  }
+}

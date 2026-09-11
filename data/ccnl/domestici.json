@@ -14,19 +14,100 @@
         "perOra": true,
         "percentuale": null,
         "descrizione": "Cassacolf — ente bilaterale lavoro domestico (quota oraria datoriale €0,03/h)",
-        "notaLegge": "Art. 49 CCNL Domestici"
+        "notaLegge": "Art. 49 CCNL Domestici",
+        "scalaConPartTime": true
       }
     }
   },
   "livelli": [
-    { "codice": "DS", "descrizione": "Livello DS", "qualifica": "Assistente non autosufficiente (assistenza notturna e diurna) — figura specializzata", "minimoTabellare": 9.97, "moltiplicatore": 1.00 },
-    { "codice": "D",  "descrizione": "Livello D",  "qualifica": "Governante, maggiordomo, assistente senior convivente", "minimoTabellare": 9.57, "moltiplicatore": 0.96 },
-    { "codice": "CS", "descrizione": "Livello CS", "qualifica": "Assistente familiare non autosufficiente qualificato (OSS, badante con attestato)", "minimoTabellare": 8.30, "moltiplicatore": 0.83 },
-    { "codice": "C",  "descrizione": "Livello C",  "qualifica": "Assistente familiare qualificato, colf con specializzazione cucina/cura persone", "minimoTabellare": 7.86, "moltiplicatore": 0.79 },
-    { "codice": "BS", "descrizione": "Livello BS", "qualifica": "Addetto all'assistenza di base con esperienza biennale (badante non qualificato senior)", "minimoTabellare": 7.45, "moltiplicatore": 0.75 },
-    { "codice": "B",  "descrizione": "Livello B",  "qualifica": "Addetto all'assistenza di base, colf con compiti specifici", "minimoTabellare": 7.01, "moltiplicatore": 0.70 },
-    { "codice": "AS", "descrizione": "Livello AS", "qualifica": "Collaboratore generico con 2+ anni di esperienza (pulizie, babysitter senior)", "minimoTabellare": 6.76, "moltiplicatore": 0.68 },
-    { "codice": "A",  "descrizione": "Livello A",  "qualifica": "Collaboratore generico (pulizie, babysitter, addetto servizi domestici)", "minimoTabellare": 6.51, "moltiplicatore": 0.65 }
+    {
+      "codice": "DS",
+      "descrizione": "Livello DS",
+      "qualifica": "Assistente non autosufficiente (assistenza notturna e diurna) — figura specializzata",
+      "minimoTabellare": 9.97,
+      "moltiplicatore": 1.0,
+      "contingenza": 0,
+      "edr": 0,
+      "altreIndennitaFisse": 0,
+      "retribuzioneMensileTabella": 9.97
+    },
+    {
+      "codice": "D",
+      "descrizione": "Livello D",
+      "qualifica": "Governante, maggiordomo, assistente senior convivente",
+      "minimoTabellare": 9.57,
+      "moltiplicatore": 0.96,
+      "contingenza": 0,
+      "edr": 0,
+      "altreIndennitaFisse": 0,
+      "retribuzioneMensileTabella": 9.57
+    },
+    {
+      "codice": "CS",
+      "descrizione": "Livello CS",
+      "qualifica": "Assistente familiare non autosufficiente qualificato (OSS, badante con attestato)",
+      "minimoTabellare": 8.3,
+      "moltiplicatore": 0.83,
+      "contingenza": 0,
+      "edr": 0,
+      "altreIndennitaFisse": 0,
+      "retribuzioneMensileTabella": 8.3
+    },
+    {
+      "codice": "C",
+      "descrizione": "Livello C",
+      "qualifica": "Assistente familiare qualificato, colf con specializzazione cucina/cura persone",
+      "minimoTabellare": 7.86,
+      "moltiplicatore": 0.79,
+      "contingenza": 0,
+      "edr": 0,
+      "altreIndennitaFisse": 0,
+      "retribuzioneMensileTabella": 7.86
+    },
+    {
+      "codice": "BS",
+      "descrizione": "Livello BS",
+      "qualifica": "Addetto all'assistenza di base con esperienza biennale (badante non qualificato senior)",
+      "minimoTabellare": 7.45,
+      "moltiplicatore": 0.75,
+      "contingenza": 0,
+      "edr": 0,
+      "altreIndennitaFisse": 0,
+      "retribuzioneMensileTabella": 7.45
+    },
+    {
+      "codice": "B",
+      "descrizione": "Livello B",
+      "qualifica": "Addetto all'assistenza di base, colf con compiti specifici",
+      "minimoTabellare": 7.01,
+      "moltiplicatore": 0.7,
+      "contingenza": 0,
+      "edr": 0,
+      "altreIndennitaFisse": 0,
+      "retribuzioneMensileTabella": 7.01
+    },
+    {
+      "codice": "AS",
+      "descrizione": "Livello AS",
+      "qualifica": "Collaboratore generico con 2+ anni di esperienza (pulizie, babysitter senior)",
+      "minimoTabellare": 6.76,
+      "moltiplicatore": 0.68,
+      "contingenza": 0,
+      "edr": 0,
+      "altreIndennitaFisse": 0,
+      "retribuzioneMensileTabella": 6.76
+    },
+    {
+      "codice": "A",
+      "descrizione": "Livello A",
+      "qualifica": "Collaboratore generico (pulizie, babysitter, addetto servizi domestici)",
+      "minimoTabellare": 6.51,
+      "moltiplicatore": 0.65,
+      "contingenza": 0,
+      "edr": 0,
+      "altreIndennitaFisse": 0,
+      "retribuzioneMensileTabella": 6.51
+    }
   ],
   "scattiAnzianita": {
     "periodicitaMesi": 24,
@@ -34,5 +115,6 @@
     "percentualeScatto": 0.04,
     "maxScatti": 7,
     "_nota": "Aumento del 4% sul minimo orario di retribuzione per ogni biennio di servizio (massimo 7 aumenti, in vigore fino a 5 fino al 31/3/1988). Percentuale applicata al minimoTabellare orario del livello."
-  }
+  },
+  "orarioSettimanalePieno": 40
 }

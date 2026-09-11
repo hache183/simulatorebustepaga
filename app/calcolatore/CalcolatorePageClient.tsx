@@ -1,36 +1,51 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { CalcolatoreFormStep1 } from '@/components/CalcolatoreForm';
 import { CalcolatoreFormStep2 } from '@/components/CalcolatoreFormStep2';
 import { RisultatiCalcolatore } from '@/components/RisultatiCalcolatore';
-import { SociAmministratoriTab } from '@/components/SociAmministratoriTab';
-import { Disclaimer } from '@/components/Disclaimer';
+import { SociAmministratoriPanel } from '@/components/SociAmministratoriPanel';
+import { AvvisoDatiCcnl } from '@/components/AvvisoDatiCcnl';
+import { listCcnlUi } from '@/lib/ccnl';
 import type { CalcolatoreOutput, ContributoContrattuale } from '@/types';
 
-type PaginaTab = 'dipendenti' | 'soci';
+const CCNL_UI = listCcnlUi();
 
 interface Step1Data {
   ccnlId: string; livello: string; ral: number;
-  tipoContratto: 'tempo_indeterminato'|'tempo_determinato';
+  tipoContratto: 'tempo_indeterminato'|'tempo_determinato'|'somministrazione'|'apprendistato';
   oreLavoro: number;
   mensilita: number;
   retribuzionePersonalizzata?: number;
   convivente?: boolean;
   pagaOraria?: number;
   oreSettimanali?: number;
+  iscrittoCorsoScuola?: boolean;
+  altroLavoratoreInForza?: boolean;
+  coperturaRiposi?: boolean;
+  oreCoperturaRiposi?: number;
+  voceParticolare?: 'nessuna'|'pt30'|'assistenzaNotturna'|'presenzaNotturna';
 }
 
 interface Step2Data {
   numeroDipendenti: number; regione: string; codiceInail: string;
   anzianitaAnni: number; agevolazioniSelezionate: string[];
-  includiAssistenzaSanitaria: boolean; aliquotaInps: number;
+  includiAssistenzaSanitaria: boolean;
+  includiPrevidenzaComplementare?: boolean;
+  includiCassaColf?: boolean;
+  aliquotaInps: number;
+  markupAgenzia?: number;
 }
 
-interface Props { updatedDates: string[]; }
+export function CalcolatorePageClient() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const tab = searchParams.get('tab') === 'soci' ? 'soci' : 'dipendenti';
+  const vaiA = (next: 'dipendenti' | 'soci') => {
+    router.replace(next === 'soci' ? '/calcolatore?tab=soci' : '/calcolatore', { scroll: false });
+  };
 
-export function CalcolatorePageClient({ updatedDates }: Props) {
-  const [paginaTab, setPaginaTab] = useState<PaginaTab>('dipendenti');
   const [step, setStep] = useState<1 | 2 | 'risultati'>(1);
   const [step1Data, setStep1Data] = useState<Step1Data | null>(null);
   const [risultato, setRisultato] = useState<CalcolatoreOutput | null>(null);
@@ -41,7 +56,7 @@ export function CalcolatorePageClient({ updatedDates }: Props) {
   const handleStep1 = (data: Step1Data) => {
     setStep1Data(data);
     // Fetch contributi CCNL for Step 2 toggle
-    fetch(`/api/ccnl/${data.ccnlId}/livelli`)
+    fetch(`/api/ccnl/${data.ccnlId}/livelli${data.convivente ? '?convivente=true' : ''}`)
       .then(r => r.json())
       .then(d => {
         const resp = d as { contributiContrattuali?: { azienda: Record<string, ContributoContrattuale> } };
@@ -74,122 +89,131 @@ export function CalcolatorePageClient({ updatedDates }: Props) {
 
   const ricalcola = () => { setStep(1); setRisultato(null); setErrore(null); };
 
+  // Stato della tabella del CCNL scelto. A risultati pronti si usa la fonte
+  // restituita dal motore, che per i domestici conviventi è un file diverso
+  // da quello elencato in UI.
+  const metaCcnl = useMemo(() => {
+    if (!step1Data) return null;
+    const daElenco = CCNL_UI.find(c => c.id === step1Data.ccnlId);
+    return {
+      nome: daElenco?.nome ?? step1Data.ccnlId,
+      fonte: risultato?.fonteCcnl ?? daElenco?.fonte,
+      validitaAl: risultato ? risultato.validitaAl ?? null : daElenco?.validitaAl ?? null,
+    };
+  }, [step1Data, risultato]);
+
   return (
     <div className="print-unlock" style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
 
-      {/* Tab principali: dipendenti vs Soci e Amministratori (modalità isolate) */}
+      {/* Tab modulo + step dipendenti — sotto l'header */}
       <div className="no-print" style={{
         paddingTop: '56px',
         background: 'var(--color-bg-surface)',
         borderBottom: '1px solid var(--color-border)',
       }}>
-        <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '12px 32px 0' }}>
-          <div style={{ display: 'flex', gap: '4px', marginBottom: paginaTab === 'dipendenti' ? '0' : '12px' }}>
-            {([
-              { id: 'dipendenti' as const, label: 'Dipendenti' },
-              { id: 'soci' as const, label: 'Soci e Amministratori' },
-            ]).map(t => (
-              <button key={t.id} type="button" onClick={() => setPaginaTab(t.id)}
-                style={{
-                  padding: '10px 18px', borderRadius: '8px 8px 0 0',
-                  border: '1px solid var(--color-border)',
-                  borderBottom: paginaTab === t.id ? '1px solid var(--color-bg-surface)' : undefined,
-                  marginBottom: paginaTab === t.id ? '-1px' : 0,
-                  background: paginaTab === t.id ? 'var(--color-bg-base)' : 'var(--color-bg-elevated)',
-                  color: paginaTab === t.id ? 'var(--color-text-primary)' : 'var(--color-text-muted)',
-                  fontWeight: paginaTab === t.id ? 600 : 500,
-                  fontSize: '13px',
-                  fontFamily: "'Plus Jakarta Sans', sans-serif",
-                  cursor: 'pointer',
-                }}>
-                {t.label}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {paginaTab === 'dipendenti' && (
-          <div style={{
-            maxWidth: '1400px', margin: '0 auto',
-            padding: '0 32px',
-            display: 'flex', alignItems: 'center', gap: '8px',
-            height: '44px',
-          }}>
-            {[
-              { n: 1, label: 'Assunzione',  done: step !== 1 },
-              { n: 2, label: 'Azienda',     done: step === 'risultati' },
-              { n: 3, label: 'Risultati',   done: false },
-            ].map((s, i) => {
-              const isActive = (step === 1 && s.n === 1) || (step === 2 && s.n === 2) || (step === 'risultati' && s.n === 3);
-              return (
-                <div key={s.n} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <div style={{
-                      width: '22px', height: '22px', borderRadius: '50%',
-                      display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      fontSize: '11px', fontFamily: "'DM Mono', monospace", fontWeight: 500,
-                      background: s.done ? 'var(--color-green)' : isActive ? 'var(--color-accent)' : 'var(--color-bg-elevated)',
-                      color: (s.done || isActive) ? 'white' : 'var(--color-text-muted)',
-                      border: `1px solid ${s.done ? 'var(--color-green)' : isActive ? 'var(--color-accent)' : 'var(--color-border)'}`,
-                      transition: 'all 0.2s ease',
-                    }}>
-                      {s.done ? '✓' : s.n}
+        <div style={{
+          maxWidth: '1400px', margin: '0 auto',
+          padding: '0 32px',
+          display: 'flex', alignItems: 'center', gap: '8px',
+          height: '44px',
+        }}>
+          <button
+            type="button"
+            className={`modulo-tab${tab === 'dipendenti' ? ' active' : ''}`}
+            onClick={() => vaiA('dipendenti')}
+          >
+            Dipendenti
+          </button>
+          <button
+            type="button"
+            className={`modulo-tab${tab === 'soci' ? ' active' : ''}`}
+            onClick={() => vaiA('soci')}
+          >
+            Soci e Amministratori
+          </button>
+          {tab === 'dipendenti' && (
+            <>
+              <span style={{ flex: 1 }} />
+              {[
+                { n: 1, label: 'Assunzione',  done: step !== 1 },
+                { n: 2, label: 'Azienda',     done: step === 'risultati' },
+                { n: 3, label: 'Risultati',   done: false },
+              ].map((s, i) => {
+                const isActive = (step === 1 && s.n === 1) || (step === 2 && s.n === 2) || (step === 'risultati' && s.n === 3);
+                return (
+                  <div key={s.n} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <div style={{
+                        width: '22px', height: '22px', borderRadius: '50%',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        fontSize: '11px', fontFamily: "'DM Mono', monospace", fontWeight: 500,
+                        background: s.done ? 'var(--color-green)' : isActive ? 'var(--color-accent)' : 'var(--color-bg-elevated)',
+                        color: (s.done || isActive) ? 'white' : 'var(--color-text-muted)',
+                        border: `1px solid ${s.done ? 'var(--color-green)' : isActive ? 'var(--color-accent)' : 'var(--color-border)'}`,
+                        transition: 'all 0.2s ease',
+                      }}>
+                        {s.done ? '✓' : s.n}
+                      </div>
+                      <span style={{
+                        fontSize: '13px', fontFamily: "'Plus Jakarta Sans', sans-serif",
+                        color: isActive ? 'var(--color-text-primary)' : s.done ? 'var(--color-green)' : 'var(--color-text-muted)',
+                        fontWeight: isActive ? 600 : 400,
+                      }}>
+                        {s.label}
+                      </span>
                     </div>
-                    <span style={{
-                      fontSize: '13px', fontFamily: "'Plus Jakarta Sans', sans-serif",
-                      color: isActive ? 'var(--color-text-primary)' : s.done ? 'var(--color-green)' : 'var(--color-text-muted)',
-                      fontWeight: isActive ? 600 : 400,
-                    }}>
-                      {s.label}
-                    </span>
+                    {i < 2 && (
+                      <span style={{ color: 'var(--color-border-bright)', fontSize: '12px' }}>›</span>
+                    )}
                   </div>
-                  {i < 2 && (
-                    <span style={{ color: 'var(--color-border-bright)', fontSize: '12px' }}>›</span>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        )}
+                );
+              })}
+            </>
+          )}
+        </div>
       </div>
 
-      {paginaTab === 'soci' && (
+      {/* Stato della tabella CCNL: fuori dai contenitori no-print, così resta
+          nel PDF consegnato al cliente. */}
+      {tab === 'dipendenti' && metaCcnl && step !== 1 && (
+        <div style={{
+          maxWidth: '1400px', margin: '0 auto', width: '100%',
+          padding: '16px 32px 0',
+        }}>
+          <AvvisoDatiCcnl
+            nomeCcnl={metaCcnl.nome}
+            fonte={metaCcnl.fonte}
+            validitaAl={metaCcnl.validitaAl}
+          />
+        </div>
+      )}
+
+      {tab === 'soci' && (
         <div className="print-unlock" style={{
           flex: 1,
           maxWidth: '1400px', margin: '0 auto',
           width: '100%',
           padding: '24px 32px',
           overflowY: 'auto',
-          background: 'var(--color-bg-base)',
         }}>
-          <div style={{ marginBottom: '20px' }}>
-            <h1 style={{
-              fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: '20px',
-              color: 'var(--color-text-primary)', marginBottom: '6px',
-            }}>
-              Soci e Amministratori
-            </h1>
-            <p style={{ fontSize: '13px', color: 'var(--color-text-muted)', lineHeight: 1.55, maxWidth: '720px' }}>
-              Simulazione isolata dal calcolo dipendenti: compenso annuo oppure solo rimborsi. INPS sul lordo secondo schema consulente; IRPEF con la stessa logica IRPEF/detrazioni/cuneo/addizionali medi del motore dipendenti.
-            </p>
-          </div>
-          <SociAmministratoriTab />
+          <SociAmministratoriPanel />
         </div>
       )}
 
-      {paginaTab === 'dipendenti' && (
+      {/* Contenuto principale — due colonne */}
       <div className="print-unlock" style={{
+        display: tab === 'dipendenti' ? 'grid' : 'none',
         flex: 1,
         maxWidth: '1400px', margin: '0 auto',
         width: '100%',
         padding: '24px 32px',
-        display: 'grid',
         gridTemplateColumns: step === 'risultati' ? '1fr' : '420px 1fr',
         gap: '24px',
         alignItems: 'start',
         overflowY: 'auto',
       }}>
 
+        {/* Colonna sinistra — form */}
         {step !== 'risultati' && (
           <div style={{
             background: 'var(--color-bg-surface)',
@@ -199,12 +223,14 @@ export function CalcolatorePageClient({ updatedDates }: Props) {
             animation: 'fadeSlideIn 0.2s ease forwards',
           }}>
             {step === 1 && <CalcolatoreFormStep1 onNext={handleStep1} />}
-            {step === 2 && <CalcolatoreFormStep2 onSubmit={handleStep2} onBack={() => setStep(1)} isLoading={isLoading} contributiCcnl={contributiCcnl} ccnlId={step1Data?.ccnlId} />}
+            {step === 2 && <CalcolatoreFormStep2 onSubmit={handleStep2} onBack={() => setStep(1)} isLoading={isLoading} contributiCcnl={contributiCcnl} ccnlId={step1Data?.ccnlId} tipoContratto={step1Data?.tipoContratto} />}
           </div>
         )}
 
+        {/* Colonna destra — risultati o placeholder o skeleton */}
         <div style={{ animation: 'fadeSlideIn 0.2s ease forwards' }}>
 
+          {/* Placeholder iniziale */}
           {step === 1 && !risultato && (
             <div style={{
               background: 'var(--color-bg-surface)',
@@ -235,6 +261,7 @@ export function CalcolatorePageClient({ updatedDates }: Props) {
             </div>
           )}
 
+          {/* Skeleton loader */}
           {isLoading && (
             <div style={{
               background: 'var(--color-bg-surface)',
@@ -254,6 +281,7 @@ export function CalcolatorePageClient({ updatedDates }: Props) {
             </div>
           )}
 
+          {/* Errore */}
           {errore && !isLoading && (
             <div style={{
               background: 'var(--color-red-dim)',
@@ -270,23 +298,12 @@ export function CalcolatorePageClient({ updatedDates }: Props) {
             </div>
           )}
 
+          {/* Risultati */}
           {step === 'risultati' && risultato && (
             <div style={{ animation: 'fadeSlideIn 0.2s ease forwards' }}>
               <RisultatiCalcolatore risultato={risultato} onRicalcola={ricalcola} />
             </div>
           )}
-        </div>
-      </div>
-      )}
-
-      {/* Disclaimer fisso in fondo */}
-      <div className="no-print" style={{
-        borderTop: '1px solid var(--color-border)',
-        padding: '12px 32px',
-        background: 'var(--color-bg-surface)',
-      }}>
-        <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
-          <Disclaimer updatedDates={updatedDates} />
         </div>
       </div>
 

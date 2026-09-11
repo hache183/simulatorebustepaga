@@ -1,8 +1,8 @@
 {
   "id": "edilizia",
   "nome": "CCNL Edilizia (ANCE — Industria)",
-  "fonte": "TODO: non disponibile PDF specifico per CCNL Edilizia ANCE Industria tra i 50 documenti (disponibili F012 Cooperative e F015 Artigianato). Usato come proxy PDF F015 — EDILIZIA - ARTIGIANATO vigente dal 01/01/2026 al 31/12/2026, stampa del 21/04/2026. Valori possono differire dalla versione ANCE Industria.",
-  "updatedAt": "2026-04-21T00:00:00Z",
+  "fonte": "PROXY — PDF LAVORO/F015.pdf EDILIZIA ARTIGIANATO 01/01/2026–31/12/2026 (ANCE Industria assente in LAVORO/). Colonna TOTALE WK. NON VERIFICATO vs ANCE.",
+  "updatedAt": "2026-09-11T00:00:00Z",
   "mensilita": 13,
   "_notaImpiegati": "I valori mensili si riferiscono agli impiegati edili. Gli operai edili (muratori, carpentieri, ecc.) sono retribuiti con paga oraria definita dalle Casse Edili provinciali e non con stipendio mensile fisso.",
   "contributiContrattuali": {
@@ -11,31 +11,84 @@
         "tipo": "bilaterale",
         "modalita": "percentuale",
         "importoMensile": null,
-        "percentuale": 0.0950,
+        "percentuale": 0.095,
         "descrizione": "Contributo Cassa Edile complessivo — applicabile agli operai (include APE, ferie, gratifica, CAPE, scuola edile). Per gli impiegati non si applica la Cassa Edile ma il CCNL standard. Media nazionale stimata 9,50% (varia per provincia dal 7% al 12%).",
-        "notaLegge": "Accordi Casse Edili provinciali — media nazionale (solo operai)"
+        "notaLegge": "Accordi Casse Edili provinciali — media nazionale (solo operai)",
+        "scalaConPartTime": true
       },
       "formazioneEdile": {
         "tipo": "bilaterale",
         "modalita": "percentuale",
         "importoMensile": null,
-        "percentuale": 0.0070,
+        "percentuale": 0.007,
         "descrizione": "Contributo formazione professionale edile (0,70%)",
-        "notaLegge": "Art. 39 CCNL Edilizia ANCE"
+        "notaLegge": "Art. 39 CCNL Edilizia ANCE",
+        "scalaConPartTime": true
       }
     }
   },
   "livelli": [
-    { "codice": "Q",  "descrizione": "Quadro (liv. 7)",                    "qualifica": "Capo cantiere, direttore tecnico di cantiere",       "minimoTabellare": 2218.96, "moltiplicatore": 1.00 },
-    { "codice": "1",  "descrizione": "1° livello (liv. 6 — Operaio specializzato)", "qualifica": "Muratore specializzato, gruista, carpentiere", "minimoTabellare": 1975.08, "moltiplicatore": 0.85 },
-    { "codice": "2",  "descrizione": "2° livello (liv. 4 — Operaio qualificato)",   "qualifica": "Muratore qualificato, ferraiolo, piastrellista", "minimoTabellare": 1533.88, "moltiplicatore": 0.75 },
-    { "codice": "3",  "descrizione": "3° livello (liv. 3 — Operaio comune)", "qualifica": "Operaio comune, aiutante muratore",               "minimoTabellare": 1426.72, "moltiplicatore": 0.65 },
-    { "codice": "4",  "descrizione": "4° livello (liv. 1 — Manovale)",     "qualifica": "Manovale, addetto al trasporto materiali",          "minimoTabellare": 1097.30, "moltiplicatore": 0.58 }
+    {
+      "codice": "Q",
+      "descrizione": "Quadro (liv. 7)",
+      "qualifica": "Capo cantiere, direttore tecnico di cantiere",
+      "minimoTabellare": 2218.96,
+      "moltiplicatore": 1.0,
+      "contingenza": 534.28,
+      "edr": 10.33,
+      "altreIndennitaFisse": 140.0,
+      "retribuzioneMensileTabella": 2903.57
+    },
+    {
+      "codice": "1",
+      "descrizione": "1° livello (liv. 6 — Operaio specializzato)",
+      "qualifica": "Muratore specializzato, gruista, carpentiere",
+      "minimoTabellare": 1975.08,
+      "moltiplicatore": 0.85,
+      "contingenza": 529.12,
+      "edr": 10.33,
+      "altreIndennitaFisse": 0,
+      "retribuzioneMensileTabella": 2514.53
+    },
+    {
+      "codice": "2",
+      "descrizione": "2° livello (liv. 4 — Operaio qualificato)",
+      "qualifica": "Muratore qualificato, ferraiolo, piastrellista",
+      "minimoTabellare": 1533.88,
+      "moltiplicatore": 0.75,
+      "contingenza": 520.12,
+      "edr": 10.33,
+      "altreIndennitaFisse": 0,
+      "retribuzioneMensileTabella": 2064.33
+    },
+    {
+      "codice": "3",
+      "descrizione": "3° livello (liv. 3 — Operaio comune)",
+      "qualifica": "Operaio comune, aiutante muratore",
+      "minimoTabellare": 1426.72,
+      "moltiplicatore": 0.65,
+      "contingenza": 517.85,
+      "edr": 10.33,
+      "altreIndennitaFisse": 0,
+      "retribuzioneMensileTabella": 1954.9
+    },
+    {
+      "codice": "4",
+      "descrizione": "4° livello (liv. 1 — Manovale)",
+      "qualifica": "Manovale, addetto al trasporto materiali",
+      "minimoTabellare": 1097.3,
+      "moltiplicatore": 0.58,
+      "contingenza": 512.58,
+      "edr": 10.33,
+      "altreIndennitaFisse": 0,
+      "retribuzioneMensileTabella": 1620.21
+    }
   ],
   "scattiAnzianita": {
     "periodicitaMesi": 24,
     "importoPerScattoEuro": 0,
     "maxScatti": 0,
     "_nota": "Nell'edilizia non esistono scatti di anzianità tradizionali per operai. L'anzianità professionale (APE) è gestita tramite la Cassa Edile. Per gli impiegati si applicano scatti CCNL impiegati Confindustria."
-  }
+  },
+  "orarioSettimanalePieno": 40
 }
