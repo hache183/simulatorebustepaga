@@ -132,6 +132,7 @@ const CCNL_LIST = [
   { id: 'tessile',            nome: 'Tessile',              path: 'data/ccnl/tessile.json' },
   { id: 'vigilanza_privata',  nome: 'Vigilanza Privata',    path: 'data/ccnl/vigilanza_privata.json' },
   { id: 'domestici',          nome: 'Lavoro Domestico',     path: 'data/ccnl/domestici.json' },
+  { id: 'domestici_conviventi', nome: 'Domestici Conviventi', path: 'data/ccnl/domestici_conviventi.json' },
 ];
 
 // ─── Shared helpers ───────────────────────────────────────────────────────────
