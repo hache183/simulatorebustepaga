@@ -46,15 +46,11 @@ test('costo base: INPS datoriale deve rispettare l aliquota impostata', async ()
 });
 
 // ─── CASO 2: Agevolazione under36 ────────────────────────────────────────
-test('under36: deve applicare risparmio positivo entro il massimale di 6.000 euro', async () => {
+test('under36: il costo dipendenti resta il lordo pieno, senza sconto', async () => {
   const result = await calculateCosto({ ...inputBase, agevolazioniSelezionate: ['under36'] });
-  const agev = result.agevolazioniApplicate.find(a => a.id === 'under36');
-  expect(agev).toBeDefined();
-  expect(agev!.risparmioAnnuo).toBeGreaterThan(0);
-  expect(agev!.risparmioAnnuo).toBeLessThanOrEqual(6_000);
-  // Il costo totale deve essere inferiore al caso senza agevolazioni
   const resultBase = await calculateCosto(inputBase);
-  expect(result.costoTotaleAnnuo).toBeLessThan(resultBase.costoTotaleAnnuo);
+  expect(result.agevolazioniApplicate).toHaveLength(0);
+  expect(result.costoTotaleAnnuo).toBeCloseTo(resultBase.costoTotaleAnnuo, 2);
 });
 
 // ─── CASO 3: Part-time 20 ore ─────────────────────────────────────────────
@@ -94,16 +90,14 @@ test('input invalido: codice INAIL inesistente deve lanciare Error', async () =>
 });
 
 // ─── CASO 6: Agevolazioni non cumulabili ─────────────────────────────────
-test('non cumulabilità: under36 + decontribuzione_sud devono produrre solo 1 agevolazione con risparmio', async () => {
+test('agevolazioni selezionate non riducono il costo dipendenti', async () => {
   const result = await calculateCosto({
     ...inputBase,
     agevolazioniSelezionate: ['under36', 'decontribuzione_sud'],
   });
-  const conRisparmio = result.agevolazioniApplicate.filter(a => a.risparmioAnnuo > 0);
-  expect(conRisparmio).toHaveLength(1);
-  // Quella esclusa deve avere avvertenza
-  const conAvvertenza = result.agevolazioniApplicate.filter(a => a.avvertenza);
-  expect(conAvvertenza.length).toBeGreaterThanOrEqual(1);
+  const resultBase = await calculateCosto(inputBase);
+  expect(result.agevolazioniApplicate).toHaveLength(0);
+  expect(result.costoTotaleAnnuo).toBeCloseTo(resultBase.costoTotaleAnnuo, 2);
 });
 
 // ─── CALCOLI UNITARI AGGIUNTIVI ───────────────────────────────────────────
@@ -290,15 +284,18 @@ test('nettoDipendente: part-time 20h netto annuo deve essere circa metà del ful
   expect(rapporto).toBeLessThan(0.65);
 });
 
-test('nettoDipendente: bonus cuneo fiscale presente per redditi bassi', async () => {
-  // RAL 21584.78 → imponibile ~19602 → sotto 20k → bonus cuneo (sub-fasce 7.1%/5.3%/4.8%)
+test('nettoDipendente: nessun bonus cuneo fiscale', async () => {
   const result = await calculateCosto({
     ...inputBase,
     livello: '4',
     ral: 21_584.78,
     mensilita: 14,
   });
-  expect(result.nettoDipendente.bonusCuneoFiscale).toBeGreaterThan(0);
+  expect(result.nettoDipendente.bonusCuneoFiscale).toBe(0);
+  expect(result.nettoDipendente.irpefNetta).toBeCloseTo(
+    Math.max(0, result.nettoDipendente.irpefLorda - result.nettoDipendente.detrazioneLavoroDip),
+    2,
+  );
 });
 
 describe('DOMESTICI — convivente vs non convivente', () => {
@@ -322,7 +319,12 @@ describe('DOMESTICI — convivente vs non convivente', () => {
 
   test('non convivente e convivente producono contributi dipendente diversi', async () => {
     const nonConvivente = await calculateCosto({ ...baseDom, convivente: false });
-    const convivente = await calculateCosto({ ...baseDom, convivente: true });
+    const convivente = await calculateCosto({
+      ...baseDom,
+      convivente: true,
+      oreLavoro: 54,
+      oreSettimanali: 54,
+    });
     expect(convivente.nettoDipendente.inpsDipendente).not.toBeCloseTo(nonConvivente.nettoDipendente.inpsDipendente, 2);
   });
 

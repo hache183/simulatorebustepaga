@@ -31,10 +31,5 @@
     "aliquota": 0.2448,
     "comingSoon": true,
     "_nota": "Gestione IVS commercianti sul reddito d'impresa. +1 punto oltre soglia 56.224 €."
-  },
-  "ritenutaSostitutiva8": {
-    "aliquota": 0.08,
-    "validitaAl": "2026-12-31",
-    "nota": "Ritenuta 8% ridotta unica INPS fino al 31/12/2026. Costo datore = lordo + rimborsi, senza quota 2/3 Gestione separata."
   }
 }

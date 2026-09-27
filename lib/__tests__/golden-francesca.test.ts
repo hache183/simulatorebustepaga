@@ -1,8 +1,7 @@
 import { calculateCosto } from '@/lib/engine';
-import { getLivello, listCcnlIds, listCcnlIdsUi } from '@/lib/ccnl';
-import { getSettoreContributivo } from '@/lib/contributi';
+import { getLivello, listCcnlIds, listCcnlIdsUi, pagaMensileBase } from '@/lib/ccnl';
 import { calcolaCompensiSocietari } from '@/lib/societari';
-import type { CalcolatoreOutput, LivelloCcnl } from '@/types';
+import type { LivelloCcnl } from '@/types';
 
 const round2 = (n: number) => Math.round(n * 100) / 100;
 
@@ -11,14 +10,11 @@ type LivelloExtra = LivelloCcnl & {
   scattoEuro?: number;
 };
 
-type OutputExtra = CalcolatoreOutput & {
-  scomposizioneLivello?: { totale: number };
-};
-
 describe('GOLDEN D1 — Domestici non conviventi liv. A, 25h, TI', () => {
-  // 6,51 €/h × 25 h × 52 sett. = 8.463,00
-  // Fascia >24h Circ. 9/2026: 0,31 lav. / 0,93 datore
-  const ral = round2(6.51 * 25 * 52);
+  // 6,51 €/h × 25 h × 4,33 = mensile, × 13 mensilità
+  // Fascia >24h Circ. 9/2026: 0,31 lav. / 0,93 datore su ore × 52
+  const mensile = round2(6.51 * 25 * 4.33);
+  const ral = round2(mensile * 13);
   const input = {
     ccnlId: 'domestici',
     livello: 'A',
@@ -38,9 +34,9 @@ describe('GOLDEN D1 — Domestici non conviventi liv. A, 25h, TI', () => {
     aliquotaInps: 0,
   };
 
-  test('RAL = 6,51 × 1300 = 8.463,00', async () => {
+  test('RAL = mensile (6,51 × 25 × 4,33) × 13', async () => {
     const result = await calculateCosto(input);
-    expect(result.voci.find(v => v.id === 'ral')!.importoAnnuo).toBeCloseTo(8463, 2);
+    expect(result.voci.find(v => v.id === 'ral')!.importoAnnuo).toBeCloseTo(ral, 2);
   });
 
   test('INPS dipendente 0,31 × 1300 = 403,00; datore 0,93 × 1300 = 1.209,00', async () => {
@@ -55,9 +51,9 @@ describe('GOLDEN D1 — Domestici non conviventi liv. A, 25h, TI', () => {
     expect(result.voci.find(v => v.id === 'contributi_ccnl')!.importoAnnuo).toBeCloseTo(0, 2);
   });
 
-  test('netto da busta (senza IRPEF) = 8.463 − 403 = 8.060', async () => {
+  test('netto da busta (senza IRPEF) = RAL − 403', async () => {
     const result = await calculateCosto(input);
-    expect(result.nettoDipendente.nettoAnnuo).toBeCloseTo(8060, 2);
+    expect(result.nettoDipendente.nettoAnnuo).toBeCloseTo(ral - 403, 2);
     expect(result.nettoDipendente.disclaimer).toMatch(/senza IRPEF/i);
   });
 
@@ -103,13 +99,107 @@ describe('GOLDEN D-CONV-A — Convivente liv. A, 54h, 13 mensilità, no CassaCol
     // INPS dip 0,31 × 54 × 52 = 870,48 → netto 10.934,82
     expect(result.nettoDipendente.inpsDipendente).toBeCloseTo(870.48, 2);
     expect(result.nettoDipendente.nettoAnnuo).toBeCloseTo(10_934.82, 2);
+    expect(result.voci.find(v => v.id === 'ral')!.importoAnnuo / 13).toBeCloseTo(908.10, 2);
   });
 });
 
-describe('GOLDEN C1 — Commercio 4°, 40h, 14 mensilità, 0 scatti, 10 dip., INAIL 0111', () => {
-  const liv4 = getLivello('commercio', '4') as LivelloExtra;
-  const ral = round2((liv4.retribuzioneMensileTabella ?? liv4.minimoTabellare) * 14);
-  const settore = getSettoreContributivo('commercio', 10)!;
+describe('GOLDEN DOM 16/09 — tabelle A/B/C e non conviventi', () => {
+  const base = {
+    tipoContratto: 'tempo_indeterminato' as const,
+    mensilita: 13,
+    anzianitaAnni: 0,
+    numeroDipendenti: 1,
+    regione: 'Lazio',
+    codiceInail: '',
+    agevolazioniSelezionate: [] as string[],
+    includiAssistenzaSanitaria: false,
+    includiCassaColf: false,
+    aliquotaInps: 0,
+    ral: 12_000,
+  };
+
+  test('A convivente FT livello A: mensile 908,10', async () => {
+    const result = await calculateCosto({
+      ...base,
+      ccnlId: 'domestici',
+      livello: 'A',
+      oreLavoro: 54,
+      oreSettimanali: 54,
+      convivente: true,
+    });
+    expect(result.voci.find(v => v.id === 'ral')!.importoAnnuo / 13).toBeCloseTo(908.10, 2);
+  });
+
+  test('A convivente FT livello DS: mensile + indennità', async () => {
+    const result = await calculateCosto({
+      ...base,
+      ccnlId: 'domestici_conviventi',
+      livello: 'DS',
+      oreLavoro: 54,
+      oreSettimanali: 54,
+      convivente: true,
+    });
+    expect(result.voci.find(v => v.id === 'ral')!.importoAnnuo / 13).toBeCloseTo(1474.73 + 207.69, 2);
+  });
+
+  test('B convivente 30 h: C 814,60 / BS 737,39 / B 702,25', async () => {
+    for (const [livello, mensile] of [['C', 814.60], ['BS', 737.39], ['B', 702.25]] as const) {
+      const result = await calculateCosto({
+        ...base,
+        ccnlId: 'domestici_conviventi',
+        livello,
+        oreLavoro: 30,
+        oreSettimanali: 30,
+        convivente: true,
+      });
+      expect(result.voci.find(v => v.id === 'ral')!.importoAnnuo / 13).toBeCloseTo(mensile, 2);
+    }
+  });
+
+  test('C sostituzione CS 25 h: 964,51 mensili', async () => {
+    const result = await calculateCosto({
+      ...base,
+      ccnlId: 'domestici_conviventi',
+      livello: 'CS',
+      oreLavoro: 25,
+      oreSettimanali: 25,
+      convivente: true,
+      sostituzioneTitolare: true,
+    });
+    expect(result.voci.find(v => v.id === 'ral')!.importoAnnuo / 13).toBeCloseTo(964.51, 2);
+    expect(round2(8.91 * 25 * 4.33)).toBeCloseTo(964.51, 2);
+  });
+
+  test('non convivente 9,57 × 25 × 4,33 ≈ 1.037 ±1 €', async () => {
+    const result = await calculateCosto({
+      ...base,
+      ccnlId: 'domestici',
+      livello: 'D',
+      oreLavoro: 25,
+      oreSettimanali: 25,
+      pagaOraria: 9.57,
+      convivente: false,
+    });
+    const mensile = result.voci.find(v => v.id === 'ral')!.importoAnnuo / 13;
+    // 9,57 × 25 × 4,33 = 1.035,9525 → 1.035,95. Il foglio scrive 1.037 (scarto 1,05 €).
+    expect(mensile).toBeCloseTo(round2(9.57 * 25 * 4.33), 2);
+    expect(Math.abs(mensile - 1037)).toBeLessThanOrEqual(1.05);
+  });
+
+  test('part-time convivente su livello DS è rifiutato', async () => {
+    await expect(calculateCosto({
+      ...base,
+      ccnlId: 'domestici_conviventi',
+      livello: 'DS',
+      oreLavoro: 30,
+      oreSettimanali: 30,
+      convivente: true,
+    })).rejects.toThrow('part-time convivente ammesso solo C, B, BS (tab. B)');
+  });
+});
+
+describe('GOLDEN C1 — Commercio stampa 14/09, RAL 24.944, 14 mensilità', () => {
+  const ral = 24_944;
   const input = {
     ccnlId: 'commercio',
     livello: '4',
@@ -121,26 +211,55 @@ describe('GOLDEN C1 — Commercio 4°, 40h, 14 mensilità, 0 scatti, 10 dip., IN
     numeroDipendenti: 10,
     regione: 'Lombardia',
     codiceInail: '0111',
-    agevolazioniSelezionate: [] as string[],
+    agevolazioniSelezionate: ['under36'] as string[],
     includiAssistenzaSanitaria: true,
-    includiPrevidenzaComplementare: false,
     aliquotaInps: 0.288,
+    quotaNonGodute: 1,
   };
 
-  test('usa colonna TOTALE 1.783,75 (non solo paga base 1.257,46)', () => {
-    expect(liv4.retribuzioneMensileTabella ?? 0).toBeCloseTo(1783.75, 2);
-    expect(liv4.minimoTabellare).toBeCloseTo(1257.46, 2);
-    expect(ral).toBeCloseTo(24_972.50, 2);
+  test('default RAL non somma il terzo elemento', () => {
+    const liv4 = getLivello('commercio', '4');
+    expect(pagaMensileBase(liv4)).toBeCloseTo(liv4.minimoTabellare, 2);
+    expect(pagaMensileBase({ ...liv4, terzoElemento: 100, retribuzioneMensileTabella: 9_999 })).toBeCloseTo(liv4.minimoTabellare, 2);
   });
 
-  test('RAL / INPS commercio_fino15 / TFR / 13ª', async () => {
+  test('13ª e 14ª informative = RAL / 14', async () => {
     const result = await calculateCosto(input);
-    expect(result.voci.find(v => v.id === 'ral')!.importoAnnuo).toBeCloseTo(24_972.50, 2);
-    // 24.972,50 × 0,2928
-    expect(settore.aliquotaDatore).toBeCloseTo(0.2928, 4);
-    expect(result.voci.find(v => v.id === 'inps')!.importoAnnuo).toBeCloseTo(24_972.50 * 0.2928, 2);
-    expect(result.voci.find(v => v.id === 'tfr')!.importoAnnuo).toBeCloseTo(24_972.50 / 13.5, 2);
-    expect(result.voci.find(v => v.id === 'tredicesima')!.importoAnnuo).toBeCloseTo(24_972.50 / 14, 2);
+    expect(result.voci.find(v => v.id === 'tredicesima')!.importoAnnuo).toBeCloseTo(1_781.71, 2);
+    expect(result.voci.find(v => v.id === 'quattordicesima')!.importoAnnuo).toBeCloseTo(1_781.71, 2);
+  });
+
+  test('INPS datore pieno, senza sconto agevolazioni', async () => {
+    const result = await calculateCosto(input);
+    const senza = await calculateCosto({ ...input, agevolazioniSelezionate: [] });
+    expect(result.voci.find(v => v.id === 'inps')!.importoAnnuo).toBeCloseTo(ral * 0.288, 2);
+    expect(result.voci.find(v => v.id === 'inps')!.descrizione).not.toMatch(/netti da agevolazioni/i);
+    expect(result.costoTotaleAnnuo).toBeCloseTo(senza.costoTotaleAnnuo, 2);
+    expect(result.agevolazioniApplicate).toHaveLength(0);
+  });
+
+  test('ferie/permessi/festività non godute e Fondo Est', async () => {
+    const result = await calculateCosto(input);
+    const atteso = 261 * ((ral / 14) / 173);
+    expect(result.voci.find(v => v.id === 'ferie_permessi_festivita')!.importoAnnuo).toBeCloseTo(atteso, 2);
+    expect(result.voci.find(v => v.id === 'assistenza_sanitaria')!.importoAnnuo).toBeCloseTo(13 * 12, 2);
+    expect(result.voci.find(v => v.id === 'assistenza_sanitaria')!.descrizione).toBe('Assistenza sanitaria integrativa');
+    expect(result.voci.find(v => v.id === 'ente_bilaterale_ebiter')).toBeDefined();
+  });
+
+  test('netto senza bonus cuneo e INPS dipendente 9,19%', async () => {
+    const result = await calculateCosto(input);
+    expect(result.nettoDipendente.bonusCuneoFiscale).toBe(0);
+    expect(result.nettoDipendente.inpsDipendente).toBeCloseTo(ral * 0.0919, 2);
+    expect(result.nettoDipendente.irpefNetta).toBeCloseTo(
+      Math.max(0, result.nettoDipendente.irpefLorda - result.nettoDipendente.detrazioneLavoroDip),
+      2,
+    );
+  });
+
+  test('quota non godute 0% azzera il costo ferie', async () => {
+    const result = await calculateCosto({ ...input, quotaNonGodute: 0 });
+    expect(result.voci.find(v => v.id === 'ferie_permessi_festivita')!.importoAnnuo).toBeCloseTo(0, 2);
   });
 });
 
@@ -199,7 +318,11 @@ describe('GOLDEN P1 — FIPE QA usa colonna TOTALE WK', () => {
       aliquotaInps: 0.288,
     });
     expect(result.voci.find(v => v.id === 'ral')!.importoAnnuo).toBeCloseTo(34_610.66, 2);
-    expect((result as OutputExtra).scomposizioneLivello?.totale).toBeCloseTo(2472.19, 2);
+    expect(pagaMensileBase(liv)).toBeCloseTo(2472.19, 2);
+    expect(pagaMensileBase(liv)).toBeCloseTo(
+      liv.minimoTabellare + (liv.contingenza ?? 0) + (liv.edr ?? 0) + (liv.altreIndennitaFisse ?? 0),
+      2,
+    );
   });
 });
 

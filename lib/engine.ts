@@ -2,31 +2,28 @@ import { z } from 'zod';
 import { getCcnlData } from './ccnl';
 import {
   calcolaInpsBase,
-  calcolaAgevolazioni,
   calcolaTfr,
   calcolaInail,
   calcolaScattiAnzianita,
   calcolaInpsDomestici,
   getSettoreContributivo,
 } from './contributi';
-import type { CalcolatoreInput, CalcolatoreOutput, DettaglioCosto, ContributoContrattuale, AliquoteInpsData } from '@/types';
+import type { CalcolatoreInput, CalcolatoreOutput, DettaglioCosto, ContributoContrattuale } from '@/types';
 import { calcolaNettoDaRedditoLordoEinpsPerc, DISCLAIMER_NETTO_DIPENDENTE } from '@/lib/irpef-lavoro-dipendente';
-
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const ALIQUOTE_INPS = require('../data/aliquote-inps.json') as AliquoteInpsData;
+import { calcolaRetribuzioneDomestici, round2 } from '@/lib/domestici';
 
 // Schema di validazione Zod — rifiuta qualsiasi input malformato prima del calcolo
 const InputSchema = z.object({
   ccnlId: z.string().min(1, 'Seleziona un CCNL'),
   livello: z.string().min(1, 'Seleziona il livello contrattuale'),
   ral: z.number({ error: 'La RAL deve essere un numero' })
-    .min(1_000, 'RAL minima: 1.000 euro')
+    .min(1, 'RAL minima: 1 euro')
     .max(500_000, 'RAL massima: 500.000 euro'),
   tipoContratto: z.enum(
     ['tempo_indeterminato', 'tempo_determinato'],
     { error: 'Tipo di contratto non valido' }
   ),
-  oreLavoro: z.number().min(1).max(48),
+  oreLavoro: z.number().min(1).max(80),
   mensilita: z.number()
     .min(13, 'Il minimo di legge è 13 mensilità (tredicesima obbligatoria per R.D.L. 1525/1937)')
     .max(16, 'Massimo 16 mensilità — oltre non esiste nel diritto del lavoro italiano'),
@@ -37,10 +34,14 @@ const InputSchema = z.object({
   agevolazioniSelezionate: z.array(z.string()),
   includiAssistenzaSanitaria: z.boolean(),
   aliquotaInps: z.number().min(0).max(0.5),
+  quotaNonGodute: z.number().min(0).max(1).optional(),
   retribuzionePersonalizzata: z.number().min(0).max(500_000).optional(),
   convivente: z.boolean().optional(),
   pagaOraria: z.number().min(0).max(500).optional(),
-  oreSettimanali: z.number().min(1).max(54).optional(),
+  oreSettimanali: z.number().min(1).max(80).optional(),
+  includiCassaColf: z.boolean().optional(),
+  sostituzioneTitolare: z.boolean().optional(),
+  oreNonGodute: z.number().min(0).max(2000).optional(),
 });
 
 // Soglie sanity check volutamente ampie per evitare falsi positivi:
@@ -55,96 +56,80 @@ const RANGE_SANITY = { min: 1.05, max: 2.20 };
  * Non è prevista CIG/FIS.
  */
 async function calculateCostoDomestico(input: CalcolatoreInput): Promise<CalcolatoreOutput> {
-  const ccnl = getCcnlData(input.ccnlId);
-  const livello = ccnl.livelli.find(l => l.codice === input.livello);
-  if (!livello) throw new Error(`Livello '${input.livello}' non trovato nel CCNL '${input.ccnlId}'`);
+  const convivente = input.convivente === true || input.ccnlId === 'domestici_conviventi';
+  const oreInserite = input.oreSettimanali ?? input.oreLavoro;
+  const ret = calcolaRetribuzioneDomestici({
+    convivente,
+    livello: input.livello,
+    oreSettimanali: oreInserite,
+    pagaOrariaInserita: input.pagaOraria,
+    sostituzioneTitolare: input.sostituzioneTitolare,
+    mensilita: input.mensilita,
+  });
 
-  // I CCNL domestici conviventi hanno minimi MENSILI (PDF H501 Conviventi);
-  // i non conviventi hanno minimi ORARI (PDF H501 Non Conviventi).
-  // Il flag `retribuzioneOraria` sul JSON del CCNL discrimina i due casi.
-  const isRetribuzioneMensile = ccnl.retribuzioneOraria === false;
-  const oreSettimanali = input.oreSettimanali ?? input.oreLavoro;
-  const convivente = input.convivente ?? false;
-  const mensilita = input.mensilita; // 13 per lavoro domestico
+  const ccnl = getCcnlData(convivente ? 'domestici_conviventi' : 'domestici');
+  const ccnlNonConv = getCcnlData('domestici');
+  const ralEffettiva = ret.ral;
+  const mensilita = ret.mensilita;
+  const oreSettimanali = ret.oreSettimanali;
 
-  // Paga oraria: usata per la voce "ral" e per tracciare la tariffa effettiva.
-  // Per i mensili, se l'utente non la sovrascrive, non è il valore primario (la RAL
-  // parte dal minimo mensile); la calcoliamo come tariffa equivalente solo a scopo
-  // informativo/descrittivo.
-  const pagaOraria = input.pagaOraria ?? (
-    isRetribuzioneMensile
-      ? (oreSettimanali > 0 ? (livello.minimoTabellare * mensilita) / (oreSettimanali * 52) : 0)
-      : livello.minimoTabellare
-  );
-
-  // Indennità vitto e alloggio per conviventi
-  const settoreDomestico = ALIQUOTE_INPS.settoriContributivi['domestici'] as unknown as Record<string, unknown>;
-  const indennitaMensileConfigurata = Number(settoreDomestico['indennitaVittoAlloggioMensile'] ?? 0);
-  const indennitaVAMensile = convivente ? indennitaMensileConfigurata : 0;
-  const indennitaVAAnnua = indennitaVAMensile * 12;
-
-  // RAL base:
-  //  - mensili (conviventi): minimoTabellare × mensilità (dal PDF H501 Conviventi)
-  //  - orari (non conviventi): pagaOraria × ore settimanali × 52
-  const retribuzioneBaseAnnua = isRetribuzioneMensile
-    ? livello.minimoTabellare * mensilita
-    : pagaOraria * oreSettimanali * 52;
-  const ralEffettiva = retribuzioneBaseAnnua + indennitaVAAnnua;
-
-  // Contributi INPS forfettari (per ora lavorata)
   const inpsDom = calcolaInpsDomestici(
     ralEffettiva,
     oreSettimanali,
     convivente,
-    input.tipoContratto
+    input.tipoContratto,
+    ret.regime === 'non_convivente' || ret.regime === 'convivente_c' ? ret.pagaOraria : undefined,
   );
-  const contributoOrarioDatore = inpsDom.quotaDatorePerOra;
   const oreAnnuali = oreSettimanali * 52;
   const inpsDatore = inpsDom.inpsDatore;
-
-  // TFR (Art. 2120 c.c.)
   const tfr = calcolaTfr(ralEffettiva, mensilita);
+  const costoScatti = calcolaScattiAnzianita(input.anzianitaAnni, ccnl.scattiAnzianita, ralEffettiva);
 
-  // Scatti di anzianità (orari per il domestico)
-  const costoScatti = calcolaScattiAnzianita(input.anzianitaAnni, ccnl.scattiAnzianita) * oreSettimanali * 52 / 12;
+  const cassa = ccnlNonConv.contributiContrattuali.azienda.cassaColf;
+  const quotaCassaOra = cassa?.perOra ? (cassa.importoMensile ?? 0) : 0;
+  const cassaColf = input.includiCassaColf ? round2(quotaCassaOra * oreAnnuali) : 0;
 
-  // Tredicesima mensilità — per il lavoro domestico è aggiuntiva rispetto alla paga oraria annua
-  const tredicesima = ralEffettiva / 12;
+  // Ferie/permessi/festività non godute solo sui non conviventi.
+  // Paga oraria già oraria: non si divide per 173 e non si copiano 173/56/32.
+  const haOreJson = ccnlNonConv.oreFerieAnnue != null
+    || ccnlNonConv.orePermessiAnnue != null
+    || ccnlNonConv.oreFestivitaAnnue != null;
+  const oreDaJson = (ccnlNonConv.oreFerieAnnue ?? 0)
+    + (ccnlNonConv.orePermessiAnnue ?? 0)
+    + (ccnlNonConv.oreFestivitaAnnue ?? 0);
+  const oreNonGodute = haOreJson ? oreDaJson : (input.oreNonGodute ?? 0);
+  const quotaNonGodute = input.quotaNonGodute ?? 1;
+  const costoFerie = ret.regime === 'non_convivente'
+    ? round2(oreNonGodute * ret.pagaOraria * quotaNonGodute)
+    : 0;
 
-  // Totale costo datore (INAIL incluso nei contributi forfettari)
-  const costoTotaleAnnuo = ralEffettiva + inpsDatore + tfr + costoScatti + tredicesima;
-
+  // La tredicesima è informativa e già dentro la RAL (mensile × mensilità).
+  const tredicesima = mensilita > 0 ? ralEffettiva / mensilita : 0;
+  const costoTotaleAnnuo = ralEffettiva + inpsDatore + tfr + costoScatti + cassaColf + costoFerie;
   const percentualeRal = ralEffettiva > 0 ? costoTotaleAnnuo / ralEffettiva : 0;
+  const pct = (n: number) => (ralEffettiva > 0 ? n / ralEffettiva : 0);
 
-  // Voci di dettaglio
+  const notaFerie = !haOreJson && oreNonGodute <= 0
+    ? 'inserire ore non godute'
+    : `${oreNonGodute} h × ${fmtNum(ret.pagaOraria)}€/h`;
+
   const voci: DettaglioCosto[] = [
     {
       id: 'ral',
       categoria: 'ral',
-      descrizione: isRetribuzioneMensile
-        ? `Retribuzione annua (${fmtNum(livello.minimoTabellare)}€/mese × ${mensilita} mensilità${convivente ? ' + vitto e alloggio' : ''})`
-        : `Retribuzione annua (${fmtNum(pagaOraria)}€/ora × ${oreSettimanali}h/sett × 52 sett${convivente ? ' + vitto e alloggio' : ''})`,
+      descrizione: ret.descrizioneRal,
       importoAnnuo: ralEffettiva,
       importoMensile: ralEffettiva / 12,
       percentualeRal: 1,
     },
-    ...(convivente ? [{
-      id: 'vitto_alloggio',
-      categoria: 'ral' as const,
-      descrizione: `Indennità vitto e alloggio convivente (${fmtNum(indennitaVAMensile)}€/mese)`,
-      importoAnnuo: indennitaVAAnnua,
-      importoMensile: indennitaVAMensile,
-      percentualeRal: ralEffettiva > 0 ? indennitaVAAnnua / ralEffettiva : 0,
-      notaLegge: 'Art. 36 CCNL Lavoro Domestico — indennità vitto e alloggio per conviventi',
-    }] : []),
     {
       id: 'inps',
       categoria: 'inps_azienda',
-      descrizione: `Contributi INPS forfettari datore (${fmtNum(contributoOrarioDatore)}€/ora × ${oreAnnuali} ore)`,
+      descrizione: `Contributi INPS forfettari datore (${fmtNum(inpsDom.quotaDatorePerOra)}€/ora × ${oreAnnuali} ore)`,
       importoAnnuo: inpsDatore,
       importoMensile: inpsDatore / 12,
-      percentualeRal: ralEffettiva > 0 ? inpsDatore / ralEffettiva : 0,
-      notaLegge: 'Circolare INPS lavoro domestico — contributi forfettari orari (INAIL incluso)',
+      percentualeRal: pct(inpsDatore),
+      notaLegge: `Fascia: ${inpsDom.fasciaNome}`,
     },
     {
       id: 'tfr',
@@ -152,30 +137,58 @@ async function calculateCostoDomestico(input: CalcolatoreInput): Promise<Calcola
       descrizione: 'TFR — accantonamento annuo',
       importoAnnuo: tfr,
       importoMensile: tfr / 12,
-      percentualeRal: ralEffettiva > 0 ? tfr / ralEffettiva : 0,
+      percentualeRal: pct(tfr),
       notaLegge: 'Art. 2120 c.c. — divisore 13,5',
+    },
+    {
+      id: 'inail',
+      categoria: 'inail',
+      descrizione: 'INAIL domestici — contributo fisso annuo (non incluso: gestito tramite INPS-Cassa Domestici)',
+      importoAnnuo: 0,
+      importoMensile: 0,
+      percentualeRal: 0,
+      notaLegge: 'Il premio INAIL per i lavoratori domestici è un importo fisso annuo versato con i contributi INPS trimestrali.',
     },
     {
       id: 'tredicesima',
       categoria: 'tredicesima',
-      descrizione: 'Tredicesima mensilità',
+      descrizione: 'Tredicesima mensilità (già inclusa nella retribuzione annua)',
       importoAnnuo: tredicesima,
       importoMensile: tredicesima / 12,
-      percentualeRal: ralEffettiva > 0 ? tredicesima / ralEffettiva : 0,
-      notaLegge: 'CCNL Lavoro Domestico — tredicesima obbligatoria.',
+      percentualeRal: pct(tredicesima),
+      notaLegge: 'Voce informativa: importo già compreso nella retribuzione annua. Non si somma al costo.',
+    },
+    {
+      id: 'contributi_ccnl',
+      categoria: 'ccnl_contrattuale',
+      descrizione: 'Cassacolf',
+      importoAnnuo: cassaColf,
+      importoMensile: cassaColf / 12,
+      percentualeRal: pct(cassaColf),
+      notaLegge: input.includiCassaColf
+        ? `Quota oraria datoriale ${fmtNum(quotaCassaOra)}€ × ${oreAnnuali} ore`
+        : 'CassaColf esclusa',
     },
     ...(costoScatti > 0 ? [{
       id: 'scatti_anzianita',
       categoria: 'ccnl_contrattuale' as const,
-      descrizione: `Scatti di anzianità`,
+      descrizione: 'Scatti di anzianità',
       importoAnnuo: costoScatti,
       importoMensile: costoScatti / 12,
-      percentualeRal: ralEffettiva > 0 ? costoScatti / ralEffettiva : 0,
+      percentualeRal: pct(costoScatti),
       notaLegge: 'CCNL Lavoro Domestico — scatti biennali',
+    }] : []),
+    ...(ret.regime === 'non_convivente' ? [{
+      id: 'ferie_permessi_festivita',
+      categoria: 'ccnl_contrattuale' as const,
+      descrizione: 'Ferie, permessi e festività non godute',
+      importoAnnuo: costoFerie,
+      importoMensile: costoFerie / 12,
+      percentualeRal: pct(costoFerie),
+      notaLegge: notaFerie,
     }] : []),
   ];
 
-  // Netto dipendente — datore privato non è sostituto d'imposta, nessuna ritenuta IRPEF
   const inpsDipendenteDomestico = inpsDom.inpsDipendente;
   const nettoAnnuoDomestico = ralEffettiva - inpsDipendenteDomestico;
   const nettoDipendente = {
@@ -190,8 +203,8 @@ async function calculateCostoDomestico(input: CalcolatoreInput): Promise<Calcola
     addizionaleComunale: 0,
     nettoAnnuo: nettoAnnuoDomestico,
     nettoMensile12: nettoAnnuoDomestico / 12,
-    nettoPerMensilita: nettoAnnuoDomestico / mensilita,
-    disclaimer: 'Per il lavoro domestico il datore privato non è sostituto d\'imposta (art. 4 DPR 322/1998). IRPEF e addizionali sono gestite autonomamente dal lavoratore tramite dichiarazione dei redditi.',
+    nettoPerMensilita: mensilita > 0 ? nettoAnnuoDomestico / mensilita : 0,
+    disclaimer: 'Netto da busta senza IRPEF. Per il lavoro domestico il datore privato non è sostituto d\'imposta (art. 4 DPR 322/1998). IRPEF e addizionali sono gestite autonomamente dal lavoratore tramite dichiarazione dei redditi.',
   };
 
   return {
@@ -209,6 +222,14 @@ async function calculateCostoDomestico(input: CalcolatoreInput): Promise<Calcola
 
 function fmtNum(n: number): string {
   return n.toFixed(2);
+}
+
+function importoContributoContrattuale(c: ContributoContrattuale, ral: number, oreAnnue: number): number {
+  if (c.modalita === 'fisso' && c.importoMensile != null) {
+    const mesi = c.mensilitaMaturazione ?? 12;
+    return c.importoMensile * (c.perOra ? oreAnnue : mesi);
+  }
+  return ral * (c.percentuale ?? 0);
 }
 
 /**
@@ -229,6 +250,7 @@ export async function calculateCosto(rawInput: unknown): Promise<CalcolatoreOutp
 
   // ─── BRANCH STANDARD ───────────────────────────────────────────────────
   // Validazione aggiuntiva per CCNL standard
+  if (input.oreLavoro > 48) throw new Error('Ore settimanali massime: 48');
   if (input.ral < 10_000) throw new Error('RAL minima: 10.000 euro');
   if (input.codiceInail.length < 4) throw new Error('Seleziona la categoria INAIL');
 
@@ -273,7 +295,6 @@ export async function calculateCosto(rawInput: unknown): Promise<CalcolatoreOutp
 
   // 4. Contributi INPS
   let inpsBase: number;
-  let aliquotaInpsDefault: number;
   let aliquotaDipendenteDefault: number;
   let inpsFasciaNome: string | undefined;
 
@@ -287,24 +308,20 @@ export async function calculateCosto(rawInput: unknown): Promise<CalcolatoreOutp
     );
     inpsBase = inpsDom.inpsDatore;
     aliquotaDipendenteDefault = ralEffettiva > 0 ? inpsDom.inpsDipendente / ralEffettiva : 0;
-    aliquotaInpsDefault = ralEffettiva > 0 ? inpsDom.inpsDatore / ralEffettiva : 0;
     inpsFasciaNome = inpsDom.fasciaNome;
   } else {
     const settore = getSettoreContributivo(input.ccnlId, input.numeroDipendenti);
     if (!settore) {
       throw new Error(`Settore contributivo INPS non configurato per CCNL '${input.ccnlId}'`);
     }
-    aliquotaInpsDefault = settore.aliquotaDatore;
     aliquotaDipendenteDefault = settore.aliquotaDipendente;
     const aliquotaInpsEffettiva = input.aliquotaInps;
     inpsBase = calcolaInpsBase(ralEffettiva, aliquotaInpsEffettiva);
   }
 
-  // 5. Agevolazioni e risparmio contributivo
-  const { agevolazioniApplicate, risparmioTotale, alertScadenze } =
-    calcolaAgevolazioni({ ...input, ral: ralEffettiva });
-
-  const inpsNetto = Math.max(0, inpsBase - risparmioTotale);
+  // 5. Il costo dipendenti è il lordo contributivo pieno: le agevolazioni
+  // non si sottraggono (il report non le applica).
+  const inpsNetto = inpsBase;
 
   // 6. TFR (Art. 2120 c.c.)
   // Usa le mensilità dall'input utente, non dal JSON del CCNL.
@@ -316,43 +333,43 @@ export async function calculateCosto(rawInput: unknown): Promise<CalcolatoreOutp
   // 7. INAIL — per i domestici è un contributo fisso annuo gestito via INPS, non per-mille RAL
   const inail = isDomestici ? 0 : calcolaInail(ralEffettiva, input.codiceInail);
 
-  // 8. Tredicesima (tutti i CCNL) e quattordicesima (CCNL con >=14 mensilità)
-  const tredicesima = ralEffettiva / 12;
-  // La quattordicesima è dovuta se le mensilità effettive sono 14 o più.
-  // Se le mensilità sono 15 o 16, le mensilità aggiuntive seguono la stessa
-  // logica della quattordicesima: importo pari a una mensilità ordinaria ciascuna.
-  // @see Prassi contrattuale italiana — mensilità aggiuntive oltre la 13a
-  const quattordicesima = mensilita >= 14 ? ralEffettiva / 12 : 0;
-  const quindicesimaESedicesima = mensilita >= 15 ? (ralEffettiva / 12) * (mensilita - 14) : 0;
+  // 8. 13ª e 14ª sono informative e già dentro la RAL.
+  // Stesso divisore per entrambe: RAL / numero mensilità (non /12, non 173 ore).
+  const quotaMensilita = ralEffettiva / mensilita;
+  const tredicesima = quotaMensilita;
+  const quattordicesima = mensilita >= 14 ? quotaMensilita : 0;
+  const quindicesimaESedicesima = mensilita >= 15 ? quotaMensilita * (mensilita - 14) : 0;
 
-  // 9. Contributi contrattuali specifici del CCNL (supporta fisso, fisso/ora e percentuale)
-  const contributiEntries = Object.values(ccnl.contributiContrattuali.azienda) as ContributoContrattuale[];
-  const contributiAttivi = input.includiAssistenzaSanitaria
-    ? contributiEntries
-    : contributiEntries.filter(c => c.tipo !== 'sanitario');
+  // 9. Contributi contrattuali: assistenza sanitaria e ente bilaterale su righe distinte
+  const contributiEntries = Object.entries(ccnl.contributiContrattuali.azienda) as [string, ContributoContrattuale][];
   const oreAnnue = input.oreLavoro * 52;
-  const contributiCcnl = contributiAttivi.reduce((sum, c) => {
-    if (c.modalita === 'fisso' && c.importoMensile != null) {
-      // perOra: true → tariffa oraria (es. CassaColf), altrimenti importo mensile × 12
-      return sum + c.importoMensile * (c.perOra ? oreAnnue : 12);
-    }
-    return sum + ralEffettiva * (c.percentuale ?? 0);
-  }, 0);
+  const sanitari = contributiEntries.filter(([, c]) => c.tipo === 'sanitario');
+  const bilaterali = contributiEntries.filter(([, c]) => c.tipo === 'bilaterale');
+  const altriContributi = contributiEntries.filter(([, c]) => c.tipo !== 'sanitario' && c.tipo !== 'bilaterale');
+  const importoSanitario = input.includiAssistenzaSanitaria
+    ? sanitari.reduce((sum, [, c]) => sum + importoContributoContrattuale(c, ralEffettiva, oreAnnue), 0)
+    : 0;
+  const importoBilaterali = bilaterali.map(([, c]) => importoContributoContrattuale(c, ralEffettiva, oreAnnue));
+  const importoAltri = altriContributi.map(([, c]) => importoContributoContrattuale(c, ralEffettiva, oreAnnue));
+  const contributiCcnl = importoSanitario + importoBilaterali.reduce((s, n) => s + n, 0) + importoAltri.reduce((s, n) => s + n, 0);
 
-  // 10. Scatti di anzianità (supporta importo fisso o percentuale sulla RAL)
-  const costoScatti = calcolaScattiAnzianita(input.anzianitaAnni, ccnl.scattiAnzianita, ralEffettiva);
+  // 10. Scatti di anzianità: importo del livello se c'è, altrimenti media del CCNL
+  const costoScatti = calcolaScattiAnzianita(
+    input.anzianitaAnni,
+    ccnl.scattiAnzianita,
+    ralEffettiva,
+    livello.scattoEuro,
+  );
 
-  // 10b. Elementi aggiuntivi CCNL (EDR, ex festività, contributo solidarietà, ecc.)
-  let costoElementiAggiuntivi = 0;
-  if (ccnl.elementiAggiuntivi) {
-    for (const elem of Object.values(ccnl.elementiAggiuntivi)) {
-      // Includi solo gli elementi senza condizione (sempre dovuti)
-      // o con condizione specifica — per ora includiamo tutti quelli senza condizione
-      if (elem.condizione === null || elem.condizione === undefined) {
-        costoElementiAggiuntivi += elem.importoMensile * elem.mensilita;
-      }
-    }
-  }
+  // 10b. Ferie, permessi e festività non godute (sostituisce l'elemento indiretto forfettario)
+  const oreFerie = ccnl.oreFerieAnnue ?? 0;
+  const orePermessi = ccnl.orePermessiAnnue ?? 0;
+  const oreFestivita = ccnl.oreFestivitaAnnue ?? 0;
+  const oreNonGodute = oreFerie + orePermessi + oreFestivita;
+  const quotaNonGodute = input.quotaNonGodute ?? 1;
+  const pagaOrariaNonGodute = (ralEffettiva / mensilita) / 173;
+  const costoFerieNonGodute = oreNonGodute * pagaOrariaNonGodute * quotaNonGodute;
+  const oreAssenzeNote = ccnl.oreFerieAnnue != null || ccnl.orePermessiAnnue != null || ccnl.oreFestivitaAnnue != null;
 
   // 11. Totale
   // NOTA: la RAL include già tutte le mensilità (es. 1541.77 × 14 = 21584.78),
@@ -360,7 +377,7 @@ export async function calculateCosto(rawInput: unknown): Promise<CalcolatoreOutp
   // — sono solo voci informative che mostrano la scomposizione della RAL.
   const costoTotaleAnnuo =
     ralEffettiva + inpsNetto + tfr + inail +
-    contributiCcnl + costoScatti + costoElementiAggiuntivi;
+    contributiCcnl + costoScatti + costoFerieNonGodute;
 
   const percentualeRal = costoTotaleAnnuo / ralEffettiva;
 
@@ -377,9 +394,7 @@ export async function calculateCosto(rawInput: unknown): Promise<CalcolatoreOutp
   // 12. Assembla le voci di dettaglio
   const notaInps = isDomestici
     ? `Fascia: ${inpsFasciaNome} — Circ. INPS n. 9/2026`
-    : input.aliquotaInps !== aliquotaInpsDefault
-      ? `Aliquota ${(input.aliquotaInps * 100).toFixed(2)}% — personalizzata dall'utente`
-      : 'Circ. INPS n. 99/2023 — aliquota base 28,80%';
+    : `Aliquota ${(input.aliquotaInps * 100).toFixed(2).replace('.', ',')}%`;
 
   const notaRal = isRetribuzionePersonalizzata
     ? 'Retribuzione concordata tra le parti — art. 2099 c.c.'
@@ -413,7 +428,7 @@ export async function calculateCosto(rawInput: unknown): Promise<CalcolatoreOutp
     {
       id: 'inps',
       categoria: 'inps_azienda',
-      descrizione: 'Contributi INPS datoriali (netti da agevolazioni)',
+      descrizione: 'Contributi INPS datoriali',
       importoAnnuo: inpsNetto,
       importoMensile: inpsNetto / 12,
       percentualeRal: inpsNetto / ralEffettiva,
@@ -473,14 +488,32 @@ export async function calculateCosto(rawInput: unknown): Promise<CalcolatoreOutp
         }]
       : []),
     {
-      id: 'contributi_ccnl',
+      id: 'assistenza_sanitaria',
       categoria: 'ccnl_contrattuale',
-      descrizione: 'Contributi contrattuali CCNL (Fondo Est, Ebiter, ecc.)',
-      importoAnnuo: contributiCcnl,
-      importoMensile: contributiCcnl / 12,
-      percentualeRal: contributiCcnl / ralEffettiva,
-      notaLegge: notaCcnl,
+      descrizione: 'Assistenza sanitaria integrativa',
+      importoAnnuo: importoSanitario,
+      importoMensile: importoSanitario / 12,
+      percentualeRal: importoSanitario / ralEffettiva,
+      notaLegge: sanitari.length === 0 ? 'dato CCNL assente' : notaCcnl,
     },
+    ...bilaterali.map(([key, c], i) => ({
+      id: `ente_bilaterale_${key}`,
+      categoria: 'ccnl_contrattuale' as const,
+      descrizione: c.descrizione || 'Ente bilaterale',
+      importoAnnuo: importoBilaterali[i],
+      importoMensile: importoBilaterali[i] / 12,
+      percentualeRal: importoBilaterali[i] / ralEffettiva,
+      notaLegge: c.notaLegge,
+    })),
+    ...altriContributi.map(([key, c], i) => ({
+      id: `ccnl_${key}`,
+      categoria: 'ccnl_contrattuale' as const,
+      descrizione: c.descrizione,
+      importoAnnuo: importoAltri[i],
+      importoMensile: importoAltri[i] / 12,
+      percentualeRal: importoAltri[i] / ralEffettiva,
+      notaLegge: c.notaLegge,
+    })),
     {
       id: 'scatti_anzianita',
       categoria: 'ccnl_contrattuale',
@@ -490,26 +523,27 @@ export async function calculateCosto(rawInput: unknown): Promise<CalcolatoreOutp
       percentualeRal: costoScatti / ralEffettiva,
       notaLegge: 'CCNL — scatti di anzianità',
     },
-    ...(costoElementiAggiuntivi > 0
+    ...(oreAssenzeNote || costoFerieNonGodute > 0
       ? [{
-          id: 'elementi_aggiuntivi',
+          id: 'ferie_permessi_festivita',
           categoria: 'ccnl_contrattuale' as const,
-          descrizione: 'Elementi aggiuntivi CCNL (ex festività, festività non godute, contributo solidarietà)',
-          importoAnnuo: costoElementiAggiuntivi,
-          importoMensile: costoElementiAggiuntivi / 12,
-          percentualeRal: costoElementiAggiuntivi / ralEffettiva,
-          notaLegge: `CCNL ${ccnl.nome} — elementi retributivi indiretti`,
+          descrizione: 'Ferie, permessi e festività non godute',
+          importoAnnuo: costoFerieNonGodute,
+          importoMensile: costoFerieNonGodute / 12,
+          percentualeRal: costoFerieNonGodute / ralEffettiva,
+          notaLegge: `Ferie ${oreFerie} h + permessi ${orePermessi} h + festività ${oreFestivita} h = ${oreNonGodute} h × (RAL / ${mensilita} / 173) × quota non goduta ${(quotaNonGodute * 100).toFixed(0)}%`,
         }]
       : []),
   ];
 
-  // 13. Calcolo netto dipendente
+  // 13. Netto dipendente: IRPEF lorda − detrazioni art. 13 − addizionali. Senza bonus cuneo.
   const nettoDipendente = calcolaNettoDaRedditoLordoEinpsPerc(
     ralEffettiva,
     aliquotaDipendenteDefault,
     input.tipoContratto,
     mensilita,
     DISCLAIMER_NETTO_DIPENDENTE,
+    false,
   );
 
   return {
@@ -518,8 +552,8 @@ export async function calculateCosto(rawInput: unknown): Promise<CalcolatoreOutp
     costoTotaleMensile: costoTotaleAnnuo / 12,
     percentualeRal,
     voci,
-    agevolazioniApplicate,
-    alertScadenze,
+    agevolazioniApplicate: [],
+    alertScadenze: [],
     calcolatoIl: new Date().toISOString(),
     nettoDipendente,
   };

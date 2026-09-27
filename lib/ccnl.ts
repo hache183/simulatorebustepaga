@@ -37,6 +37,7 @@ const CCNL_MAP: Record<string, CcnlData> = {
   domestici_conviventi:      require('../data/ccnl/domestici_conviventi.json'),
   domestici_non_conviventi:  require('../data/ccnl/domestici.json'),
   multiservizi:              require('../data/ccnl/multiservizi.json'),
+  pubblici_esercizi:        require('../data/ccnl/pubblici_esercizi.json'),
   pubblici_esercizi_turismo: require('../data/ccnl/pubblici_esercizi_turismo.json'),
   sanita_privata_unipresa:   require('../data/ccnl/sanita_privata.json'),
   case_di_cura_private:      require('../data/ccnl/case_di_cura_private.json'),
@@ -101,6 +102,22 @@ export function fonteNonVerificata(fonte: string | undefined): boolean {
 export function tabellaScaduta(validitaAl: string | null | undefined, oggi = new Date()): boolean {
   if (!validitaAl) return false;
   return new Date(validitaAl).getTime() < oggi.getTime();
+}
+
+/**
+ * Paga mensile usata come base della RAL di default.
+ * Minimo tabellare più indennità contrattuali nominate (contingenza, EDR,
+ * indennità di funzione, superminimo collettivo). Non somma terzo elemento,
+ * elemento distinto né la colonna TOTALE (`retribuzioneMensileTabella`).
+ */
+export function pagaMensileBase(livello: LivelloCcnl): number {
+  const indennita =
+    (livello.contingenza ?? 0) +
+    (livello.edr ?? 0) +
+    (livello.altreIndennitaFisse ?? 0) +
+    (livello.superminimoCollettivo ?? 0) +
+    (livello.indennitaFunzione ?? 0);
+  return Math.round((livello.minimoTabellare + indennita) * 100) / 100;
 }
 
 /** Restituisce un livello contrattuale o lancia errore se non esiste */

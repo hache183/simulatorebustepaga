@@ -3,8 +3,10 @@
 import type { CalcolatoreOutput } from '@/types';
 
 const eur = (n: number) =>
-  new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(n);
+  new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR', minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n);
 const pct = (n: number) => (n * 100).toFixed(1) + '%';
+const pct2 = (n: number) =>
+  (n * 100).toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '%';
 
 interface Props {
   risultato: CalcolatoreOutput;
@@ -12,9 +14,14 @@ interface Props {
 }
 
 export function RisultatiCalcolatore({ risultato, onRicalcola }: Props) {
-  const { costoTotaleAnnuo, costoTotaleMensile, percentualeRal, voci, agevolazioniApplicate, alertScadenze, nettoDipendente } = risultato;
-  const risparmioTotale = agevolazioniApplicate.reduce((s, a) => s + a.risparmioAnnuo, 0);
+  const { costoTotaleAnnuo, costoTotaleMensile, percentualeRal, voci, nettoDipendente } = risultato;
   const isDomestico = ['domestici', 'domestici_conviventi', 'domestici_non_conviventi'].includes(risultato.input.ccnlId);
+  const vociInCosto = voci.filter(v =>
+    v.importoAnnuo > 0 && v.categoria !== 'tredicesima' && v.categoria !== 'quattordicesima',
+  );
+  const aliquotaInpsDip = nettoDipendente.ralLorda > 0
+    ? nettoDipendente.inpsDipendente / nettoDipendente.ralLorda
+    : 0.0919;
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
@@ -91,34 +98,6 @@ export function RisultatiCalcolatore({ risultato, onRicalcola }: Props) {
         </div>
       </div>
 
-      {/* SEZIONE B — Alert scadenze */}
-      {alertScadenze.length > 0 && (
-        <div style={{
-          background: 'var(--color-amber-dim)',
-          borderLeft: '3px solid var(--color-amber)',
-          borderRadius: '8px', padding: '14px 16px',
-          display: 'flex', alignItems: 'flex-start', gap: '10px',
-        }}>
-          <span style={{ fontSize: '14px', flexShrink: 0 }}>⚠</span>
-          <div>
-            <p style={{ fontSize: '13px', fontWeight: 600, color: 'var(--color-amber)',
-              marginBottom: '4px',
-              fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
-              Agevolazioni in scadenza
-            </p>
-            {alertScadenze.map(a => (
-              <p key={a.agevolazioneId} style={{ fontSize: '13px', color: 'var(--color-text-secondary)' }}>
-                {a.nome}: scade tra{' '}
-                <strong style={{ color: 'var(--color-amber)', fontFamily: "'DM Mono', monospace" }}>
-                  {a.giorniRimanenti} gg
-                </strong>{' '}
-                ({new Date(a.scadenza).toLocaleDateString('it-IT')})
-              </p>
-            ))}
-          </div>
-        </div>
-      )}
-
       {/* SEZIONE C — Barra composizione */}
       <div>
         <p style={{ fontSize: '13px', color: 'var(--color-text-secondary)',
@@ -127,7 +106,7 @@ export function RisultatiCalcolatore({ risultato, onRicalcola }: Props) {
           Composizione del costo
         </p>
         <div style={{ display: 'flex', height: '14px', borderRadius: '8px', overflow: 'hidden' }}>
-          {voci.filter(v => v.importoAnnuo > 0).map(v => {
+          {vociInCosto.map(v => {
             const colori: Record<string, string> = {
               ral: '#14b8a6', inps_azienda: '#2dd4bf', tfr: '#22c55e', inail: '#f59e0b',
               tredicesima: '#818cf8', quattordicesima: '#a78bfa', ccnl_contrattuale: '#71717a', agevolazione: '#38383f',
@@ -144,7 +123,7 @@ export function RisultatiCalcolatore({ risultato, onRicalcola }: Props) {
           })}
         </div>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px 16px', marginTop: '10px' }}>
-          {voci.filter(v => v.importoAnnuo > 0).map(v => {
+          {vociInCosto.map(v => {
             const colori: Record<string, string> = {
               ral: '#14b8a6', inps_azienda: '#2dd4bf', tfr: '#22c55e', inail: '#f59e0b',
               tredicesima: '#818cf8', quattordicesima: '#a78bfa', ccnl_contrattuale: '#71717a', agevolazione: '#38383f',
@@ -159,12 +138,6 @@ export function RisultatiCalcolatore({ risultato, onRicalcola }: Props) {
             );
           })}
         </div>
-        {risparmioTotale > 0 && (
-          <p style={{ marginTop: '8px', fontSize: '13px', color: 'var(--color-green)',
-            fontFamily: "'DM Mono', monospace" }}>
-            ▼ Risparmio agevolazioni: -{eur(risparmioTotale)}/anno
-          </p>
-        )}
       </div>
 
       {/* SEZIONE D — Tabella dettaglio */}
@@ -207,24 +180,6 @@ export function RisultatiCalcolatore({ risultato, onRicalcola }: Props) {
                 </td>
               </tr>
             ))}
-            {risparmioTotale > 0 && (
-              <tr style={{ background: 'var(--color-green-dim)', borderBottom: '1px solid var(--color-border)' }}>
-                <td style={{ padding: '12px 16px', color: 'var(--color-green)', fontWeight: 500 }}>
-                  Risparmio agevolazioni
-                </td>
-                <td style={{ padding: '12px 16px', textAlign: 'right',
-                  fontFamily: "'DM Mono', monospace", color: 'var(--color-green)', fontWeight: 600 }}>
-                  -{eur(risparmioTotale)}
-                </td>
-                <td style={{ padding: '12px 16px', textAlign: 'right',
-                  fontFamily: "'DM Mono', monospace", color: 'var(--color-green)' }}>
-                  -{eur(risparmioTotale / 12)}
-                </td>
-                <td style={{ padding: '12px 16px', textAlign: 'right', color: 'var(--color-green)' }}>
-                  -{pct(risparmioTotale / risultato.input.ral)}
-                </td>
-              </tr>
-            )}
             {/* Riga totale */}
             <tr style={{ background: 'var(--color-bg-elevated)', borderTop: '2px solid var(--color-accent)' }}>
               <td style={{ padding: '14px 16px',
@@ -250,6 +205,14 @@ export function RisultatiCalcolatore({ risultato, onRicalcola }: Props) {
             </tr>
           </tbody>
         </table>
+        {!isDomestico && (
+          <p style={{
+            margin: '12px 16px 14px', fontSize: '12px', color: 'var(--color-text-secondary)',
+            lineHeight: '1.5',
+          }}>
+            Il costo indicato rappresenta il costo massimo teorico, in assenza di agevolazioni contributive. In funzione della data di assunzione e dei requisiti soggettivi e oggettivi dell&apos;azienda e delle risorse, dovrà essere verificata l&apos;eventuale applicabilità. A titolo esemplificativo tali agevolazioni possono comportare una riduzione del 50% o in alcuni casi fino al 100% dei contributi INPS a carico D/L.
+          </p>
+        )}
       </div>
 
       {/* SEZIONE E — Prospetto netto dipendente */}
@@ -268,15 +231,12 @@ export function RisultatiCalcolatore({ risultato, onRicalcola }: Props) {
               ] : [
                 { label: 'RAL lorda', value: nettoDipendente.ralLorda, sign: '' },
                 {
-                  // Per i domestici il contributo è fisso per ora (non percentuale 9,19% della RAL).
-                  // Mostriamo la percentuale effettiva calcolata dai valori reali.
-                  label: `Contributi INPS dipendente (${pct(nettoDipendente.ralLorda > 0 ? nettoDipendente.inpsDipendente / nettoDipendente.ralLorda : 0.0919)})`,
+                  label: `Contributi INPS dipendente (${pct2(aliquotaInpsDip)})`,
                   value: nettoDipendente.inpsDipendente, sign: '−'
                 },
                 { label: 'Imponibile IRPEF', value: nettoDipendente.imponibileIrpef, sign: '=', bold: true },
                 { label: 'IRPEF lorda', value: nettoDipendente.irpefLorda, sign: '−' },
                 { label: 'Detrazioni lavoro dipendente', value: nettoDipendente.detrazioneLavoroDip, sign: '+', color: 'var(--color-green)' },
-                { label: 'Bonus cuneo fiscale', value: nettoDipendente.bonusCuneoFiscale, sign: '+', color: 'var(--color-green)' },
                 { label: 'IRPEF netta', value: nettoDipendente.irpefNetta, sign: '−', bold: true },
                 { label: 'Addizionali reg./com. (stima)', value: nettoDipendente.addizionaleRegionale + nettoDipendente.addizionaleComunale, sign: '−' },
               ] as { label: string; value: number; sign: string; bold?: boolean; color?: string }[]).map((row, i) => (

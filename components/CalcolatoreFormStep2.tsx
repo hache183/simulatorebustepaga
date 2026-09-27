@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useState, useEffect } from 'react';
-import type { AgevolazioneInps, ContributoContrattuale } from '@/types';
+import type { ContributoContrattuale } from '@/types';
 
 const REGIONI = [
   'Abruzzo','Basilicata','Calabria','Campania','Emilia-Romagna',
@@ -18,17 +18,28 @@ const Step2Schema = z.object({
   regione: z.string(),
   codiceInail: z.string(),
   anzianitaAnni: z.number().min(0).max(50),
-  agevolazioniSelezionate: z.array(z.string()),
   includiAssistenzaSanitaria: z.boolean(),
   aliquotaInps: z.number().min(0).max(50),
+  quotaNonGodutePercento: z.number().min(0).max(100),
 });
 
 type Step2Data = z.infer<typeof Step2Schema>;
 
+export interface Step2SubmitData {
+  numeroDipendenti: number;
+  regione: string;
+  codiceInail: string;
+  anzianitaAnni: number;
+  agevolazioniSelezionate: string[];
+  includiAssistenzaSanitaria: boolean;
+  aliquotaInps: number;
+  quotaNonGodute: number;
+}
+
 interface VoceInail { codice: string; settore: string; tassoPerMille: number; }
 
 interface Props {
-  onSubmit: (data: Step2Data) => void;
+  onSubmit: (data: Step2SubmitData) => void;
   onBack: () => void;
   isLoading: boolean;
   contributiCcnl?: Record<string, ContributoContrattuale>;
@@ -38,8 +49,6 @@ interface Props {
 export function CalcolatoreFormStep2({ onSubmit, onBack, isLoading, contributiCcnl, ccnlId }: Props) {
   const isDomestici = ['domestici', 'domestici_conviventi', 'domestici_non_conviventi'].includes(ccnlId ?? '');
   const [voceInail, setVociInail] = useState<VoceInail[]>([]);
-  const [agevolazioni, setAgevolazioni] = useState<AgevolazioneInps[]>([]);
-  const [conflitti, setConflitti] = useState<Record<string, string>>({});
 
   const fondoSanitarioNome = contributiCcnl
     ? Object.values(contributiCcnl).find(c => c.tipo === 'sanitario')?.descrizione
@@ -48,42 +57,12 @@ export function CalcolatoreFormStep2({ onSubmit, onBack, isLoading, contributiCc
   const { register, handleSubmit, watch, setValue, formState: { errors } } =
     useForm<Step2Data>({
       resolver: zodResolver(Step2Schema),
-      defaultValues: { numeroDipendenti: 1, regione: '', anzianitaAnni: 0, codiceInail: '', agevolazioniSelezionate: [], includiAssistenzaSanitaria: true, aliquotaInps: 28.80 },
+      defaultValues: { numeroDipendenti: 1, regione: '', anzianitaAnni: 0, codiceInail: '', includiAssistenzaSanitaria: true, aliquotaInps: 28.80, quotaNonGodutePercento: 100 },
     });
-
-  const agevolazioniSelezionate = watch('agevolazioniSelezionate');
 
   useEffect(() => {
     fetch('/api/inail/voci').then(r => r.json()).then(d => setVociInail((d as { voci?: VoceInail[] }).voci ?? []));
-    fetch('/api/agevolazioni').then(r => r.json()).then(d => setAgevolazioni((d as { agevolazioni?: AgevolazioneInps[] }).agevolazioni ?? []));
   }, []);
-
-  // Calcola conflitti in real-time
-  useEffect(() => {
-    const nuoviConflitti: Record<string, string> = {};
-    for (const id of agevolazioniSelezionate) {
-      const agev = agevolazioni.find(a => a.id === id);
-      if (!agev) continue;
-      for (const conflitoId of agev.nonCumulabileCon) {
-        if (agevolazioniSelezionate.includes(conflitoId)) {
-          const nomeConflito = agevolazioni.find(a => a.id === conflitoId)?.nome ?? conflitoId;
-          nuoviConflitti[id] = `Non cumulabile con: ${nomeConflito}`;
-        }
-      }
-    }
-    setConflitti(nuoviConflitti);
-  }, [agevolazioniSelezionate, agevolazioni]);
-
-  const toggleAgevolazione = (id: string) => {
-    const correnti = agevolazioniSelezionate;
-    const nuove = correnti.includes(id) ? correnti.filter(x => x !== id) : [...correnti, id];
-    setValue('agevolazioniSelezionate', nuove);
-  };
-
-  const giorniAllaScadenza = (scadenza: string | null) => {
-    if (!scadenza) return null;
-    return Math.ceil((new Date(scadenza).getTime() - Date.now()) / 86_400_000);
-  };
 
   return (
     <form onSubmit={handleSubmit((data) => {
@@ -92,7 +71,8 @@ export function CalcolatoreFormStep2({ onSubmit, onBack, isLoading, contributiCc
         aliquotaInps: isDomestici ? 0 : data.aliquotaInps / 100,
         numeroDipendenti: isDomestici ? 1 : data.numeroDipendenti,
         codiceInail: isDomestici ? '' : data.codiceInail,
-        agevolazioniSelezionate: isDomestici ? [] : data.agevolazioniSelezionate,
+        agevolazioniSelezionate: [] as string[],
+        quotaNonGodute: isDomestici ? 0 : data.quotaNonGodutePercento / 100,
         includiAssistenzaSanitaria: isDomestici ? false : data.includiAssistenzaSanitaria,
       });
     })} style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
@@ -232,8 +212,7 @@ export function CalcolatoreFormStep2({ onSubmit, onBack, isLoading, contributiCc
           }}>%</span>
         </div>
         <p style={{ marginTop: '6px', fontSize: '11px', color: 'var(--color-text-muted)', lineHeight: '1.5' }}>
-          Aliquota contributiva INPS a carico del datore di lavoro. Il valore precompilato (28,80%) è quello standard per la generalità delle aziende.
-          Modifica se il settore ha un&apos;aliquota diversa (es. Artigianato, Agricoltura, Credito). Verifica con il tuo consulente del lavoro.
+          Aliquote contributive INPS a carico del D/L. Il valore precompilato è quello medio per la generalità delle imprese. Il valore preciso è distinto dal settore specifico (es. Artigiani, Commercianti, Industrie). Verifica con il tuo consulente.
         </p>
         {errors.aliquotaInps && <p style={{ marginTop: '4px', fontSize: '11px', color: 'var(--color-red)' }}>{errors.aliquotaInps.message}</p>}
       </div>}
@@ -268,70 +247,31 @@ export function CalcolatoreFormStep2({ onSubmit, onBack, isLoading, contributiCc
         </p>
       </div>}
 
-      {/* Agevolazioni — nascoste per domestici (non applicabili al datore famiglia) */}
       {!isDomestici && <div>
-        <p style={{ fontSize: '13px', fontWeight: 500, color: 'var(--color-text-secondary)',
-          marginBottom: '10px' }}>
-          Agevolazioni contributive applicabili
-        </p>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-          {agevolazioni.map(agev => {
-            const giorni = giorniAllaScadenza(agev.scadenza);
-            const selezionata = agevolazioniSelezionate.includes(agev.id);
-            const conflitto = conflitti[agev.id];
-            return (
-              <div
-                key={agev.id}
-                onClick={() => toggleAgevolazione(agev.id)}
-                style={{
-                  padding: '12px', borderRadius: '6px', cursor: 'pointer',
-                  transition: 'all 0.15s ease',
-                  background: selezionata ? 'var(--color-accent-glow)' : 'var(--color-bg-input)',
-                  border: `1px solid ${selezionata ? 'var(--color-accent)' : 'var(--color-border)'}`,
-                }}
-              >
-                <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '8px' }}>
-                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
-                    <input type="checkbox" checked={selezionata} readOnly
-                      style={{ marginTop: '2px', accentColor: 'var(--color-accent)', cursor: 'pointer' }} />
-                    <div>
-                      <p style={{ fontSize: '13px', fontWeight: 500, color: 'var(--color-text-primary)' }}>{agev.nome}</p>
-                      <p style={{ fontSize: '11px', color: 'var(--color-text-muted)', marginTop: '2px' }}>{agev.fonteLegge}</p>
-                    </div>
-                  </div>
-                  {giorni !== null && giorni <= 90 && (
-                    <span style={{
-                      flexShrink: 0, fontSize: '10px', padding: '2px 8px', borderRadius: '4px',
-                      background: 'var(--color-red-dim)', color: 'var(--color-red)',
-                      border: '1px solid var(--color-red)', fontFamily: "'DM Mono', monospace",
-                      whiteSpace: 'nowrap',
-                    }}>
-                      Scade {giorni}gg
-                    </span>
-                  )}
-                  {agev.scadenza === null && (
-                    <span style={{
-                      flexShrink: 0, fontSize: '10px', padding: '2px 8px', borderRadius: '4px',
-                      background: 'transparent', color: 'var(--color-text-muted)',
-                      border: '1px solid var(--color-border)',
-                    }}>
-                      Nessuna scadenza
-                    </span>
-                  )}
-                </div>
-                {conflitto && selezionata && (
-                  <p style={{
-                    marginTop: '8px', fontSize: '11px', padding: '6px 10px', borderRadius: '4px',
-                    background: 'var(--color-amber-dim)', color: 'var(--color-amber)',
-                    border: '1px solid var(--color-amber)',
-                  }}>
-                    ⚠ {conflitto} — il motore applicherà solo quella più vantaggiosa
-                  </p>
-                )}
-              </div>
-            );
-          })}
+        <label htmlFor="quotaNonGodutePercento" style={{ display: 'block', fontSize: '13px', fontWeight: 500,
+          color: 'var(--color-text-secondary)', marginBottom: '6px' }}>
+          Quota ferie, permessi e festività non godute (%)
+        </label>
+        <div style={{ position: 'relative' }}>
+          <input id="quotaNonGodutePercento" type="number" step="1" min="0" max="100"
+            {...register('quotaNonGodutePercento', { valueAsNumber: true })}
+            style={{
+              width: '100%', padding: '11px 14px',
+              background: 'var(--color-bg-input)', color: 'var(--color-text-primary)',
+              border: `1px solid ${errors.quotaNonGodutePercento ? 'var(--color-red)' : 'var(--color-border)'}`,
+              borderRadius: '6px', fontSize: '13px',
+              fontFamily: "'DM Mono', monospace",
+            }}
+          />
+          <span style={{
+            position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)',
+            fontFamily: "'DM Mono', monospace", fontSize: '13px', color: 'var(--color-text-muted)',
+          }}>%</span>
         </div>
+        <p style={{ marginTop: '6px', fontSize: '11px', color: 'var(--color-text-muted)', lineHeight: '1.5' }}>
+          100% è il costo massimo (nessuna ora goduta). 0% azzera questa voce.
+        </p>
+        {errors.quotaNonGodutePercento && <p style={{ marginTop: '4px', fontSize: '11px', color: 'var(--color-red)' }}>{errors.quotaNonGodutePercento.message}</p>}
       </div>}
 
       {/* Pulsanti */}

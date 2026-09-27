@@ -17,11 +17,15 @@ export interface CalcolatoreInput {
   codiceInail: string;                // codice voce tariffaria INAIL
   agevolazioniSelezionate: string[];  // array di id agevolazioni
   includiAssistenzaSanitaria: boolean; // se true, include contributi sanitari CCNL
-  aliquotaInps: number;               // aliquota INPS datoriale personalizzata (es. 0.2676 per 26,76%)
+  aliquotaInps: number;               // aliquota INPS datoriale (es. 0.2880 per 28,80%)
+  quotaNonGodute?: number;           // 0–1, quota ferie/permessi/festività non godute (default 1)
   retribuzionePersonalizzata?: number; // RAL personalizzata concordata tra le parti (euro/anno)
   pagaOraria?: number;                // solo domestici: retribuzione oraria effettiva
   oreSettimanali?: number;            // solo domestici: ore settimanali dedicate al rapporto
   convivente?: boolean;               // solo domestici: lavoratore convivente con vitto e alloggio
+  includiCassaColf?: boolean;         // domestici: quota oraria Cassacolf (default off)
+  sostituzioneTitolare?: boolean;     // conviventi: apre la tabella C (oraria CS/DS)
+  oreNonGodute?: number;              // domestici non conviventi: ferie/permessi/festività non godute
 }
 
 // ─── OUTPUT CALCOLATORE ───────────────────────────────────────────────────
@@ -98,6 +102,7 @@ export interface ContributoContrattuale {
   descrizione: string;
   notaLegge: string;
   perOra?: boolean; // true per contributi a tariffa oraria (es. CassaColf domestici)
+  mensilitaMaturazione?: number; // mesi su cui matura un importo fisso (default 12)
 }
 
 export interface ElementoAggiuntivo {
@@ -113,6 +118,15 @@ export interface LivelloCcnl {
   qualifica: string;
   minimoTabellare: number; // minimo tabellare mensile in euro
   moltiplicatore: number;
+  contingenza?: number;
+  edr?: number;
+  altreIndennitaFisse?: number;
+  superminimoCollettivo?: number;
+  indennitaFunzione?: number;
+  scattoEuro?: number;
+  terzoElemento?: number;
+  elementoDistinto?: number;
+  retribuzioneMensileTabella?: number;
 }
 
 export interface ScattiAnzianita {
@@ -134,7 +148,15 @@ export interface CcnlData {
   scattiAnzianita: ScattiAnzianita;
   mensilita: number;
   retribuzioneOraria?: boolean; // true se minimoTabellare è €/ora (es. domestici)
+  coefficienteOreMese?: number; // domestici: ore settimanali → mensile (4,33)
+  oreSettimanaliPieno?: number;
+  oreFerieAnnue?: number;
+  orePermessiAnnue?: number;
+  oreFestivitaAnnue?: number;
   elementiAggiuntivi?: Record<string, ElementoAggiuntivo>;
+  tabellaA?: { codice: string; descrizione?: string; mensile: number; indennitaFunzione: number }[];
+  tabellaB?: { codice: string; descrizione?: string; mensile30h: number; oreBase?: number }[];
+  tabellaC?: { codice: string; descrizione?: string; orario: number }[];
 }
 
 export interface AgevolazioneInps {

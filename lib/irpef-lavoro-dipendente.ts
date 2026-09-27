@@ -60,13 +60,14 @@ export function calcolaNettoDaRedditoLordoEinpsPerc(
   tipoContratto: string,
   mensilitaContrattuali: number,
   disclaimer: string,
+  applicaBonusCuneo = true,
 ): NettoDipendente {
   const inpsDipendente = redditoLordoAnnuo * aliquotaInpsSulLordo;
   const imponibileIrpef = redditoLordoAnnuo - inpsDipendente;
 
   const irpefLorda = calcolaIrpefLorda(imponibileIrpef);
   const detrazioneLavoroDip = calcolaDetrazioneLavoroDip(imponibileIrpef, tipoContratto);
-  const bonusCuneoFiscale = calcolaBonusCuneoFiscale(imponibileIrpef);
+  const bonusCuneoFiscale = applicaBonusCuneo ? calcolaBonusCuneoFiscale(imponibileIrpef) : 0;
   const irpefNetta = Math.max(0, irpefLorda - detrazioneLavoroDip - bonusCuneoFiscale);
 
   const addizionaleRegionale = imponibileIrpef * 0.0173;

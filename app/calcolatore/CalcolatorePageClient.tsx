@@ -6,6 +6,7 @@ import { CalcolatoreFormStep1 } from '@/components/CalcolatoreForm';
 import { CalcolatoreFormStep2 } from '@/components/CalcolatoreFormStep2';
 import { RisultatiCalcolatore } from '@/components/RisultatiCalcolatore';
 import { SociAmministratoriPanel } from '@/components/SociAmministratoriPanel';
+import { DomesticiPanel } from '@/components/DomesticiPanel';
 import { AvvisoDatiCcnl } from '@/components/AvvisoDatiCcnl';
 import { listCcnlUi } from '@/lib/ccnl';
 import type { CalcolatoreOutput, ContributoContrattuale } from '@/types';
@@ -14,7 +15,7 @@ const CCNL_UI = listCcnlUi();
 
 interface Step1Data {
   ccnlId: string; livello: string; ral: number;
-  tipoContratto: 'tempo_indeterminato'|'tempo_determinato'|'somministrazione'|'apprendistato';
+  tipoContratto: 'tempo_indeterminato'|'tempo_determinato';
   oreLavoro: number;
   mensilita: number;
   retribuzionePersonalizzata?: number;
@@ -31,6 +32,7 @@ interface Step1Data {
 interface Step2Data {
   numeroDipendenti: number; regione: string; codiceInail: string;
   anzianitaAnni: number; agevolazioniSelezionate: string[];
+  quotaNonGodute?: number;
   includiAssistenzaSanitaria: boolean;
   includiPrevidenzaComplementare?: boolean;
   includiCassaColf?: boolean;
@@ -41,9 +43,11 @@ interface Step2Data {
 export function CalcolatorePageClient() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const tab = searchParams.get('tab') === 'soci' ? 'soci' : 'dipendenti';
-  const vaiA = (next: 'dipendenti' | 'soci') => {
-    router.replace(next === 'soci' ? '/calcolatore?tab=soci' : '/calcolatore', { scroll: false });
+  const tabParam = searchParams.get('tab');
+  const tab: 'dipendenti' | 'domestici' | 'soci' =
+    tabParam === 'soci' ? 'soci' : tabParam === 'domestici' ? 'domestici' : 'dipendenti';
+  const vaiA = (next: 'dipendenti' | 'domestici' | 'soci') => {
+    router.replace(next === 'dipendenti' ? '/calcolatore' : `/calcolatore?tab=${next}`, { scroll: false });
   };
 
   const [step, setStep] = useState<1 | 2 | 'risultati'>(1);
@@ -115,7 +119,8 @@ export function CalcolatorePageClient() {
           maxWidth: '1400px', margin: '0 auto',
           padding: '0 32px',
           display: 'flex', alignItems: 'center', gap: '8px',
-          height: '44px',
+          minHeight: '44px',
+          flexWrap: 'wrap',
         }}>
           <button
             type="button"
@@ -123,6 +128,13 @@ export function CalcolatorePageClient() {
             onClick={() => vaiA('dipendenti')}
           >
             Dipendenti
+          </button>
+          <button
+            type="button"
+            className={`modulo-tab${tab === 'domestici' ? ' active' : ''}`}
+            onClick={() => vaiA('domestici')}
+          >
+            Collaboratori familiari / domestici
           </button>
           <button
             type="button"
@@ -185,6 +197,18 @@ export function CalcolatorePageClient() {
             fonte={metaCcnl.fonte}
             validitaAl={metaCcnl.validitaAl}
           />
+        </div>
+      )}
+
+      {tab === 'domestici' && (
+        <div className="print-unlock" style={{
+          flex: 1,
+          maxWidth: '1400px', margin: '0 auto',
+          width: '100%',
+          padding: '24px 32px',
+          overflowY: 'auto',
+        }}>
+          <DomesticiPanel />
         </div>
       )}
 

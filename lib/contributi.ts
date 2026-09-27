@@ -177,6 +177,7 @@ export function calcolaScattiAnzianita(
   anzianitaAnni: number,
   config: ScattiAnzianita,
   ralEffettiva?: number,
+  importoPerScattoLivello?: number | null,
 ): number {
   const periodicitaAnni = config.periodicitaMesi / 12;
   const numScatti = Math.min(
@@ -187,8 +188,9 @@ export function calcolaScattiAnzianita(
     // Scatto percentuale: ogni scatto aggiunge percentualeScatto × RAL (es. 4% domestici)
     return numScatti * config.percentualeScatto * ralEffettiva;
   }
-  if (config.importoPerScattoEuro == null) return 0;
-  return numScatti * config.importoPerScattoEuro * 12; // costo annuo
+  const importo = importoPerScattoLivello ?? config.importoPerScattoEuro;
+  if (importo == null) return 0;
+  return numScatti * importo * 12; // costo annuo
 }
 
 // Tipo interno per la struttura domestici in aliquote-inps.json
@@ -219,13 +221,16 @@ export function calcolaInpsDomestici(
   oreLavoro: number,
   convivente: boolean = false,
   tipoContratto: 'tempo_indeterminato' | 'tempo_determinato' = 'tempo_indeterminato',
+  retribuzioneOrariaEsplicita?: number,
 ): { inpsDatore: number; inpsDipendente: number; fasciaNome: string; quotaDatorePerOra: number } {
   const data = ALIQUOTE_INPS;
   const raw = (data.settoriContributivi as unknown as Record<string, DomesticiSettoreRaw>)['domestici'];
   const fasce = raw.tabellaFasce2026;
 
   const oreAnnue = oreLavoro * 52;
-  const retribuzioneOraria = oreAnnue > 0 ? ralAnnua / oreAnnue : 0;
+  const retribuzioneOraria = retribuzioneOrariaEsplicita != null && retribuzioneOrariaEsplicita > 0
+    ? retribuzioneOrariaEsplicita
+    : (oreAnnue > 0 ? ralAnnua / oreAnnue : 0);
 
   let fascia: FasciaDomestici;
   let fasciaNome: string;

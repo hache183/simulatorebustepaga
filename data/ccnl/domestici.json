@@ -5,6 +5,7 @@
   "updatedAt": "2026-04-21T00:00:00Z",
   "mensilita": 13,
   "retribuzioneOraria": true,
+  "coefficienteOreMese": 4.33,
   "contributiContrattuali": {
     "azienda": {
       "cassaColf": {

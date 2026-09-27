@@ -5,6 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useState, useEffect } from 'react';
 import type { LivelloCcnl, ContributoContrattuale } from '@/types';
+import { pagaMensileBase } from '@/lib/ccnl';
 
 const CCNL_DISPONIBILI = [
   { id: 'acconciatura_estetica', nome: 'Acconciatura ed Estetica' },
@@ -23,8 +24,6 @@ const CCNL_DISPONIBILI = [
   { id: 'comunicazione_grafica_editoria', nome: 'Comunicazione — Grafica ed editoria (G029)' },
   { id: 'cooperative_sociali', nome: 'Cooperative Sociali (Legacoop-Agci-Confcooperative)' },
   { id: 'credito',             nome: 'Credito — Banche (ABI)' },
-  { id: 'domestici_conviventi', nome: 'Domestici — Collaboratori Familiari Conviventi' },
-  { id: 'domestici_non_conviventi', nome: 'Domestici — Collaboratori Familiari Non Conviventi' },
   { id: 'edilizia_industria',  nome: 'Edilizia — Industria' },
   { id: 'edilizia_artigianato', nome: 'Edilizia — Artigianato' },
   { id: 'farmacie_private',    nome: 'Farmacie — Aziende Private Urbane' },
@@ -103,11 +102,12 @@ export function CalcolatoreFormStep1({ onNext }: Props) {
   const ralWatch = watch('ral');
   const isDomesticiCcnl = ['domestici', 'domestici_conviventi', 'domestici_non_conviventi'].includes(ccnlSelezionato ?? '');
   const livelloData = livelli.find(l => l.codice === livelloSelezionato);
+  const pagaMensile = livelloData && !isDomesticiCcnl ? pagaMensileBase(livelloData) : 0;
   // Per i domestici minimoTabellare è €/ora → RAL = tariffa × ore/sett × 52
   const ralTabellare = livelloData
     ? isDomesticiCcnl
       ? livelloData.minimoTabellare * (oreLavoro || 20) * 52
-      : livelloData.minimoTabellare * ccnlMensilita
+      : pagaMensile * ccnlMensilita
     : 0;
 
   useEffect(() => {
@@ -139,7 +139,7 @@ export function CalcolatoreFormStep1({ onNext }: Props) {
   // Precompile RAL when livello changes (standard CCNL — no oreRatio in form, engine adjusts)
   useEffect(() => {
     if (!isDomesticiCcnl && livelloData && !retribPersonalizzataAttiva) {
-      setValue('ral', Math.round(livelloData.minimoTabellare * ccnlMensilita * 100) / 100);
+      setValue('ral', Math.round(pagaMensileBase(livelloData) * ccnlMensilita * 100) / 100);
     }
   }, [livelloSelezionato, retribPersonalizzataAttiva, ccnlMensilita, isDomesticiCcnl]);
 
@@ -226,7 +226,7 @@ export function CalcolatoreFormStep1({ onNext }: Props) {
           {livelli.map(l => {
             const ralAnnua = isDomesticiCcnl
               ? l.minimoTabellare * (oreLavoro || 20) * 52
-              : l.minimoTabellare * ccnlMensilita;
+              : pagaMensileBase(l) * ccnlMensilita;
             const unitLabel = isDomesticiCcnl ? '/ora' : '/mese';
             return (
               <option key={l.codice} value={l.codice}>
@@ -471,42 +471,6 @@ export function CalcolatoreFormStep1({ onNext }: Props) {
           </p>
         )}
       </div>
-      )}
-
-      {/* Toggle convivente — solo per voce legacy "domestici" */}
-      {ccnlSelezionato === 'domestici' && (
-        <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <button type="button"
-              onClick={() => setValue('convivente', !watch('convivente'))}
-              style={{
-                width: '40px', height: '22px', borderRadius: '11px', border: 'none', cursor: 'pointer',
-                background: watch('convivente') ? 'var(--color-accent)' : 'var(--color-bg-elevated)',
-                position: 'relative', transition: 'background 0.2s ease',
-                outline: `1px solid ${watch('convivente') ? 'var(--color-accent)' : 'var(--color-border)'}`,
-                flexShrink: 0,
-              }}>
-              <div style={{
-                width: '16px', height: '16px', borderRadius: '50%', background: 'white',
-                position: 'absolute', top: '3px',
-                left: watch('convivente') ? '21px' : '3px',
-                transition: 'left 0.2s ease',
-              }} />
-            </button>
-            <label style={{ fontSize: '13px', fontWeight: 500, color: 'var(--color-text-secondary)', cursor: 'pointer' }}
-              onClick={() => setValue('convivente', !watch('convivente'))}>
-              Lavoratore convivente (con vitto e alloggio)
-            </label>
-          </div>
-          {watch('convivente') && (
-            <p style={{ marginTop: '8px', fontSize: '11px', color: 'var(--color-text-muted)', lineHeight: '1.5',
-              padding: '6px 8px', borderRadius: '4px', background: 'var(--color-bg-elevated)',
-              border: '1px solid var(--color-border)' }}>
-              Convivente → fascia INPS ridotta (€1,24/h datore — Tabella B Circ. n. 9/2026).
-              Il vitto e l&apos;alloggio hanno valore in natura escluso dalla retribuzione imponibile.
-            </p>
-          )}
-        </div>
       )}
 
       {/* Mensilità */}

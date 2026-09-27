@@ -1,42 +1,24 @@
 'use client';
 
-import { useMemo, useState, type CSSProperties, type ReactNode } from 'react';
+import { useEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from 'react';
+import { cercaVeicoli, type CatalogoAci, type VeicoloAci } from '@/lib/aci';
 import {
   calcolaSoci,
   defaultStateSoci,
-  type AliquotaSociId,
-  type RegimeContributivoSoci,
   type SociState,
-  type TipoContrattoIrpef,
 } from '@/lib/societari';
 
-const REGIMI: { value: RegimeContributivoSoci; label: string; spiegazione: string }[] = [
-  {
-    value: 'ritenuta_unica',
-    label: 'Ritenuta unica sul percipiente',
-    spiegazione:
-      'L\'intera aliquota selezionata è trattenuta al socio o amministratore. '
-      + 'Il costo per la società è il solo compenso lordo, più eventuali rimborsi. '
-      + 'È l\'unico regime compatibile con la ritenuta ridotta 8%.',
-  },
-  {
-    value: 'riparto_gs',
-    label: 'Gestione separata — riparto 2/3 – 1/3',
-    spiegazione:
-      'Trattamento ordinario dell\'amministratore (Circ. INPS 8/2026): due terzi del '
-      + 'contributo restano a carico della società e un terzo è trattenuto al percipiente. '
-      + 'L\'aliquota discende dall\'esistenza di altra copertura INPS, non dalla scelta manuale.',
-  },
-];
+const BANNER_ACI =
+  'Tariffa = colonna Costo km 15.000 km, tabelle ACI 2026, GU 297/2025 SO 40. Non è il fringe benefit.';
 
-const ALIQUOTE_UI: { value: AliquotaSociId; label: string }[] = [
-  { value: 'p35_03', label: '35,03% — aliquota intera ordinaria' },
-  { value: 'p8', label: '8% — ridotta unica INPS fino al 31/12/2026' },
-  { value: 'p24', label: '24% — ridotta (altra copertura INPS)' },
-];
+const NOTA_OVERRIDE =
+  'modello non in tabella ACI 2026 — inserire il costo km dalla GU';
 
 const eur = (n: number) =>
   new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR', minimumFractionDigits: 2 }).format(n);
+
+const eurKm = (n: number) =>
+  `${new Intl.NumberFormat('it-IT', { minimumFractionDigits: 4, maximumFractionDigits: 4 }).format(n)} €/km`;
 
 const labelStyle: CSSProperties = {
   display: 'block',
@@ -52,16 +34,20 @@ const inputStyle: CSSProperties = {
 };
 
 function NumInput({
-  value, onChange, step = '0.01',
-}: { value: number; onChange: (n: number) => void; step?: string }) {
+  value, onChange, step = '0.01', readOnly = false,
+}: { value: number; onChange?: (n: number) => void; step?: string; readOnly?: boolean }) {
   return (
     <input
       type="number"
       min={0}
       step={step}
+      readOnly={readOnly}
       value={Number.isFinite(value) ? value : 0}
-      onChange={e => onChange(Number(e.target.value))}
-      style={inputStyle}
+      onChange={e => onChange?.(Number(e.target.value))}
+      style={{
+        ...inputStyle,
+        background: readOnly ? 'var(--color-bg-elevated)' : undefined,
+      }}
     />
   );
 }
@@ -91,21 +77,53 @@ function Row({ k, v, sub, strong }: { k: string; v: string; sub?: boolean; stron
   );
 }
 
+function sezioneVeicolo(v: VeicoloAci): string {
+  const stato = v.inProduzione ? 'in produzione' : 'fuori produzione';
+  return `${v.alimentazione} · ${stato}`;
+}
+
 export function SociAmministratoriPanel() {
   const [stato, setStato] = useState<SociState>(defaultStateSoci);
+  const [catalogo, setCatalogo] = useState<VeicoloAci[] | null>(null);
+  const [query, setQuery] = useState('');
+  const [aperto, setAperto] = useState(false);
+  const [veicolo, setVeicolo] = useState<VeicoloAci | null>(null);
+  const [overrideManuale, setOverrideManuale] = useState(false);
+  const boxRef = useRef<HTMLDivElement>(null);
+
   const set = <K extends keyof SociState>(k: K, v: SociState[K]) =>
     setStato(s => ({ ...s, [k]: v }));
 
-  const out = useMemo(() => calcolaSoci(stato), [stato]);
+  useEffect(() => {
+    let attivo = true;
+    void import('@/data/aci-2026.json').then(mod => {
+      const data = mod.default as CatalogoAci;
+      if (attivo) setCatalogo(data.veicoli);
+    });
+    return () => { attivo = false; };
+  }, []);
 
+  useEffect(() => {
+    const chiudi = (e: MouseEvent) => {
+      if (!boxRef.current?.contains(e.target as Node)) setAperto(false);
+    };
+    document.addEventListener('mousedown', chiudi);
+    return () => document.removeEventListener('mousedown', chiudi);
+  }, []);
+
+  const out = useMemo(() => calcolaSoci(stato), [stato]);
   const conCompenso = stato.modalita === 'con_compenso';
-  const pct = (out.aliquotaInpsApplicata * 100).toFixed(2);
+  const pct = (out.aliquotaInpsApplicata * 100).toLocaleString('it-IT', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+
+  const trovati = useMemo(
+    () => (catalogo && !overrideManuale ? cercaVeicoli(catalogo, query, 41) : []),
+    [catalogo, query, overrideManuale],
+  );
+  const visibili = trovati.slice(0, 40);
   const fisc = out.dettaglioFiscale;
-  const isRipartoGs = stato.regimeContributivo === 'riparto_gs';
-  // Nel riparto GS l'aliquota la decide la copertura INPS, non il menu a tendina.
-  const mostraWarning24 = conCompenso && !isRipartoGs
-    && stato.aliquotaInpsId === 'p24' && !stato.haAltraCoperturaInps;
-  const regimeAttivo = REGIMI.find(r => r.value === stato.regimeContributivo) ?? REGIMI[0];
 
   const pair = (a: ReactNode, b: ReactNode) => (
     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>{a}{b}</div>
@@ -116,6 +134,14 @@ export function SociAmministratoriPanel() {
     border: '1px solid var(--color-border)',
     borderRadius: '10px',
     padding: '20px',
+  };
+
+  const scegli = (v: VeicoloAci) => {
+    setVeicolo(v);
+    setOverrideManuale(false);
+    set('costoKm', v.costoKm);
+    setQuery(`${v.marca} ${v.modello}`);
+    setAperto(false);
   };
 
   return (
@@ -142,9 +168,9 @@ export function SociAmministratoriPanel() {
             Soci e Amministratori
           </h2>
           <p style={{ fontSize: '12px', color: 'var(--color-text-muted)', lineHeight: 1.55 }}>
-            Simulazione isolata dal calcolo dipendenti: compenso annuo oppure solo rimborsi.
-            Il trattamento contributivo dipende dal regime selezionato e cambia il costo per
-            la società. Addizionali regionali e comunali come media, uguale al motore dipendenti.
+            Compenso annuo in Gestione separata, oppure solo trasferte e rimborso km.
+            Il contributo si ripartisce per due terzi sulla società e un terzo sul percipiente.
+            Addizionali regionali e comunali come media, uguale al motore dipendenti.
           </p>
         </div>
 
@@ -189,78 +215,21 @@ export function SociAmministratoriPanel() {
             </div>
 
             <div>
-              <label style={labelStyle}>Regime contributivo del compenso</label>
-              <select
-                value={stato.regimeContributivo}
-                onChange={e => set('regimeContributivo', e.target.value as RegimeContributivoSoci)}
-                style={{ width: '100%', padding: '11px 14px' }}
-              >
-                {REGIMI.map(r => (
-                  <option key={r.value} value={r.value}>{r.label}</option>
-                ))}
-              </select>
-              <p style={{ fontSize: '11px', color: 'var(--color-text-muted)', lineHeight: 1.55, marginTop: '6px' }}>
-                {regimeAttivo.spiegazione}
+              <p style={{ ...labelStyle, marginBottom: '8px' }}>Gestione separata</p>
+              <label style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', fontSize: '13px', color: 'var(--color-text-secondary)', lineHeight: 1.45 }}>
+                <input
+                  type="checkbox"
+                  checked={stato.haAltraCoperturaInps}
+                  onChange={e => set('haAltraCoperturaInps', e.target.checked)}
+                  style={{ marginTop: '2px' }}
+                />
+                Iscritto ad altra gestione obbligatoria o pensionato (aliquota 24%)
+              </label>
+              <p style={{ fontSize: '11px', color: 'var(--color-text-muted)', lineHeight: 1.55, marginTop: '8px' }}>
+                Aliquota applicata: <strong>{stato.haAltraCoperturaInps ? '24%' : '35,03%'}</strong>
+                {' '}— Circ. INPS 8/2026. Senza la spunta resta l&apos;aliquota intera.
+                Riparto 2/3 società e 1/3 percipiente.
               </p>
-            </div>
-
-            {!isRipartoGs && (
-              <div>
-                <label style={labelStyle}>Tipologia aliquota INPS sul lordo</label>
-                <select
-                  value={stato.aliquotaInpsId}
-                  onChange={e => set('aliquotaInpsId', e.target.value as AliquotaSociId)}
-                  style={{ width: '100%', padding: '11px 14px' }}
-                >
-                  {ALIQUOTE_UI.map(a => (
-                    <option key={a.value} value={a.value}>{a.label}</option>
-                  ))}
-                </select>
-              </div>
-            )}
-
-            <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: 'var(--color-text-secondary)' }}>
-              <input
-                type="checkbox"
-                checked={stato.haAltraCoperturaInps}
-                onChange={e => set('haAltraCoperturaInps', e.target.checked)}
-              />
-              Il soggetto ha altra copertura INPS
-            </label>
-
-            {isRipartoGs && (
-              <p style={{ fontSize: '11px', color: 'var(--color-text-muted)', lineHeight: 1.55, marginTop: '-8px' }}>
-                Aliquota applicata: <strong>{pct}%</strong> — {stato.haAltraCoperturaInps
-                  ? 'IVS ridotta per iscritti ad altra gestione obbligatoria o pensionati.'
-                  : 'aliquota intera Gestione separata, in assenza di altra copertura.'}
-              </p>
-            )}
-
-            {mostraWarning24 && (
-              <div style={{
-                background: 'var(--color-amber-dim)',
-                border: '1px solid var(--color-amber)',
-                borderLeft: '3px solid var(--color-amber)',
-                borderRadius: '8px',
-                padding: '12px 14px',
-                fontSize: '12px',
-                color: 'var(--color-amber)',
-                lineHeight: 1.5,
-              }}>
-                Aliquota 24% selezionata senza conferma di altra copertura INPS — verificare con il consulente.
-              </div>
-            )}
-
-            <div>
-              <label style={labelStyle}>Tipo contratto ai fini IRPEF</label>
-              <select
-                value={stato.tipoContrattoIrpef}
-                onChange={e => set('tipoContrattoIrpef', e.target.value as TipoContrattoIrpef)}
-                style={{ width: '100%', padding: '11px 14px' }}
-              >
-                <option value="tempo_indeterminato">Tempo indeterminato</option>
-                <option value="tempo_determinato">Tempo determinato</option>
-              </select>
             </div>
           </>
         )}
@@ -270,44 +239,194 @@ export function SociAmministratoriPanel() {
             fontSize: '11px', fontWeight: 600, color: 'var(--color-text-secondary)',
             letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: '14px',
           }}>
-            Trasferte, rimborso km e buoni pasto
+            Trasferte
           </p>
+          <p style={{ fontSize: '12px', color: 'var(--color-text-secondary)', marginBottom: '8px' }}>Nazionale</p>
           {pair(
             <div>
-              <label style={labelStyle}>Giorni trasferte</label>
-              <NumInput value={stato.giorniTrasferte} onChange={n => set('giorniTrasferte', n)} step="1" />
+              <label style={labelStyle}>Giorni</label>
+              <NumInput value={stato.giorniTrasfertaNazionale} onChange={n => set('giorniTrasfertaNazionale', n)} step="1" />
             </div>,
             <div>
               <label style={labelStyle}>€ / giorno</label>
               <NumInput
-                value={stato.importoTrasfertaGiornaliera}
-                onChange={n => set('importoTrasfertaGiornaliera', n)}
+                value={stato.importoTrasfertaNazionale}
+                onChange={n => set('importoTrasfertaNazionale', n)}
               />
             </div>,
           )}
           <div style={{ height: '12px' }} />
+          <p style={{ fontSize: '12px', color: 'var(--color-text-secondary)', marginBottom: '8px' }}>Estera</p>
           {pair(
             <div>
-              <label style={labelStyle}>Km auto personale</label>
-              <NumInput value={stato.kmAutoPersonale} onChange={n => set('kmAutoPersonale', n)} step="1" />
+              <label style={labelStyle}>Giorni</label>
+              <NumInput value={stato.giorniTrasfertaEstera} onChange={n => set('giorniTrasfertaEstera', n)} step="1" />
             </div>,
             <div>
-              <label style={labelStyle}>€ / km</label>
-              <NumInput value={stato.tariffaKmEur} onChange={n => set('tariffaKmEur', n)} step="0.0001" />
-            </div>,
-          )}
-          <div style={{ height: '12px' }} />
-          {pair(
-            <div>
-              <label style={labelStyle}>Giorni buoni pasto</label>
-              <NumInput value={stato.giorniBuoniPasto} onChange={n => set('giorniBuoniPasto', n)} step="1" />
-            </div>,
-            <div>
-              <label style={labelStyle}>€ / buono</label>
+              <label style={labelStyle}>€ / giorno</label>
               <NumInput
-                value={stato.importoBuonoPastoGiornaliero}
-                onChange={n => set('importoBuonoPastoGiornaliero', n)}
+                value={stato.importoTrasfertaEstera}
+                onChange={n => set('importoTrasfertaEstera', n)}
               />
+            </div>,
+          )}
+        </div>
+
+        <div style={{ borderTop: '1px solid var(--color-border)', paddingTop: '16px' }}>
+          <p style={{
+            fontSize: '11px', fontWeight: 600, color: 'var(--color-text-secondary)',
+            letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: '14px',
+          }}>
+            Rimborso chilometrico
+          </p>
+          <div style={{
+            background: 'var(--color-amber-dim)',
+            border: '1px solid var(--color-amber)',
+            borderRadius: '8px',
+            padding: '10px 12px',
+            fontSize: '12px',
+            color: 'var(--color-text-secondary)',
+            lineHeight: 1.5,
+            marginBottom: '12px',
+          }}>
+            {BANNER_ACI}
+          </div>
+
+          <label style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', fontSize: '13px', color: 'var(--color-text-secondary)', marginBottom: '12px' }}>
+            <input
+              type="checkbox"
+              checked={overrideManuale}
+              onChange={e => {
+                const on = e.target.checked;
+                setOverrideManuale(on);
+                setAperto(false);
+                if (on) {
+                  setVeicolo(null);
+                  setQuery('');
+                  set('costoKm', 0);
+                } else if (veicolo) {
+                  set('costoKm', veicolo.costoKm);
+                } else {
+                  set('costoKm', 0);
+                }
+              }}
+            />
+            Il modello non è in tabella ACI 2026
+          </label>
+
+          {overrideManuale ? (
+            <div>
+              <label style={labelStyle}>€ / km (dalla Gazzetta Ufficiale)</label>
+              <NumInput value={stato.costoKm} onChange={n => set('costoKm', n)} step="0.0001" />
+              <p style={{ fontSize: '11px', color: 'var(--color-text-muted)', marginTop: '6px', lineHeight: 1.45 }}>
+                {NOTA_OVERRIDE}
+              </p>
+            </div>
+          ) : (
+            <div ref={boxRef} style={{ position: 'relative' }}>
+              <label style={labelStyle} htmlFor="aci-cerca">Marca e modello</label>
+              <input
+                id="aci-cerca"
+                role="combobox"
+                aria-expanded={aperto}
+                aria-autocomplete="list"
+                autoComplete="off"
+                placeholder={catalogo ? 'Cerca, es. panda o golf 1.5' : 'Caricamento tabelle ACI…'}
+                disabled={!catalogo}
+                value={query}
+                onChange={e => {
+                  setQuery(e.target.value);
+                  setAperto(true);
+                  if (veicolo && e.target.value !== `${veicolo.marca} ${veicolo.modello}`) {
+                    setVeicolo(null);
+                    set('costoKm', 0);
+                  }
+                }}
+                onFocus={() => setAperto(true)}
+                style={inputStyle}
+              />
+              {aperto && catalogo && query.trim().length >= 2 && (
+                <ul
+                  role="listbox"
+                  style={{
+                    position: 'absolute',
+                    zIndex: 5,
+                    left: 0,
+                    right: 0,
+                    top: '100%',
+                    margin: '4px 0 0',
+                    padding: '4px',
+                    listStyle: 'none',
+                    maxHeight: '280px',
+                    overflowY: 'auto',
+                    background: 'var(--color-bg-surface)',
+                    border: '1px solid var(--color-border)',
+                    borderRadius: '8px',
+                    boxShadow: '0 8px 24px rgba(0,0,0,0.12)',
+                  }}
+                >
+                  {visibili.length === 0 && (
+                    <li style={{ padding: '10px 12px', fontSize: '12px', color: 'var(--color-text-muted)' }}>
+                      Nessun modello. Usa l&apos;inserimento manuale del costo km.
+                    </li>
+                  )}
+                  {visibili.map(v => (
+                    <li key={`${v.idModello}-${v.alimentazione}-${v.inProduzione}`}>
+                      <button
+                        type="button"
+                        role="option"
+                        onMouseDown={e => e.preventDefault()}
+                        onClick={() => scegli(v)}
+                        style={{
+                          display: 'block',
+                          width: '100%',
+                          textAlign: 'left',
+                          border: 'none',
+                          background: 'transparent',
+                          cursor: 'pointer',
+                          padding: '8px 10px',
+                          borderRadius: '6px',
+                          color: 'var(--color-text-primary)',
+                        }}
+                      >
+                        <span style={{ fontSize: '13px' }}>{v.marca} {v.modello}</span>
+                        <span style={{ display: 'block', fontSize: '11px', color: 'var(--color-text-muted)', marginTop: '2px' }}>
+                          {sezioneVeicolo(v)} · {eurKm(v.costoKm)}
+                        </span>
+                      </button>
+                    </li>
+                  ))}
+                  {trovati.length > 40 && (
+                    <li style={{ padding: '8px 10px', fontSize: '11px', color: 'var(--color-text-muted)' }}>
+                      Mostrati i primi 40. Affina la ricerca.
+                    </li>
+                  )}
+                </ul>
+              )}
+              {veicolo && (
+                <p style={{ fontSize: '12px', color: 'var(--color-text-secondary)', marginTop: '8px', lineHeight: 1.45 }}>
+                  {veicolo.marca} {veicolo.modello}
+                  <br />
+                  <span style={{ color: 'var(--color-text-muted)' }}>{sezioneVeicolo(veicolo)}</span>
+                </p>
+              )}
+            </div>
+          )}
+
+          <div style={{ height: '12px' }} />
+          {overrideManuale ? (
+            <div>
+              <label style={labelStyle}>Km nel periodo</label>
+              <NumInput value={stato.km} onChange={n => set('km', n)} step="1" />
+            </div>
+          ) : pair(
+            <div>
+              <label style={labelStyle}>Km nel periodo</label>
+              <NumInput value={stato.km} onChange={n => set('km', n)} step="1" />
+            </div>,
+            <div>
+              <label style={labelStyle}>€ / km ACI</label>
+              <NumInput value={veicolo?.costoKm ?? 0} step="0.0001" readOnly />
             </div>,
           )}
         </div>
@@ -331,18 +450,16 @@ export function SociAmministratoriPanel() {
               {eur(out.costoTotaleDatore)}
             </p>
             <p style={{ fontSize: '10px', color: 'var(--color-text-muted)', marginTop: '6px', lineHeight: 1.4 }}>
-              {isRipartoGs
-                ? 'Include la quota 2/3 Gestione separata'
-                : 'Non include contributi a carico della società'}
+              {conCompenso ? 'Include la quota 2/3 Gestione separata' : 'Solo trasferte e rimborso km'}
             </p>
           </div>
         </div>
 
         <div style={{ ...boxStyle, padding: '24px' }}>
           <p style={{ fontSize: '12px', color: 'var(--color-text-muted)', lineHeight: 1.55, marginBottom: '14px' }}>
-            {isRipartoGs
-              ? 'Costo totale datore = compenso lordo annuo + quota contributiva 2/3 a carico della società + somma trasferte, rimborso km e buoni pasto indennizzati dall\u2019azienda.'
-              : 'Costo totale datore = compenso lordo annuo (se presente) + somma trasferte, rimborso km e buoni pasto indennizzati dall\u2019azienda. Nessun contributo resta a carico della società.'}
+            {conCompenso
+              ? 'Costo totale datore = compenso lordo annuo + quota contributiva 2/3 a carico della società + trasferte e rimborso km. Trasferte e km sono fuori dalla base Gestione separata e IRPEF.'
+              : 'Senza compenso il lordo è zero e non c’è Gestione separata. Restano trasferte e rimborso km, che entrano nel liquido e nel costo datore.'}
           </p>
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
             <tbody>
@@ -357,22 +474,12 @@ export function SociAmministratoriPanel() {
                   )}
                 </>
               )}
-              <Row
-                k={out.ripartoGs ? 'Ritenuta INPS al percipiente' : `Ritenute INPS (${pct}%)`}
-                v={`− ${eur(out.ritenutaInps)}`}
-              />
-              <Row sub k="IRPEF lorda (scaglioni dipendenti)" v={eur(fisc?.irpefLorda ?? 0)} />
-              <Row
-                sub
-                k={isRipartoGs ? 'Detrazioni art.13 + bonus cuneo (non applicate)' : 'Detrazioni art.13 + bonus cuneo'}
-                v={eur((fisc?.detrazioneLavoroDip ?? 0) + (fisc?.bonusCuneoFiscale ?? 0))}
-              />
-              <Row sub k="IRPEF netta stimata" v={eur(fisc?.irpefNetta ?? 0)} />
+              <Row sub k="IRPEF stimata (senza bonus cuneo)" v={eur(fisc?.irpefLorda ?? 0)} />
               <Row sub k="Addizionali regionali e comunali (media)" v={eur((fisc?.addizionaleRegionale ?? 0) + (fisc?.addizionaleComunale ?? 0))} />
-              <Row k="Netto da compenso (dopo INPS e imposte)" v={eur(out.nettoDaCompenso)} strong />
-              <Row k="Trasferte" v={eur(out.trasferte)} />
+              <Row k="Netto da compenso (dopo quota percipiente e imposte)" v={eur(out.nettoDaCompenso)} strong />
+              <Row k="Trasferte nazionali" v={eur(out.trasferteNazionali)} />
+              <Row k="Trasferte estere" v={eur(out.trasferteEstere)} />
               <Row k="Rimborso km" v={eur(out.rimborsoKm)} />
-              <Row k="Buoni pasto" v={eur(out.buoniPasto)} />
               <Row k="Totale rimborsi / indennità" v={eur(out.sommaRimborsiIndennita)} strong />
             </tbody>
           </table>
