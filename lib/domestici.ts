@@ -89,12 +89,12 @@ export function calcolaRetribuzioneDomestici(p: ParametriRetribuzioneDomestici):
 
   if (p.oreSettimanali < ORE_PIENO_CONVIVENTE) {
     if (p.oreSettimanali < ORE_MIN_PART_TIME_CONVIVENTE) {
-      throw new Error('Part-time convivente: ore settimanali da 30 a meno di 54 (tab. B)');
+      throw new Error('Part-time convivente: ore settimanali da 30 a meno di 54');
     }
-    const riga = (conv.tabellaB ?? []).find(r => r.codice === p.livello);
-    if (!riga) throw new Error(ERRORE_PART_TIME_LIVELLO);
-    const oreBase = riga.oreBase ?? ORE_MIN_PART_TIME_CONVIVENTE;
-    const mensile = round2(riga.mensile30h * (p.oreSettimanali / oreBase));
+    const rigaA = (conv.tabellaA ?? []).find(r => r.codice === p.livello);
+    if (!rigaA) throw new Error(`Livello '${p.livello}' non trovato in tab. A conviventi`);
+    const baseMensile = rigaA.mensile + (rigaA.indennitaFunzione > 0 ? rigaA.indennitaFunzione : 0);
+    const mensile = round2(baseMensile * (p.oreSettimanali / ORE_PIENO_CONVIVENTE));
     const pagaOraria = p.oreSettimanali > 0 ? mensile / (p.oreSettimanali * coefficiente) : 0;
     const ral = round2(mensile * mensilita);
     return {
@@ -104,7 +104,7 @@ export function calcolaRetribuzioneDomestici(p: ParametriRetribuzioneDomestici):
       oreSettimanali: p.oreSettimanali,
       mensilita,
       ral,
-      descrizioneRal: `Retribuzione annua tab. B (${riga.mensile30h.toFixed(2)}€ per ${oreBase}h × ${p.oreSettimanali}/${oreBase} × ${mensilita} mensilità)`,
+      descrizioneRal: `Retribuzione annua tab. A part-time (${baseMensile.toFixed(2)}€ × ${p.oreSettimanali}/${ORE_PIENO_CONVIVENTE} × ${mensilita} mensilità)`,
     };
   }
 

@@ -1,6 +1,4 @@
-// Stesse medie usate dal netto dipendenti (`lib/irpef-lavoro-dipendente.ts`).
-const ADDIZIONALE_REGIONALE = 0.0173;
-const ADDIZIONALE_COMUNALE = 0.008;
+import { calcolaNettoDaRedditoLordoEinpsPerc } from '@/lib/irpef-lavoro-dipendente';
 
 function round2(n: number): number {
   return Math.round(n * 100) / 100;
@@ -31,7 +29,7 @@ interface GestioneSeparataData {
 /* ------------------------------------------------------------------ *
  * Simulazione soci/amministratori. Unico regime: Gestione separata    *
  * con riparto 2/3 società – 1/3 percipiente (Circ. INPS 8/2026).      *
- * IRPEF dagli scaglioni di questo modulo, senza bonus cuneo.          *
+ * IRPEF come lavoro dipendente (detrazioni art. 13), senza bonus cuneo. *
  * ------------------------------------------------------------------ */
 
 export const IMPORTO_TRASFERTA_NAZIONALE_DEFAULT = 46.48;
@@ -150,21 +148,21 @@ export function calcolaSoci(o: SociState): SociResult {
     iscrittoAltraGestione: o.haAltraCoperturaInps,
   });
 
-  const imposte = round2(gs.irpefLorda + gs.addizionaleRegionale + gs.addizionaleComunale);
+  const imposte = round2(gs.irpefNetta);
   const fisc: DettaglioFiscaleSoci = {
     ralLorda: round2(lordo),
     inpsDipendente: gs.gsPercipiente,
     imponibileIrpef: round2(lordo - gs.gsPercipiente),
     irpefLorda: gs.irpefLorda,
-    detrazioneLavoroDip: 0,
-    bonusCuneoFiscale: 0,
-    irpefNetta: gs.irpefLorda,
+    detrazioneLavoroDip: gs.detrazioneLavoroDip,
+    bonusCuneoFiscale: gs.bonusCuneoFiscale,
+    irpefNetta: gs.irpefNettaIrpef,
     addizionaleRegionale: gs.addizionaleRegionale,
     addizionaleComunale: gs.addizionaleComunale,
     nettoAnnuo: gs.nettoAmministratore,
     disclaimer:
       'Gestione separata: 2/3 a carico della società e 1/3 trattenuto al percipiente (Circ. INPS 8/2026). '
-      + 'IRPEF stimata sugli scaglioni, senza bonus cuneo. '
+      + 'IRPEF con detrazioni lavoro dipendente (art. 13), senza bonus cuneo. '
       + 'Addizionali come media usata anche per i dipendenti. Trasferte e km sono fuori dalla base contributiva.',
   };
 
@@ -211,6 +209,9 @@ export interface SocietariOutput {
   gsCommittente: number;
   gsPercipiente: number;
   irpefLorda: number;
+  detrazioneLavoroDip: number;
+  bonusCuneoFiscale: number;
+  irpefNettaIrpef: number;
   addizionaleRegionale: number;
   addizionaleComunale: number;
   irpefNetta: number;
@@ -219,12 +220,6 @@ export interface SocietariOutput {
   irapNota: string;
   fonte: string;
   calcolatoIl: string;
-}
-
-function irpefLordaScaglioni(imponibile: number): number {
-  if (imponibile <= 28_000) return imponibile * 0.23;
-  if (imponibile <= 50_000) return 6_440 + (imponibile - 28_000) * 0.33;
-  return 13_700 + (imponibile - 50_000) * 0.43;
 }
 
 export function calcolaCompensiSocietari(input: SocietariInput): SocietariOutput {
@@ -236,6 +231,9 @@ export function calcolaCompensiSocietari(input: SocietariInput): SocietariOutput
     gsCommittente: 0,
     gsPercipiente: 0,
     irpefLorda: 0,
+    detrazioneLavoroDip: 0,
+    bonusCuneoFiscale: 0,
+    irpefNettaIrpef: 0,
     addizionaleRegionale: 0,
     addizionaleComunale: 0,
     irpefNetta: 0,
@@ -270,10 +268,16 @@ export function calcolaCompensiSocietari(input: SocietariInput): SocietariOutput
   const gsCommittente = gsTotale * cfg.quotaCommittente;
   const gsPercipiente = gsTotale * cfg.quotaPercipiente;
 
-  const imponibileIrpef = Math.max(0, lordo - gsPercipiente);
-  const irpefLorda = irpefLordaScaglioni(imponibileIrpef);
-  const addReg = imponibileIrpef * ADDIZIONALE_REGIONALE;
-  const addCom = imponibileIrpef * ADDIZIONALE_COMUNALE;
+  const aliquotaInpsDip = lordo > 0 ? gsPercipiente / lordo : 0;
+  const fisc = calcolaNettoDaRedditoLordoEinpsPerc(
+    lordo,
+    aliquotaInpsDip,
+    'tempo_indeterminato',
+    12,
+    'Stima IRPEF amministratore con detrazioni lavoro dipendente.',
+    false,
+  );
+  const imposteTotali = round2(fisc.irpefNetta + fisc.addizionaleRegionale + fisc.addizionaleComunale);
 
   return {
     ...base,
@@ -281,12 +285,15 @@ export function calcolaCompensiSocietari(input: SocietariInput): SocietariOutput
     gsTotale: round2(gsTotale),
     gsCommittente: round2(gsCommittente),
     gsPercipiente: round2(gsPercipiente),
-    irpefLorda: round2(irpefLorda),
-    addizionaleRegionale: round2(addReg),
-    addizionaleComunale: round2(addCom),
-    irpefNetta: round2(irpefLorda + addReg + addCom),
+    irpefLorda: round2(fisc.irpefLorda),
+    detrazioneLavoroDip: round2(fisc.detrazioneLavoroDip),
+    bonusCuneoFiscale: round2(fisc.bonusCuneoFiscale),
+    irpefNettaIrpef: round2(fisc.irpefNetta),
+    addizionaleRegionale: round2(fisc.addizionaleRegionale),
+    addizionaleComunale: round2(fisc.addizionaleComunale),
+    irpefNetta: imposteTotali,
     costoSocieta: round2(lordo + gsCommittente),
-    nettoAmministratore: round2(lordo - gsPercipiente - irpefLorda - addReg - addCom),
+    nettoAmministratore: round2(fisc.nettoAnnuo),
     irapNota: 'IRAP: non calcolata (incidenza del compenso sulla base IRAP dipende dal tipo di società).',
   };
 }

@@ -26,6 +26,7 @@ export interface CalcolatoreInput {
   includiCassaColf?: boolean;         // domestici: quota oraria Cassacolf (default off)
   sostituzioneTitolare?: boolean;     // conviventi: apre la tabella C (oraria CS/DS)
   oreNonGodute?: number;              // domestici non conviventi: ferie/permessi/festività non godute
+  oreAssenzeAnnue?: number;           // dipendenti: ore ferie+permessi+festività se assenti nel JSON CCNL
 }
 
 // ─── OUTPUT CALCOLATORE ───────────────────────────────────────────────────
@@ -127,6 +128,30 @@ export interface LivelloCcnl {
   terzoElemento?: number;
   elementoDistinto?: number;
   retribuzioneMensileTabella?: number;
+  /** Tab edili: false = quadro/impiegato, non selezionabile */
+  categoriaOperaio?: boolean;
+}
+
+export interface MotoreEdiliCassaConfig {
+  percentSuF: number;
+  coeffOrario1: number;
+  coeffFisso2: number;
+  coeffFisso3: number;
+  percentSuF2: number;
+}
+
+export interface MotoreEdiliConfig {
+  cassaProvincia: string;
+  oreMensiliPieno: number;
+  oreSettimanaliPieno: number;
+  gratificaFeriePercent: number;
+  permessiFestivitaPercent: number;
+  indennitaMensaGiorno: number;
+  indennitaTrasportoGiorno: number;
+  giorniIndennitaMese: number;
+  inpsDatorePercent: number;
+  inpsDipendentePercent: number;
+  cassaEdile: MotoreEdiliCassaConfig;
 }
 
 export interface ScattiAnzianita {
@@ -157,6 +182,7 @@ export interface CcnlData {
   tabellaA?: { codice: string; descrizione?: string; mensile: number; indennitaFunzione: number }[];
   tabellaB?: { codice: string; descrizione?: string; mensile30h: number; oreBase?: number }[];
   tabellaC?: { codice: string; descrizione?: string; orario: number }[];
+  motoreEdili?: MotoreEdiliConfig;
 }
 
 export interface AgevolazioneInps {

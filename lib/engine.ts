@@ -11,6 +11,7 @@ import {
 import type { CalcolatoreInput, CalcolatoreOutput, DettaglioCosto, ContributoContrattuale } from '@/types';
 import { calcolaNettoDaRedditoLordoEinpsPerc, DISCLAIMER_NETTO_DIPENDENTE } from '@/lib/irpef-lavoro-dipendente';
 import { calcolaRetribuzioneDomestici, round2 } from '@/lib/domestici';
+import { calcolaEdili, isEdiliCcnlId } from '@/lib/edili';
 
 // Schema di validazione Zod — rifiuta qualsiasi input malformato prima del calcolo
 const InputSchema = z.object({
@@ -25,7 +26,7 @@ const InputSchema = z.object({
   ),
   oreLavoro: z.number().min(1).max(80),
   mensilita: z.number()
-    .min(13, 'Il minimo di legge è 13 mensilità (tredicesima obbligatoria per R.D.L. 1525/1937)')
+    .min(12, 'Minimo 12 mensilità')
     .max(16, 'Massimo 16 mensilità — oltre non esiste nel diritto del lavoro italiano'),
   anzianitaAnni: z.number().min(0).max(50),
   numeroDipendenti: z.number().min(1),
@@ -42,6 +43,7 @@ const InputSchema = z.object({
   includiCassaColf: z.boolean().optional(),
   sostituzioneTitolare: z.boolean().optional(),
   oreNonGodute: z.number().min(0).max(2000).optional(),
+  oreAssenzeAnnue: z.number().min(0).max(2000).optional(),
 });
 
 // Soglie sanity check volutamente ampie per evitare falsi positivi:
@@ -97,7 +99,10 @@ async function calculateCostoDomestico(input: CalcolatoreInput): Promise<Calcola
   const oreDaJson = (ccnlNonConv.oreFerieAnnue ?? 0)
     + (ccnlNonConv.orePermessiAnnue ?? 0)
     + (ccnlNonConv.oreFestivitaAnnue ?? 0);
-  const oreNonGodute = haOreJson ? oreDaJson : (input.oreNonGodute ?? 0);
+  const ratioOre = Math.min(1, oreSettimanali / 40);
+  const oreNonGodute = haOreJson
+    ? round2(oreDaJson * ratioOre)
+    : (input.oreNonGodute ?? 0);
   const quotaNonGodute = input.quotaNonGodute ?? 1;
   const costoFerie = ret.regime === 'non_convivente'
     ? round2(oreNonGodute * ret.pagaOraria * quotaNonGodute)
@@ -248,8 +253,15 @@ export async function calculateCosto(rawInput: unknown): Promise<CalcolatoreOutp
     return calculateCostoDomestico(input);
   }
 
+  if (isEdiliCcnlId(input.ccnlId)) {
+    return calcolaEdili(input);
+  }
+
   // ─── BRANCH STANDARD ───────────────────────────────────────────────────
   // Validazione aggiuntiva per CCNL standard
+  if (input.mensilita < 13) {
+    throw new Error('Il minimo di legge è 13 mensilità (tredicesima obbligatoria per R.D.L. 1525/1937)');
+  }
   if (input.oreLavoro > 48) throw new Error('Ore settimanali massime: 48');
   if (input.ral < 10_000) throw new Error('RAL minima: 10.000 euro');
   if (input.codiceInail.length < 4) throw new Error('Seleziona la categoria INAIL');
@@ -345,7 +357,9 @@ export async function calculateCosto(rawInput: unknown): Promise<CalcolatoreOutp
   const oreAnnue = input.oreLavoro * 52;
   const sanitari = contributiEntries.filter(([, c]) => c.tipo === 'sanitario');
   const bilaterali = contributiEntries.filter(([, c]) => c.tipo === 'bilaterale');
-  const altriContributi = contributiEntries.filter(([, c]) => c.tipo !== 'sanitario' && c.tipo !== 'bilaterale');
+  const altriContributi = contributiEntries.filter(
+    ([, c]) => c.tipo !== 'sanitario' && c.tipo !== 'bilaterale' && c.tipo !== 'previdenziale',
+  );
   const importoSanitario = input.includiAssistenzaSanitaria
     ? sanitari.reduce((sum, [, c]) => sum + importoContributoContrattuale(c, ralEffettiva, oreAnnue), 0)
     : 0;
@@ -365,11 +379,15 @@ export async function calculateCosto(rawInput: unknown): Promise<CalcolatoreOutp
   const oreFerie = ccnl.oreFerieAnnue ?? 0;
   const orePermessi = ccnl.orePermessiAnnue ?? 0;
   const oreFestivita = ccnl.oreFestivitaAnnue ?? 0;
-  const oreNonGodute = oreFerie + orePermessi + oreFestivita;
+  let oreNonGodute = oreFerie + orePermessi + oreFestivita;
+  if (oreNonGodute <= 0 && (input.oreAssenzeAnnue ?? 0) > 0) {
+    oreNonGodute = input.oreAssenzeAnnue!;
+  }
   const quotaNonGodute = input.quotaNonGodute ?? 1;
   const pagaOrariaNonGodute = (ralEffettiva / mensilita) / 173;
   const costoFerieNonGodute = oreNonGodute * pagaOrariaNonGodute * quotaNonGodute;
-  const oreAssenzeNote = ccnl.oreFerieAnnue != null || ccnl.orePermessiAnnue != null || ccnl.oreFestivitaAnnue != null;
+  const oreAssenzeNote = ccnl.oreFerieAnnue != null || ccnl.orePermessiAnnue != null || ccnl.oreFestivitaAnnue != null
+    || (input.oreAssenzeAnnue ?? 0) > 0;
 
   // 11. Totale
   // NOTA: la RAL include già tutte le mensilità (es. 1541.77 × 14 = 21584.78),
@@ -536,14 +554,14 @@ export async function calculateCosto(rawInput: unknown): Promise<CalcolatoreOutp
       : []),
   ];
 
-  // 13. Netto dipendente: IRPEF lorda − detrazioni art. 13 − addizionali. Senza bonus cuneo.
+  // 13. Netto dipendente: IRPEF lorda − detrazioni art. 13 − bonus cuneo − addizionali.
   const nettoDipendente = calcolaNettoDaRedditoLordoEinpsPerc(
     ralEffettiva,
     aliquotaDipendenteDefault,
     input.tipoContratto,
     mensilita,
     DISCLAIMER_NETTO_DIPENDENTE,
-    false,
+    true,
   );
 
   return {

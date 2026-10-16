@@ -32,7 +32,7 @@ describe('IRPEF condiviso: parità con netto dipendente engine', () => {
       inputMirrorEngine.tipoContratto,
       inputMirrorEngine.mensilita,
       DISCLAIMER_NETTO_DIPENDENTE,
-      false,
+      true,
     );
     expect(fromLib.nettoAnnuo).toBeCloseTo(result.nettoDipendente.nettoAnnuo, 0);
     expect(fromLib.irpefNetta).toBeCloseTo(result.nettoDipendente.irpefNetta, 0);
@@ -46,6 +46,7 @@ describe('calcolaSoci — Gestione separata', () => {
     expect(o.costoTotaleDatore).toBeCloseTo(14_802.40, 2);
     expect(o.aliquotaInpsApplicata).toBeCloseTo(0.3503, 4);
     expect(o.dettaglioFiscale?.bonusCuneoFiscale).toBe(0);
+    expect(o.dettaglioFiscale?.detrazioneLavoroDip ?? 0).toBeGreaterThan(0);
   });
 
   test('12.000 € al 24%: quota società 1.920 e costo 13.920', () => {

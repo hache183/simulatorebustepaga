@@ -21,6 +21,7 @@ const Step2Schema = z.object({
   includiAssistenzaSanitaria: z.boolean(),
   aliquotaInps: z.number().min(0).max(50),
   quotaNonGodutePercento: z.number().min(0).max(100),
+  oreAssenzeAnnue: z.number().min(0).max(2000).optional(),
 });
 
 type Step2Data = z.infer<typeof Step2Schema>;
@@ -34,6 +35,7 @@ export interface Step2SubmitData {
   includiAssistenzaSanitaria: boolean;
   aliquotaInps: number;
   quotaNonGodute: number;
+  oreAssenzeAnnue?: number;
 }
 
 interface VoceInail { codice: string; settore: string; tassoPerMille: number; }
@@ -49,6 +51,7 @@ interface Props {
 export function CalcolatoreFormStep2({ onSubmit, onBack, isLoading, contributiCcnl, ccnlId }: Props) {
   const isDomestici = ['domestici', 'domestici_conviventi', 'domestici_non_conviventi'].includes(ccnlId ?? '');
   const [voceInail, setVociInail] = useState<VoceInail[]>([]);
+  const [oreAssenzeCcnl, setOreAssenzeCcnl] = useState<number | null>(null);
 
   const fondoSanitarioNome = contributiCcnl
     ? Object.values(contributiCcnl).find(c => c.tipo === 'sanitario')?.descrizione
@@ -64,6 +67,21 @@ export function CalcolatoreFormStep2({ onSubmit, onBack, isLoading, contributiCc
     fetch('/api/inail/voci').then(r => r.json()).then(d => setVociInail((d as { voci?: VoceInail[] }).voci ?? []));
   }, []);
 
+  useEffect(() => {
+    if (!ccnlId || isDomestici) {
+      setOreAssenzeCcnl(null);
+      return;
+    }
+    fetch(`/api/ccnl/${ccnlId}/livelli`)
+      .then(r => r.json())
+      .then(d => {
+        const resp = d as { oreFerieAnnue?: number | null; orePermessiAnnue?: number | null; oreFestivitaAnnue?: number | null };
+        const tot = (resp.oreFerieAnnue ?? 0) + (resp.orePermessiAnnue ?? 0) + (resp.oreFestivitaAnnue ?? 0);
+        setOreAssenzeCcnl(tot > 0 ? tot : null);
+      })
+      .catch(() => setOreAssenzeCcnl(null));
+  }, [ccnlId, isDomestici]);
+
   return (
     <form onSubmit={handleSubmit((data) => {
       onSubmit({
@@ -74,6 +92,7 @@ export function CalcolatoreFormStep2({ onSubmit, onBack, isLoading, contributiCc
         agevolazioniSelezionate: [] as string[],
         quotaNonGodute: isDomestici ? 0 : data.quotaNonGodutePercento / 100,
         includiAssistenzaSanitaria: isDomestici ? false : data.includiAssistenzaSanitaria,
+        oreAssenzeAnnue: isDomestici || oreAssenzeCcnl != null ? undefined : data.oreAssenzeAnnue,
       });
     })} style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
 
@@ -241,7 +260,7 @@ export function CalcolatoreFormStep2({ onSubmit, onBack, isLoading, contributiCc
           </label>
         </div>
         <p style={{ fontSize: '11px', color: 'var(--color-text-muted)', lineHeight: '1.5' }}>
-          Se attivo, include nel costo i contributi al fondo sanitario previsto dal CCNL
+          Se attivo, include nel costo l&apos;importo del fondo sanitario definito nel JSON del CCNL selezionato
           {fondoSanitarioNome ? ` (${fondoSanitarioNome})` : ' (es. Fondo Est, Metasalute, San.Arti)'}.
           Disattivalo se l&apos;azienda non aderisce al fondo sanitario.
         </p>
@@ -269,8 +288,29 @@ export function CalcolatoreFormStep2({ onSubmit, onBack, isLoading, contributiCc
           }}>%</span>
         </div>
         <p style={{ marginTop: '6px', fontSize: '11px', color: 'var(--color-text-muted)', lineHeight: '1.5' }}>
-          100% è il costo massimo (nessuna ora goduta). 0% azzera questa voce.
+          {oreAssenzeCcnl != null
+            ? `Ore da CCNL: ${oreAssenzeCcnl} h annue (ferie + permessi + festività). 100% = costo massimo se non godute.`
+            : 'Ore assenze non definite per questo CCNL: inserisci il totale annuo qui sotto o lascia 0.'}
         </p>
+        {oreAssenzeCcnl == null && (
+          <div style={{ marginTop: '10px' }}>
+            <label htmlFor="oreAssenzeAnnue" style={{ display: 'block', fontSize: '12px', fontWeight: 500,
+              color: 'var(--color-text-secondary)', marginBottom: '6px' }}>
+              Ore ferie + permessi + festività (annue)
+            </label>
+            <input id="oreAssenzeAnnue" type="number" min="0" max="2000" step="1"
+              {...register('oreAssenzeAnnue', { valueAsNumber: true })}
+              placeholder="es. 261"
+              style={{
+                width: '100%', padding: '11px 14px',
+                background: 'var(--color-bg-input)', color: 'var(--color-text-primary)',
+                border: '1px solid var(--color-border)',
+                borderRadius: '6px', fontSize: '13px',
+                fontFamily: "'DM Mono', monospace",
+              }}
+            />
+          </div>
+        )}
         {errors.quotaNonGodutePercento && <p style={{ marginTop: '4px', fontSize: '11px', color: 'var(--color-red)' }}>{errors.quotaNonGodutePercento.message}</p>}
       </div>}
 

@@ -131,6 +131,22 @@
       "note": "Costruzioni edili — gestione terziario"
     },
     {
+      "codice": "3601",
+      "settore": "Edilizia — costruzioni generali (voce 36xx)",
+      "gestione": "industria",
+      "tassoPerMille": 110.00,
+      "rangeOscillazione": { "min": 77.00, "max": 110.00 },
+      "note": "Tariffa edile gruppo 36 — tab operai edili (allineata a 3110 industria)"
+    },
+    {
+      "codice": "3610",
+      "settore": "Edilizia civile e industriale (voce 36xx)",
+      "gestione": "industria",
+      "tassoPerMille": 110.00,
+      "rangeOscillazione": { "min": 77.00, "max": 110.00 },
+      "note": "Voce 36xx per simulatore dipendenti edili — verificare codice effettivo in posizione assicurativa"
+    },
+    {
       "codice": "4100",
       "settore": "Energia, telecomunicazioni, gas, acqua",
       "gestione": "terziario",

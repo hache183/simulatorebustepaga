@@ -4,6 +4,9 @@
   "fonte": "PDF LAVORO/H052.pdf — ALBERGHI CONFCOMMERCIO, 01/06/2025–30/04/2026. Non è FIPE pubblici esercizi. Colonna TOTALE WK.",
   "updatedAt": "2026-09-11T00:00:00Z",
   "mensilita": 14,
+  "oreFerieAnnue": 173,
+  "orePermessiAnnue": 56,
+  "oreFestivitaAnnue": 32,
   "contributiContrattuali": {
     "azienda": {
       "fast": {

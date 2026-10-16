@@ -474,7 +474,9 @@ export function SociAmministratoriPanel() {
                   )}
                 </>
               )}
-              <Row sub k="IRPEF stimata (senza bonus cuneo)" v={eur(fisc?.irpefLorda ?? 0)} />
+              <Row sub k="IRPEF lorda" v={eur(fisc?.irpefLorda ?? 0)} />
+              <Row sub k="Detrazioni lavoro dipendente (art. 13)" v={eur(fisc?.detrazioneLavoroDip ?? 0)} />
+              <Row sub k="IRPEF netta (senza bonus cuneo)" v={eur(fisc?.irpefNetta ?? 0)} />
               <Row sub k="Addizionali regionali e comunali (media)" v={eur((fisc?.addizionaleRegionale ?? 0) + (fisc?.addizionaleComunale ?? 0))} />
               <Row k="Netto da compenso (dopo quota percipiente e imposte)" v={eur(out.nettoDaCompenso)} strong />
               <Row k="Trasferte nazionali" v={eur(out.trasferteNazionali)} />

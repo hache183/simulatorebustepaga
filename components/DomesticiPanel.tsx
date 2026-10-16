@@ -2,7 +2,6 @@
 
 import { useEffect, useMemo, useState, type CSSProperties } from 'react';
 import { RisultatiCalcolatore } from '@/components/RisultatiCalcolatore';
-import { AvvisoDatiCcnl } from '@/components/AvvisoDatiCcnl';
 import type { CalcolatoreOutput, LivelloCcnl } from '@/types';
 
 const COEFF_DEFAULT = 4.33;
@@ -54,7 +53,6 @@ export function DomesticiPanel() {
   const [ore, setOre] = useState(25);
   const [oreNonGodute, setOreNonGodute] = useState(0);
   const [cassaColf, setCassaColf] = useState(false);
-  const [tipoContratto, setTipoContratto] = useState<'tempo_indeterminato' | 'tempo_determinato'>('tempo_indeterminato');
   const [anzianitaAnni, setAnzianitaAnni] = useState(0);
   const [nonConv, setNonConv] = useState<CcnlResp | null>(null);
   const [conv, setConv] = useState<CcnlResp | null>(null);
@@ -110,12 +108,12 @@ export function DomesticiPanel() {
     }
     if (ramo === 'part_time') {
       if (ore < 30 || ore >= ORE_PIENO) {
-        return { mensile: 0, errore: 'Part-time convivente: ore settimanali da 30 a meno di 54 (tab. B)' };
+        return { mensile: 0, errore: 'Part-time convivente: ore settimanali da 30 a meno di 54' };
       }
-      const riga = conv?.tabellaB?.find(r => r.codice === livello);
-      if (!riga) return { mensile: 0, errore: ERRORE_PART_TIME };
-      const oreBase = riga.oreBase ?? 30;
-      return { mensile: round2(riga.mensile30h * (ore / oreBase)), errore: null };
+      const riga = conv?.tabellaA?.find(r => r.codice === livello);
+      if (!riga) return { mensile: 0, errore: 'Livello non trovato in tab. A' };
+      const base = riga.mensile + (riga.indennitaFunzione > 0 ? riga.indennitaFunzione : 0);
+      return { mensile: round2(base * (ore / ORE_PIENO)), errore: null };
     }
     const riga = conv?.tabellaA?.find(r => r.codice === livello);
     if (!riga) return { mensile: 0, errore: null };
@@ -152,8 +150,7 @@ export function DomesticiPanel() {
       if (!(conv?.tabellaA ?? []).some(r => r.codice === livello)) setLivello('A');
     } else {
       setOre(30);
-      const ammessi = conv?.tabellaB ?? [];
-      if (!ammessi.some(r => r.codice === livello)) setLivello(ammessi[0]?.codice ?? 'C');
+      if (!(conv?.tabellaA ?? []).some(r => r.codice === livello)) setLivello('A');
     }
   };
 
@@ -194,7 +191,7 @@ export function DomesticiPanel() {
           ccnlId: modo === 'convivente' ? 'domestici_conviventi' : 'domestici',
           livello,
           ral,
-          tipoContratto,
+          tipoContratto: 'tempo_indeterminato',
           oreLavoro: modo === 'convivente' && !sostituzione && ramo === 'pieno' ? ORE_PIENO : ore,
           oreSettimanali: modo === 'convivente' && !sostituzione && ramo === 'pieno' ? ORE_PIENO : ore,
           mensilita,
@@ -223,7 +220,6 @@ export function DomesticiPanel() {
     }
   };
 
-  const fonte = modo === 'convivente' ? conv : nonConv;
   const oreBloccate = modo === 'convivente' && !sostituzione && ramo === 'pieno';
 
   return (
@@ -272,7 +268,7 @@ export function DomesticiPanel() {
               {!sostituzione && (
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px' }}>
                   <button type="button" onClick={() => scegliRamo('pieno')} style={pill(ramo === 'pieno')}>Tempo pieno 54 h (tab. A)</button>
-                  <button type="button" onClick={() => scegliRamo('part_time')} style={pill(ramo === 'part_time')}>Part-time (tab. B)</button>
+                  <button type="button" onClick={() => scegliRamo('part_time')} style={pill(ramo === 'part_time')}>Part-time (tab. A proporzionale)</button>
                 </div>
               )}
               {ramo === 'part_time' && !sostituzione && (
@@ -328,11 +324,6 @@ export function DomesticiPanel() {
               onChange={e => setAnzianitaAnni(Number(e.target.value))} style={inputStyle} />
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px' }}>
-            <button type="button" onClick={() => setTipoContratto('tempo_indeterminato')} style={pill(tipoContratto === 'tempo_indeterminato')}>Tempo indeterminato</button>
-            <button type="button" onClick={() => setTipoContratto('tempo_determinato')} style={pill(tipoContratto === 'tempo_determinato')}>Tempo determinato</button>
-          </div>
-
           <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: 'var(--color-text-secondary)' }}>
             <input type="checkbox" checked={cassaColf} onChange={e => setCassaColf(e.target.checked)} />
             Includi CassaColf (0,03 €/ora)
@@ -356,11 +347,6 @@ export function DomesticiPanel() {
       )}
 
       <div>
-        {fonte && (
-          <div style={{ marginBottom: '16px' }}>
-            <AvvisoDatiCcnl nomeCcnl={fonte.nome} fonte={fonte.fonte} validitaAl={fonte.validitaAl} />
-          </div>
-        )}
         {!risultato && !loading && (
           <div style={{
             background: 'var(--color-bg-surface)', border: '1px solid var(--color-border)',

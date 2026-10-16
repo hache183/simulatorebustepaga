@@ -115,10 +115,10 @@ test('INAIL: codice 0723 (studi professionali) deve dare tasso 5.64 per mille', 
 
 // ─── VALIDAZIONE MENSILITÀ ────────────────────────────────────────────────
 
-test('mensilita 12: deve lanciare ZodError — sotto il minimo di legge', async () => {
+test('mensilita 12: rifiutata nel branch dipendenti standard', async () => {
   await expect(
     calculateCosto({ ...inputBase, mensilita: 12 })
-  ).rejects.toThrow(ZodError);
+  ).rejects.toThrow(/13 mensilità/);
 });
 
 test('mensilita 17: deve lanciare ZodError — sopra il massimo ammesso', async () => {
@@ -284,16 +284,16 @@ test('nettoDipendente: part-time 20h netto annuo deve essere circa metà del ful
   expect(rapporto).toBeLessThan(0.65);
 });
 
-test('nettoDipendente: nessun bonus cuneo fiscale', async () => {
+test('nettoDipendente: bonus cuneo fiscale applicato', async () => {
   const result = await calculateCosto({
     ...inputBase,
     livello: '4',
     ral: 21_584.78,
     mensilita: 14,
   });
-  expect(result.nettoDipendente.bonusCuneoFiscale).toBe(0);
+  expect(result.nettoDipendente.bonusCuneoFiscale).toBeGreaterThan(0);
   expect(result.nettoDipendente.irpefNetta).toBeCloseTo(
-    Math.max(0, result.nettoDipendente.irpefLorda - result.nettoDipendente.detrazioneLavoroDip),
+    Math.max(0, result.nettoDipendente.irpefLorda - result.nettoDipendente.detrazioneLavoroDip - result.nettoDipendente.bonusCuneoFiscale),
     2,
   );
 });

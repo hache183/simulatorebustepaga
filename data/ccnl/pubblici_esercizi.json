@@ -4,6 +4,9 @@
   "fonte": "PDF LAVORO/pubblici-esercizi-ristorazione-e-turismo-pubblici-.pdf — Wolters Kluwer One Lavoro, stampa 20/04/2026. FIPE, minimi 01/06/2025–31/05/2026. Colonna TOTALE = minimo + contingenza (comprensiva EDR confederale) + indennità di funzione. Orario pieno 40h (divisore 172).",
   "updatedAt": "2026-09-11T00:00:00Z",
   "mensilita": 14,
+  "oreFerieAnnue": 173,
+  "orePermessiAnnue": 56,
+  "oreFestivitaAnnue": 32,
   "contributiContrattuali": {
     "azienda": {
       "fast": {

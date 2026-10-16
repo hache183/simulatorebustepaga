@@ -4,6 +4,10 @@
   "fonte": "Rinnovo CCNL 19/11/2024 (vigenza 01/01/2023 – 31/12/2026). Tabelle dal 01/03/2026. Fonte: kitech.it CodiceCateg=420",
   "updatedAt": "2026-03-01T00:00:00Z",
   "mensilita": 13,
+  "validitaAl": "2026-10-31",
+  "oreFerieAnnue": 173,
+  "orePermessiAnnue": 64,
+  "oreFestivitaAnnue": 32,
   "contributiContrattuali": {
     "azienda": {
       "sanarti": {

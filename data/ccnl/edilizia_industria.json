@@ -4,18 +4,37 @@
   "fonte": "LAVORO/F012.pdf — qualificativi settore EDILIZIA - COOPERATIVE vigenti dal 01/07/2023 (colonna TOTALE). ATTENZIONE: PDF copre EDILIZIA COOPERATIVE, non il CCNL ANCE Industria; verificare applicabilità al caso d'uso.",
   "updatedAt": "2026-05-01T00:00:00Z",
   "mensilita": 13,
+  "motoreEdili": {
+    "cassaProvincia": "Taranto",
+    "oreMensiliPieno": 173,
+    "oreSettimanaliPieno": 40,
+    "gratificaFeriePercent": 0.185,
+    "permessiFestivitaPercent": 0.0495,
+    "indennitaMensaGiorno": 3.6,
+    "indennitaTrasportoGiorno": 2.4,
+    "giorniIndennitaMese": 22,
+    "inpsDatorePercent": 0.3508,
+    "inpsDipendentePercent": 0.0919,
+    "cassaEdile": {
+      "percentSuF": 0.07826,
+      "coeffOrario1": 0.0767,
+      "coeffFisso2": 2,
+      "coeffFisso3": 1.5,
+      "percentSuF2": 0.0035
+    }
+  },
   "contributiContrattuali": {
     "azienda": {}
   },
   "livelli": [
-    { "codice": "8", "descrizione": "Livello 8", "qualifica": "Quadro", "minimoTabellare": 3237.78, "moltiplicatore": 1.00 },
-    { "codice": "7", "descrizione": "Livello 7", "qualifica": "Livello 7", "minimoTabellare": 2824.71, "moltiplicatore": 0.87 },
-    { "codice": "6", "descrizione": "Livello 6", "qualifica": "Livello 6", "minimoTabellare": 2350.65, "moltiplicatore": 0.73 },
-    { "codice": "5", "descrizione": "Livello 5", "qualifica": "Livello 5", "minimoTabellare": 2072.30, "moltiplicatore": 0.64 },
-    { "codice": "4", "descrizione": "Livello 4", "qualifica": "Livello 4", "minimoTabellare": 1908.32, "moltiplicatore": 0.59 },
-    { "codice": "3", "descrizione": "Livello 3", "qualifica": "Livello 3", "minimoTabellare": 1810.08, "moltiplicatore": 0.56 },
-    { "codice": "2", "descrizione": "Livello 2", "qualifica": "Livello 2", "minimoTabellare": 1676.47, "moltiplicatore": 0.52 },
-    { "codice": "1", "descrizione": "Livello 1", "qualifica": "Livello 1", "minimoTabellare": 1529.14, "moltiplicatore": 0.47 }
+    { "codice": "8", "descrizione": "Livello 8", "qualifica": "Quadro", "minimoTabellare": 3237.78, "moltiplicatore": 1.00, "categoriaOperaio": false },
+    { "codice": "7", "descrizione": "Livello 7", "qualifica": "Livello 7", "minimoTabellare": 2824.71, "moltiplicatore": 0.87, "categoriaOperaio": true },
+    { "codice": "6", "descrizione": "Livello 6", "qualifica": "Livello 6", "minimoTabellare": 2350.65, "moltiplicatore": 0.73, "categoriaOperaio": true },
+    { "codice": "5", "descrizione": "Livello 5", "qualifica": "Livello 5", "minimoTabellare": 2072.30, "moltiplicatore": 0.64, "categoriaOperaio": true },
+    { "codice": "4", "descrizione": "Livello 4", "qualifica": "Livello 4", "minimoTabellare": 1908.32, "moltiplicatore": 0.59, "categoriaOperaio": true },
+    { "codice": "3", "descrizione": "Livello 3", "qualifica": "Livello 3", "minimoTabellare": 1810.08, "moltiplicatore": 0.56, "categoriaOperaio": true },
+    { "codice": "2", "descrizione": "Livello 2", "qualifica": "Livello 2", "minimoTabellare": 1676.47, "moltiplicatore": 0.52, "categoriaOperaio": true },
+    { "codice": "1", "descrizione": "Livello 1", "qualifica": "Livello 1", "minimoTabellare": 1529.14, "moltiplicatore": 0.47, "categoriaOperaio": true }
   ],
   "scattiAnzianita": {
     "periodicitaMesi": 24,

@@ -5,53 +5,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useState, useEffect } from 'react';
 import type { LivelloCcnl, ContributoContrattuale } from '@/types';
-import { pagaMensileBase } from '@/lib/ccnl';
+import { pagaMensileBase, listCcnlUi } from '@/lib/ccnl';
 
-const CCNL_DISPONIBILI = [
-  { id: 'acconciatura_estetica', nome: 'Acconciatura ed Estetica' },
-  { id: 'agricoltura_impiegati', nome: 'Agricoltura — Impiegati' },
-  { id: 'agricoltura_operai', nome: 'Agricoltura — Operai' },
-  { id: 'alimentari_industria', nome: 'Alimentari — Industria' },
-  { id: 'alimentari_artigianato', nome: 'Alimentari — Artigianato' },
-  { id: 'amministratori_condominio', nome: 'Amministratori di condominio (UNAI — H404)' },
-  { id: 'assicurazioni',       nome: 'Assicurazioni (ANAPA)' },
-  { id: 'autorimesse',         nome: 'Autorimesse e Noleggio Automezzi' },
-  { id: 'autoscuole',          nome: 'Autoscuole' },
-  { id: 'case_di_cura_private', nome: 'Case di Cura Private (non medico)' },
-  { id: 'calzature',           nome: 'Calzature — Industria' },
-  { id: 'chimica',             nome: 'Chimica Farmaceutica e Plastica' },
-  { id: 'commercio',           nome: 'Commercio (Terziario Servizi)' },
-  { id: 'comunicazione_grafica_editoria', nome: 'Comunicazione — Grafica ed editoria (G029)' },
-  { id: 'cooperative_sociali', nome: 'Cooperative Sociali (Legacoop-Agci-Confcooperative)' },
-  { id: 'credito',             nome: 'Credito — Banche (ABI)' },
-  { id: 'edilizia_industria',  nome: 'Edilizia — Industria' },
-  { id: 'edilizia_artigianato', nome: 'Edilizia — Artigianato' },
-  { id: 'farmacie_private',    nome: 'Farmacie — Aziende Private Urbane' },
-  { id: 'facility_management', nome: 'Facility Management' },
-  { id: 'gomma_plastica',      nome: 'Gomma e Plastica — Industria' },
-  { id: 'grafica_aziende_industriali', nome: 'Grafica — Carta e piccola industria (G011)' },
-  { id: 'igiene_ambientale_private', nome: 'Igiene Ambientale (Aziende Private)' },
-  { id: 'informatica',         nome: 'Informatica e Servizi Innovativi (ICT - Cifa)' },
-  { id: 'lavanderie_artigiane', nome: 'Lavanderie (Aziende Artigiane)' },
-  { id: 'lavanderie_industriali', nome: 'Lavanderie (Industriali)' },
-  { id: 'legno_arredamento',   nome: 'Legno e Arredamento' },
-  { id: 'metalmeccanici',      nome: 'Metalmeccanici — Industria' },
-  { id: 'multiservizi',        nome: 'Multiservizi — Pulizie e Facility (Ancst)' },
-  { id: 'pubblici_esercizi_turismo', nome: 'Pubblici esercizi e turismo — Confcommercio (H05Y)' },
-  { id: 'sanita_privata_unipresa', nome: 'Sanità Privata (Unipresa)' },
-  { id: 'scuole_private',      nome: 'Scuole e Istituti Privati (Agidae-FISM)' },
-  { id: 'servizi_postali_appalto', nome: 'Servizi Postali in Appalto' },
-  { id: 'studi_professionali', nome: 'Studi Professionali (Confprofessioni)' },
-  { id: 'telecomunicazioni',   nome: 'Telecomunicazioni (Asstel)' },
-  { id: 'tessile',             nome: 'Tessile — Abbigliamento Industria' },
-  { id: 'trasporti',           nome: 'Trasporto Merci e Logistica (Conftrasporto)' },
-  { id: 'vigilanza_privata',   nome: 'Vigilanza Privata — Servizi Fiduciari' },
-].sort((a, b) => a.nome.localeCompare(b.nome, 'it'));
-
-const TIPI_CONTRATTO = [
-  { value: 'tempo_indeterminato', label: 'Tempo indeterminato' },
-  { value: 'tempo_determinato',   label: 'Tempo determinato' },
-] as const;
+const CCNL_DISPONIBILI = listCcnlUi().map(c => ({ id: c.id, nome: c.nome }));
 
 const fmtEur = (n: number) => new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR', minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n);
 
@@ -59,7 +15,6 @@ const Step1Schema = z.object({
   ccnlId: z.string().min(1, 'Seleziona un CCNL'),
   livello: z.string().min(1, 'Seleziona il livello contrattuale'),
   ral: z.number().min(1_000, 'Minimo 1.000 €').max(500_000, 'Massimo 500.000 €'),
-  tipoContratto: z.enum(['tempo_indeterminato', 'tempo_determinato']),
   oreLavoro: z.number().min(1).max(48),
   pagaOraria: z.number().min(0).max(500).optional(),
   oreSettimanali: z.number().int().min(1).max(54).optional(),
@@ -71,7 +26,8 @@ const Step1Schema = z.object({
   convivente: z.boolean().optional(),
 });
 
-type Step1Data = z.infer<typeof Step1Schema>;
+type Step1FormData = z.infer<typeof Step1Schema>;
+export type Step1Data = Step1FormData & { tipoContratto: 'tempo_indeterminato' | 'tempo_determinato' };
 
 interface Props {
   onNext: (data: Step1Data) => void;
@@ -91,9 +47,9 @@ export function CalcolatoreFormStep1({ onNext }: Props) {
     watch,
     setValue,
     formState: { errors },
-  } = useForm<Step1Data>({
+  } = useForm<Step1FormData>({
     resolver: zodResolver(Step1Schema),
-    defaultValues: { oreLavoro: 40, tipoContratto: 'tempo_indeterminato', mensilita: 13, convivente: false, oreSettimanali: 25 },
+    defaultValues: { oreLavoro: 40, mensilita: 13, convivente: false, oreSettimanali: 25 },
   });
 
   const ccnlSelezionato = watch('ccnlId');
@@ -166,7 +122,7 @@ export function CalcolatoreFormStep1({ onNext }: Props) {
       } else if (retribPersonalizzataAttiva) {
         data.retribuzionePersonalizzata = data.ral;
       }
-      onNext(data);
+      onNext({ ...data, tipoContratto: 'tempo_indeterminato' });
     })} style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
 
       {/* Label sezione */}
@@ -406,32 +362,6 @@ export function CalcolatoreFormStep1({ onNext }: Props) {
         )}
       </div>
       )}
-
-      {/* Tipo contratto — per domestico mostra solo tempo indeterminato e determinato */}
-      <div>
-        <label style={{ display: 'block', fontSize: '13px', fontWeight: 500,
-          color: 'var(--color-text-secondary)', marginBottom: '6px' }}>
-          Tipo di contratto
-        </label>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px' }}>
-          {TIPI_CONTRATTO.map(t => {
-            const selected = watch('tipoContratto') === t.value;
-            return (
-              <button key={t.value} type="button"
-                onClick={() => setValue('tipoContratto', t.value)}
-                style={{
-                  padding: '8px 10px', borderRadius: '6px', fontSize: '12px', fontWeight: 500,
-                  cursor: 'pointer', transition: 'all 0.15s ease', textAlign: 'left',
-                  background: selected ? 'var(--color-accent-glow)' : 'var(--color-bg-input)',
-                  border: `1px solid ${selected ? 'var(--color-accent)' : 'var(--color-border)'}`,
-                  color: selected ? 'var(--color-accent-bright)' : 'var(--color-text-secondary)',
-                }}>
-                {t.label}
-              </button>
-            );
-          })}
-        </div>
-      </div>
 
       {/* Ore di lavoro — nascosto per lavoro domestico (usa campo dedicato) */}
       {!isDomestico && (

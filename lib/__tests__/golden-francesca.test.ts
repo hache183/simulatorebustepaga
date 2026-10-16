@@ -142,8 +142,9 @@ describe('GOLDEN DOM 16/09 — tabelle A/B/C e non conviventi', () => {
     expect(result.voci.find(v => v.id === 'ral')!.importoAnnuo / 13).toBeCloseTo(1474.73 + 207.69, 2);
   });
 
-  test('B convivente 30 h: C 814,60 / BS 737,39 / B 702,25', async () => {
-    for (const [livello, mensile] of [['C', 814.60], ['BS', 737.39], ['B', 702.25]] as const) {
+  test('part-time convivente 30 h: tab. A × 30/54', async () => {
+    for (const [livello, baseMensile] of [['C', 1123.63], ['BS', 1053.39], ['B', 983.16]] as const) {
+      const mensile = round2(baseMensile * (30 / 54));
       const result = await calculateCosto({
         ...base,
         ccnlId: 'domestici_conviventi',
@@ -186,15 +187,17 @@ describe('GOLDEN DOM 16/09 — tabelle A/B/C e non conviventi', () => {
     expect(Math.abs(mensile - 1037)).toBeLessThanOrEqual(1.05);
   });
 
-  test('part-time convivente su livello DS è rifiutato', async () => {
-    await expect(calculateCosto({
+  test('part-time convivente 30 h su livello DS: tab. A proporzionale', async () => {
+    const result = await calculateCosto({
       ...base,
       ccnlId: 'domestici_conviventi',
       livello: 'DS',
       oreLavoro: 30,
       oreSettimanali: 30,
       convivente: true,
-    })).rejects.toThrow('part-time convivente ammesso solo C, B, BS (tab. B)');
+    });
+    const mensile = round2((1474.73 + 207.69) * (30 / 54));
+    expect(result.voci.find(v => v.id === 'ral')!.importoAnnuo / 13).toBeCloseTo(mensile, 2);
   });
 });
 
@@ -247,12 +250,12 @@ describe('GOLDEN C1 — Commercio stampa 14/09, RAL 24.944, 14 mensilità', () =
     expect(result.voci.find(v => v.id === 'ente_bilaterale_ebiter')).toBeDefined();
   });
 
-  test('netto senza bonus cuneo e INPS dipendente 9,19%', async () => {
+  test('netto con bonus cuneo e INPS dipendente 9,19%', async () => {
     const result = await calculateCosto(input);
-    expect(result.nettoDipendente.bonusCuneoFiscale).toBe(0);
+    expect(result.nettoDipendente.bonusCuneoFiscale).toBeGreaterThan(0);
     expect(result.nettoDipendente.inpsDipendente).toBeCloseTo(ral * 0.0919, 2);
     expect(result.nettoDipendente.irpefNetta).toBeCloseTo(
-      Math.max(0, result.nettoDipendente.irpefLorda - result.nettoDipendente.detrazioneLavoroDip),
+      Math.max(0, result.nettoDipendente.irpefLorda - result.nettoDipendente.detrazioneLavoroDip - result.nettoDipendente.bonusCuneoFiscale),
       2,
     );
   });
@@ -361,5 +364,7 @@ test('UI elenca tutti i CCNL file-backed tranne duplicati interni', () => {
   expect(ui).toContain('commercio');
   expect(ui).toContain('pubblici_esercizi');
   expect(ui).toContain('metalmeccanici');
-  expect(ui.length).toBe(listCcnlIds().length - 2);
+  expect(ui).not.toContain('agricoltura_impiegati');
+  expect(ui).not.toContain('agricoltura_operai');
+  expect(ui.length).toBe(listCcnlIds().length - 4);
 });

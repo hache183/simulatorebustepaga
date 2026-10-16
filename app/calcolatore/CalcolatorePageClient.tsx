@@ -1,17 +1,14 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { CalcolatoreFormStep1 } from '@/components/CalcolatoreForm';
 import { CalcolatoreFormStep2 } from '@/components/CalcolatoreFormStep2';
 import { RisultatiCalcolatore } from '@/components/RisultatiCalcolatore';
 import { SociAmministratoriPanel } from '@/components/SociAmministratoriPanel';
 import { DomesticiPanel } from '@/components/DomesticiPanel';
-import { AvvisoDatiCcnl } from '@/components/AvvisoDatiCcnl';
-import { listCcnlUi } from '@/lib/ccnl';
+import { EdiliPanel } from '@/components/EdiliPanel';
 import type { CalcolatoreOutput, ContributoContrattuale } from '@/types';
-
-const CCNL_UI = listCcnlUi();
 
 interface Step1Data {
   ccnlId: string; livello: string; ral: number;
@@ -38,15 +35,19 @@ interface Step2Data {
   includiCassaColf?: boolean;
   aliquotaInps: number;
   markupAgenzia?: number;
+  oreAssenzeAnnue?: number;
 }
 
 export function CalcolatorePageClient() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const tabParam = searchParams.get('tab');
-  const tab: 'dipendenti' | 'domestici' | 'soci' =
-    tabParam === 'soci' ? 'soci' : tabParam === 'domestici' ? 'domestici' : 'dipendenti';
-  const vaiA = (next: 'dipendenti' | 'domestici' | 'soci') => {
+  const tab: 'dipendenti' | 'edili' | 'domestici' | 'soci' =
+    tabParam === 'soci' ? 'soci'
+      : tabParam === 'domestici' ? 'domestici'
+        : tabParam === 'edili' ? 'edili'
+          : 'dipendenti';
+  const vaiA = (next: 'dipendenti' | 'edili' | 'domestici' | 'soci') => {
     router.replace(next === 'dipendenti' ? '/calcolatore' : `/calcolatore?tab=${next}`, { scroll: false });
   };
 
@@ -93,19 +94,6 @@ export function CalcolatorePageClient() {
 
   const ricalcola = () => { setStep(1); setRisultato(null); setErrore(null); };
 
-  // Stato della tabella del CCNL scelto. A risultati pronti si usa la fonte
-  // restituita dal motore, che per i domestici conviventi è un file diverso
-  // da quello elencato in UI.
-  const metaCcnl = useMemo(() => {
-    if (!step1Data) return null;
-    const daElenco = CCNL_UI.find(c => c.id === step1Data.ccnlId);
-    return {
-      nome: daElenco?.nome ?? step1Data.ccnlId,
-      fonte: daElenco?.fonte,
-      validitaAl: daElenco?.validitaAl ?? null,
-    };
-  }, [step1Data]);
-
   return (
     <div className="print-unlock" style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
 
@@ -128,6 +116,13 @@ export function CalcolatorePageClient() {
             onClick={() => vaiA('dipendenti')}
           >
             Dipendenti
+          </button>
+          <button
+            type="button"
+            className={`modulo-tab${tab === 'edili' ? ' active' : ''}`}
+            onClick={() => vaiA('edili')}
+          >
+            Dipendenti edili
           </button>
           <button
             type="button"
@@ -185,18 +180,15 @@ export function CalcolatorePageClient() {
         </div>
       </div>
 
-      {/* Stato della tabella CCNL: fuori dai contenitori no-print, così resta
-          nel PDF consegnato al cliente. */}
-      {tab === 'dipendenti' && metaCcnl && step !== 1 && (
-        <div style={{
-          maxWidth: '1400px', margin: '0 auto', width: '100%',
-          padding: '16px 32px 0',
+      {tab === 'edili' && (
+        <div className="print-unlock" style={{
+          flex: 1,
+          maxWidth: '1400px', margin: '0 auto',
+          width: '100%',
+          padding: '24px 32px',
+          overflowY: 'auto',
         }}>
-          <AvvisoDatiCcnl
-            nomeCcnl={metaCcnl.nome}
-            fonte={metaCcnl.fonte}
-            validitaAl={metaCcnl.validitaAl}
-          />
+          <EdiliPanel />
         </div>
       )}
 

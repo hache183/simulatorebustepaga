@@ -4,6 +4,10 @@
   "fonte": "LAVORO/D014.pdf — qualificativi ABBIGLIAMENTO - IND.(APP. ASSUNTI 09/98) vigenti dal 01/01/2026 al 31/12/2026 (colonna TOTALE). ATTENZIONE: PDF copre uno scaglione storico del CCNL Abbigliamento Industria (apprendisti assunti nel 09/1998); contributi SANIMODA/PREVIMODA non citati nel PDF.",
   "updatedAt": "2026-04-21T00:00:00Z",
   "mensilita": 13,
+  "validitaAl": "2026-12-31",
+  "oreFerieAnnue": 173,
+  "orePermessiAnnue": 56,
+  "oreFestivitaAnnue": 32,
   "contributiContrattuali": {
     "azienda": {
       "sanimoda": {

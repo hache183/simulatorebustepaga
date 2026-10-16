@@ -4,17 +4,36 @@
   "fonte": "LAVORO/F015.pdf — qualificativi EDILIZIA - ARTIGIANATO vigenti dal 01/01/2026 al 31/12/2026 (colonna TOTALE)",
   "updatedAt": "2026-05-01T00:00:00Z",
   "mensilita": 13,
+  "motoreEdili": {
+    "cassaProvincia": "Taranto",
+    "oreMensiliPieno": 173,
+    "oreSettimanaliPieno": 40,
+    "gratificaFeriePercent": 0.185,
+    "permessiFestivitaPercent": 0.0495,
+    "indennitaMensaGiorno": 3.6,
+    "indennitaTrasportoGiorno": 2.4,
+    "giorniIndennitaMese": 22,
+    "inpsDatorePercent": 0.3508,
+    "inpsDipendentePercent": 0.0919,
+    "cassaEdile": {
+      "percentSuF": 0.07826,
+      "coeffOrario1": 0.0767,
+      "coeffFisso2": 2,
+      "coeffFisso3": 1.5,
+      "percentSuF2": 0.0035
+    }
+  },
   "contributiContrattuali": {
     "azienda": {}
   },
   "livelli": [
-    { "codice": "7", "descrizione": "Livello 7", "qualifica": "Livello 7", "minimoTabellare": 2903.57, "moltiplicatore": 1.00 },
-    { "codice": "6", "descrizione": "Livello 6", "qualifica": "Livello 6", "minimoTabellare": 2514.53, "moltiplicatore": 0.87 },
-    { "codice": "5", "descrizione": "Livello 5", "qualifica": "Livello 5", "minimoTabellare": 2179.29, "moltiplicatore": 0.75 },
-    { "codice": "4", "descrizione": "Livello 4", "qualifica": "Livello 4", "minimoTabellare": 2064.33, "moltiplicatore": 0.71 },
-    { "codice": "3", "descrizione": "Livello 3", "qualifica": "Livello 3", "minimoTabellare": 1954.90, "moltiplicatore": 0.67 },
-    { "codice": "2", "descrizione": "Livello 2", "qualifica": "Livello 2", "minimoTabellare": 1805.75, "moltiplicatore": 0.62 },
-    { "codice": "1", "descrizione": "Livello 1", "qualifica": "Livello 1", "minimoTabellare": 1620.21, "moltiplicatore": 0.56 }
+    { "codice": "7", "descrizione": "Livello 7", "qualifica": "Livello 7", "minimoTabellare": 2903.57, "moltiplicatore": 1.00, "categoriaOperaio": true },
+    { "codice": "6", "descrizione": "Livello 6", "qualifica": "Livello 6", "minimoTabellare": 2514.53, "moltiplicatore": 0.87, "categoriaOperaio": true },
+    { "codice": "5", "descrizione": "Livello 5", "qualifica": "Livello 5", "minimoTabellare": 2179.29, "moltiplicatore": 0.75, "categoriaOperaio": true },
+    { "codice": "4", "descrizione": "Livello 4", "qualifica": "Livello 4", "minimoTabellare": 2064.33, "moltiplicatore": 0.71, "categoriaOperaio": true },
+    { "codice": "3", "descrizione": "Livello 3", "qualifica": "Livello 3", "minimoTabellare": 1954.90, "moltiplicatore": 0.67, "categoriaOperaio": true },
+    { "codice": "2", "descrizione": "Livello 2", "qualifica": "Livello 2", "minimoTabellare": 1805.75, "moltiplicatore": 0.62, "categoriaOperaio": true },
+    { "codice": "1", "descrizione": "Livello 1", "qualifica": "Livello 1", "minimoTabellare": 1620.21, "moltiplicatore": 0.56, "categoriaOperaio": true }
   ],
   "scattiAnzianita": {
     "periodicitaMesi": 24,

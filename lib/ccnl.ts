@@ -82,8 +82,10 @@ export function listCcnlIds(): string[] {
 
 const ALIAS_INTERNI = new Set(['domestici_non_conviventi', 'domestici_conviventi']);
 
+const CCNL_ESCLUSI_CALCOLATORE = new Set(['agricoltura_impiegati', 'agricoltura_operai']);
+
 export function listCcnlIdsUi(): string[] {
-  return Object.keys(CCNL_MAP).filter(id => !ALIAS_INTERNI.has(id));
+  return Object.keys(CCNL_MAP).filter(id => !ALIAS_INTERNI.has(id) && !CCNL_ESCLUSI_CALCOLATORE.has(id));
 }
 
 export function listCcnlUi(): { id: string; nome: string; fonte: string; validitaAl?: string | null }[] {
