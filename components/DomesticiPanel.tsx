@@ -108,12 +108,12 @@ export function DomesticiPanel() {
     }
     if (ramo === 'part_time') {
       if (ore < 30 || ore >= ORE_PIENO) {
-        return { mensile: 0, errore: 'Part-time convivente: ore settimanali da 30 a meno di 54' };
+        return { mensile: 0, errore: 'Part-time convivente: ore settimanali da 30 a meno di 54 (tab. B)' };
       }
-      const riga = conv?.tabellaA?.find(r => r.codice === livello);
-      if (!riga) return { mensile: 0, errore: 'Livello non trovato in tab. A' };
-      const base = riga.mensile + (riga.indennitaFunzione > 0 ? riga.indennitaFunzione : 0);
-      return { mensile: round2(base * (ore / ORE_PIENO)), errore: null };
+      const riga = conv?.tabellaB?.find(r => r.codice === livello);
+      if (!riga) return { mensile: 0, errore: ERRORE_PART_TIME };
+      const oreBase = riga.oreBase ?? 30;
+      return { mensile: round2(riga.mensile30h * (ore / oreBase)), errore: null };
     }
     const riga = conv?.tabellaA?.find(r => r.codice === livello);
     if (!riga) return { mensile: 0, errore: null };
@@ -150,7 +150,8 @@ export function DomesticiPanel() {
       if (!(conv?.tabellaA ?? []).some(r => r.codice === livello)) setLivello('A');
     } else {
       setOre(30);
-      if (!(conv?.tabellaA ?? []).some(r => r.codice === livello)) setLivello('A');
+      const ammessi = conv?.tabellaB ?? [];
+      if (!ammessi.some(r => r.codice === livello)) setLivello(ammessi[0]?.codice ?? 'C');
     }
   };
 
@@ -268,7 +269,7 @@ export function DomesticiPanel() {
               {!sostituzione && (
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px' }}>
                   <button type="button" onClick={() => scegliRamo('pieno')} style={pill(ramo === 'pieno')}>Tempo pieno 54 h (tab. A)</button>
-                  <button type="button" onClick={() => scegliRamo('part_time')} style={pill(ramo === 'part_time')}>Part-time (tab. A proporzionale)</button>
+                  <button type="button" onClick={() => scegliRamo('part_time')} style={pill(ramo === 'part_time')}>Part-time (tab. B)</button>
                 </div>
               )}
               {ramo === 'part_time' && !sostituzione && (

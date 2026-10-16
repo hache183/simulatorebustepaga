@@ -237,7 +237,8 @@ export function RisultatiCalcolatore({ risultato, onRicalcola }: Props) {
                 { label: 'Imponibile IRPEF', value: nettoDipendente.imponibileIrpef, sign: '=', bold: true },
                 { label: 'IRPEF lorda', value: nettoDipendente.irpefLorda, sign: '−' },
                 { label: 'Detrazioni lavoro dipendente', value: nettoDipendente.detrazioneLavoroDip, sign: '+', color: 'var(--color-green)' },
-                { label: 'IRPEF netta', value: nettoDipendente.irpefNetta, sign: '−', bold: true },
+                { label: 'Bonus cuneo fiscale', value: nettoDipendente.bonusCuneoFiscale, sign: '+', color: 'var(--color-green)' },
+                { label: 'IRPEF netta (dopo detrazioni e cuneo)', value: nettoDipendente.irpefNetta, sign: '−', bold: true },
                 { label: 'Addizionali reg./com. (stima)', value: nettoDipendente.addizionaleRegionale + nettoDipendente.addizionaleComunale, sign: '−' },
               ] as { label: string; value: number; sign: string; bold?: boolean; color?: string }[]).map((row, i) => (
                 <tr key={i} style={{

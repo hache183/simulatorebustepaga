@@ -142,9 +142,8 @@ describe('GOLDEN DOM 16/09 — tabelle A/B/C e non conviventi', () => {
     expect(result.voci.find(v => v.id === 'ral')!.importoAnnuo / 13).toBeCloseTo(1474.73 + 207.69, 2);
   });
 
-  test('part-time convivente 30 h: tab. A × 30/54', async () => {
-    for (const [livello, baseMensile] of [['C', 1123.63], ['BS', 1053.39], ['B', 983.16]] as const) {
-      const mensile = round2(baseMensile * (30 / 54));
+  test('B convivente 30 h: C 814,60 / BS 737,39 / B 702,25', async () => {
+    for (const [livello, mensile] of [['C', 814.60], ['BS', 737.39], ['B', 702.25]] as const) {
       const result = await calculateCosto({
         ...base,
         ccnlId: 'domestici_conviventi',
@@ -187,17 +186,15 @@ describe('GOLDEN DOM 16/09 — tabelle A/B/C e non conviventi', () => {
     expect(Math.abs(mensile - 1037)).toBeLessThanOrEqual(1.05);
   });
 
-  test('part-time convivente 30 h su livello DS: tab. A proporzionale', async () => {
-    const result = await calculateCosto({
+  test('part-time convivente su livello DS è rifiutato', async () => {
+    await expect(calculateCosto({
       ...base,
       ccnlId: 'domestici_conviventi',
       livello: 'DS',
       oreLavoro: 30,
       oreSettimanali: 30,
       convivente: true,
-    });
-    const mensile = round2((1474.73 + 207.69) * (30 / 54));
-    expect(result.voci.find(v => v.id === 'ral')!.importoAnnuo / 13).toBeCloseTo(mensile, 2);
+    })).rejects.toThrow(/tab\. B/i);
   });
 });
 

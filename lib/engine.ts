@@ -91,18 +91,11 @@ async function calculateCostoDomestico(input: CalcolatoreInput): Promise<Calcola
   const quotaCassaOra = cassa?.perOra ? (cassa.importoMensile ?? 0) : 0;
   const cassaColf = input.includiCassaColf ? round2(quotaCassaOra * oreAnnuali) : 0;
 
-  // Ferie/permessi/festività non godute solo sui non conviventi.
-  // Paga oraria già oraria: non si divide per 173 e non si copiano 173/56/32.
-  const haOreJson = ccnlNonConv.oreFerieAnnue != null
-    || ccnlNonConv.orePermessiAnnue != null
-    || ccnlNonConv.oreFestivitaAnnue != null;
-  const oreDaJson = (ccnlNonConv.oreFerieAnnue ?? 0)
-    + (ccnlNonConv.orePermessiAnnue ?? 0)
-    + (ccnlNonConv.oreFestivitaAnnue ?? 0);
-  const ratioOre = Math.min(1, oreSettimanali / 40);
-  const oreNonGodute = haOreJson
-    ? round2(oreDaJson * ratioOre)
-    : (input.oreNonGodute ?? 0);
+  // Ferie non godute (non conviventi): Y = (173 × ore settimanali) / 40, costo = Y × paga oraria.
+  const ORE_FR_DOMESTICI = 173;
+  const oreEquivalentiFr = round2((ORE_FR_DOMESTICI * oreSettimanali) / 40);
+  const oreManuali = input.oreNonGodute ?? 0;
+  const oreNonGodute = oreManuali > 0 ? oreManuali : oreEquivalentiFr;
   const quotaNonGodute = input.quotaNonGodute ?? 1;
   const costoFerie = ret.regime === 'non_convivente'
     ? round2(oreNonGodute * ret.pagaOraria * quotaNonGodute)
@@ -114,9 +107,9 @@ async function calculateCostoDomestico(input: CalcolatoreInput): Promise<Calcola
   const percentualeRal = ralEffettiva > 0 ? costoTotaleAnnuo / ralEffettiva : 0;
   const pct = (n: number) => (ralEffettiva > 0 ? n / ralEffettiva : 0);
 
-  const notaFerie = !haOreJson && oreNonGodute <= 0
-    ? 'inserire ore non godute'
-    : `${oreNonGodute} h × ${fmtNum(ret.pagaOraria)}€/h`;
+  const notaFerie = oreManuali > 0
+    ? `${oreNonGodute} h (inserite) × ${fmtNum(ret.pagaOraria)}€/h`
+    : `${oreEquivalentiFr} h (173×${oreSettimanali}/40) × ${fmtNum(ret.pagaOraria)}€/h`;
 
   const voci: DettaglioCosto[] = [
     {

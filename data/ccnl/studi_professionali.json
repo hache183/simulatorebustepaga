@@ -11,6 +11,7 @@
         "modalita": "fisso",
         "importoMensile": 4.65,
         "percentuale": null,
+        "mensilitaMaturazione": 14,
         "descrizione": "CADIPROF — Cassa di Assistenza Sanitaria per i Dipendenti degli Studi Professionali (€ 4,65/mese fisso quota datore)",
         "notaLegge": "Art. 22 CCNL Studi Professionali — CADIPROF"
       },

@@ -92,7 +92,11 @@ export function CalcolatoreFormStep2({ onSubmit, onBack, isLoading, contributiCc
         agevolazioniSelezionate: [] as string[],
         quotaNonGodute: isDomestici ? 0 : data.quotaNonGodutePercento / 100,
         includiAssistenzaSanitaria: isDomestici ? false : data.includiAssistenzaSanitaria,
-        oreAssenzeAnnue: isDomestici || oreAssenzeCcnl != null ? undefined : data.oreAssenzeAnnue,
+        oreAssenzeAnnue: isDomestici || oreAssenzeCcnl != null
+          ? undefined
+          : (typeof data.oreAssenzeAnnue === 'number' && Number.isFinite(data.oreAssenzeAnnue)
+            ? data.oreAssenzeAnnue
+            : undefined),
       });
     })} style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
 
@@ -299,7 +303,13 @@ export function CalcolatoreFormStep2({ onSubmit, onBack, isLoading, contributiCc
               Ore ferie + permessi + festività (annue)
             </label>
             <input id="oreAssenzeAnnue" type="number" min="0" max="2000" step="1"
-              {...register('oreAssenzeAnnue', { valueAsNumber: true })}
+              {...register('oreAssenzeAnnue', {
+                setValueAs: (v) => {
+                  if (v === '' || v === null || v === undefined) return undefined;
+                  const n = Number(v);
+                  return Number.isFinite(n) ? n : undefined;
+                },
+              })}
               placeholder="es. 261"
               style={{
                 width: '100%', padding: '11px 14px',

@@ -6,10 +6,7 @@
   "mensilita": 13,
   "retribuzioneOraria": true,
   "coefficienteOreMese": 4.33,
-  "oreFerieAnnue": 173,
-  "orePermessiAnnue": 56,
-  "oreFestivitaAnnue": 32,
-  "_notaAssenze": "Ore annue di riferimento a 40 h/sett.; il motore proporziona alle ore effettive del collaboratore.",
+  "_notaAssenze": "FR non conviventi: Y=(173×ore sett.)/40, costo=Y×paga oraria (non si usano oreFerieAnnue da JSON).",
   "contributiContrattuali": {
     "azienda": {
       "cassaColf": {
