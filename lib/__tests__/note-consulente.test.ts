@@ -1,6 +1,7 @@
 import { calculateCosto } from '@/lib/engine';
 import { getCcnlData, pagaMensileBase } from '@/lib/ccnl';
 import { round2 } from '@/lib/domestici';
+import { ASSISTENZA_SANITARIA_FORFAIT_ANNUO, NOTA_ASSISTENZA_SANITARIA_FORFAIT } from '@/lib/costanti-consulente';
 
 describe('note consulente — commercio e studi', () => {
   test('commercio liv.4 Puglia INAIL 0112 calcola senza errore', async () => {
@@ -24,7 +25,9 @@ describe('note consulente — commercio e studi', () => {
       quotaNonGodute: 1,
     });
     expect(result.costoTotaleAnnuo).toBeGreaterThan(ral);
-    expect(result.voci.find(v => v.id === 'assistenza_sanitaria')!.importoAnnuo).toBeCloseTo(13 * 12, 2);
+    const san = result.voci.find(v => v.id === 'assistenza_sanitaria')!;
+    expect(san.importoAnnuo).toBeCloseTo(ASSISTENZA_SANITARIA_FORFAIT_ANNUO, 2);
+    expect(san.notaLegge).toBe(NOTA_ASSISTENZA_SANITARIA_FORFAIT);
     expect(result.nettoDipendente.bonusCuneoFiscale).toBeGreaterThan(0);
   });
 
@@ -47,7 +50,7 @@ describe('note consulente — commercio e studi', () => {
       includiAssistenzaSanitaria: true,
       aliquotaInps: 0.2928,
     });
-    expect(result.voci.find(v => v.id === 'assistenza_sanitaria')!.importoAnnuo).toBeCloseTo(4.65 * 14, 2);
+    expect(result.voci.find(v => v.id === 'assistenza_sanitaria')!.importoAnnuo).toBeCloseTo(ASSISTENZA_SANITARIA_FORFAIT_ANNUO, 2);
   });
 });
 

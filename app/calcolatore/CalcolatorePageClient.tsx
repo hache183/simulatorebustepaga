@@ -8,7 +8,7 @@ import { RisultatiCalcolatore } from '@/components/RisultatiCalcolatore';
 import { SociAmministratoriPanel } from '@/components/SociAmministratoriPanel';
 import { DomesticiPanel } from '@/components/DomesticiPanel';
 import { EdiliPanel } from '@/components/EdiliPanel';
-import type { CalcolatoreOutput, ContributoContrattuale } from '@/types';
+import type { CalcolatoreOutput } from '@/types';
 
 interface Step1Data {
   ccnlId: string; livello: string; ral: number;
@@ -56,18 +56,8 @@ export function CalcolatorePageClient() {
   const [risultato, setRisultato] = useState<CalcolatoreOutput | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [errore, setErrore] = useState<string | null>(null);
-  const [contributiCcnl, setContributiCcnl] = useState<Record<string, ContributoContrattuale>>({});
-
   const handleStep1 = (data: Step1Data) => {
     setStep1Data(data);
-    // Fetch contributi CCNL for Step 2 toggle
-    fetch(`/api/ccnl/${data.ccnlId}/livelli${data.convivente ? '?convivente=true' : ''}`)
-      .then(r => r.json())
-      .then(d => {
-        const resp = d as { contributiContrattuali?: { azienda: Record<string, ContributoContrattuale> } };
-        if (resp.contributiContrattuali?.azienda) setContributiCcnl(resp.contributiContrattuali.azienda);
-      })
-      .catch(() => {});
     setStep(2);
   };
 
@@ -239,7 +229,7 @@ export function CalcolatorePageClient() {
             animation: 'fadeSlideIn 0.2s ease forwards',
           }}>
             {step === 1 && <CalcolatoreFormStep1 onNext={handleStep1} />}
-            {step === 2 && <CalcolatoreFormStep2 onSubmit={handleStep2} onBack={() => setStep(1)} isLoading={isLoading} contributiCcnl={contributiCcnl} ccnlId={step1Data?.ccnlId} />}
+            {step === 2 && <CalcolatoreFormStep2 onSubmit={handleStep2} onBack={() => setStep(1)} isLoading={isLoading} ccnlId={step1Data?.ccnlId} />}
           </div>
         )}
 

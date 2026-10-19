@@ -127,12 +127,13 @@ test('mensilita 17: deve lanciare ZodError — sopra il massimo ammesso', async 
   ).rejects.toThrow(ZodError);
 });
 
-test('mensilita 14 vs 13: con stessa RAL il costo totale è identico (le mensilità sono già nella RAL)', async () => {
+test('mensilita 14 vs 13: stessa RAL, ferie non godute = una mensilità (varia con N mensilità)', async () => {
+  const ral = inputBase.ral;
   const con13 = await calculateCosto({ ...inputBase, mensilita: 13 });
   const con14 = await calculateCosto({ ...inputBase, mensilita: 14 });
-  // Con la stessa RAL, il costo aziendale non cambia: le mensilità aggiuntive
-  // sono una diversa distribuzione dello stesso importo annuo
-  expect(con14.costoTotaleAnnuo).toBeCloseTo(con13.costoTotaleAnnuo, 0);
+  expect(con13.voci.find(v => v.id === 'ferie_permessi_festivita')!.importoAnnuo).toBeCloseTo(ral / 13, 2);
+  expect(con14.voci.find(v => v.id === 'ferie_permessi_festivita')!.importoAnnuo).toBeCloseTo(ral / 14, 2);
+  expect(con13.costoTotaleAnnuo - con14.costoTotaleAnnuo).toBeCloseTo(ral / 13 - ral / 14, 1);
 });
 
 test('mensilita 16: deve contenere voce mensilita_extra con importo corretto', async () => {
@@ -153,10 +154,13 @@ test('TFR con 14 mensilita: RAL/13.5 non dipende da mensilita', async () => {
 });
 
 // ─── MOD2: Assistenza sanitaria ────────────────────────────────────────────
-test('assistenza sanitaria esclusa: costo deve essere inferiore', async () => {
-  const conSanitaria = await calculateCosto({ ...inputBase, includiAssistenzaSanitaria: true });
-  const senzaSanitaria = await calculateCosto({ ...inputBase, includiAssistenzaSanitaria: false });
-  expect(senzaSanitaria.costoTotaleAnnuo).toBeLessThan(conSanitaria.costoTotaleAnnuo);
+test('assistenza sanitaria forfait: sempre 180 €/anno indipendentemente dal flag input', async () => {
+  const conFlag = await calculateCosto({ ...inputBase, includiAssistenzaSanitaria: true });
+  const senzaFlag = await calculateCosto({ ...inputBase, includiAssistenzaSanitaria: false });
+  const importo = conFlag.voci.find(v => v.id === 'assistenza_sanitaria')!.importoAnnuo;
+  expect(importo).toBeCloseTo(180, 2);
+  expect(senzaFlag.voci.find(v => v.id === 'assistenza_sanitaria')!.importoAnnuo).toBeCloseTo(180, 2);
+  expect(conFlag.costoTotaleAnnuo).toBe(senzaFlag.costoTotaleAnnuo);
 });
 
 // ─── MOD3: Aliquota INPS personalizzata ────────────────────────────────────

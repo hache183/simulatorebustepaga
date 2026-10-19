@@ -67,10 +67,6 @@ export function DomesticiPanel() {
 
   const coeff = nonConv?.coefficienteOreMese ?? COEFF_DEFAULT;
   const mensilita = (modo === 'convivente' ? conv?.mensilita : nonConv?.mensilita) ?? 13;
-  const haOreJson = nonConv != null && (
-    nonConv.oreFerieAnnue != null || nonConv.orePermessiAnnue != null || nonConv.oreFestivitaAnnue != null
-  );
-
   const opzioni = useMemo(() => {
     if (modo === 'non_convivente') {
       return (nonConv?.livelli ?? []).map(l => ({
@@ -310,11 +306,11 @@ export function DomesticiPanel() {
 
           {modo === 'non_convivente' && (
             <div>
-              <label htmlFor="ore-ng" style={labelStyle}>Ore ferie, permessi e festività non godute</label>
+              <label htmlFor="ore-ng" style={labelStyle}>Ore ferie non godute (opzionale)</label>
               <input id="ore-ng" type="number" step="1" min="0" value={oreNonGodute}
                 onChange={e => setOreNonGodute(Number(e.target.value))} style={inputStyle} />
               <p style={{ marginTop: '4px', fontSize: '11px', color: 'var(--color-text-muted)' }}>
-                {haOreJson ? 'Ore lette dal CCNL.' : 'inserire ore non godute'}
+                Lascia 0 per il default: Y = (173 × ore sett.) / 40, costo = Y × paga oraria.
               </p>
             </div>
           )}

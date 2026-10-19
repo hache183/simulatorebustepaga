@@ -238,11 +238,10 @@ describe('GOLDEN C1 — Commercio stampa 14/09, RAL 24.944, 14 mensilità', () =
     expect(result.agevolazioniApplicate).toHaveLength(0);
   });
 
-  test('ferie/permessi/festività non godute e Fondo Est', async () => {
+  test('ferie/permessi/festività non godute e assistenza forfait', async () => {
     const result = await calculateCosto(input);
-    const atteso = 261 * ((ral / 14) / 173);
-    expect(result.voci.find(v => v.id === 'ferie_permessi_festivita')!.importoAnnuo).toBeCloseTo(atteso, 2);
-    expect(result.voci.find(v => v.id === 'assistenza_sanitaria')!.importoAnnuo).toBeCloseTo(13 * 12, 2);
+    expect(result.voci.find(v => v.id === 'ferie_permessi_festivita')!.importoAnnuo).toBeCloseTo(ral / 14, 2);
+    expect(result.voci.find(v => v.id === 'assistenza_sanitaria')!.importoAnnuo).toBeCloseTo(180, 2);
     expect(result.voci.find(v => v.id === 'assistenza_sanitaria')!.descrizione).toBe('Assistenza sanitaria integrativa');
     expect(result.voci.find(v => v.id === 'ente_bilaterale_ebiter')).toBeDefined();
   });
@@ -257,9 +256,9 @@ describe('GOLDEN C1 — Commercio stampa 14/09, RAL 24.944, 14 mensilità', () =
     );
   });
 
-  test('quota non godute 0% azzera il costo ferie', async () => {
+  test('quota non godute in input ignorata: ferie = una mensilità', async () => {
     const result = await calculateCosto({ ...input, quotaNonGodute: 0 });
-    expect(result.voci.find(v => v.id === 'ferie_permessi_festivita')!.importoAnnuo).toBeCloseTo(0, 2);
+    expect(result.voci.find(v => v.id === 'ferie_permessi_festivita')!.importoAnnuo).toBeCloseTo(ral / 14, 2);
   });
 });
 

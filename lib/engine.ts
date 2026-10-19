@@ -12,6 +12,12 @@ import type { CalcolatoreInput, CalcolatoreOutput, DettaglioCosto, ContributoCon
 import { calcolaNettoDaRedditoLordoEinpsPerc, DISCLAIMER_NETTO_DIPENDENTE } from '@/lib/irpef-lavoro-dipendente';
 import { calcolaRetribuzioneDomestici, round2 } from '@/lib/domestici';
 import { calcolaEdili, isEdiliCcnlId } from '@/lib/edili';
+import {
+  ASSISTENZA_SANITARIA_FORFAIT_ANNUO,
+  NOTA_ASSISTENZA_SANITARIA_FORFAIT,
+  NOTA_FERIE_NON_GODUTE_SEMPLIFICATA,
+  ORE_FERIE_NON_GODUTE_FISSE,
+} from '@/lib/costanti-consulente';
 
 // Schema di validazione Zod — rifiuta qualsiasi input malformato prima del calcolo
 const InputSchema = z.object({
@@ -348,14 +354,11 @@ export async function calculateCosto(rawInput: unknown): Promise<CalcolatoreOutp
   // 9. Contributi contrattuali: assistenza sanitaria e ente bilaterale su righe distinte
   const contributiEntries = Object.entries(ccnl.contributiContrattuali.azienda) as [string, ContributoContrattuale][];
   const oreAnnue = input.oreLavoro * 52;
-  const sanitari = contributiEntries.filter(([, c]) => c.tipo === 'sanitario');
   const bilaterali = contributiEntries.filter(([, c]) => c.tipo === 'bilaterale');
   const altriContributi = contributiEntries.filter(
     ([, c]) => c.tipo !== 'sanitario' && c.tipo !== 'bilaterale' && c.tipo !== 'previdenziale',
   );
-  const importoSanitario = input.includiAssistenzaSanitaria
-    ? sanitari.reduce((sum, [, c]) => sum + importoContributoContrattuale(c, ralEffettiva, oreAnnue), 0)
-    : 0;
+  const importoSanitario = ASSISTENZA_SANITARIA_FORFAIT_ANNUO;
   const importoBilaterali = bilaterali.map(([, c]) => importoContributoContrattuale(c, ralEffettiva, oreAnnue));
   const importoAltri = altriContributi.map(([, c]) => importoContributoContrattuale(c, ralEffettiva, oreAnnue));
   const contributiCcnl = importoSanitario + importoBilaterali.reduce((s, n) => s + n, 0) + importoAltri.reduce((s, n) => s + n, 0);
@@ -368,19 +371,11 @@ export async function calculateCosto(rawInput: unknown): Promise<CalcolatoreOutp
     livello.scattoEuro,
   );
 
-  // 10b. Ferie, permessi e festività non godute (sostituisce l'elemento indiretto forfettario)
-  const oreFerie = ccnl.oreFerieAnnue ?? 0;
-  const orePermessi = ccnl.orePermessiAnnue ?? 0;
-  const oreFestivita = ccnl.oreFestivitaAnnue ?? 0;
-  let oreNonGodute = oreFerie + orePermessi + oreFestivita;
-  if (oreNonGodute <= 0 && (input.oreAssenzeAnnue ?? 0) > 0) {
-    oreNonGodute = input.oreAssenzeAnnue!;
-  }
-  const quotaNonGodute = input.quotaNonGodute ?? 1;
-  const pagaOrariaNonGodute = (ralEffettiva / mensilita) / 173;
-  const costoFerieNonGodute = oreNonGodute * pagaOrariaNonGodute * quotaNonGodute;
-  const oreAssenzeNote = ccnl.oreFerieAnnue != null || ccnl.orePermessiAnnue != null || ccnl.oreFestivitaAnnue != null
-    || (input.oreAssenzeAnnue ?? 0) > 0;
+  // 10b. Ferie, permessi e ex festività non godute — formula fissa: 173 h × (RAL/mensilità/173)
+  const retribuzioneMensile = ralEffettiva / mensilita;
+  const costoFerieNonGodute = round2(
+    ORE_FERIE_NON_GODUTE_FISSE * (retribuzioneMensile / ORE_FERIE_NON_GODUTE_FISSE),
+  );
 
   // 11. Totale
   // NOTA: la RAL include già tutte le mensilità (es. 1541.77 × 14 = 21584.78),
@@ -410,10 +405,6 @@ export async function calculateCosto(rawInput: unknown): Promise<CalcolatoreOutp
   const notaRal = isRetribuzionePersonalizzata
     ? 'Retribuzione concordata tra le parti — art. 2099 c.c.'
     : undefined;
-
-  const notaCcnl = !input.includiAssistenzaSanitaria
-    ? `CCNL ${ccnl.nome} — assistenza sanitaria esclusa`
-    : `CCNL ${ccnl.nome}`;
 
   const voci: DettaglioCosto[] = [
     {
@@ -505,7 +496,7 @@ export async function calculateCosto(rawInput: unknown): Promise<CalcolatoreOutp
       importoAnnuo: importoSanitario,
       importoMensile: importoSanitario / 12,
       percentualeRal: importoSanitario / ralEffettiva,
-      notaLegge: sanitari.length === 0 ? 'dato CCNL assente' : notaCcnl,
+      notaLegge: NOTA_ASSISTENZA_SANITARIA_FORFAIT,
     },
     ...bilaterali.map(([key, c], i) => ({
       id: `ente_bilaterale_${key}`,
@@ -534,7 +525,7 @@ export async function calculateCosto(rawInput: unknown): Promise<CalcolatoreOutp
       percentualeRal: costoScatti / ralEffettiva,
       notaLegge: 'CCNL — scatti di anzianità',
     },
-    ...(oreAssenzeNote || costoFerieNonGodute > 0
+    ...(costoFerieNonGodute > 0
       ? [{
           id: 'ferie_permessi_festivita',
           categoria: 'ccnl_contrattuale' as const,
@@ -542,7 +533,7 @@ export async function calculateCosto(rawInput: unknown): Promise<CalcolatoreOutp
           importoAnnuo: costoFerieNonGodute,
           importoMensile: costoFerieNonGodute / 12,
           percentualeRal: costoFerieNonGodute / ralEffettiva,
-          notaLegge: `Ferie ${oreFerie} h + permessi ${orePermessi} h + festività ${oreFestivita} h = ${oreNonGodute} h × (RAL / ${mensilita} / 173) × quota non goduta ${(quotaNonGodute * 100).toFixed(0)}%`,
+          notaLegge: NOTA_FERIE_NON_GODUTE_SEMPLIFICATA(mensilita),
         }]
       : []),
   ];

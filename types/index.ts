@@ -16,9 +16,9 @@ export interface CalcolatoreInput {
   regione: string;
   codiceInail: string;                // codice voce tariffaria INAIL
   agevolazioniSelezionate: string[];  // array di id agevolazioni
-  includiAssistenzaSanitaria: boolean; // se true, include contributi sanitari CCNL
+  includiAssistenzaSanitaria: boolean; // dipendenti: forfait sempre applicato dal motore; flag legacy API
   aliquotaInps: number;               // aliquota INPS datoriale (es. 0.2880 per 28,80%)
-  quotaNonGodute?: number;           // 0–1, quota ferie/permessi/festività non godute (default 1)
+  quotaNonGodute?: number;           // domestici; dipendenti: ignorato (formula fissa)
   retribuzionePersonalizzata?: number; // RAL personalizzata concordata tra le parti (euro/anno)
   pagaOraria?: number;                // solo domestici: retribuzione oraria effettiva
   oreSettimanali?: number;            // solo domestici: ore settimanali dedicate al rapporto
@@ -26,7 +26,7 @@ export interface CalcolatoreInput {
   includiCassaColf?: boolean;         // domestici: quota oraria Cassacolf (default off)
   sostituzioneTitolare?: boolean;     // conviventi: apre la tabella C (oraria CS/DS)
   oreNonGodute?: number;              // domestici non conviventi: ferie/permessi/festività non godute
-  oreAssenzeAnnue?: number;           // dipendenti: ore ferie+permessi+festività se assenti nel JSON CCNL
+  oreAssenzeAnnue?: number;           // legacy API; dipendenti: ignorato (formula fissa 173 h)
 }
 
 // ─── OUTPUT CALCOLATORE ───────────────────────────────────────────────────

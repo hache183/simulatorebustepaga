@@ -4,7 +4,10 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useState, useEffect } from 'react';
-import type { ContributoContrattuale } from '@/types';
+import {
+  NOTA_ASSISTENZA_SANITARIA_FORFAIT,
+  ORE_FERIE_NON_GODUTE_FISSE,
+} from '@/lib/costanti-consulente';
 
 const REGIONI = [
   'Abruzzo','Basilicata','Calabria','Campania','Emilia-Romagna',
@@ -18,10 +21,7 @@ const Step2Schema = z.object({
   regione: z.string(),
   codiceInail: z.string(),
   anzianitaAnni: z.number().min(0).max(50),
-  includiAssistenzaSanitaria: z.boolean(),
   aliquotaInps: z.number().min(0).max(50),
-  quotaNonGodutePercento: z.number().min(0).max(100),
-  oreAssenzeAnnue: z.number().min(0).max(2000).optional(),
 });
 
 type Step2Data = z.infer<typeof Step2Schema>;
@@ -34,8 +34,6 @@ export interface Step2SubmitData {
   agevolazioniSelezionate: string[];
   includiAssistenzaSanitaria: boolean;
   aliquotaInps: number;
-  quotaNonGodute: number;
-  oreAssenzeAnnue?: number;
 }
 
 interface VoceInail { codice: string; settore: string; tassoPerMille: number; }
@@ -44,43 +42,22 @@ interface Props {
   onSubmit: (data: Step2SubmitData) => void;
   onBack: () => void;
   isLoading: boolean;
-  contributiCcnl?: Record<string, ContributoContrattuale>;
   ccnlId?: string;
 }
 
-export function CalcolatoreFormStep2({ onSubmit, onBack, isLoading, contributiCcnl, ccnlId }: Props) {
+export function CalcolatoreFormStep2({ onSubmit, onBack, isLoading, ccnlId }: Props) {
   const isDomestici = ['domestici', 'domestici_conviventi', 'domestici_non_conviventi'].includes(ccnlId ?? '');
   const [voceInail, setVociInail] = useState<VoceInail[]>([]);
-  const [oreAssenzeCcnl, setOreAssenzeCcnl] = useState<number | null>(null);
 
-  const fondoSanitarioNome = contributiCcnl
-    ? Object.values(contributiCcnl).find(c => c.tipo === 'sanitario')?.descrizione
-    : undefined;
-
-  const { register, handleSubmit, watch, setValue, formState: { errors } } =
+  const { register, handleSubmit, formState: { errors } } =
     useForm<Step2Data>({
       resolver: zodResolver(Step2Schema),
-      defaultValues: { numeroDipendenti: 1, regione: '', anzianitaAnni: 0, codiceInail: '', includiAssistenzaSanitaria: true, aliquotaInps: 28.80, quotaNonGodutePercento: 100 },
+      defaultValues: { numeroDipendenti: 1, regione: '', anzianitaAnni: 0, codiceInail: '', aliquotaInps: 28.80 },
     });
 
   useEffect(() => {
     fetch('/api/inail/voci').then(r => r.json()).then(d => setVociInail((d as { voci?: VoceInail[] }).voci ?? []));
   }, []);
-
-  useEffect(() => {
-    if (!ccnlId || isDomestici) {
-      setOreAssenzeCcnl(null);
-      return;
-    }
-    fetch(`/api/ccnl/${ccnlId}/livelli`)
-      .then(r => r.json())
-      .then(d => {
-        const resp = d as { oreFerieAnnue?: number | null; orePermessiAnnue?: number | null; oreFestivitaAnnue?: number | null };
-        const tot = (resp.oreFerieAnnue ?? 0) + (resp.orePermessiAnnue ?? 0) + (resp.oreFestivitaAnnue ?? 0);
-        setOreAssenzeCcnl(tot > 0 ? tot : null);
-      })
-      .catch(() => setOreAssenzeCcnl(null));
-  }, [ccnlId, isDomestici]);
 
   return (
     <form onSubmit={handleSubmit((data) => {
@@ -90,13 +67,7 @@ export function CalcolatoreFormStep2({ onSubmit, onBack, isLoading, contributiCc
         numeroDipendenti: isDomestici ? 1 : data.numeroDipendenti,
         codiceInail: isDomestici ? '' : data.codiceInail,
         agevolazioniSelezionate: [] as string[],
-        quotaNonGodute: isDomestici ? 0 : data.quotaNonGodutePercento / 100,
-        includiAssistenzaSanitaria: isDomestici ? false : data.includiAssistenzaSanitaria,
-        oreAssenzeAnnue: isDomestici || oreAssenzeCcnl != null
-          ? undefined
-          : (typeof data.oreAssenzeAnnue === 'number' && Number.isFinite(data.oreAssenzeAnnue)
-            ? data.oreAssenzeAnnue
-            : undefined),
+        includiAssistenzaSanitaria: !isDomestici,
       });
     })} style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
 
@@ -240,88 +211,29 @@ export function CalcolatoreFormStep2({ onSubmit, onBack, isLoading, contributiCc
         {errors.aliquotaInps && <p style={{ marginTop: '4px', fontSize: '11px', color: 'var(--color-red)' }}>{errors.aliquotaInps.message}</p>}
       </div>}
 
-      {/* Toggle assistenza sanitaria — nascosto per domestici */}
-      {!isDomestici && <div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '6px' }}>
-          <button type="button"
-            onClick={() => setValue('includiAssistenzaSanitaria', !watch('includiAssistenzaSanitaria'))}
-            style={{
-              width: '40px', height: '22px', borderRadius: '11px', border: 'none', cursor: 'pointer',
-              background: watch('includiAssistenzaSanitaria') ? 'var(--color-accent)' : 'var(--color-bg-elevated)',
-              position: 'relative', transition: 'background 0.2s ease',
-              outline: `1px solid ${watch('includiAssistenzaSanitaria') ? 'var(--color-accent)' : 'var(--color-border)'}`,
-            }}>
-            <div style={{
-              width: '16px', height: '16px', borderRadius: '50%', background: 'white',
-              position: 'absolute', top: '3px',
-              left: watch('includiAssistenzaSanitaria') ? '21px' : '3px',
-              transition: 'left 0.2s ease',
-            }} />
-          </button>
-          <label style={{ fontSize: '13px', fontWeight: 500, color: 'var(--color-text-secondary)', cursor: 'pointer' }}
-            onClick={() => setValue('includiAssistenzaSanitaria', !watch('includiAssistenzaSanitaria'))}>
-            Includi assistenza sanitaria integrativa
-          </label>
-        </div>
-        <p style={{ fontSize: '11px', color: 'var(--color-text-muted)', lineHeight: '1.5' }}>
-          Se attivo, include nel costo l&apos;importo del fondo sanitario definito nel JSON del CCNL selezionato
-          {fondoSanitarioNome ? ` (${fondoSanitarioNome})` : ' (es. Fondo Est, Metasalute, San.Arti)'}.
-          Disattivalo se l&apos;azienda non aderisce al fondo sanitario.
+      {!isDomestici && <div style={{
+        padding: '12px 14px', borderRadius: '8px',
+        background: 'var(--color-bg-elevated)', border: '1px solid var(--color-border)',
+      }}>
+        <p style={{ fontSize: '13px', fontWeight: 600, color: 'var(--color-text-secondary)', marginBottom: '6px' }}>
+          Assistenza sanitaria integrativa (sempre inclusa)
+        </p>
+        <p style={{ fontSize: '12px', color: 'var(--color-text-muted)', lineHeight: 1.55 }}>
+          {NOTA_ASSISTENZA_SANITARIA_FORFAIT}
         </p>
       </div>}
 
-      {!isDomestici && <div>
-        <label htmlFor="quotaNonGodutePercento" style={{ display: 'block', fontSize: '13px', fontWeight: 500,
-          color: 'var(--color-text-secondary)', marginBottom: '6px' }}>
-          Quota ferie, permessi e festività non godute (%)
-        </label>
-        <div style={{ position: 'relative' }}>
-          <input id="quotaNonGodutePercento" type="number" step="1" min="0" max="100"
-            {...register('quotaNonGodutePercento', { valueAsNumber: true })}
-            style={{
-              width: '100%', padding: '11px 14px',
-              background: 'var(--color-bg-input)', color: 'var(--color-text-primary)',
-              border: `1px solid ${errors.quotaNonGodutePercento ? 'var(--color-red)' : 'var(--color-border)'}`,
-              borderRadius: '6px', fontSize: '13px',
-              fontFamily: "'DM Mono', monospace",
-            }}
-          />
-          <span style={{
-            position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)',
-            fontFamily: "'DM Mono', monospace", fontSize: '13px', color: 'var(--color-text-muted)',
-          }}>%</span>
-        </div>
-        <p style={{ marginTop: '6px', fontSize: '11px', color: 'var(--color-text-muted)', lineHeight: '1.5' }}>
-          {oreAssenzeCcnl != null
-            ? `Ore da CCNL: ${oreAssenzeCcnl} h annue (ferie + permessi + festività). 100% = costo massimo se non godute.`
-            : 'Ore assenze non definite per questo CCNL: inserisci il totale annuo qui sotto o lascia 0.'}
+      {!isDomestici && <div style={{
+        padding: '12px 14px', borderRadius: '8px',
+        background: 'var(--color-bg-elevated)', border: '1px solid var(--color-border)',
+      }}>
+        <p style={{ fontSize: '13px', fontWeight: 600, color: 'var(--color-text-secondary)', marginBottom: '6px' }}>
+          Ferie, permessi ed ex festività non godute
         </p>
-        {oreAssenzeCcnl == null && (
-          <div style={{ marginTop: '10px' }}>
-            <label htmlFor="oreAssenzeAnnue" style={{ display: 'block', fontSize: '12px', fontWeight: 500,
-              color: 'var(--color-text-secondary)', marginBottom: '6px' }}>
-              Ore ferie + permessi + festività (annue)
-            </label>
-            <input id="oreAssenzeAnnue" type="number" min="0" max="2000" step="1"
-              {...register('oreAssenzeAnnue', {
-                setValueAs: (v) => {
-                  if (v === '' || v === null || v === undefined) return undefined;
-                  const n = Number(v);
-                  return Number.isFinite(n) ? n : undefined;
-                },
-              })}
-              placeholder="es. 261"
-              style={{
-                width: '100%', padding: '11px 14px',
-                background: 'var(--color-bg-input)', color: 'var(--color-text-primary)',
-                border: '1px solid var(--color-border)',
-                borderRadius: '6px', fontSize: '13px',
-                fontFamily: "'DM Mono', monospace",
-              }}
-            />
-          </div>
-        )}
-        {errors.quotaNonGodutePercento && <p style={{ marginTop: '4px', fontSize: '11px', color: 'var(--color-red)' }}>{errors.quotaNonGodutePercento.message}</p>}
+        <p style={{ fontSize: '12px', color: 'var(--color-text-muted)', lineHeight: 1.55 }}>
+          Formula fissa: {ORE_FERIE_NON_GODUTE_FISSE} h × (retribuzione mensile / {ORE_FERIE_NON_GODUTE_FISSE})
+          = valore di una mensilità. Non modificabile dall&apos;operatore.
+        </p>
       </div>}
 
       {/* Pulsanti */}
