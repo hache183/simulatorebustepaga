@@ -51,8 +51,6 @@ export function DomesticiPanel() {
   const [livello, setLivello] = useState('A');
   const [pagaOraria, setPagaOraria] = useState(6.51);
   const [ore, setOre] = useState(25);
-  const [oreNonGodute, setOreNonGodute] = useState(0);
-  const [cassaColf, setCassaColf] = useState(false);
   const [anzianitaAnni, setAnzianitaAnni] = useState(0);
   const [nonConv, setNonConv] = useState<CcnlResp | null>(null);
   const [conv, setConv] = useState<CcnlResp | null>(null);
@@ -202,9 +200,7 @@ export function DomesticiPanel() {
           quotaNonGodute: 1,
           convivente: modo === 'convivente',
           pagaOraria: modo === 'non_convivente' ? pagaOraria : undefined,
-          includiCassaColf: cassaColf,
           sostituzioneTitolare: modo === 'convivente' && sostituzione,
-          oreNonGodute: modo === 'non_convivente' ? oreNonGodute : 0,
         }),
       });
       const json = await res.json();
@@ -258,15 +254,15 @@ export function DomesticiPanel() {
 
           {modo === 'convivente' && (
             <>
-              <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: 'var(--color-text-secondary)' }}>
-                <input type="checkbox" checked={sostituzione} onChange={e => attivaSostituzione(e.target.checked)} />
-                sostituzione titolare (tab. C)
-              </label>
-              {!sostituzione && (
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px' }}>
-                  <button type="button" onClick={() => scegliRamo('pieno')} style={pill(ramo === 'pieno')}>Tempo pieno 54 h (tab. A)</button>
-                  <button type="button" onClick={() => scegliRamo('part_time')} style={pill(ramo === 'part_time')}>Part-time (tab. B)</button>
-                </div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '6px' }}>
+                <button type="button" onClick={() => scegliRamo('pieno')} style={pill(!sostituzione && ramo === 'pieno')}>Tempo pieno 54 h (tab. A)</button>
+                <button type="button" onClick={() => scegliRamo('part_time')} style={pill(!sostituzione && ramo === 'part_time')}>Part-time (tab. B)</button>
+                <button type="button" onClick={() => attivaSostituzione(true)} style={pill(sostituzione)}>Part-time per sostituzione titolare (tab. C)</button>
+              </div>
+              {sostituzione && (
+                <p style={{ fontSize: '12px', color: 'var(--color-text-muted)', lineHeight: 1.5 }}>
+                  Sostituzione del titolare: solo livelli CS e DS, retribuzione oraria della tab. C per le ore settimanali inserite.
+                </p>
               )}
               {ramo === 'part_time' && !sostituzione && (
                 <p style={{ fontSize: '12px', color: 'var(--color-text-muted)', lineHeight: 1.5 }}>{ERRORE_PART_TIME}</p>
@@ -305,14 +301,9 @@ export function DomesticiPanel() {
           </div>
 
           {modo === 'non_convivente' && (
-            <div>
-              <label htmlFor="ore-ng" style={labelStyle}>Ore ferie non godute (opzionale)</label>
-              <input id="ore-ng" type="number" step="1" min="0" value={oreNonGodute}
-                onChange={e => setOreNonGodute(Number(e.target.value))} style={inputStyle} />
-              <p style={{ marginTop: '4px', fontSize: '11px', color: 'var(--color-text-muted)' }}>
-                Lascia 0 per il default: Y = (173 × ore sett.) / 40, costo = Y × paga oraria.
-              </p>
-            </div>
+            <p style={{ fontSize: '11px', color: 'var(--color-text-muted)', lineHeight: 1.5 }}>
+              Ferie, permessi ed ex festività non godute: formula fissa Y = (173 × ore sett.) / 40, costo = Y × paga oraria. Non modificabile dall&apos;operatore.
+            </p>
           )}
 
           <div>
@@ -321,10 +312,9 @@ export function DomesticiPanel() {
               onChange={e => setAnzianitaAnni(Number(e.target.value))} style={inputStyle} />
           </div>
 
-          <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: 'var(--color-text-secondary)' }}>
-            <input type="checkbox" checked={cassaColf} onChange={e => setCassaColf(e.target.checked)} />
-            Includi CassaColf (0,03 €/ora)
-          </label>
+          <p style={{ fontSize: '11px', color: 'var(--color-text-muted)', lineHeight: 1.5 }}>
+            CassaColf obbligatoria: quota datore 0,04 €/ora, sempre inclusa nel costo.
+          </p>
 
           <p style={{ fontSize: '13px', color: 'var(--color-text-secondary)' }}>
             Mensile lordo <strong style={{ fontFamily: "'DM Mono', monospace", color: 'var(--color-text-primary)' }}>{eur(preview.mensile)}</strong>

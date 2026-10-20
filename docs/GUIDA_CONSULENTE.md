@@ -340,13 +340,13 @@ Default in maschera oggi:
 |---|---|---|---|
 | Fondi **sanitari** (Fondo Est, MetaSalute, FAST, …) | **acceso** | fisso €/mese × 12, oppure % sulla RAL | i fissi sanitari in genere **no** (`scalaConPartTime: false`) |
 | Enti **bilaterali** (Ebiter, EBTL, …) | acceso (non è un toggle dedicato) | fisso o % | come da JSON |
-| **Previdenza complementare** (COMETA 2%, Previcommercio 1,55%, Fonchim, …) | **spento** | % sulla RAL | sì, perché gira sulla RAL già scalata |
-| **CassaColf** 0,03 €/h | **spento** | 0,03 × ore × 52 | sì (è a ora) |
+| **Previdenza complementare** (COMETA 2%, Previcommercio 1,55%, Fonchim, …) | **sempre incluso (obbligatoria)** | % sulla RAL | sì, perché gira sulla RAL già scalata |
+| **CassaColf** 0,04 €/h | **sempre incluso (obbligatoria)** | 0,04 × ore × 52 | sì (è a ora) |
 | Scatti | sempre, se anzianità > 0 | vedi sotto | — |
 | Elementi aggiuntivi a `condizione: null` | sempre | €/mese × n. mensilità **senza** scala PT | no |
 | Elementi con condizione (EDR mancata adesione, ecc.) | **mai** | — | il motore non chiede se la condizione è vera |
 
-**CassaColf, da dire a voce:** il versamento CCNL (Art. 49 nel JSON) è **dovuto**. Il default spento allinea il foglio Francesca (15.291,21 senza 84,24 €). Toggle acceso: 54 × 52 × 0,03 = **84,24 €/anno** convivente; 25 × 52 × 0,03 = **39,00 €** sul caso D1.
+**CassaColf, da dire a voce:** il versamento CCNL (Art. 49 nel JSON) è **dovuto**. Il default spento allinea il foglio Francesca (15.291,21 senza 112,32 €). Toggle acceso: 54 × 52 × 0,03 = **112,32 €/anno** convivente; 25 × 52 × 0,03 = **52,00 €** sul caso D1.
 
 ### Scatti
 
@@ -371,7 +371,7 @@ Esempio M1: 4 anni / 24 mesi = 2 scatti; C3 `scattoEuro` 29,64; 2 × 29,64 × 12
 | FIPE | EBTL | bilaterale | 0,20% RAL | on |
 | Metalmeccanici | MetaSalute | sanitario | 12,00 €/mese | on |
 | Metalmeccanici | COMETA | previdenziale | 2,00% RAL | **off** |
-| Domestici | CassaColf | bilaterale oraria | 0,03 €/h | **off** |
+| Domestici | CassaColf | bilaterale oraria | 0,04 €/h | **off** |
 
 ---
 
@@ -468,7 +468,7 @@ Tutti gli addendi sotto escono dal motore allo stesso arrotondamento del softwar
 | INPS lavoratore | 0,31 × 54 × 52 | 870,48 |
 | Netto da busta (senza IRPEF) | 11.805,30 − 870,48 | 10.934,82 |
 
-Se si accende CassaColf: +84,24. Non è il foglio Francesca.
+Se si accende CassaColf: +112,32. Non è il foglio Francesca.
 
 ### 9.2 Domestico non convivente A, 25 h — D1
 
@@ -483,7 +483,7 @@ Se si accende CassaColf: +84,24. Non è il foglio Francesca.
 | INPS datore | 0,93 × 1.300 | 1.209,00 |
 | INPS lavoratore | 0,31 × 1.300 | 403,00 |
 | INAIL voce | | 0,00 |
-| CassaColf | off (on = 39,00) | 0,00 |
+| CassaColf | off (on = 52,00) | 0,00 |
 | Netto da busta (senza IRPEF) | 8.463 − 403 | 8.060,00 |
 
 Il TFR (8.463 / 13,5) entra nel **costo** azienda; non era nella lista dei numeri che Francesca ha firmato sul netto.
@@ -608,7 +608,7 @@ Il golden firmato è lo scatto 711,36.
 | **TFR 13,5** | Accantonamento annuo = RAL / 13,5 (art. 2120 c.c.) |
 | **Gestione separata** | Contributi INPS su compenso amministratore (35,03% o 24%), riparto 2/3–1/3 |
 | **Sostituto d’imposta** | Chi trattiene IRPEF in busta. Il datore familiare **non** lo è |
-| **CassaColf** | 0,03 €/h datore, Art. 49 CCNL; nel simulatore è un toggle |
+| **CassaColf** | 0,04 €/h datore, Art. 49 CCNL; nel simulatore è un toggle |
 | **Oscillazione INAIL** | Maggiorazione/sconto sul tasso medio; in anagrafica, non nel premio calcolato |
 | **Autodichiarazione** | La spunta agevolazione non istruisce la pratica |
 
@@ -620,7 +620,7 @@ Il golden firmato è lo scatto 711,36.
 Perché il datore familiare non è sostituto d’imposta. Il numero è RAL meno 0,31 €/ora. L’IRPEF la versa il lavoratore in dichiarazione. In maschera la voce si chiama «imponibile netto da contributi (senza IRPEF)».
 
 **2. Perché CassaColf non sta nel 15.291,21?**  
-Perché il toggle è **spento di default**, allineato al foglio manoscritto. In CCNL (Art. 49) i 0,03 €/h sono dovuti: 54 × 52 × 0,03 = 84,24 €. Si accende dal toggle.
+Perché il toggle è **spento di default**, allineato al foglio manoscritto. In CCNL (Art. 49) i 0,04 €/h sono dovuti: 54 × 52 × 0,03 = 112,32 €. Si accende dal toggle.
 
 **3. Posso fare il part-time al convivente A?**  
 No, in via ordinaria. Il motore riporta le ore a 54. PT 30 h solo per C, BS, B se iscritto a corso di scuola; altra deroga PT solo per CS e DS se c’è già un altro lavoratore in forza.
@@ -645,3 +645,8 @@ No. È già nella RAL. In report è una riga informativa.
 
 **10. (bonus) FIPE QA a 1.854 €?**  
 Quello è il **minimo**. Il TOTALE WK è **2.472,19** (c’è la contingenza 542,70 e l’indennità di funzione 75). Tabella scaduta il 31/05/2026.
+
+
+---
+
+**Aggiornamento ultimo giro (note consulente 19/10):** CassaColf obbligatoria a 0,04 €/h (non più toggle); ferie/permessi/ex festività dipendenti = 275 h fisse × (retribuzione mensile / 173); domestici non conviventi: ferie fisse (173 × ore sett. / 40) × paga oraria, campo non modificabile; conviventi: aggiunto part-time per sostituzione titolare (tab. C); edilizia: nota che l'aliquota Cassa Edile è indicativa e varia per cassa provinciale.

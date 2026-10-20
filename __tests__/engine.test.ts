@@ -127,13 +127,12 @@ test('mensilita 17: deve lanciare ZodError — sopra il massimo ammesso', async 
   ).rejects.toThrow(ZodError);
 });
 
-test('mensilita 14 vs 13: stessa RAL, ferie non godute = una mensilità (varia con N mensilità)', async () => {
+test('mensilita 14 vs 13: stessa RAL, ferie non godute = 275 × (mensile / 173)', async () => {
   const ral = inputBase.ral;
   const con13 = await calculateCosto({ ...inputBase, mensilita: 13 });
   const con14 = await calculateCosto({ ...inputBase, mensilita: 14 });
-  expect(con13.voci.find(v => v.id === 'ferie_permessi_festivita')!.importoAnnuo).toBeCloseTo(ral / 13, 2);
-  expect(con14.voci.find(v => v.id === 'ferie_permessi_festivita')!.importoAnnuo).toBeCloseTo(ral / 14, 2);
-  expect(con13.costoTotaleAnnuo - con14.costoTotaleAnnuo).toBeCloseTo(ral / 13 - ral / 14, 1);
+  expect(con13.voci.find(v => v.id === 'ferie_permessi_festivita')!.importoAnnuo).toBeCloseTo(275 * (ral / 13 / 173), 2);
+  expect(con14.voci.find(v => v.id === 'ferie_permessi_festivita')!.importoAnnuo).toBeCloseTo(275 * (ral / 14 / 173), 2);
 });
 
 test('mensilita 16: deve contenere voce mensilita_extra con importo corretto', async () => {

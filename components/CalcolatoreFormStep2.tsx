@@ -7,6 +7,7 @@ import { useState, useEffect } from 'react';
 import {
   NOTA_ASSISTENZA_SANITARIA_FORFAIT,
   ORE_FERIE_NON_GODUTE_FISSE,
+  DIVISORE_ORARIO_FERIE_FISSO,
 } from '@/lib/costanti-consulente';
 
 const REGIONI = [
@@ -231,8 +232,8 @@ export function CalcolatoreFormStep2({ onSubmit, onBack, isLoading, ccnlId }: Pr
           Ferie, permessi ed ex festività non godute
         </p>
         <p style={{ fontSize: '12px', color: 'var(--color-text-muted)', lineHeight: 1.55 }}>
-          Formula fissa: {ORE_FERIE_NON_GODUTE_FISSE} h × (retribuzione mensile / {ORE_FERIE_NON_GODUTE_FISSE})
-          = valore di una mensilità. Non modificabile dall&apos;operatore.
+          Formula fissa: {ORE_FERIE_NON_GODUTE_FISSE} h × (retribuzione mensile / {DIVISORE_ORARIO_FERIE_FISSO})
+          = valore ferie, permessi ed ex festività. Non modificabile dall&apos;operatore.
         </p>
       </div>}
 

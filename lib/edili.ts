@@ -186,11 +186,11 @@ export async function calcolaEdili(input: CalcolatoreInput): Promise<Calcolatore
     {
       id: 'cassa_edile',
       categoria: 'ccnl_contrattuale',
-      descrizione: `Cassa Edile provinciale (${cfg.cassaProvincia})`,
+      descrizione: 'Cassa Edile provinciale',
       importoAnnuo: cassaEdile,
       importoMensile: cassaEdile / 12,
       percentualeRal: pct(cassaEdile),
-      notaLegge: 'Contributo orario G × ore annue (173 h/mese × 12, proporzionate al part-time)',
+      notaLegge: 'Contributo orario G × ore annue (173 h/mese × 12, proporzionate al part-time). Aliquota indicativa: potrà subire variazioni in base alla cassa edile provinciale di appartenenza.',
     },
     {
       id: 'tredicesima_cassa',

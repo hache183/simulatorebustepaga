@@ -32,7 +32,6 @@ interface Step2Data {
   quotaNonGodute?: number;
   includiAssistenzaSanitaria: boolean;
   includiPrevidenzaComplementare?: boolean;
-  includiCassaColf?: boolean;
   aliquotaInps: number;
   markupAgenzia?: number;
   oreAssenzeAnnue?: number;

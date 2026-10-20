@@ -12,10 +12,10 @@
       "cassaColf": {
         "tipo": "bilaterale",
         "modalita": "fisso",
-        "importoMensile": 0.03,
+        "importoMensile": 0.04,
         "perOra": true,
         "percentuale": null,
-        "descrizione": "Cassacolf — ente bilaterale lavoro domestico (quota oraria datoriale €0,03/h)",
+        "descrizione": "Cassacolf — ente bilaterale lavoro domestico (quota oraria datoriale €0,04/h)",
         "notaLegge": "Art. 49 CCNL Domestici",
         "scalaConPartTime": true
       }

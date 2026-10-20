@@ -30,7 +30,6 @@ describe('GOLDEN D1 — Domestici non conviventi liv. A, 25h, TI', () => {
     codiceInail: '',
     agevolazioniSelezionate: [] as string[],
     includiAssistenzaSanitaria: false,
-    includiCassaColf: false,
     aliquotaInps: 0,
   };
 
@@ -45,10 +44,10 @@ describe('GOLDEN D1 — Domestici non conviventi liv. A, 25h, TI', () => {
     expect(result.voci.find(v => v.id === 'inps')!.importoAnnuo).toBeCloseTo(1209, 2);
   });
 
-  test('INAIL voce separata = 0; CassaColf default off = 0', async () => {
+  test('INAIL voce separata = 0; CassaColf obbligatoria 0,04 × 1300 = 52,00', async () => {
     const result = await calculateCosto(input);
     expect(result.voci.find(v => v.id === 'inail')!.importoAnnuo).toBe(0);
-    expect(result.voci.find(v => v.id === 'contributi_ccnl')!.importoAnnuo).toBeCloseTo(0, 2);
+    expect(result.voci.find(v => v.id === 'contributi_ccnl')!.importoAnnuo).toBeCloseTo(52, 2);
   });
 
   test('netto da busta (senza IRPEF) = RAL − 403', async () => {
@@ -56,14 +55,9 @@ describe('GOLDEN D1 — Domestici non conviventi liv. A, 25h, TI', () => {
     expect(result.nettoDipendente.nettoAnnuo).toBeCloseTo(ral - 403, 2);
     expect(result.nettoDipendente.disclaimer).toMatch(/senza IRPEF/i);
   });
-
-  test('CassaColf on: 0,03 × 1300 = 39,00', async () => {
-    const result = await calculateCosto({ ...input, includiCassaColf: true });
-    expect(result.voci.find(v => v.id === 'contributi_ccnl')!.importoAnnuo).toBeCloseTo(39, 2);
-  });
 });
 
-describe('GOLDEN D-CONV-A — Convivente liv. A, 54h, 13 mensilità, no CassaColf', () => {
+describe('GOLDEN D-CONV-A — Convivente liv. A, 54h, 13 mensilità, CassaColf obbligatoria', () => {
   const input = {
     ccnlId: 'domestici',
     livello: 'A',
@@ -78,7 +72,6 @@ describe('GOLDEN D-CONV-A — Convivente liv. A, 54h, 13 mensilità, no CassaCol
     codiceInail: '',
     agevolazioniSelezionate: [] as string[],
     includiAssistenzaSanitaria: false,
-    includiCassaColf: false,
     aliquotaInps: 0,
     convivente: true,
   };
@@ -93,9 +86,10 @@ describe('GOLDEN D-CONV-A — Convivente liv. A, 54h, 13 mensilità, no CassaCol
     expect(result.voci.find(v => v.id === 'tfr')!.importoAnnuo).toBeCloseTo(874.47, 2);
     // 13ª informativa = una mensilità, non in somma
     expect(result.voci.find(v => v.id === 'tredicesima')!.importoAnnuo).toBeCloseTo(908.10, 2);
-    expect(result.voci.find(v => v.id === 'contributi_ccnl')!.importoAnnuo).toBeCloseTo(0, 2);
-    // COSTO = 15.291,21
-    expect(result.costoTotaleAnnuo).toBeCloseTo(15_291.21, 2);
+    // CassaColf 0,04 × 54 × 52 = 112,32
+    expect(result.voci.find(v => v.id === 'contributi_ccnl')!.importoAnnuo).toBeCloseTo(112.32, 2);
+    // COSTO = 15.291,21 + 112,32
+    expect(result.costoTotaleAnnuo).toBeCloseTo(15_403.53, 2);
     // INPS dip 0,31 × 54 × 52 = 870,48 → netto 10.934,82
     expect(result.nettoDipendente.inpsDipendente).toBeCloseTo(870.48, 2);
     expect(result.nettoDipendente.nettoAnnuo).toBeCloseTo(10_934.82, 2);
@@ -113,7 +107,6 @@ describe('GOLDEN DOM 16/09 — tabelle A/B/C e non conviventi', () => {
     codiceInail: '',
     agevolazioniSelezionate: [] as string[],
     includiAssistenzaSanitaria: false,
-    includiCassaColf: false,
     aliquotaInps: 0,
     ral: 12_000,
   };
@@ -168,6 +161,20 @@ describe('GOLDEN DOM 16/09 — tabelle A/B/C e non conviventi', () => {
     });
     expect(result.voci.find(v => v.id === 'ral')!.importoAnnuo / 13).toBeCloseTo(964.51, 2);
     expect(round2(8.91 * 25 * 4.33)).toBeCloseTo(964.51, 2);
+  });
+
+  test('C sostituzione part-time DS 20 h: 10,75 × 20 × 4,33, CassaColf inclusa', async () => {
+    const result = await calculateCosto({
+      ...base,
+      ccnlId: 'domestici_conviventi',
+      livello: 'DS',
+      oreLavoro: 20,
+      oreSettimanali: 20,
+      convivente: true,
+      sostituzioneTitolare: true,
+    });
+    expect(result.voci.find(v => v.id === 'ral')!.importoAnnuo / 13).toBeCloseTo(round2(10.75 * 20 * 4.33), 2);
+    expect(result.voci.find(v => v.id === 'contributi_ccnl')!.importoAnnuo).toBeCloseTo(round2(0.04 * 20 * 52), 2);
   });
 
   test('non convivente 9,57 × 25 × 4,33 ≈ 1.037 ±1 €', async () => {
@@ -240,7 +247,7 @@ describe('GOLDEN C1 — Commercio stampa 14/09, RAL 24.944, 14 mensilità', () =
 
   test('ferie/permessi/festività non godute e assistenza forfait', async () => {
     const result = await calculateCosto(input);
-    expect(result.voci.find(v => v.id === 'ferie_permessi_festivita')!.importoAnnuo).toBeCloseTo(ral / 14, 2);
+    expect(result.voci.find(v => v.id === 'ferie_permessi_festivita')!.importoAnnuo).toBeCloseTo(275 * (ral / 14 / 173), 2);
     expect(result.voci.find(v => v.id === 'assistenza_sanitaria')!.importoAnnuo).toBeCloseTo(180, 2);
     expect(result.voci.find(v => v.id === 'assistenza_sanitaria')!.descrizione).toBe('Assistenza sanitaria integrativa');
     expect(result.voci.find(v => v.id === 'ente_bilaterale_ebiter')).toBeDefined();
@@ -256,9 +263,9 @@ describe('GOLDEN C1 — Commercio stampa 14/09, RAL 24.944, 14 mensilità', () =
     );
   });
 
-  test('quota non godute in input ignorata: ferie = una mensilità', async () => {
+  test('quota non godute in input ignorata: ferie = 275 × (mensile / 173)', async () => {
     const result = await calculateCosto({ ...input, quotaNonGodute: 0 });
-    expect(result.voci.find(v => v.id === 'ferie_permessi_festivita')!.importoAnnuo).toBeCloseTo(ral / 14, 2);
+    expect(result.voci.find(v => v.id === 'ferie_permessi_festivita')!.importoAnnuo).toBeCloseTo(275 * (ral / 14 / 173), 2);
   });
 });
 

@@ -130,7 +130,10 @@ export function EdiliPanel() {
             Dipendenti edili
           </h2>
           <p style={{ fontSize: '13px', color: 'var(--color-text-muted)', margin: 0, lineHeight: 1.5 }}>
-            Operai edili (Industria o Artigianato). Imponibile A+B+C+D+E su 12 mensilità; INPS datore 35,08%; Cassa Edile Taranto.
+            Operai edili (Industria o Artigianato). Imponibile A+B+C+D+E su 12 mensilità; INPS datore 35,08%; Cassa Edile.
+          </p>
+          <p style={{ fontSize: '12px', color: 'var(--color-text-muted)', margin: 0, lineHeight: 1.5 }}>
+            Nota: l&apos;aliquota della Cassa Edile è indicativa e potrà subire variazioni in base alla cassa edile provinciale di appartenenza.
           </p>
 
           <label style={{ fontSize: '12px', color: 'var(--color-text-muted)' }}>

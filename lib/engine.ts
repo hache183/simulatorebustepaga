@@ -17,6 +17,7 @@ import {
   NOTA_ASSISTENZA_SANITARIA_FORFAIT,
   NOTA_FERIE_NON_GODUTE_SEMPLIFICATA,
   ORE_FERIE_NON_GODUTE_FISSE,
+  DIVISORE_ORARIO_FERIE_FISSO,
 } from '@/lib/costanti-consulente';
 
 // Schema di validazione Zod — rifiuta qualsiasi input malformato prima del calcolo
@@ -46,9 +47,7 @@ const InputSchema = z.object({
   convivente: z.boolean().optional(),
   pagaOraria: z.number().min(0).max(500).optional(),
   oreSettimanali: z.number().min(1).max(80).optional(),
-  includiCassaColf: z.boolean().optional(),
   sostituzioneTitolare: z.boolean().optional(),
-  oreNonGodute: z.number().min(0).max(2000).optional(),
   oreAssenzeAnnue: z.number().min(0).max(2000).optional(),
 });
 
@@ -95,16 +94,15 @@ async function calculateCostoDomestico(input: CalcolatoreInput): Promise<Calcola
 
   const cassa = ccnlNonConv.contributiContrattuali.azienda.cassaColf;
   const quotaCassaOra = cassa?.perOra ? (cassa.importoMensile ?? 0) : 0;
-  const cassaColf = input.includiCassaColf ? round2(quotaCassaOra * oreAnnuali) : 0;
+  // CassaColf obbligatoria: sempre inclusa nel costo.
+  const cassaColf = round2(quotaCassaOra * oreAnnuali);
 
   // Ferie non godute (non conviventi): Y = (173 × ore settimanali) / 40, costo = Y × paga oraria.
   const ORE_FR_DOMESTICI = 173;
   const oreEquivalentiFr = round2((ORE_FR_DOMESTICI * oreSettimanali) / 40);
-  const oreManuali = input.oreNonGodute ?? 0;
-  const oreNonGodute = oreManuali > 0 ? oreManuali : oreEquivalentiFr;
   const quotaNonGodute = input.quotaNonGodute ?? 1;
   const costoFerie = ret.regime === 'non_convivente'
-    ? round2(oreNonGodute * ret.pagaOraria * quotaNonGodute)
+    ? round2(oreEquivalentiFr * ret.pagaOraria * quotaNonGodute)
     : 0;
 
   // La tredicesima è informativa e già dentro la RAL (mensile × mensilità).
@@ -113,9 +111,7 @@ async function calculateCostoDomestico(input: CalcolatoreInput): Promise<Calcola
   const percentualeRal = ralEffettiva > 0 ? costoTotaleAnnuo / ralEffettiva : 0;
   const pct = (n: number) => (ralEffettiva > 0 ? n / ralEffettiva : 0);
 
-  const notaFerie = oreManuali > 0
-    ? `${oreNonGodute} h (inserite) × ${fmtNum(ret.pagaOraria)}€/h`
-    : `${oreEquivalentiFr} h (173×${oreSettimanali}/40) × ${fmtNum(ret.pagaOraria)}€/h`;
+  const notaFerie = `${oreEquivalentiFr} h (173×${oreSettimanali}/40) × ${fmtNum(ret.pagaOraria)}€/h — formula fissa`;
 
   const voci: DettaglioCosto[] = [
     {
@@ -169,9 +165,7 @@ async function calculateCostoDomestico(input: CalcolatoreInput): Promise<Calcola
       importoAnnuo: cassaColf,
       importoMensile: cassaColf / 12,
       percentualeRal: pct(cassaColf),
-      notaLegge: input.includiCassaColf
-        ? `Quota oraria datoriale ${fmtNum(quotaCassaOra)}€ × ${oreAnnuali} ore`
-        : 'CassaColf esclusa',
+      notaLegge: `Obbligatoria — quota oraria datoriale ${fmtNum(quotaCassaOra)}€ × ${oreAnnuali} ore`,
     },
     ...(costoScatti > 0 ? [{
       id: 'scatti_anzianita',
@@ -371,10 +365,10 @@ export async function calculateCosto(rawInput: unknown): Promise<CalcolatoreOutp
     livello.scattoEuro,
   );
 
-  // 10b. Ferie, permessi e ex festività non godute — formula fissa: 173 h × (RAL/mensilità/173)
+  // 10b. Ferie, permessi e ex festività non godute — formula fissa: 275 h × (RAL/mensilità/173)
   const retribuzioneMensile = ralEffettiva / mensilita;
   const costoFerieNonGodute = round2(
-    ORE_FERIE_NON_GODUTE_FISSE * (retribuzioneMensile / ORE_FERIE_NON_GODUTE_FISSE),
+    ORE_FERIE_NON_GODUTE_FISSE * (retribuzioneMensile / DIVISORE_ORARIO_FERIE_FISSO),
   );
 
   // 11. Totale

@@ -23,10 +23,8 @@ export interface CalcolatoreInput {
   pagaOraria?: number;                // solo domestici: retribuzione oraria effettiva
   oreSettimanali?: number;            // solo domestici: ore settimanali dedicate al rapporto
   convivente?: boolean;               // solo domestici: lavoratore convivente con vitto e alloggio
-  includiCassaColf?: boolean;         // domestici: quota oraria Cassacolf (default off)
   sostituzioneTitolare?: boolean;     // conviventi: apre la tabella C (oraria CS/DS)
-  oreNonGodute?: number;              // domestici non conviventi: ferie/permessi/festività non godute
-  oreAssenzeAnnue?: number;           // legacy API; dipendenti: ignorato (formula fissa 173 h)
+  oreAssenzeAnnue?: number;           // legacy API; dipendenti: ignorato (formula fissa 275 h)
 }
 
 // ─── OUTPUT CALCOLATORE ───────────────────────────────────────────────────
@@ -141,7 +139,6 @@ export interface MotoreEdiliCassaConfig {
 }
 
 export interface MotoreEdiliConfig {
-  cassaProvincia: string;
   oreMensiliPieno: number;
   oreSettimanaliPieno: number;
   gratificaFeriePercent: number;
