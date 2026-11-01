@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { ZodError } from 'zod';
 import { calculateCosto } from '@/lib/engine';
 import { LRUCache } from 'lru-cache';
+import { richiediAccessoLead } from '@/lib/lead-guard';
+import { registraSimulazione, sintesiSimulazione } from '@/lib/lead-store';
 
 // Rate limiter: max 20 calcoli per minuto per IP
 const rateLimiter = new LRUCache<string, number[]>({ max: 500, ttl: 60_000 });
@@ -16,6 +18,9 @@ function isRateLimited(ip: string): boolean {
 }
 
 export async function POST(req: NextRequest) {
+  const accesso = richiediAccessoLead(req);
+  if (!accesso.ok) return accesso.risposta;
+
   const ip = req.headers.get('x-forwarded-for') ?? '127.0.0.1';
 
   if (isRateLimited(ip)) {
@@ -28,6 +33,14 @@ export async function POST(req: NextRequest) {
   try {
     const body: unknown = await req.json();
     const risultato = await calculateCosto(body);
+    try {
+      registraSimulazione(accesso.leadId, {
+        endpoint: 'calcola',
+        sintesi: sintesiSimulazione('calcola', body, risultato),
+      });
+    } catch (e) {
+      console.error('[lead-store]', e);
+    }
     return NextResponse.json(risultato);
   } catch (err) {
     if (err instanceof ZodError) {

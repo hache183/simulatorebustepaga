@@ -6,6 +6,8 @@ import {
   type SociState,
   type SocietariInput,
 } from '@/lib/societari';
+import { richiediAccessoLead } from '@/lib/lead-guard';
+import { registraSimulazione, sintesiSimulazione } from '@/lib/lead-store';
 
 const MAX_COMPENSO = 5_000_000;
 
@@ -14,7 +16,21 @@ function numero(v: unknown, fallback: number): number {
   return Number.isFinite(n) && n >= 0 ? n : fallback;
 }
 
+function traccia(leadId: string, body: unknown, risultato: unknown) {
+  try {
+    registraSimulazione(leadId, {
+      endpoint: 'societari',
+      sintesi: sintesiSimulazione('societari', body, risultato),
+    });
+  } catch (e) {
+    console.error('[lead-store]', e);
+  }
+}
+
 export async function POST(req: NextRequest) {
+  const accesso = richiediAccessoLead(req);
+  if (!accesso.ok) return accesso.risposta;
+
   try {
     const body = await req.json() as Partial<SociState> & SocietariInput;
 
@@ -23,7 +39,9 @@ export async function POST(req: NextRequest) {
       if (lordo < 0 || lordo > MAX_COMPENSO) {
         return NextResponse.json({ errore: 'Compenso non valido' }, { status: 400 });
       }
-      return NextResponse.json(calcolaCompensiSocietari({ ...body, compensoAnnuo: lordo }));
+      const risultato = calcolaCompensiSocietari({ ...body, compensoAnnuo: lordo });
+      traccia(accesso.leadId, body, risultato);
+      return NextResponse.json(risultato);
     }
 
     const base = defaultStateSoci();
@@ -44,7 +62,9 @@ export async function POST(req: NextRequest) {
       costoKm: numero(body.costoKm, 0),
     };
 
-    return NextResponse.json(calcolaSoci(stato));
+    const risultato = calcolaSoci(stato);
+    traccia(accesso.leadId, body, risultato);
+    return NextResponse.json(risultato);
   } catch (e) {
     console.error('[api/societari]', e);
     return NextResponse.json({ errore: 'Richiesta non valida' }, { status: 400 });

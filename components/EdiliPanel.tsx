@@ -2,7 +2,8 @@
 
 import { useEffect, useMemo, useState, type CSSProperties } from 'react';
 import { RisultatiCalcolatore } from '@/components/RisultatiCalcolatore';
-import { ReportLeadGate } from '@/components/ReportLeadGate';
+import { useReportLead } from '@/components/LeadFunnel';
+import { AccessoLeadRichiesto, CalcoloAnnullato, leggiRispostaSimulazione } from '@/lib/lead-session';
 import { livelliOperaioEdili } from '@/lib/edili';
 import type { CalcolatoreOutput } from '@/types';
 
@@ -32,6 +33,7 @@ function filtraVociInail36(voci: VoceInail[]): VoceInail[] {
 }
 
 export function EdiliPanel() {
+  const { eseguiReport } = useReportLead();
   const [ccnlId, setCcnlId] = useState<string>('edilizia_industria');
   const [vociInail, setVociInail] = useState<VoceInail[]>([]);
   const [livello, setLivello] = useState('1');
@@ -68,41 +70,47 @@ export function EdiliPanel() {
     return liv ? round2(liv.minimoTabellare * 12) : 0;
   }, [livelliOperaio, livello]);
 
-  const calcola = async () => {
-    setLoading(true);
-    setErrore(null);
-    const ralPlaceholder = Math.max(1, minimoAnnuo);
-    try {
-      const res = await fetch('/api/calcola', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ccnlId,
-          livello,
-          ral: ralPlaceholder,
-          tipoContratto: 'tempo_indeterminato',
-          oreLavoro: ore,
-          oreSettimanali: ore,
-          mensilita: 12,
-          anzianitaAnni: 0,
-          numeroDipendenti: 1,
-          regione: 'Puglia',
-          codiceInail,
-          agevolazioniSelezionate: [],
-          includiAssistenzaSanitaria: false,
-          aliquotaInps: 0.3508,
-          retribuzionePersonalizzata: ralConcordata === '' ? undefined : Number(ralConcordata),
-        }),
-      });
-      const json = await res.json();
-      if (!res.ok) throw new Error((json as { errore?: string }).errore ?? 'Errore nel calcolo');
-      setRisultato(json as CalcolatoreOutput);
-    } catch (e) {
+  const calcola = () => {
+    const payload = {
+      ccnlId,
+      livello,
+      ral: Math.max(1, minimoAnnuo),
+      tipoContratto: 'tempo_indeterminato' as const,
+      oreLavoro: ore,
+      oreSettimanali: ore,
+      mensilita: 12,
+      anzianitaAnni: 0,
+      numeroDipendenti: 1,
+      regione: 'Puglia',
+      codiceInail,
+      agevolazioniSelezionate: [] as string[],
+      includiAssistenzaSanitaria: false,
+      aliquotaInps: 0.3508,
+      retribuzionePersonalizzata: ralConcordata === '' ? undefined : Number(ralConcordata),
+    };
+    void eseguiReport('edili', async () => {
+      setLoading(true);
+      setErrore(null);
+      try {
+        const res = await fetch('/api/calcola', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        const json = await leggiRispostaSimulazione<CalcolatoreOutput>(res);
+        setRisultato(json);
+      } catch (e) {
+        if (e instanceof AccessoLeadRichiesto) throw e;
+        setErrore(e instanceof Error ? e.message : 'Errore sconosciuto');
+        setRisultato(null);
+      } finally {
+        setLoading(false);
+      }
+    }).catch(e => {
+      if (e instanceof AccessoLeadRichiesto || e instanceof CalcoloAnnullato) return;
       setErrore(e instanceof Error ? e.message : 'Errore sconosciuto');
-      setRisultato(null);
-    } finally {
       setLoading(false);
-    }
+    });
   };
 
   return (
@@ -245,9 +253,7 @@ export function EdiliPanel() {
             </div>
           )}
           {risultato && (
-            <ReportLeadGate modulo="edili" meta={{ ccnl: risultato.input.ccnlId }}>
-              <RisultatiCalcolatore risultato={risultato} onRicalcola={() => setRisultato(null)} />
-            </ReportLeadGate>
+            <RisultatiCalcolatore risultato={risultato} onRicalcola={() => setRisultato(null)} />
           )}
         </div>
       </div>

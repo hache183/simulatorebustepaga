@@ -17,7 +17,7 @@ export function AppHeader() {
     <header
       className="no-print app-header"
     >
-      <div className="app-header__brand">
+      <a href="/" className="app-header__brand" style={{ textDecoration: 'none' }}>
         <div className="app-header__logo">
           <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden>
             <path d="M2 12 L5 7 L8 9 L11 4 L14 6" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
@@ -27,7 +27,7 @@ export function AppHeader() {
         <span className="app-header__title">
           CostWork<span className="app-header__title-accent">Pro</span>
         </span>
-      </div>
+      </a>
 
       <div className="app-header__status">
         <span className="app-header__status-dot" />

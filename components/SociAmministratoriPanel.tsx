@@ -8,7 +8,8 @@ import {
   type SociState,
 } from '@/lib/societari';
 import { RisultatiSoci } from '@/components/RisultatiSoci';
-import { ReportLeadGate } from '@/components/ReportLeadGate';
+import { useReportLead } from '@/components/LeadFunnel';
+import { AccessoLeadRichiesto, CalcoloAnnullato, leggiRispostaSimulazione } from '@/lib/lead-session';
 
 const BANNER_ACI =
   'Tariffa = colonna Costo km 15.000 km, tabelle ACI 2026, GU 297/2025 SO 40. Non è il fringe benefit.';
@@ -57,6 +58,7 @@ function sezioneVeicolo(v: VeicoloAci): string {
 }
 
 export function SociAmministratoriPanel() {
+  const { eseguiReport } = useReportLead();
   const [stato, setStato] = useState<SociState>(defaultStateSoci);
   const [catalogo, setCatalogo] = useState<VeicoloAci[] | null>(null);
   const [query, setQuery] = useState('');
@@ -90,24 +92,31 @@ export function SociAmministratoriPanel() {
 
   const conCompenso = stato.modalita === 'con_compenso';
 
-  const generaReport = async () => {
-    setLoading(true);
-    setErrore(null);
-    try {
-      const res = await fetch('/api/societari', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(stato),
-      });
-      const json = await res.json();
-      if (!res.ok) throw new Error((json as { errore?: string }).errore ?? 'Errore nel calcolo');
-      setRisultato(json as SociResult);
-    } catch (e) {
+  const generaReport = () => {
+    const payload = { ...stato };
+    void eseguiReport('soci', async () => {
+      setLoading(true);
+      setErrore(null);
+      try {
+        const res = await fetch('/api/societari', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        const json = await leggiRispostaSimulazione<SociResult>(res);
+        setRisultato(json);
+      } catch (e) {
+        if (e instanceof AccessoLeadRichiesto) throw e;
+        setErrore(e instanceof Error ? e.message : 'Errore sconosciuto');
+        setRisultato(null);
+      } finally {
+        setLoading(false);
+      }
+    }).catch(e => {
+      if (e instanceof AccessoLeadRichiesto || e instanceof CalcoloAnnullato) return;
       setErrore(e instanceof Error ? e.message : 'Errore sconosciuto');
-      setRisultato(null);
-    } finally {
       setLoading(false);
-    }
+    });
   };
 
   const trovati = useMemo(
@@ -450,13 +459,11 @@ export function SociAmministratoriPanel() {
           </div>
         )}
         {risultato && !loading && (
-          <ReportLeadGate modulo="soci" meta={{ modalita: stato.modalita }}>
-            <RisultatiSoci
-              out={risultato}
-              stato={stato}
-              onRicalcola={() => { setRisultato(null); setErrore(null); }}
-            />
-          </ReportLeadGate>
+          <RisultatiSoci
+            out={risultato}
+            stato={stato}
+            onRicalcola={() => { setRisultato(null); setErrore(null); }}
+          />
         )}
       </div>
     </div>

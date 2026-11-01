@@ -2,7 +2,8 @@
 
 import { useEffect, useMemo, useState, type CSSProperties } from 'react';
 import { RisultatiCalcolatore } from '@/components/RisultatiCalcolatore';
-import { ReportLeadGate } from '@/components/ReportLeadGate';
+import { useReportLead } from '@/components/LeadFunnel';
+import { AccessoLeadRichiesto, CalcoloAnnullato, leggiRispostaSimulazione } from '@/lib/lead-session';
 import type { CalcolatoreOutput, LivelloCcnl } from '@/types';
 
 const COEFF_DEFAULT = 4.33;
@@ -46,6 +47,7 @@ const inputStyle: CSSProperties = {
 };
 
 export function DomesticiPanel() {
+  const { eseguiReport } = useReportLead();
   const [modo, setModo] = useState<Modo>('non_convivente');
   const [ramo, setRamo] = useState<Ramo>('pieno');
   const [sostituzione, setSostituzione] = useState(false);
@@ -171,47 +173,53 @@ export function DomesticiPanel() {
     }
   };
 
-  const calcola = async () => {
+  const calcola = () => {
     if (preview.errore) {
       setErrore(preview.errore);
       return;
     }
-    setLoading(true);
-    setErrore(null);
-    const ral = Math.max(1, round2(preview.mensile * mensilita));
-    try {
-      const res = await fetch('/api/calcola', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ccnlId: modo === 'convivente' ? 'domestici_conviventi' : 'domestici',
-          livello,
-          ral,
-          tipoContratto: 'tempo_indeterminato',
-          oreLavoro: modo === 'convivente' && !sostituzione && ramo === 'pieno' ? ORE_PIENO : ore,
-          oreSettimanali: modo === 'convivente' && !sostituzione && ramo === 'pieno' ? ORE_PIENO : ore,
-          mensilita,
-          anzianitaAnni,
-          numeroDipendenti: 1,
-          regione: 'Lazio',
-          codiceInail: '',
-          agevolazioniSelezionate: [],
-          includiAssistenzaSanitaria: false,
-          aliquotaInps: 0,
-          quotaNonGodute: 1,
-          convivente: modo === 'convivente',
-          pagaOraria: modo === 'non_convivente' ? pagaOraria : undefined,
-          sostituzioneTitolare: modo === 'convivente' && sostituzione,
-        }),
-      });
-      const json = await res.json();
-      if (!res.ok) throw new Error((json as { errore?: string }).errore ?? 'Errore nel calcolo');
-      setRisultato(json as CalcolatoreOutput);
-    } catch (e) {
+    const payload = {
+      ccnlId: modo === 'convivente' ? 'domestici_conviventi' : 'domestici',
+      livello,
+      ral: Math.max(1, round2(preview.mensile * mensilita)),
+      tipoContratto: 'tempo_indeterminato' as const,
+      oreLavoro: modo === 'convivente' && !sostituzione && ramo === 'pieno' ? ORE_PIENO : ore,
+      oreSettimanali: modo === 'convivente' && !sostituzione && ramo === 'pieno' ? ORE_PIENO : ore,
+      mensilita,
+      anzianitaAnni,
+      numeroDipendenti: 1,
+      regione: 'Lazio',
+      codiceInail: '',
+      agevolazioniSelezionate: [] as string[],
+      includiAssistenzaSanitaria: false,
+      aliquotaInps: 0,
+      quotaNonGodute: 1,
+      convivente: modo === 'convivente',
+      pagaOraria: modo === 'non_convivente' ? pagaOraria : undefined,
+      sostituzioneTitolare: modo === 'convivente' && sostituzione,
+    };
+    void eseguiReport('domestici', async () => {
+      setLoading(true);
+      setErrore(null);
+      try {
+        const res = await fetch('/api/calcola', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        const json = await leggiRispostaSimulazione<CalcolatoreOutput>(res);
+        setRisultato(json);
+      } catch (e) {
+        if (e instanceof AccessoLeadRichiesto) throw e;
+        setErrore(e instanceof Error ? e.message : 'Errore sconosciuto');
+      } finally {
+        setLoading(false);
+      }
+    }).catch(e => {
+      if (e instanceof AccessoLeadRichiesto || e instanceof CalcoloAnnullato) return;
       setErrore(e instanceof Error ? e.message : 'Errore sconosciuto');
-    } finally {
       setLoading(false);
-    }
+    });
   };
 
   const oreBloccate = modo === 'convivente' && !sostituzione && ramo === 'pieno';
@@ -344,9 +352,7 @@ export function DomesticiPanel() {
           </div>
         )}
         {risultato && (
-          <ReportLeadGate modulo="domestici" meta={{ ccnl: risultato.input.ccnlId }}>
-            <RisultatiCalcolatore risultato={risultato} onRicalcola={() => { setRisultato(null); setErrore(null); }} />
-          </ReportLeadGate>
+          <RisultatiCalcolatore risultato={risultato} onRicalcola={() => { setRisultato(null); setErrore(null); }} />
         )}
       </div>
     </div>
