@@ -19,12 +19,28 @@ Apri il terminale nella cartella del progetto e digita:
 
 Poi apri il browser e vai su: **http://localhost:3000**
 
+Il simulatore è **pubblico**: non serve registrarsi. Prima di vedere il report completo l’utente lascia un lead (nome, email, consenso privacy). Dopo il primo invio, un cookie sblocca i report per circa 30 giorni sullo stesso browser.
+
+### Variabili per i lead (email)
+
+In `.env.local`:
+
+- `LEADS_TO_EMAIL` — indirizzo che riceve i lead
+- `LEADS_FROM_EMAIL` — mittente verificato su Resend (es. `CostWork <noreply@tuodominio.it>`)
+- `RESEND_API_KEY` — chiave API Resend
+
+Opzionale: `NEXT_PUBLIC_PRIVACY_URL` per puntare a un’informativa esterna; altrimenti si usa `/privacy`.
+
+### Area consulente (admin)
+
+Login da **Area consulente** nell’header oppure `/login`. Servono `AUTH_EMAIL`, `AUTH_PASSWORD` e `AUTH_TOKEN` come prima.
+
 ---
 
 ## Come aggiornare le aliquote INPS o le tariffe INAIL
 
-1. Vai su: **http://localhost:3000/admin**
-2. Inserisci la password (quella in .env.local)
+1. Accedi come consulente e vai su: **http://localhost:3000/admin**
+2. Inserisci la password admin (quella in `.env.local`, variabile `ADMIN_PASSWORD`)
 3. Seleziona il file da modificare (es. "Aliquote INPS e Agevolazioni")
 4. Modifica i numeri direttamente nell'editor
 5. Clicca **Salva modifiche**

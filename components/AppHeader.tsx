@@ -4,89 +4,37 @@ import { Suspense, useState, useEffect, type ReactNode } from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
 
 export function AppHeader() {
-  const [ora, setOra] = useState('');
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
-    const aggiorna = () => {
-      setOra(new Date().toLocaleTimeString('it-IT', {
-        hour: '2-digit', minute: '2-digit', second: '2-digit'
-      }));
-    };
-    aggiorna();
-    const id = setInterval(aggiorna, 1000);
-    return () => clearInterval(id);
+    fetch('/api/auth/session')
+      .then(r => r.json())
+      .then((d: { isAdmin?: boolean }) => setIsAdmin(Boolean(d.isAdmin)))
+      .catch(() => setIsAdmin(false));
   }, []);
 
   return (
     <header
-      className="no-print"
-      style={{
-        position: 'fixed',
-        top: 0, left: 0, right: 0,
-        height: '56px',
-        backgroundColor: 'var(--color-bg-surface)',
-        borderBottom: '1px solid var(--color-border)',
-        zIndex: 100,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        padding: '0 32px',
-      }}
+      className="no-print app-header"
     >
-      {/* Logo + nome prodotto */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-        <div style={{
-          width: '28px', height: '28px',
-          background: 'var(--color-accent)',
-          borderRadius: '7px',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          flexShrink: 0,
-        }}>
-          <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+      <div className="app-header__brand">
+        <div className="app-header__logo">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden>
             <path d="M2 12 L5 7 L8 9 L11 4 L14 6" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             <circle cx="14" cy="6" r="1.5" fill="white"/>
           </svg>
         </div>
-
-        <span style={{
-          fontFamily: "'Syne', sans-serif",
-          fontWeight: 700,
-          fontSize: '15px',
-          color: 'var(--color-text-primary)',
-          letterSpacing: '-0.01em',
-        }}>
-          CostWork<span style={{ color: 'var(--color-accent-bright)' }}>Pro</span>
+        <span className="app-header__title">
+          CostWork<span className="app-header__title-accent">Pro</span>
         </span>
       </div>
 
-      {/* Centro — status indicator (minimal) */}
-      <div style={{
-        display: 'flex', alignItems: 'center', gap: '6px',
-      }}>
-        <span style={{
-          width: '6px', height: '6px', borderRadius: '50%',
-          backgroundColor: 'var(--color-green)',
-          display: 'inline-block',
-        }} />
-        <span style={{
-          fontSize: '12px', fontFamily: "'Plus Jakarta Sans', sans-serif",
-          color: 'var(--color-text-muted)',
-        }}>
-          Aliquote {new Date().getFullYear()}
-        </span>
+      <div className="app-header__status">
+        <span className="app-header__status-dot" />
+        <span>Aliquote {new Date().getFullYear()}</span>
       </div>
 
-      {/* Destra — ora + link admin */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-        <span style={{
-          fontFamily: "'DM Mono', monospace",
-          fontSize: '12px',
-          color: 'var(--color-text-muted)',
-          minWidth: '64px',
-          textAlign: 'right',
-        }}>
-          {ora}
-        </span>
+      <div className="app-header__actions">
         <Suspense fallback={
           <>
             <HeaderModuloLink href="/calcolatore" active={false}>Costo lavoro</HeaderModuloLink>
@@ -95,59 +43,23 @@ export function AppHeader() {
         }>
           <HeaderModuloLinks />
         </Suspense>
-        <a
-          href="/admin"
-          style={{
-            fontSize: '12px',
-            color: 'var(--color-text-secondary)',
-            textDecoration: 'none',
-            fontFamily: "'Plus Jakarta Sans', sans-serif",
-            fontWeight: 500,
-            padding: '5px 12px',
-            border: '1px solid var(--color-border)',
-            borderRadius: '6px',
-            transition: 'border-color 0.15s ease, color 0.15s ease',
-          }}
-          onMouseEnter={e => {
-            (e.target as HTMLAnchorElement).style.borderColor = 'var(--color-border-bright)';
-            (e.target as HTMLAnchorElement).style.color = 'var(--color-text-primary)';
-          }}
-          onMouseLeave={e => {
-            (e.target as HTMLAnchorElement).style.borderColor = 'var(--color-border)';
-            (e.target as HTMLAnchorElement).style.color = 'var(--color-text-secondary)';
-          }}
-        >
-          Admin
-        </a>
-        <button
-          onClick={async () => {
-            await fetch('/api/auth/logout', { method: 'POST' });
-            window.location.href = '/login';
-          }}
-          style={{
-            fontSize: '12px',
-            color: 'var(--color-text-muted)',
-            textDecoration: 'none',
-            fontFamily: "'Plus Jakarta Sans', sans-serif",
-            fontWeight: 500,
-            padding: '5px 12px',
-            border: '1px solid var(--color-border)',
-            borderRadius: '6px',
-            background: 'transparent',
-            cursor: 'pointer',
-            transition: 'border-color 0.15s ease, color 0.15s ease',
-          }}
-          onMouseEnter={e => {
-            (e.target as HTMLButtonElement).style.borderColor = 'var(--color-red)';
-            (e.target as HTMLButtonElement).style.color = 'var(--color-red)';
-          }}
-          onMouseLeave={e => {
-            (e.target as HTMLButtonElement).style.borderColor = 'var(--color-border)';
-            (e.target as HTMLButtonElement).style.color = 'var(--color-text-muted)';
-          }}
-        >
-          Esci
-        </button>
+        {isAdmin ? (
+          <>
+            <a href="/admin" className="app-header__link">Admin</a>
+            <button
+              type="button"
+              className="app-header__link app-header__link--muted"
+              onClick={async () => {
+                await fetch('/api/auth/logout', { method: 'POST' });
+                window.location.href = '/calcolatore';
+              }}
+            >
+              Esci
+            </button>
+          </>
+        ) : (
+          <a href="/login" className="app-header__link">Area consulente</a>
+        )}
       </div>
     </header>
   );
@@ -172,16 +84,7 @@ function HeaderModuloLink({
   return (
     <a
       href={href}
-      style={{
-        fontSize: '12px',
-        color: active ? 'var(--color-text-primary)' : 'var(--color-text-secondary)',
-        textDecoration: 'none',
-        fontFamily: "'Plus Jakarta Sans', sans-serif",
-        fontWeight: 500,
-        padding: '5px 12px',
-        border: `1px solid ${active ? 'var(--color-accent)' : 'var(--color-border)'}`,
-        borderRadius: '6px',
-      }}
+      className={`app-header__nav${active ? ' app-header__nav--active' : ''}`}
     >
       {children}
     </a>

@@ -1,50 +1,84 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 /**
- * Middleware di autenticazione.
- * Protegge tutte le pagine tranne /login e le risorse statiche.
- * Il token è un hash SHA-256 di email+password salvato in un cookie HttpOnly.
+ * Simulatore pubblico; solo /admin e /api/admin richiedono login consulente.
  */
 
-const PUBLIC_PATHS = ['/login', '/api/auth/login', '/api/auth/logout'];
+const PUBLIC_API_PREFIXES = [
+  '/api/auth/login',
+  '/api/auth/logout',
+  '/api/auth/session',
+  '/api/calcola',
+  '/api/ccnl/',
+  '/api/inps/',
+  '/api/inail/',
+  '/api/agevolazioni',
+  '/api/societari',
+  '/api/leads',
+];
+
+function isPublicApi(pathname: string): boolean {
+  return PUBLIC_API_PREFIXES.some(p => pathname === p || pathname.startsWith(p));
+}
+
+function isPublicPage(pathname: string): boolean {
+  if (
+    pathname === '/' ||
+    pathname === '/login' ||
+    pathname === '/privacy' ||
+    pathname.startsWith('/calcolatore') ||
+    pathname === '/compensi-societari'
+  ) {
+    return true;
+  }
+  return false;
+}
+
+function requiresAdminAuth(pathname: string): boolean {
+  return pathname.startsWith('/admin') || pathname.startsWith('/api/admin');
+}
+
+function verifyAdminToken(request: NextRequest): boolean {
+  const token = request.cookies.get('auth_token')?.value;
+  const expected = process.env.AUTH_TOKEN;
+  return Boolean(token && expected && token === expected);
+}
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Risorse statiche e percorsi pubblici: passa liberamente
   if (
     pathname.startsWith('/_next') ||
     pathname.startsWith('/favicon') ||
-    pathname.endsWith('.ico') ||
-    PUBLIC_PATHS.some(p => pathname === p)
+    pathname.endsWith('.ico')
   ) {
     return NextResponse.next();
   }
 
-  const token = request.cookies.get('auth_token')?.value;
-  if (!token) {
-    const loginUrl = request.nextUrl.clone();
-    loginUrl.pathname = '/login';
-    loginUrl.searchParams.set('from', pathname);
-    return NextResponse.redirect(loginUrl);
-  }
-
-  // Verifica token contro le env (hash statico calcolato a runtime)
-  const expected = process.env.AUTH_TOKEN;
-  if (!expected || token !== expected) {
-    const loginUrl = request.nextUrl.clone();
-    loginUrl.pathname = '/login';
-    loginUrl.searchParams.set('from', pathname);
-    const response = NextResponse.redirect(loginUrl);
-    response.cookies.delete('auth_token');
+  if (isPublicPage(pathname) || isPublicApi(pathname)) {
+    const response = NextResponse.next();
+    if (pathname.startsWith('/calcolatore') || pathname.startsWith('/admin')) {
+      response.headers.set('Cache-Control', 'no-store, must-revalidate');
+    }
     return response;
   }
 
-  // Tutto ciò che sta dietro il login contiene dati di clienti reali: nessuna
-  // cache condivisa o del browser deve conservarne copia.
-  const response = NextResponse.next();
-  response.headers.set('Cache-Control', 'no-store, must-revalidate');
-  return response;
+  if (requiresAdminAuth(pathname)) {
+    if (!verifyAdminToken(request)) {
+      if (pathname.startsWith('/api/')) {
+        return NextResponse.json({ errore: 'Non autorizzato' }, { status: 401 });
+      }
+      const loginUrl = request.nextUrl.clone();
+      loginUrl.pathname = '/login';
+      loginUrl.searchParams.set('from', pathname);
+      return NextResponse.redirect(loginUrl);
+    }
+    const response = NextResponse.next();
+    response.headers.set('Cache-Control', 'no-store, must-revalidate');
+    return response;
+  }
+
+  return NextResponse.next();
 }
 
 export const config = {

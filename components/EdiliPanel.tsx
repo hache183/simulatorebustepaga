@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState, type CSSProperties } from 'react';
 import { RisultatiCalcolatore } from '@/components/RisultatiCalcolatore';
+import { ReportLeadGate } from '@/components/ReportLeadGate';
 import { livelliOperaioEdili } from '@/lib/edili';
 import type { CalcolatoreOutput } from '@/types';
 
@@ -244,7 +245,9 @@ export function EdiliPanel() {
             </div>
           )}
           {risultato && (
-            <RisultatiCalcolatore risultato={risultato} onRicalcola={() => setRisultato(null)} />
+            <ReportLeadGate modulo="edili" meta={{ ccnl: risultato.input.ccnlId }}>
+              <RisultatiCalcolatore risultato={risultato} onRicalcola={() => setRisultato(null)} />
+            </ReportLeadGate>
           )}
         </div>
       </div>

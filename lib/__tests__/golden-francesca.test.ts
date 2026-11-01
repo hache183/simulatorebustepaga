@@ -369,5 +369,7 @@ test('UI elenca tutti i CCNL file-backed tranne duplicati interni', () => {
   expect(ui).toContain('metalmeccanici');
   expect(ui).not.toContain('agricoltura_impiegati');
   expect(ui).not.toContain('agricoltura_operai');
-  expect(ui.length).toBe(listCcnlIds().length - 4);
+  expect(ui).not.toContain('edilizia_industria');
+  expect(ui).not.toContain('edilizia_artigianato');
+  expect(ui.length).toBe(listCcnlIds().length - 6);
 });

@@ -3,19 +3,18 @@
 import { useEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 import { cercaVeicoli, type CatalogoAci, type VeicoloAci } from '@/lib/aci';
 import {
-  calcolaSoci,
   defaultStateSoci,
+  type SociResult,
   type SociState,
 } from '@/lib/societari';
+import { RisultatiSoci } from '@/components/RisultatiSoci';
+import { ReportLeadGate } from '@/components/ReportLeadGate';
 
 const BANNER_ACI =
   'Tariffa = colonna Costo km 15.000 km, tabelle ACI 2026, GU 297/2025 SO 40. Non è il fringe benefit.';
 
 const NOTA_OVERRIDE =
   'modello non in tabella ACI 2026 — inserire il costo km dalla GU';
-
-const eur = (n: number) =>
-  new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR', minimumFractionDigits: 2 }).format(n);
 
 const eurKm = (n: number) =>
   `${new Intl.NumberFormat('it-IT', { minimumFractionDigits: 4, maximumFractionDigits: 4 }).format(n)} €/km`;
@@ -52,31 +51,6 @@ function NumInput({
   );
 }
 
-function Row({ k, v, sub, strong }: { k: string; v: string; sub?: boolean; strong?: boolean }) {
-  return (
-    <tr style={{ borderBottom: '1px solid var(--color-border)' }}>
-      <td style={{
-        padding: '8px 0',
-        paddingLeft: sub ? '14px' : 0,
-        color: strong ? 'var(--color-text-primary)' : 'var(--color-text-secondary)',
-        fontSize: sub ? '12px' : '13px',
-        fontWeight: strong ? 600 : 400,
-      }}>
-        {sub ? `⋯ ${k}` : k}
-      </td>
-      <td style={{
-        padding: '8px 0',
-        textAlign: 'right',
-        fontFamily: "'DM Mono', monospace",
-        fontSize: sub ? '12px' : '13px',
-        fontWeight: strong ? 600 : 400,
-      }}>
-        {v}
-      </td>
-    </tr>
-  );
-}
-
 function sezioneVeicolo(v: VeicoloAci): string {
   const stato = v.inProduzione ? 'in produzione' : 'fuori produzione';
   return `${v.alimentazione} · ${stato}`;
@@ -89,6 +63,9 @@ export function SociAmministratoriPanel() {
   const [aperto, setAperto] = useState(false);
   const [veicolo, setVeicolo] = useState<VeicoloAci | null>(null);
   const [overrideManuale, setOverrideManuale] = useState(false);
+  const [risultato, setRisultato] = useState<SociResult | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [errore, setErrore] = useState<string | null>(null);
   const boxRef = useRef<HTMLDivElement>(null);
 
   const set = <K extends keyof SociState>(k: K, v: SociState[K]) =>
@@ -111,30 +88,37 @@ export function SociAmministratoriPanel() {
     return () => document.removeEventListener('mousedown', chiudi);
   }, []);
 
-  const out = useMemo(() => calcolaSoci(stato), [stato]);
   const conCompenso = stato.modalita === 'con_compenso';
-  const pct = (out.aliquotaInpsApplicata * 100).toLocaleString('it-IT', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  });
+
+  const generaReport = async () => {
+    setLoading(true);
+    setErrore(null);
+    try {
+      const res = await fetch('/api/societari', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(stato),
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error((json as { errore?: string }).errore ?? 'Errore nel calcolo');
+      setRisultato(json as SociResult);
+    } catch (e) {
+      setErrore(e instanceof Error ? e.message : 'Errore sconosciuto');
+      setRisultato(null);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const trovati = useMemo(
     () => (catalogo && !overrideManuale ? cercaVeicoli(catalogo, query, 41) : []),
     [catalogo, query, overrideManuale],
   );
   const visibili = trovati.slice(0, 40);
-  const fisc = out.dettaglioFiscale;
 
   const pair = (a: ReactNode, b: ReactNode) => (
     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>{a}{b}</div>
   );
-
-  const boxStyle: CSSProperties = {
-    background: 'var(--color-bg-surface)',
-    border: '1px solid var(--color-border)',
-    borderRadius: '10px',
-    padding: '20px',
-  };
 
   const scegli = (v: VeicoloAci) => {
     setVeicolo(v);
@@ -151,15 +135,7 @@ export function SociAmministratoriPanel() {
       gap: '24px',
       alignItems: 'start',
     }}>
-      <div style={{
-        background: 'var(--color-bg-surface)',
-        border: '1px solid var(--color-border)',
-        borderRadius: '10px',
-        padding: '28px',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '18px',
-      }}>
+      <div className="calcolatore-panel" style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
         <div>
           <h2 style={{
             fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: '20px',
@@ -430,67 +406,58 @@ export function SociAmministratoriPanel() {
             </div>,
           )}
         </div>
+
+        <button
+          type="button"
+          onClick={generaReport}
+          disabled={loading}
+          style={{
+            marginTop: '8px',
+            padding: '14px',
+            border: 'none',
+            borderRadius: '10px',
+            cursor: loading ? 'wait' : 'pointer',
+            background: 'var(--color-accent)',
+            color: '#fff',
+            fontWeight: 600,
+            fontSize: '14px',
+            fontFamily: "'Plus Jakarta Sans', sans-serif",
+            opacity: loading ? 0.7 : 1,
+          }}
+        >
+          {loading ? 'Generazione report…' : 'Genera report'}
+        </button>
+        {errore && (
+          <p style={{ fontSize: '13px', color: 'var(--color-red)', margin: 0 }}>{errore}</p>
+        )}
       </div>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-          <div style={boxStyle}>
-            <p style={{ fontSize: '12px', color: 'var(--color-text-muted)', marginBottom: '6px' }}>
-              Liquido complessivo al socio / amministratore
+      <div>
+        {!risultato && !loading && (
+          <div className="calcolatore-panel" style={{ textAlign: 'center', padding: '48px 32px' }}>
+            <p style={{ fontWeight: 600, color: 'var(--color-text-secondary)', marginBottom: '8px' }}>
+              Il report apparirà qui
             </p>
-            <p style={{ fontFamily: "'DM Mono', monospace", fontSize: '22px', fontWeight: 500, color: 'var(--color-accent-bright)' }}>
-              {eur(out.nettoTotalePercepito)}
-            </p>
-          </div>
-          <div style={boxStyle}>
-            <p style={{ fontSize: '12px', color: 'var(--color-text-muted)', marginBottom: '6px' }}>
-              Costo totale per il datore di lavoro
-            </p>
-            <p style={{ fontFamily: "'DM Mono', monospace", fontSize: '22px', fontWeight: 500, color: 'var(--color-text-primary)' }}>
-              {eur(out.costoTotaleDatore)}
-            </p>
-            <p style={{ fontSize: '10px', color: 'var(--color-text-muted)', marginTop: '6px', lineHeight: 1.4 }}>
-              {conCompenso ? 'Include la quota 2/3 Gestione separata' : 'Solo trasferte e rimborso km'}
+            <p style={{ fontSize: '13px', color: 'var(--color-text-muted)', lineHeight: 1.6 }}>
+              Compila i dati e premi <strong>Genera report</strong> per il prospetto completo.
             </p>
           </div>
-        </div>
-
-        <div style={{ ...boxStyle, padding: '24px' }}>
-          <p style={{ fontSize: '12px', color: 'var(--color-text-muted)', lineHeight: 1.55, marginBottom: '14px' }}>
-            {conCompenso
-              ? 'Costo totale datore = compenso lordo annuo + quota contributiva 2/3 a carico della società + trasferte e rimborso km. Trasferte e km sono fuori dalla base Gestione separata e IRPEF.'
-              : 'Senza compenso il lordo è zero e non c’è Gestione separata. Restano trasferte e rimborso km, che entrano nel liquido e nel costo datore.'}
-          </p>
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
-            <tbody>
-              <Row k="Compenso lordo annuo" v={eur(out.compensoLordo)} />
-              {out.ripartoGs && (
-                <>
-                  <Row k={`Contributo Gestione separata (${pct}%)`} v={eur(out.ripartoGs.contributoTotale)} />
-                  <Row sub k="Quota 2/3 a carico della società" v={eur(out.ripartoGs.quotaCommittente)} />
-                  <Row sub k="Quota 1/3 trattenuta al percipiente" v={eur(out.ripartoGs.quotaPercipiente)} />
-                  {out.ripartoGs.massimaleApplicato && (
-                    <Row sub k="Massimale contributivo applicato su" v={eur(out.ripartoGs.imponibileGs)} />
-                  )}
-                </>
-              )}
-              <Row sub k="IRPEF lorda" v={eur(fisc?.irpefLorda ?? 0)} />
-              <Row sub k="Detrazioni lavoro dipendente (art. 13)" v={eur(fisc?.detrazioneLavoroDip ?? 0)} />
-              <Row sub k="IRPEF netta (senza bonus cuneo)" v={eur(fisc?.irpefNetta ?? 0)} />
-              <Row sub k="Addizionali regionali e comunali (media)" v={eur((fisc?.addizionaleRegionale ?? 0) + (fisc?.addizionaleComunale ?? 0))} />
-              <Row k="Netto da compenso (dopo quota percipiente e imposte)" v={eur(out.nettoDaCompenso)} strong />
-              <Row k="Trasferte nazionali" v={eur(out.trasferteNazionali)} />
-              <Row k="Trasferte estere" v={eur(out.trasferteEstere)} />
-              <Row k="Rimborso km" v={eur(out.rimborsoKm)} />
-              <Row k="Totale rimborsi / indennità" v={eur(out.sommaRimborsiIndennita)} strong />
-            </tbody>
-          </table>
-          {fisc && (
-            <p style={{ marginTop: '14px', fontSize: '11px', color: 'var(--color-text-muted)', lineHeight: 1.55 }}>
-              {fisc.disclaimer}
-            </p>
-          )}
-        </div>
+        )}
+        {loading && (
+          <div className="calcolatore-panel" style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <div className="skeleton" style={{ height: '72px' }} />
+            <div className="skeleton" style={{ height: '240px' }} />
+          </div>
+        )}
+        {risultato && !loading && (
+          <ReportLeadGate modulo="soci" meta={{ modalita: stato.modalita }}>
+            <RisultatiSoci
+              out={risultato}
+              stato={stato}
+              onRicalcola={() => { setRisultato(null); setErrore(null); }}
+            />
+          </ReportLeadGate>
+        )}
       </div>
     </div>
   );

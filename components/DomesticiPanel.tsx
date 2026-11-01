@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState, type CSSProperties } from 'react';
 import { RisultatiCalcolatore } from '@/components/RisultatiCalcolatore';
+import { ReportLeadGate } from '@/components/ReportLeadGate';
 import type { CalcolatoreOutput, LivelloCcnl } from '@/types';
 
 const COEFF_DEFAULT = 4.33;
@@ -343,7 +344,9 @@ export function DomesticiPanel() {
           </div>
         )}
         {risultato && (
-          <RisultatiCalcolatore risultato={risultato} onRicalcola={() => { setRisultato(null); setErrore(null); }} />
+          <ReportLeadGate modulo="domestici" meta={{ ccnl: risultato.input.ccnlId }}>
+            <RisultatiCalcolatore risultato={risultato} onRicalcola={() => { setRisultato(null); setErrore(null); }} />
+          </ReportLeadGate>
         )}
       </div>
     </div>

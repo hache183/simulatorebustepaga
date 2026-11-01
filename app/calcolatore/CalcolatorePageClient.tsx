@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { CalcolatoreFormStep1 } from '@/components/CalcolatoreForm';
 import { CalcolatoreFormStep2 } from '@/components/CalcolatoreFormStep2';
 import { RisultatiCalcolatore } from '@/components/RisultatiCalcolatore';
+import { ReportLeadGate } from '@/components/ReportLeadGate';
 import { SociAmministratoriPanel } from '@/components/SociAmministratoriPanel';
 import { DomesticiPanel } from '@/components/DomesticiPanel';
 import { EdiliPanel } from '@/components/EdiliPanel';
@@ -87,11 +88,7 @@ export function CalcolatorePageClient() {
     <div className="print-unlock" style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
 
       {/* Tab modulo + step dipendenti — sotto l'header */}
-      <div className="no-print" style={{
-        paddingTop: '56px',
-        background: 'var(--color-bg-surface)',
-        borderBottom: '1px solid var(--color-border)',
-      }}>
+      <div className="no-print calcolatore-shell" style={{ paddingTop: '56px' }}>
         <div style={{
           maxWidth: '1400px', margin: '0 auto',
           padding: '0 32px',
@@ -220,13 +217,7 @@ export function CalcolatorePageClient() {
 
         {/* Colonna sinistra — form */}
         {step !== 'risultati' && (
-          <div style={{
-            background: 'var(--color-bg-surface)',
-            border: '1px solid var(--color-border)',
-            borderRadius: '10px',
-            padding: '28px',
-            animation: 'fadeSlideIn 0.2s ease forwards',
-          }}>
+          <div className="calcolatore-panel" style={{ animation: 'fadeSlideIn 0.2s ease forwards' }}>
             {step === 1 && <CalcolatoreFormStep1 onNext={handleStep1} />}
             {step === 2 && <CalcolatoreFormStep2 onSubmit={handleStep2} onBack={() => setStep(1)} isLoading={isLoading} ccnlId={step1Data?.ccnlId} />}
           </div>
@@ -306,7 +297,15 @@ export function CalcolatorePageClient() {
           {/* Risultati */}
           {step === 'risultati' && risultato && (
             <div style={{ animation: 'fadeSlideIn 0.2s ease forwards' }}>
-              <RisultatiCalcolatore risultato={risultato} onRicalcola={ricalcola} />
+              <ReportLeadGate
+                modulo="dipendenti"
+                meta={{
+                  ccnl: risultato.input.ccnlId,
+                  regione: risultato.input.regione ?? '',
+                }}
+              >
+                <RisultatiCalcolatore risultato={risultato} onRicalcola={ricalcola} />
+              </ReportLeadGate>
             </div>
           )}
         </div>

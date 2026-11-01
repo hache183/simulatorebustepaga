@@ -85,7 +85,7 @@ function LoginForm() {
             fontSize: '13px',
             color: 'var(--color-text-muted)',
           }}>
-            Accedi per utilizzare il simulatore
+            Accesso riservato ai consulenti (admin e aggiornamento dati)
           </p>
         </div>
 
