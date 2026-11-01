@@ -34,6 +34,9 @@ yarn-error.log*
 # vercel
 .vercel
 
+# registro lead locale (dati personali)
+/data/runtime/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

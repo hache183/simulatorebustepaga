@@ -335,6 +335,90 @@ input[type="range"]::-webkit-slider-thumb {
   color: var(--color-red);
   margin: 0;
 }
+.lead-form__honeypot {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+.lead-form__privacy input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  margin-top: 2px;
+  flex-shrink: 0;
+  padding: 0 !important;
+  accent-color: var(--color-accent);
+  border-radius: 4px;
+}
+
+.lead-funnel {
+  min-height: 100vh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 88px 16px 48px;
+}
+.lead-funnel__card {
+  width: 100%;
+  max-width: 440px;
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  box-shadow: var(--shadow-modal);
+  padding: 28px;
+}
+.lead-funnel__kicker {
+  margin: 0 0 8px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-accent-bright);
+}
+.lead-funnel__title {
+  font-family: 'Syne', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0 0 8px;
+  color: var(--color-text-primary);
+}
+.lead-funnel__subtitle {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  margin: 0 0 18px;
+  line-height: 1.55;
+}
+.lead-funnel__hint {
+  margin: 0;
+  font-size: 12px;
+  color: var(--color-text-muted);
+}
+.lead-funnel__steps {
+  display: flex;
+  gap: 8px;
+  list-style: none;
+  padding: 0;
+  margin: 0 0 18px;
+}
+.lead-funnel__steps li {
+  flex: 1;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  border-top: 2px solid var(--color-border);
+  padding-top: 8px;
+}
+.lead-funnel__steps li.is-active {
+  color: var(--color-accent-bright);
+  border-top-color: var(--color-accent);
+}
+.lead-funnel__steps li.is-done {
+  color: var(--color-green);
+  border-top-color: var(--color-green);
+}
 
 .report-gate {
   position: relative;
@@ -383,6 +467,19 @@ input[type="range"]::-webkit-slider-thumb {
 @media (max-width: 900px) {
   .soci-layout { grid-template-columns: 1fr !important; }
   .app-header { padding: 0 16px; }
+}
+
+@media (max-width: 680px) {
+  .app-header {
+    height: auto;
+    min-height: 56px;
+    flex-wrap: wrap;
+    align-items: center;
+    padding: 10px 16px;
+    row-gap: 8px;
+  }
+  .lead-funnel { padding-top: 168px; }
+  .calcolatore-shell { padding-top: 160px !important; }
 }
 
 @media print {

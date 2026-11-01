@@ -27,13 +27,16 @@ export default function PrivacyPage() {
       </p>
       <h2 style={{ fontSize: '16px', marginTop: '24px' }}>Finalità</h2>
       <p style={{ color: 'var(--color-text-secondary)' }}>
-        I dati (nome, email e campi opzionali) sono raccolti per inviare il report richiesto, per eventuale ricontatto commerciale
-        e per migliorare il servizio. I parametri di simulazione non vengono inclusi nella notifica email al consulente, salvo metadati generici (es. tipo modulo).
+        I dati (nome, email, telefono e, se indicati, azienda e ruolo) sono raccolti per consentire l&apos;uso del simulatore
+        e per ricontattare chi ha richiesto il calcolo. Le comunicazioni commerciali partono solo se è stato dato il consenso marketing, separato.
+        Un identificativo tecnico associa le simulazioni successive allo stesso contatto. I parametri di simulazione non vengono
+        inclusi nella email al consulente, salvo il modulo scelto (dipendenti, edili, domestici o soci).
       </p>
       <h2 style={{ fontSize: '16px', marginTop: '24px' }}>Base giuridica e conservazione</h2>
       <p style={{ color: 'var(--color-text-secondary)' }}>
-        Il trattamento si basa sul consenso espresso tramite checkbox. I dati sono conservati per il tempo necessario alle finalità indicate
-        e secondo gli obblighi di legge applicabili al titolare.
+        Il consenso privacy è obbligatorio per usare il simulatore. Il consenso marketing è facoltativo. I dati sono conservati
+        per il tempo necessario alle finalità indicate e secondo gli obblighi di legge applicabili al titolare. Lo sblocco sul browser
+        dura circa 30 giorni e non sostituisce il consenso.
       </p>
       <p style={{ marginTop: '32px' }}>
         <Link href="/calcolatore" style={{ color: 'var(--color-accent-bright)' }}>

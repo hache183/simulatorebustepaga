@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState, type CSSProperties } from 'react';
 import { RisultatiCalcolatore } from '@/components/RisultatiCalcolatore';
-import { ReportLeadGate } from '@/components/ReportLeadGate';
+import { leggiRispostaSimulazione } from '@/lib/lead-session';
 import { livelliOperaioEdili } from '@/lib/edili';
 import type { CalcolatoreOutput } from '@/types';
 
@@ -94,9 +94,9 @@ export function EdiliPanel() {
           retribuzionePersonalizzata: ralConcordata === '' ? undefined : Number(ralConcordata),
         }),
       });
-      const json = await res.json();
-      if (!res.ok) throw new Error((json as { errore?: string }).errore ?? 'Errore nel calcolo');
-      setRisultato(json as CalcolatoreOutput);
+      const json = await leggiRispostaSimulazione<CalcolatoreOutput>(res);
+      if (!json) return;
+      setRisultato(json);
     } catch (e) {
       setErrore(e instanceof Error ? e.message : 'Errore sconosciuto');
       setRisultato(null);
@@ -245,9 +245,7 @@ export function EdiliPanel() {
             </div>
           )}
           {risultato && (
-            <ReportLeadGate modulo="edili" meta={{ ccnl: risultato.input.ccnlId }}>
-              <RisultatiCalcolatore risultato={risultato} onRicalcola={() => setRisultato(null)} />
-            </ReportLeadGate>
+            <RisultatiCalcolatore risultato={risultato} onRicalcola={() => setRisultato(null)} />
           )}
         </div>
       </div>

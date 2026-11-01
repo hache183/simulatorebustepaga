@@ -5,8 +5,9 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { CalcolatoreFormStep1 } from '@/components/CalcolatoreForm';
 import { CalcolatoreFormStep2 } from '@/components/CalcolatoreFormStep2';
 import { RisultatiCalcolatore } from '@/components/RisultatiCalcolatore';
-import { ReportLeadGate } from '@/components/ReportLeadGate';
+import { LeadFunnel } from '@/components/LeadFunnel';
 import { SociAmministratoriPanel } from '@/components/SociAmministratoriPanel';
+import { leggiRispostaSimulazione } from '@/lib/lead-session';
 import { DomesticiPanel } from '@/components/DomesticiPanel';
 import { EdiliPanel } from '@/components/EdiliPanel';
 import type { CalcolatoreOutput } from '@/types';
@@ -71,9 +72,9 @@ export function CalcolatorePageClient() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...step1Data, ...data }),
       });
-      const json = await res.json();
-      if (!res.ok) throw new Error((json as { errore?: string }).errore ?? 'Errore nel calcolo');
-      setRisultato(json as CalcolatoreOutput);
+      const json = await leggiRispostaSimulazione<CalcolatoreOutput>(res);
+      if (!json) return;
+      setRisultato(json);
       setStep('risultati');
     } catch (e) {
       setErrore(e instanceof Error ? e.message : 'Errore sconosciuto');
@@ -85,6 +86,7 @@ export function CalcolatorePageClient() {
   const ricalcola = () => { setStep(1); setRisultato(null); setErrore(null); };
 
   return (
+    <LeadFunnel modulo={tab}>
     <div className="print-unlock" style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
 
       {/* Tab modulo + step dipendenti — sotto l'header */}
@@ -297,20 +299,13 @@ export function CalcolatorePageClient() {
           {/* Risultati */}
           {step === 'risultati' && risultato && (
             <div style={{ animation: 'fadeSlideIn 0.2s ease forwards' }}>
-              <ReportLeadGate
-                modulo="dipendenti"
-                meta={{
-                  ccnl: risultato.input.ccnlId,
-                  regione: risultato.input.regione ?? '',
-                }}
-              >
-                <RisultatiCalcolatore risultato={risultato} onRicalcola={ricalcola} />
-              </ReportLeadGate>
+              <RisultatiCalcolatore risultato={risultato} onRicalcola={ricalcola} />
             </div>
           )}
         </div>
       </div>
 
     </div>
+    </LeadFunnel>
   );
 }

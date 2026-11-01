@@ -8,7 +8,7 @@ import {
   type SociState,
 } from '@/lib/societari';
 import { RisultatiSoci } from '@/components/RisultatiSoci';
-import { ReportLeadGate } from '@/components/ReportLeadGate';
+import { leggiRispostaSimulazione } from '@/lib/lead-session';
 
 const BANNER_ACI =
   'Tariffa = colonna Costo km 15.000 km, tabelle ACI 2026, GU 297/2025 SO 40. Non è il fringe benefit.';
@@ -99,9 +99,9 @@ export function SociAmministratoriPanel() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(stato),
       });
-      const json = await res.json();
-      if (!res.ok) throw new Error((json as { errore?: string }).errore ?? 'Errore nel calcolo');
-      setRisultato(json as SociResult);
+      const json = await leggiRispostaSimulazione<SociResult>(res);
+      if (!json) return;
+      setRisultato(json);
     } catch (e) {
       setErrore(e instanceof Error ? e.message : 'Errore sconosciuto');
       setRisultato(null);
@@ -450,13 +450,11 @@ export function SociAmministratoriPanel() {
           </div>
         )}
         {risultato && !loading && (
-          <ReportLeadGate modulo="soci" meta={{ modalita: stato.modalita }}>
-            <RisultatiSoci
-              out={risultato}
-              stato={stato}
-              onRicalcola={() => { setRisultato(null); setErrore(null); }}
-            />
-          </ReportLeadGate>
+          <RisultatiSoci
+            out={risultato}
+            stato={stato}
+            onRicalcola={() => { setRisultato(null); setErrore(null); }}
+          />
         )}
       </div>
     </div>

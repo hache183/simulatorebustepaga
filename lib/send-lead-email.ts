@@ -2,10 +2,13 @@ import { Resend } from 'resend';
 import type { LeadModulo } from '@/lib/lead-unlock';
 
 export interface LeadPayload {
+  id: string;
   nome: string;
   email: string;
   telefono?: string;
   azienda?: string;
+  ruolo?: string;
+  marketing: boolean;
   modulo: LeadModulo;
   meta?: Record<string, string>;
 }
@@ -21,11 +24,14 @@ export async function inviaEmailLead(lead: LeadPayload): Promise<void> {
 
   const resend = new Resend(apiKey);
   const righe = [
+    `ID: ${lead.id}`,
     `Modulo: ${lead.modulo}`,
     `Nome: ${lead.nome}`,
     `Email: ${lead.email}`,
     lead.telefono ? `Telefono: ${lead.telefono}` : null,
     lead.azienda ? `Azienda: ${lead.azienda}` : null,
+    lead.ruolo ? `Ruolo: ${lead.ruolo}` : null,
+    `Consenso marketing: ${lead.marketing ? 'sì' : 'no'}`,
     lead.meta && Object.keys(lead.meta).length > 0
       ? `Contesto: ${Object.entries(lead.meta).map(([k, v]) => `${k}=${v}`).join(', ')}`
       : null,

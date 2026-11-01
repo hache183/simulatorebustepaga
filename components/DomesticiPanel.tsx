@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState, type CSSProperties } from 'react';
 import { RisultatiCalcolatore } from '@/components/RisultatiCalcolatore';
-import { ReportLeadGate } from '@/components/ReportLeadGate';
+import { leggiRispostaSimulazione } from '@/lib/lead-session';
 import type { CalcolatoreOutput, LivelloCcnl } from '@/types';
 
 const COEFF_DEFAULT = 4.33;
@@ -204,9 +204,9 @@ export function DomesticiPanel() {
           sostituzioneTitolare: modo === 'convivente' && sostituzione,
         }),
       });
-      const json = await res.json();
-      if (!res.ok) throw new Error((json as { errore?: string }).errore ?? 'Errore nel calcolo');
-      setRisultato(json as CalcolatoreOutput);
+      const json = await leggiRispostaSimulazione<CalcolatoreOutput>(res);
+      if (!json) return;
+      setRisultato(json);
     } catch (e) {
       setErrore(e instanceof Error ? e.message : 'Errore sconosciuto');
     } finally {
@@ -344,9 +344,7 @@ export function DomesticiPanel() {
           </div>
         )}
         {risultato && (
-          <ReportLeadGate modulo="domestici" meta={{ ccnl: risultato.input.ccnlId }}>
-            <RisultatiCalcolatore risultato={risultato} onRicalcola={() => { setRisultato(null); setErrore(null); }} />
-          </ReportLeadGate>
+          <RisultatiCalcolatore risultato={risultato} onRicalcola={() => { setRisultato(null); setErrore(null); }} />
         )}
       </div>
     </div>

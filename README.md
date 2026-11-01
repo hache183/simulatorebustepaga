@@ -19,17 +19,28 @@ Apri il terminale nella cartella del progetto e digita:
 
 Poi apri il browser e vai su: **http://localhost:3000**
 
-Il simulatore è **pubblico**: non serve registrarsi. Prima di vedere il report completo l’utente lascia un lead (nome, email, consenso privacy). Dopo il primo invio, un cookie sblocca i report per circa 30 giorni sullo stesso browser.
+All’apertura il visitatore vede prima un modulo in due passaggi (nome, email, telefono, azienda, ruolo, consenso privacy obbligatorio e consenso marketing facoltativo). Il simulatore e i report restano chiusi finché il lead non è stato salvato. Dopo l’invio, un cookie firmato (httpOnly, circa 30 giorni) sblocca il calcolatore su quel browser. Senza un cookie valido, `POST /api/calcola` e `POST /api/societari` rispondono 401.
 
-### Variabili per i lead (email)
+### Variabili per i lead
 
-In `.env.local`:
+In `.env.local` e, su Vercel, nelle Environment Variables del progetto:
 
+- `LEAD_COOKIE_SECRET` — segreto HMAC del cookie di sblocco. Obbligatorio, almeno 16 caratteri (meglio 32 o più, casuali). Senza questo valore il modulo non sblocca il simulatore.
 - `LEADS_TO_EMAIL` — indirizzo che riceve i lead
 - `LEADS_FROM_EMAIL` — mittente verificato su Resend (es. `CostWork <noreply@tuodominio.it>`)
 - `RESEND_API_KEY` — chiave API Resend
 
 Opzionale: `NEXT_PUBLIC_PRIVACY_URL` per puntare a un’informativa esterna; altrimenti si usa `/privacy`.
+
+In locale ogni lead e le simulazioni che esegue finiscono anche in `data/runtime/leads.json` (non va committato: contiene dati personali). Su Vercel il disco è in sola lettura: il lead resta nell’email, che include un id, e ogni simulazione viene scritta nei log della funzione con lo stesso id.
+
+### Prova manuale del gate
+
+1. Imposta `LEAD_COOKIE_SECRET` e le tre variabili Resend, poi `npm run dev`.
+2. Apri `http://localhost:3000/calcolatore`: deve comparire il modulo, non il calcolatore.
+3. Compila i due passaggi e invia: compare il simulatore. Ricarica la pagina: il modulo non torna.
+4. Cancella il cookie `lead_unlock` e ricarica: il modulo torna.
+5. Senza cookie, `curl -s -o /dev/null -w '%{http_code}' -X POST http://localhost:3000/api/calcola -H 'content-type: application/json' -d '{}'` deve stampare `401`.
 
 ### Area consulente (admin)
 
@@ -61,8 +72,9 @@ Il sistema verifica che il formato sia corretto prima di salvare. Se c'è un err
 
 ## Cosa NON modificare
 
-- I file in lib/ (contengono la logica di calcolo)
+- `lib/engine.ts`, `lib/irpef-*` e i JSON in `data/` con aliquote e minimi (il calcolo non va toccato)
 - I file in types/ (contengono i tipi TypeScript)
-- Il file app/api/calcola/route.ts (gestisce la sicurezza delle richieste)
+
+`app/api/calcola/route.ts` controlla il cookie lead e poi chiama `calculateCosto`: la chiamata al motore va lasciata com'è.
 
 ---
