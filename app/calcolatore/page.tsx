@@ -1,6 +1,7 @@
 import { Suspense } from 'react';
 import { CalcolatorePageClient } from './CalcolatorePageClient';
 import { AppHeader } from '@/components/AppHeader';
+import { LeadReportGate } from '@/components/LeadFunnel';
 
 export default function CalcolatorePageWrapper() {
   return (
@@ -15,7 +16,9 @@ export default function CalcolatorePageWrapper() {
             <div className="skeleton" style={{ width: '200px', height: '4px', borderRadius: '2px' }} />
           </div>
         }>
-          <CalcolatorePageClient />
+          <LeadReportGate>
+            <CalcolatorePageClient />
+          </LeadReportGate>
         </Suspense>
       </main>
     </>

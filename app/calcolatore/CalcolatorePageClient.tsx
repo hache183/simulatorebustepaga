@@ -5,9 +5,9 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { CalcolatoreFormStep1 } from '@/components/CalcolatoreForm';
 import { CalcolatoreFormStep2 } from '@/components/CalcolatoreFormStep2';
 import { RisultatiCalcolatore } from '@/components/RisultatiCalcolatore';
-import { LeadFunnel } from '@/components/LeadFunnel';
+import { useReportLead } from '@/components/LeadFunnel';
 import { SociAmministratoriPanel } from '@/components/SociAmministratoriPanel';
-import { leggiRispostaSimulazione } from '@/lib/lead-session';
+import { AccessoLeadRichiesto, CalcoloAnnullato, leggiRispostaSimulazione } from '@/lib/lead-session';
 import { DomesticiPanel } from '@/components/DomesticiPanel';
 import { EdiliPanel } from '@/components/EdiliPanel';
 import type { CalcolatoreOutput } from '@/types';
@@ -52,6 +52,7 @@ export function CalcolatorePageClient() {
     router.replace(next === 'dipendenti' ? '/calcolatore' : `/calcolatore?tab=${next}`, { scroll: false });
   };
 
+  const { eseguiReport } = useReportLead();
   const [step, setStep] = useState<1 | 2 | 'risultati'>(1);
   const [step1Data, setStep1Data] = useState<Step1Data | null>(null);
   const [risultato, setRisultato] = useState<CalcolatoreOutput | null>(null);
@@ -62,32 +63,38 @@ export function CalcolatorePageClient() {
     setStep(2);
   };
 
-  const handleStep2 = async (data: Step2Data) => {
+  const handleStep2 = (data: Step2Data) => {
     if (!step1Data) return;
-    setIsLoading(true);
-    setErrore(null);
-    try {
-      const res = await fetch('/api/calcola', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...step1Data, ...data }),
-      });
-      const json = await leggiRispostaSimulazione<CalcolatoreOutput>(res);
-      if (!json) return;
-      setRisultato(json);
-      setStep('risultati');
-    } catch (e) {
+    const payload = { ...step1Data, ...data };
+    void eseguiReport('dipendenti', async () => {
+      setIsLoading(true);
+      setErrore(null);
+      try {
+        const res = await fetch('/api/calcola', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        const json = await leggiRispostaSimulazione<CalcolatoreOutput>(res);
+        setRisultato(json);
+        setStep('risultati');
+      } catch (e) {
+        if (e instanceof AccessoLeadRichiesto) throw e;
+        setErrore(e instanceof Error ? e.message : 'Errore sconosciuto');
+      } finally {
+        setIsLoading(false);
+      }
+    }).catch(e => {
+      if (e instanceof AccessoLeadRichiesto || e instanceof CalcoloAnnullato) return;
       setErrore(e instanceof Error ? e.message : 'Errore sconosciuto');
-    } finally {
       setIsLoading(false);
-    }
+    });
   };
 
   const ricalcola = () => { setStep(1); setRisultato(null); setErrore(null); };
 
   return (
-    <LeadFunnel modulo={tab}>
-    <div className="print-unlock" style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
+    <div className="print-unlock" data-testid="simulatore" style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
 
       {/* Tab modulo + step dipendenti — sotto l'header */}
       <div className="no-print calcolatore-shell" style={{ paddingTop: '56px' }}>
@@ -306,6 +313,5 @@ export function CalcolatorePageClient() {
       </div>
 
     </div>
-    </LeadFunnel>
   );
 }

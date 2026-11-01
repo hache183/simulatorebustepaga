@@ -10,6 +10,7 @@ const PRIVACY_HREF = process.env.NEXT_PUBLIC_PRIVACY_URL ?? '/privacy';
 interface Props {
   modulo: LeadModulo;
   onSuccess: () => void;
+  onAnnulla?: () => void;
 }
 
 function emailValida(email: string): boolean {
@@ -20,7 +21,7 @@ function telefonoValido(telefono: string): boolean {
   return /^[+0-9][0-9\s()./-]{5,39}$/.test(telefono.trim());
 }
 
-export function LeadCaptureForm({ modulo, onSuccess }: Props) {
+export function LeadCaptureForm({ modulo, onSuccess, onAnnulla }: Props) {
   const [passo, setPasso] = useState<1 | 2>(1);
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
@@ -96,11 +97,11 @@ export function LeadCaptureForm({ modulo, onSuccess }: Props) {
 
   return (
     <div className="lead-funnel__card" data-testid="lead-form">
-      <p className="lead-funnel__kicker">Simulatore gratuito</p>
-      <h1 className="lead-funnel__title">Accedi al calcolatore</h1>
+      <p className="lead-funnel__kicker">Report gratuito</p>
+      <h1 className="lead-funnel__title">Sblocca il report</h1>
       <p className="lead-funnel__subtitle">
         {passo === 1
-          ? 'Lascia i tuoi recapiti per calcolare il costo del lavoro e ottenere il report. Nessun account: dopo l\'invio il simulatore resta sbloccato su questo browser per 30 giorni.'
+          ? 'I parametri che hai inserito restano salvati. Lascia i tuoi recapiti per generare il prospetto: dopo l\'invio il calcolo parte da solo. Niente account, sblocco per 30 giorni su questo browser.'
           : 'Azienda e ruolo ci aiutano a ricontattarti nel modo giusto. Il consenso privacy è necessario; le comunicazioni commerciali sono facoltative.'}
       </p>
 
@@ -153,6 +154,11 @@ export function LeadCaptureForm({ modulo, onSuccess }: Props) {
           <Button type="submit" variant="primary" fullWidth>
             Continua
           </Button>
+          {onAnnulla && (
+            <Button type="button" variant="secondary" fullWidth onClick={onAnnulla}>
+              Torna ai parametri
+            </Button>
+          )}
         </form>
       ) : (
         <form onSubmit={invia} className="lead-form" noValidate>
@@ -196,11 +202,16 @@ export function LeadCaptureForm({ modulo, onSuccess }: Props) {
           </label>
           {errore && <p className="lead-form__error" role="alert">{errore}</p>}
           <Button type="submit" variant="primary" fullWidth disabled={loading}>
-            {loading ? 'Invio in corso…' : 'Vai al simulatore'}
+            {loading ? 'Invio in corso…' : 'Genera il report'}
           </Button>
           <Button type="button" variant="secondary" fullWidth onClick={() => { setErrore(null); setPasso(1); }}>
             Torna ai contatti
           </Button>
+          {onAnnulla && (
+            <Button type="button" variant="ghost" fullWidth onClick={onAnnulla}>
+              Torna ai parametri
+            </Button>
+          )}
         </form>
       )}
     </div>

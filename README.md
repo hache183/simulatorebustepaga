@@ -19,7 +19,7 @@ Apri il terminale nella cartella del progetto e digita:
 
 Poi apri il browser e vai su: **http://localhost:3000**
 
-All’apertura il visitatore vede prima un modulo in due passaggi (nome, email, telefono, azienda, ruolo, consenso privacy obbligatorio e consenso marketing facoltativo). Il simulatore e i report restano chiusi finché il lead non è stato salvato. Dopo l’invio, un cookie firmato (httpOnly, circa 30 giorni) sblocca il calcolatore su quel browser. Senza un cookie valido, `POST /api/calcola` e `POST /api/societari` rispondono 401.
+La home spiega il simulatore e porta a `/calcolatore`. I parametri si compilano liberamente. Nome, email, telefono, azienda, ruolo, consenso privacy (obbligatorio) e consenso marketing (facoltativo) si chiedono solo al clic su calcola, se manca il cookie firmato. Dopo l’invio il report parte con i dati già inseriti. Il cookie (httpOnly, circa 30 giorni) fa saltare il modulo alle visite successive. Senza un cookie valido, `POST /api/calcola` e `POST /api/societari` rispondono 401.
 
 ### Variabili per i lead
 
@@ -37,10 +37,11 @@ In locale ogni lead e le simulazioni che esegue finiscono anche in `data/runtime
 ### Prova manuale del gate
 
 1. Imposta `LEAD_COOKIE_SECRET` e le tre variabili Resend, poi `npm run dev`.
-2. Apri `http://localhost:3000/calcolatore`: deve comparire il modulo, non il calcolatore.
-3. Compila i due passaggi e invia: compare il simulatore. Ricarica la pagina: il modulo non torna.
-4. Cancella il cookie `lead_unlock` e ricarica: il modulo torna.
-5. Senza cookie, `curl -s -o /dev/null -w '%{http_code}' -X POST http://localhost:3000/api/calcola -H 'content-type: application/json' -d '{}'` deve stampare `401`.
+2. Apri `http://localhost:3000`: deve comparire la home, con il pulsante per il simulatore.
+3. Apri `/calcolatore` e compila CCNL e livello: il modulo lead non deve comparire.
+4. Premi **Calcola il costo**: compare il modulo. Annullando, i parametri restano. Inviando i dati, parte il report.
+5. Ricarica e ricalcola: il modulo non torna. Cancella il cookie `lead_unlock` e ricalcola: il modulo torna.
+6. Senza cookie, `curl -s -o /dev/null -w '%{http_code}' -X POST http://localhost:3000/api/calcola -H 'content-type: application/json' -d '{}'` deve stampare `401`.
 
 ### Area consulente (admin)
 
