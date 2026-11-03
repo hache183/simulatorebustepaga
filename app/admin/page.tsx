@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import Link from 'next/link';
 import { AppHeader } from '@/components/AppHeader';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -80,7 +81,6 @@ interface CcnlData {
 }
 
 interface TabProps {
-  password: string;
   /** Ambiente serverless: si esporta il JSON invece di scriverlo su disco. */
   solaLettura: boolean;
 }
@@ -145,7 +145,7 @@ function fmtDate(iso: string | null | undefined): string {
 function updatedAtLabel(iso: string | undefined) {
   if (!iso) return null;
   return (
-    <p style={{ fontFamily: "'DM Mono', monospace", fontSize: '11px', color: 'var(--color-text-muted)', marginBottom: '16px' }}>
+    <p style={{ fontFamily: "var(--font-mono), monospace", fontSize: '11px', color: 'var(--color-text-muted)', marginBottom: '16px' }}>
       Ultimo aggiornamento: {fmtDate(iso)}
     </p>
   );
@@ -158,7 +158,7 @@ function warnRange(value: number, min: number, max: number): boolean {
 function WarningInline({ show, msg }: { show: boolean; msg: string }) {
   if (!show) return null;
   return (
-    <span style={{ fontFamily: "'DM Mono', monospace", fontSize: '10px', color: 'var(--color-amber)', marginLeft: '8px' }}>
+    <span style={{ fontFamily: "var(--font-mono), monospace", fontSize: '10px', color: 'var(--color-amber)', marginLeft: '8px' }}>
       ⚠ {msg}
     </span>
   );
@@ -176,7 +176,7 @@ function FeedbackBanner({ feedback }: { feedback: FeedbackState }) {
       background: ok ? 'var(--color-green-dim)' : 'var(--color-red-dim)',
       color: ok ? 'var(--color-green)' : 'var(--color-red)',
       fontSize: '13px',
-      fontFamily: "'Plus Jakarta Sans', sans-serif",
+      fontFamily: "var(--font-sans), sans-serif",
       marginTop: '12px',
     }}>
       {ok ? '✓' : '✕'} {feedback.messaggio}
@@ -215,7 +215,7 @@ function ExportPanel({
     border: '1px solid var(--color-accent)',
     background: 'var(--color-accent-glow)',
     color: 'var(--color-accent-bright)',
-    fontFamily: "'Plus Jakarta Sans', sans-serif",
+    fontFamily: "var(--font-sans), sans-serif",
     fontSize: '12px',
     fontWeight: 600,
     cursor: 'pointer',
@@ -232,13 +232,13 @@ function ExportPanel({
       flexDirection: 'column',
       gap: '10px',
     }}>
-      <p style={{ fontSize: '13px', color: 'var(--color-amber)', fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600 }}>
+      <p style={{ fontSize: '13px', color: 'var(--color-amber)', fontFamily: "var(--font-sans), sans-serif", fontWeight: 600 }}>
         JSON validato — da committare in repo
       </p>
-      <p style={{ fontSize: '12px', color: 'var(--color-text-secondary)', fontFamily: "'Plus Jakarta Sans', sans-serif", lineHeight: 1.5 }}>
+      <p style={{ fontSize: '12px', color: 'var(--color-text-secondary)', fontFamily: "var(--font-sans), sans-serif", lineHeight: 1.5 }}>
         {feedback.messaggio}
       </p>
-      <p style={{ fontSize: '11px', fontFamily: "'DM Mono', monospace", color: 'var(--color-text-muted)' }}>
+      <p style={{ fontSize: '11px', fontFamily: "var(--font-mono), monospace", color: 'var(--color-text-muted)' }}>
         Destinazione: {feedback.filePath}
       </p>
       <div style={{ display: 'flex', gap: '8px' }}>
@@ -251,7 +251,7 @@ function ExportPanel({
         rows={10}
         onFocus={e => e.currentTarget.select()}
         style={{
-          fontFamily: "'DM Mono', monospace",
+          fontFamily: "var(--font-mono), monospace",
           fontSize: '11px',
           padding: '10px',
           background: 'var(--color-bg-input)',
@@ -291,7 +291,7 @@ function NumInput({
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', ...extraStyle }}>
       {label && (
-        <label style={{ fontSize: '12px', fontFamily: "'Plus Jakarta Sans', sans-serif", color: 'var(--color-text-secondary)' }}>
+        <label style={{ fontSize: '12px', fontFamily: "var(--font-sans), sans-serif", color: 'var(--color-text-secondary)' }}>
           {label}
           <WarningInline show={warn} msg={warnMsg} />
         </label>
@@ -304,7 +304,7 @@ function NumInput({
             border: '1px solid var(--color-border)',
             borderRight: 'none',
             borderRadius: '6px 0 0 6px',
-            fontFamily: "'DM Mono', monospace",
+            fontFamily: "var(--font-mono), monospace",
             fontSize: '13px',
             color: 'var(--color-text-muted)',
           }}>{prefix}</span>
@@ -315,7 +315,7 @@ function NumInput({
           step={step}
           onChange={e => onChange(e.target.value)}
           style={{
-            fontFamily: "'DM Mono', monospace",
+            fontFamily: "var(--font-mono), monospace",
             fontSize: '13px',
             padding: '7px 10px',
             background: 'var(--color-bg-input)',
@@ -332,7 +332,7 @@ function NumInput({
             border: '1px solid var(--color-border)',
             borderLeft: 'none',
             borderRadius: '0 6px 6px 0',
-            fontFamily: "'DM Mono', monospace",
+            fontFamily: "var(--font-mono), monospace",
             fontSize: '13px',
             color: 'var(--color-text-muted)',
           }}>{suffix}</span>
@@ -345,7 +345,7 @@ function NumInput({
 function SectionTitle({ children }: { children: React.ReactNode }) {
   return (
     <h3 style={{
-      fontFamily: "'Plus Jakarta Sans', sans-serif",
+      fontFamily: "var(--font-sans), sans-serif",
       fontWeight: 600,
       fontSize: '14px',
       color: 'var(--color-text-primary)',
@@ -358,12 +358,11 @@ function SectionTitle({ children }: { children: React.ReactNode }) {
 
 // ─── Network helpers shared by all tabs ──────────────────────────────────────
 
-// La password va nel body: in query string finirebbe nei log di accesso.
-async function apiLeggi(password: string, filePath: string): Promise<string> {
+async function apiLeggi(filePath: string): Promise<string> {
   const res = await fetch('/api/admin/leggi-file', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ password, filePath }),
+    body: JSON.stringify({ filePath }),
   });
   const json = await res.json() as { contenuto?: string; errore?: string };
   if (!res.ok) throw new Error(json.errore ?? `HTTP ${res.status}`);
@@ -372,7 +371,6 @@ async function apiLeggi(password: string, filePath: string): Promise<string> {
 }
 
 async function apiSalva(
-  password: string,
   filePath: string,
   content: string,
   setSalvando: (v: boolean) => void,
@@ -384,7 +382,7 @@ async function apiSalva(
     const res = await fetch('/api/admin/update-json', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ password, filePath, content }),
+      body: JSON.stringify({ filePath, content }),
     });
     const json = await res.json() as {
       errore?: string;
@@ -417,7 +415,7 @@ async function apiSalva(
 
 // ─── TAB 1: INPS & Agevolazioni ───────────────────────────────────────────────
 
-function TabInps({ password, solaLettura }: TabProps) {
+function TabInps({ solaLettura }: TabProps) {
   const [raw, setRaw] = useState<AliquoteInps | null>(null);
   const [aliqAzienda, setAliqAzienda] = useState('');
   const [aliqDip, setAliqDip] = useState('');
@@ -428,7 +426,7 @@ function TabInps({ password, solaLettura }: TabProps) {
 
   const carica = useCallback(async () => {
     try {
-      const parsed: AliquoteInps = JSON.parse(await apiLeggi(password, 'data/aliquote-inps.json'));
+      const parsed: AliquoteInps = JSON.parse(await apiLeggi('data/aliquote-inps.json'));
       setAliqAzienda(String(+(parsed.aliquotaBaseAzienda * 100).toFixed(4)));
       setAliqDip(String(+(parsed.aliquotaBaseDipendente * 100).toFixed(4)));
       const st: Record<string, { esonero: string; massimale: string; scadenza: string }> = {};
@@ -444,7 +442,7 @@ function TabInps({ password, solaLettura }: TabProps) {
     } catch (e) {
       setFeedback({ tipo: 'errore', messaggio: e instanceof Error ? e.message : 'Errore nel caricamento del file' });
     }
-  }, [password]);
+  }, []);
 
   useEffect(() => { void carica(); }, [carica]);
 
@@ -463,7 +461,7 @@ function TabInps({ password, solaLettura }: TabProps) {
         scadenza: agState[ag.id]?.scadenza ? new Date(agState[ag.id].scadenza).toISOString() : null,
       })),
     };
-    await apiSalva(password, 'data/aliquote-inps.json', JSON.stringify(updated, null, 2), setSalvando, setFeedback);
+    await apiSalva('data/aliquote-inps.json', JSON.stringify(updated, null, 2), setSalvando, setFeedback);
   };
 
   const scadenzaBadge = (scadenza: string | null) => {
@@ -524,7 +522,7 @@ function TabInps({ password, solaLettura }: TabProps) {
                   border: 'none',
                   cursor: 'pointer',
                   color: 'var(--color-text-primary)',
-                  fontFamily: "'Plus Jakarta Sans', sans-serif",
+                  fontFamily: "var(--font-sans), sans-serif",
                   fontSize: '13px',
                   fontWeight: 600,
                   textAlign: 'left',
@@ -534,7 +532,7 @@ function TabInps({ password, solaLettura }: TabProps) {
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                   <span style={{
                     fontSize: '10px',
-                    fontFamily: "'DM Mono', monospace",
+                    fontFamily: "var(--font-mono), monospace",
                     padding: '2px 7px',
                     borderRadius: '4px',
                     background: badge.bg,
@@ -564,13 +562,13 @@ function TabInps({ password, solaLettura }: TabProps) {
                       step="100"
                     />
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                      <label style={{ fontSize: '12px', color: 'var(--color-text-secondary)', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>Scadenza</label>
+                      <label style={{ fontSize: '12px', color: 'var(--color-text-secondary)', fontFamily: "var(--font-sans), sans-serif" }}>Scadenza</label>
                       <input
                         type="date"
                         value={st.scadenza}
                         onChange={e => setAgState(prev => ({ ...prev, [ag.id]: { ...prev[ag.id], scadenza: e.target.value } }))}
                         style={{
-                          fontFamily: "'DM Mono', monospace",
+                          fontFamily: "var(--font-mono), monospace",
                           fontSize: '13px',
                           padding: '7px 10px',
                           background: 'var(--color-bg-input)',
@@ -586,7 +584,7 @@ function TabInps({ password, solaLettura }: TabProps) {
                     value={`${ag.descrizione}\n\nFonte: ${ag.fonteLegge}`}
                     rows={3}
                     style={{
-                      fontFamily: "'Plus Jakarta Sans', sans-serif",
+                      fontFamily: "var(--font-sans), sans-serif",
                       fontSize: '12px',
                       padding: '8px 10px',
                       background: 'var(--color-bg-input)',
@@ -612,7 +610,7 @@ function TabInps({ password, solaLettura }: TabProps) {
 
 // ─── TAB 2: Tariffe INAIL ─────────────────────────────────────────────────────
 
-function TabInail({ password, solaLettura }: TabProps) {
+function TabInail({ solaLettura }: TabProps) {
   const [raw, setRaw] = useState<InailData | null>(null);
   const [tassi, setTassi] = useState<Record<string, string>>({});
   const [salvando, setSalvando] = useState(false);
@@ -620,7 +618,7 @@ function TabInail({ password, solaLettura }: TabProps) {
 
   const carica = useCallback(async () => {
     try {
-      const parsed: InailData = JSON.parse(await apiLeggi(password, 'data/inail.json'));
+      const parsed: InailData = JSON.parse(await apiLeggi('data/inail.json'));
       const t: Record<string, string> = {};
       for (const v of parsed.voci ?? []) t[v.codice] = String(v.tassoPerMille);
       setTassi(t);
@@ -628,7 +626,7 @@ function TabInail({ password, solaLettura }: TabProps) {
     } catch (e) {
       setFeedback({ tipo: 'errore', messaggio: e instanceof Error ? e.message : 'Errore nel caricamento del file' });
     }
-  }, [password]);
+  }, []);
 
   useEffect(() => { void carica(); }, [carica]);
 
@@ -638,7 +636,7 @@ function TabInail({ password, solaLettura }: TabProps) {
       ...raw,
       voci: raw.voci.map(v => ({ ...v, tassoPerMille: parseFloat(tassi[v.codice] ?? String(v.tassoPerMille)) })),
     };
-    await apiSalva(password, 'data/inail.json', JSON.stringify(updated, null, 2), setSalvando, setFeedback);
+    await apiSalva('data/inail.json', JSON.stringify(updated, null, 2), setSalvando, setFeedback);
   };
 
   return (
@@ -650,7 +648,7 @@ function TabInail({ password, solaLettura }: TabProps) {
         borderRadius: '10px',
         overflow: 'hidden',
       }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: '13px' }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse', fontFamily: "var(--font-sans), sans-serif", fontSize: '13px' }}>
           <thead>
             <tr style={{ background: 'var(--color-bg-elevated)' }}>
               <th style={{ padding: '10px 14px', textAlign: 'left', color: 'var(--color-text-secondary)', fontWeight: 500, fontSize: '12px' }}>Codice</th>
@@ -664,7 +662,7 @@ function TabInail({ password, solaLettura }: TabProps) {
               const warn = warnRange(val, 0.1, 200); // max 200‰: edilizia industriale arriva a 110‰
               return (
                 <tr key={v.codice} style={{ background: i % 2 === 0 ? 'var(--color-bg-base)' : 'var(--color-bg-surface)', borderTop: '1px solid var(--color-border)' }}>
-                  <td style={{ padding: '8px 14px', fontFamily: "'DM Mono', monospace", color: 'var(--color-accent-bright)' }}>{v.codice}</td>
+                  <td style={{ padding: '8px 14px', fontFamily: "var(--font-mono), monospace", color: 'var(--color-accent-bright)' }}>{v.codice}</td>
                   <td style={{ padding: '8px 14px', color: 'var(--color-text-secondary)' }}>{v.settore}</td>
                   <td style={{ padding: '8px 14px', textAlign: 'right' }}>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '6px' }}>
@@ -677,7 +675,7 @@ function TabInail({ password, solaLettura }: TabProps) {
                         style={{
                           width: '90px',
                           textAlign: 'right',
-                          fontFamily: "'DM Mono', monospace",
+                          fontFamily: "var(--font-mono), monospace",
                           fontSize: '13px',
                           padding: '4px 8px',
                           background: 'var(--color-bg-input)',
@@ -686,7 +684,7 @@ function TabInail({ password, solaLettura }: TabProps) {
                           color: 'var(--color-text-primary)',
                         }}
                       />
-                      <span style={{ fontFamily: "'DM Mono', monospace", color: 'var(--color-text-muted)', fontSize: '12px' }}>‰</span>
+                      <span style={{ fontFamily: "var(--font-mono), monospace", color: 'var(--color-text-muted)', fontSize: '12px' }}>‰</span>
                     </div>
                   </td>
                 </tr>
@@ -703,7 +701,7 @@ function TabInail({ password, solaLettura }: TabProps) {
 
 // ─── TAB 3: TFR ──────────────────────────────────────────────────────────────
 
-function TabTfr({ password, solaLettura }: TabProps) {
+function TabTfr({ solaLettura }: TabProps) {
   const [raw, setRaw] = useState<TfrData | null>(null);
   const [divisore, setDivisore] = useState('');
   const [quotaFissa, setQuotaFissa] = useState('');
@@ -713,7 +711,7 @@ function TabTfr({ password, solaLettura }: TabProps) {
 
   const carica = useCallback(async () => {
     try {
-      const parsed: TfrData = JSON.parse(await apiLeggi(password, 'data/tfr.json'));
+      const parsed: TfrData = JSON.parse(await apiLeggi('data/tfr.json'));
       setDivisore(String(parsed.divisoreAnnuo));
       setQuotaFissa(String(+(parsed.rivalutazione.quotaFissa * 100).toFixed(4)));
       setQuotaCpi(String(+(parsed.rivalutazione.quotaVariabileCpi * 100).toFixed(4)));
@@ -721,7 +719,7 @@ function TabTfr({ password, solaLettura }: TabProps) {
     } catch (e) {
       setFeedback({ tipo: 'errore', messaggio: e instanceof Error ? e.message : 'Errore nel caricamento del file' });
     }
-  }, [password]);
+  }, []);
 
   useEffect(() => { void carica(); }, [carica]);
 
@@ -736,7 +734,7 @@ function TabTfr({ password, solaLettura }: TabProps) {
         quotaVariabileCpi: parseFloat(quotaCpi) / 100,
       },
     };
-    await apiSalva(password, 'data/tfr.json', JSON.stringify(updated, null, 2), setSalvando, setFeedback);
+    await apiSalva('data/tfr.json', JSON.stringify(updated, null, 2), setSalvando, setFeedback);
   };
 
   return (
@@ -771,7 +769,7 @@ function TabTfr({ password, solaLettura }: TabProps) {
           warnMsg="Fuori range 0–100%"
         />
       </div>
-      <p style={{ fontSize: '12px', color: 'var(--color-text-muted)', fontFamily: "'Plus Jakarta Sans', sans-serif", marginTop: '-10px' }}>
+      <p style={{ fontSize: '12px', color: 'var(--color-text-muted)', fontFamily: "var(--font-sans), sans-serif", marginTop: '-10px' }}>
         Art. 2120 c.c. — normalmente divisore 13.5, quota fissa 1.5%, quota variabile CPI 75%
       </p>
       <FeedbackBanner feedback={feedback} />
@@ -782,7 +780,7 @@ function TabTfr({ password, solaLettura }: TabProps) {
 
 // ─── TAB 4: CCNL ─────────────────────────────────────────────────────────────
 
-function TabCcnl({ password, solaLettura }: TabProps) {
+function TabCcnl({ solaLettura }: TabProps) {
   const [selectedId, setSelectedId] = useState(CCNL_LIST[0].id);
   const [raw, setRaw] = useState<CcnlData | null>(null);
   const [mensilita, setMensilita] = useState('13');
@@ -800,7 +798,7 @@ function TabCcnl({ password, solaLettura }: TabProps) {
     setRaw(null);
     setFeedback(null);
     try {
-      const parsed: CcnlData = JSON.parse(await apiLeggi(password, selectedCcnl.path));
+      const parsed: CcnlData = JSON.parse(await apiLeggi(selectedCcnl.path));
       setMensilita(String(parsed.mensilita));
       const lv: Record<string, string> = {};
       for (const l of parsed.livelli ?? []) lv[l.codice] = String(l.moltiplicatore);
@@ -817,7 +815,7 @@ function TabCcnl({ password, solaLettura }: TabProps) {
     } catch (e) {
       setFeedback({ tipo: 'errore', messaggio: e instanceof Error ? e.message : 'Errore nel caricamento del file' });
     }
-  }, [selectedCcnl.path, password]);
+  }, [selectedCcnl.path]);
 
   useEffect(() => { void carica(); }, [carica]);
 
@@ -842,7 +840,7 @@ function TabCcnl({ password, solaLettura }: TabProps) {
         ),
       },
     };
-    await apiSalva(password, selectedCcnl.path, JSON.stringify(updated, null, 2), setSalvando, setFeedback);
+    await apiSalva(selectedCcnl.path, JSON.stringify(updated, null, 2), setSalvando, setFeedback);
   };
 
   return (
@@ -860,7 +858,7 @@ function TabCcnl({ password, solaLettura }: TabProps) {
               background: selectedId === c.id ? 'var(--color-accent-glow)' : 'transparent',
               color: selectedId === c.id ? 'var(--color-accent-bright)' : 'var(--color-text-secondary)',
               fontSize: '12px',
-              fontFamily: "'Plus Jakarta Sans', sans-serif",
+              fontFamily: "var(--font-sans), sans-serif",
               cursor: 'pointer',
               fontWeight: selectedId === c.id ? 600 : 400,
             }}
@@ -875,7 +873,7 @@ function TabCcnl({ password, solaLettura }: TabProps) {
           {/* A - Mensilità */}
           <SectionTitle>Mensilità contrattuali</SectionTitle>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <label style={{ fontSize: '12px', color: 'var(--color-text-secondary)', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+            <label style={{ fontSize: '12px', color: 'var(--color-text-secondary)', fontFamily: "var(--font-sans), sans-serif" }}>
               Mensilità previste dal contratto
             </label>
             <select
@@ -887,7 +885,7 @@ function TabCcnl({ password, solaLettura }: TabProps) {
                 border: '1px solid var(--color-border)',
                 borderRadius: '6px',
                 color: 'var(--color-text-primary)',
-                fontFamily: "'DM Mono', monospace",
+                fontFamily: "var(--font-mono), monospace",
                 fontSize: '13px',
               }}
             >
@@ -899,7 +897,7 @@ function TabCcnl({ password, solaLettura }: TabProps) {
           {/* B - Livelli */}
           <SectionTitle>Livelli contrattuali</SectionTitle>
           <div style={{ border: '1px solid var(--color-border)', borderRadius: '8px', overflow: 'hidden' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: '13px' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontFamily: "var(--font-sans), sans-serif", fontSize: '13px' }}>
               <thead>
                 <tr style={{ background: 'var(--color-bg-elevated)' }}>
                   <th style={{ padding: '9px 14px', textAlign: 'left', color: 'var(--color-text-secondary)', fontSize: '12px', fontWeight: 500 }}>Codice</th>
@@ -913,7 +911,7 @@ function TabCcnl({ password, solaLettura }: TabProps) {
                   const warn = warnRange(val, 0.5, 3.0);
                   return (
                     <tr key={l.codice} style={{ background: i % 2 === 0 ? 'var(--color-bg-base)' : 'var(--color-bg-surface)', borderTop: '1px solid var(--color-border)' }}>
-                      <td style={{ padding: '8px 14px', fontFamily: "'DM Mono', monospace", color: 'var(--color-accent-bright)' }}>{l.codice}</td>
+                      <td style={{ padding: '8px 14px', fontFamily: "var(--font-mono), monospace", color: 'var(--color-accent-bright)' }}>{l.codice}</td>
                       <td style={{ padding: '8px 14px', color: 'var(--color-text-secondary)' }}>{l.descrizione}</td>
                       <td style={{ padding: '8px 14px', textAlign: 'right' }}>
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '6px' }}>
@@ -926,7 +924,7 @@ function TabCcnl({ password, solaLettura }: TabProps) {
                             style={{
                               width: '90px',
                               textAlign: 'right',
-                              fontFamily: "'DM Mono', monospace",
+                              fontFamily: "var(--font-mono), monospace",
                               fontSize: '13px',
                               padding: '4px 8px',
                               background: 'var(--color-bg-input)',
@@ -943,7 +941,7 @@ function TabCcnl({ password, solaLettura }: TabProps) {
               </tbody>
             </table>
           </div>
-          <p style={{ fontSize: '12px', color: 'var(--color-text-muted)', fontFamily: "'Plus Jakarta Sans', sans-serif", marginTop: '-12px' }}>
+          <p style={{ fontSize: '12px', color: 'var(--color-text-muted)', fontFamily: "var(--font-sans), sans-serif", marginTop: '-12px' }}>
             1.00 = livello base; &gt;1.00 = livello superiore
           </p>
 
@@ -982,7 +980,7 @@ function TabCcnl({ password, solaLettura }: TabProps) {
                   return (
                     <div key={k} style={{ display: 'flex', alignItems: 'center', gap: '14px', padding: '10px 14px', background: 'var(--color-bg-elevated)', borderRadius: '6px', border: '1px solid var(--color-border)' }}>
                       <div style={{ width: '120px', flexShrink: 0 }}>
-                        <span style={{ fontFamily: "'DM Mono', monospace", fontSize: '12px', color: 'var(--color-gold)' }}>{k}</span>
+                        <span style={{ fontFamily: "var(--font-mono), monospace", fontSize: '12px', color: 'var(--color-gold)' }}>{k}</span>
                       </div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                         {warn && <span style={{ fontSize: '10px', color: 'var(--color-amber)' }}>⚠</span>}
@@ -994,7 +992,7 @@ function TabCcnl({ password, solaLettura }: TabProps) {
                           style={{
                             width: '80px',
                             textAlign: 'right',
-                            fontFamily: "'DM Mono', monospace",
+                            fontFamily: "var(--font-mono), monospace",
                             fontSize: '13px',
                             padding: '5px 8px',
                             background: 'var(--color-bg-input)',
@@ -1003,9 +1001,9 @@ function TabCcnl({ password, solaLettura }: TabProps) {
                             color: 'var(--color-text-primary)',
                           }}
                         />
-                        <span style={{ fontFamily: "'DM Mono', monospace", fontSize: '12px', color: 'var(--color-text-muted)' }}>%</span>
+                        <span style={{ fontFamily: "var(--font-mono), monospace", fontSize: '12px', color: 'var(--color-text-muted)' }}>%</span>
                       </div>
-                      <span style={{ fontSize: '12px', color: 'var(--color-text-muted)', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>{v.descrizione}</span>
+                      <span style={{ fontSize: '12px', color: 'var(--color-text-muted)', fontFamily: "var(--font-sans), sans-serif" }}>{v.descrizione}</span>
                     </div>
                   );
                 })}
@@ -1019,7 +1017,7 @@ function TabCcnl({ password, solaLettura }: TabProps) {
       )}
 
       {!raw && !feedback && (
-        <p style={{ color: 'var(--color-text-muted)', fontFamily: "'DM Mono', monospace", fontSize: '12px' }}>Caricamento...</p>
+        <p style={{ color: 'var(--color-text-muted)', fontFamily: "var(--font-mono), monospace", fontSize: '12px' }}>Caricamento...</p>
       )}
       {!raw && feedback && <FeedbackBanner feedback={feedback} />}
     </div>
@@ -1042,7 +1040,7 @@ function TabDocs() {
 
   const Code = ({ children }: { children: React.ReactNode }) => (
     <code style={{
-      fontFamily: "'DM Mono', monospace",
+      fontFamily: "var(--font-mono), monospace",
       fontSize: '11px',
       background: 'var(--color-bg-elevated)',
       padding: '1px 5px',
@@ -1053,7 +1051,7 @@ function TabDocs() {
 
   const NormBadge = ({ children }: { children: React.ReactNode }) => (
     <span style={{
-      fontFamily: "'DM Mono', monospace",
+      fontFamily: "var(--font-mono), monospace",
       fontSize: '9px',
       background: 'var(--color-bg-elevated)',
       border: '1px solid var(--color-border)',
@@ -1066,7 +1064,7 @@ function TabDocs() {
   );
 
   const stepStyle: React.CSSProperties = {
-    fontFamily: "'Plus Jakarta Sans', sans-serif",
+    fontFamily: "var(--font-sans), sans-serif",
     fontSize: '13px',
     color: 'var(--color-text-secondary)',
     lineHeight: '1.8',
@@ -1079,20 +1077,20 @@ function TabDocs() {
     fontWeight: 500,
     color: 'var(--color-text-muted)',
     background: 'var(--color-bg-elevated)',
-    fontFamily: "'Plus Jakarta Sans', sans-serif",
+    fontFamily: "var(--font-sans), sans-serif",
   };
 
   const tdBase: React.CSSProperties = {
     padding: '8px 12px',
     fontSize: '12px',
-    fontFamily: "'Plus Jakarta Sans', sans-serif",
+    fontFamily: "var(--font-sans), sans-serif",
     color: 'var(--color-text-secondary)',
     borderTop: '1px solid var(--color-border)',
   };
 
   const tdMono: React.CSSProperties = {
     ...tdBase,
-    fontFamily: "'DM Mono', monospace",
+    fontFamily: "var(--font-mono), monospace",
     color: 'var(--color-accent-bright)',
     fontSize: '11px',
   };
@@ -1120,7 +1118,7 @@ function TabDocs() {
             border: 'none',
             cursor: 'pointer',
             color: 'var(--color-text-primary)',
-            fontFamily: "'Plus Jakarta Sans', sans-serif",
+            fontFamily: "var(--font-sans), sans-serif",
             fontSize: '14px',
             fontWeight: 600,
             textAlign: 'left',
@@ -1149,7 +1147,7 @@ function TabDocs() {
         background: 'rgba(245, 158, 11, 0.07)',
         color: 'var(--color-amber)',
         fontSize: '12px',
-        fontFamily: "'Plus Jakarta Sans', sans-serif",
+        fontFamily: "var(--font-sans), sans-serif",
         marginBottom: '12px',
         display: 'flex',
         alignItems: 'center',
@@ -1184,7 +1182,7 @@ function TabDocs() {
           border: '1px solid var(--color-border)',
           fontSize: '12px',
           color: 'var(--color-text-muted)',
-          fontFamily: "'Plus Jakarta Sans', sans-serif",
+          fontFamily: "var(--font-sans), sans-serif",
           lineHeight: '1.6',
         }}>
           ⚠ Tredicesima, quattordicesima e mensilità extra sono <strong>voci informative</strong> — non si sommano al totale perché già incluse nella RAL.
@@ -1277,7 +1275,7 @@ function TabDocs() {
             </tbody>
           </table>
         </div>
-        <p style={{ fontSize: '11px', color: 'var(--color-text-muted)', fontFamily: "'DM Mono', monospace", marginBottom: '16px' }}>
+        <p style={{ fontSize: '11px', color: 'var(--color-text-muted)', fontFamily: "var(--font-mono), monospace", marginBottom: '16px' }}>
           detrazioneMinima: 690€ (contratto a tempo indeterminato) / 1.380€ (determinato)
         </p>
 
@@ -1337,11 +1335,11 @@ function TabDocs() {
             <tbody>
               <tr>
                 <td style={tdMono}>{`ccnlId === 'domestici'`}</td>
-                <td style={{ ...tdBase, color: 'var(--color-green)', fontFamily: "'DM Mono', monospace", fontSize: '12px' }}>calculateCostoDomestico</td>
+                <td style={{ ...tdBase, color: 'var(--color-green)', fontFamily: "var(--font-mono), monospace", fontSize: '12px' }}>calculateCostoDomestico</td>
               </tr>
               <tr>
                 <td style={tdBase}>Tutti gli altri CCNL</td>
-                <td style={{ ...tdBase, color: 'var(--color-accent-bright)', fontFamily: "'DM Mono', monospace", fontSize: '12px' }}>calculateCosto (standard)</td>
+                <td style={{ ...tdBase, color: 'var(--color-accent-bright)', fontFamily: "var(--font-mono), monospace", fontSize: '12px' }}>calculateCosto (standard)</td>
               </tr>
             </tbody>
           </table>
@@ -1372,7 +1370,7 @@ function SaveButton({ label, salvando, solaLettura, onClick }: {
         border: 'none',
         borderRadius: '8px',
         cursor: salvando ? 'not-allowed' : 'pointer',
-        fontFamily: "'Plus Jakarta Sans', sans-serif",
+        fontFamily: "var(--font-sans), sans-serif",
         fontSize: '13px',
         fontWeight: 600,
         transition: 'background 0.15s ease, opacity 0.15s ease',
@@ -1387,89 +1385,19 @@ function SaveButton({ label, salvando, solaLettura, onClick }: {
 // ─── Main AdminPage ───────────────────────────────────────────────────────────
 
 export default function AdminPage() {
-  const [password, setPassword] = useState('');
-  const [autenticato, setAutenticato] = useState(false);
   const [solaLettura, setSolaLettura] = useState(false);
-  const [verificaInCorso, setVerificaInCorso] = useState(false);
-  const [erroreLogin, setErroreLogin] = useState('');
   const [tabAttivo, setTabAttivo] = useState<'inps' | 'inail' | 'tfr' | 'ccnl' | 'docs'>('inps');
 
-  // La password è verificata dal server prima di entrare: così un errore di
-  // battitura non si manifesta come banner rosso dentro ogni tab.
-  const accedi = async () => {
-    if (!password.trim()) {
-      setErroreLogin('Inserisci la password');
-      return;
-    }
-    setVerificaInCorso(true);
-    setErroreLogin('');
-    try {
-      const res = await fetch('/api/admin/stato', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password }),
-      });
-      const json = await res.json() as { ok?: boolean; solaLettura?: boolean; errore?: string };
-      if (!res.ok || !json.ok) throw new Error(json.errore ?? 'Accesso non riuscito');
-      setSolaLettura(Boolean(json.solaLettura));
-      setAutenticato(true);
-    } catch (e) {
-      setErroreLogin(e instanceof Error ? e.message : 'Accesso non riuscito');
-    } finally {
-      setVerificaInCorso(false);
-    }
-  };
-
-  if (!autenticato) {
-    return (
-      <main style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--color-bg-base)' }}>
-        <div style={{
-          background: 'var(--color-bg-surface)',
-          border: '1px solid var(--color-border)',
-          borderRadius: '12px',
-          padding: '32px',
-          width: '100%',
-          maxWidth: '360px',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '16px',
-        }}>
-          <h1 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: '20px', color: 'var(--color-text-primary)', margin: 0 }}>
-            Pannello Admin
-          </h1>
-          <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: '13px', color: 'var(--color-text-muted)', margin: 0 }}>
-            Inserisci la password per accedere alla gestione dei dati.
-          </p>
-          <input
-            type="password"
-            value={password}
-            onChange={e => setPassword(e.target.value)}
-            onKeyDown={e => { if (e.key === 'Enter') void accedi(); }}
-            placeholder="Password admin"
-            style={{ padding: '11px 14px', borderRadius: '8px', fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: '13px' }}
-          />
-          {erroreLogin && <p style={{ fontSize: '12px', color: 'var(--color-red)', fontFamily: "'Plus Jakarta Sans', sans-serif", margin: 0 }}>{erroreLogin}</p>}
-          <button
-            onClick={() => { void accedi(); }}
-            disabled={verificaInCorso}
-            style={{
-              padding: '11px',
-              background: verificaInCorso ? 'var(--color-bg-elevated)' : 'var(--color-accent)',
-              color: verificaInCorso ? 'var(--color-text-muted)' : 'white',
-              border: 'none',
-              borderRadius: '8px',
-              cursor: verificaInCorso ? 'not-allowed' : 'pointer',
-              fontFamily: "'Plus Jakarta Sans', sans-serif",
-              fontSize: '13px',
-              fontWeight: 600,
-            }}
-          >
-            {verificaInCorso ? 'Verifica...' : 'Accedi'}
-          </button>
-        </div>
-      </main>
-    );
-  }
+  useEffect(() => {
+    let attivo = true;
+    fetch('/api/admin/stato', { cache: 'no-store' })
+      .then(r => r.json())
+      .then((json: { solaLettura?: boolean }) => {
+        if (attivo) setSolaLettura(Boolean(json.solaLettura));
+      })
+      .catch(() => {});
+    return () => { attivo = false; };
+  }, []);
 
   const TABS: { id: 'inps' | 'inail' | 'tfr' | 'ccnl' | 'docs'; label: string }[] = [
     { id: 'inps',  label: 'INPS & Agevolazioni' },
@@ -1480,18 +1408,18 @@ export default function AdminPage() {
   ];
 
   return (
-    <main style={{ minHeight: '100vh', background: 'var(--color-bg-base)' }}>
+    <main id="contenuto" style={{ minHeight: '100vh', background: 'var(--color-bg-base)' }}>
       <AppHeader />
       <div style={{ maxWidth: '1000px', margin: '0 auto', padding: '80px 24px 48px' }}>
 
         {/* Page title */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '28px' }}>
-          <h2 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: '22px', color: 'var(--color-text-primary)', margin: 0 }}>
+          <h2 style={{ fontFamily: "var(--font-display), sans-serif", fontWeight: 700, fontSize: '22px', color: 'var(--color-text-primary)', margin: 0 }}>
             Gestione parametri fiscali
           </h2>
-          <a href="/calcolatore" style={{ fontSize: '13px', color: 'var(--color-accent-bright)', textDecoration: 'none', fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+          <Link href="/calcolatore" style={{ fontSize: '13px', color: 'var(--color-accent-bright)', textDecoration: 'none', fontFamily: "var(--font-sans), sans-serif" }}>
             ← Torna al calcolatore
-          </a>
+          </Link>
         </div>
 
         {/* Warning banner — il flusso cambia a seconda dell'ambiente */}
@@ -1503,7 +1431,7 @@ export default function AdminPage() {
           color: solaLettura ? 'var(--color-amber)' : 'var(--color-text-secondary)',
           fontSize: '12px',
           lineHeight: 1.6,
-          fontFamily: "'Plus Jakarta Sans', sans-serif",
+          fontFamily: "var(--font-sans), sans-serif",
           marginBottom: '24px',
         }}>
           {solaLettura ? (
@@ -1539,7 +1467,7 @@ export default function AdminPage() {
                 border: 'none',
                 borderBottom: tabAttivo === t.id ? '2px solid var(--color-accent)' : '2px solid transparent',
                 color: tabAttivo === t.id ? 'var(--color-text-primary)' : 'var(--color-text-muted)',
-                fontFamily: "'Plus Jakarta Sans', sans-serif",
+                fontFamily: "var(--font-sans), sans-serif",
                 fontSize: '13px',
                 fontWeight: tabAttivo === t.id ? 600 : 400,
                 cursor: 'pointer',
@@ -1555,10 +1483,10 @@ export default function AdminPage() {
 
         {/* Tab content */}
         <div style={{ background: 'var(--color-bg-surface)', borderRadius: '10px', border: '1px solid var(--color-border)', padding: '28px' }}>
-          {tabAttivo === 'inps'  && <TabInps  password={password} solaLettura={solaLettura} />}
-          {tabAttivo === 'inail' && <TabInail password={password} solaLettura={solaLettura} />}
-          {tabAttivo === 'tfr'   && <TabTfr   password={password} solaLettura={solaLettura} />}
-          {tabAttivo === 'ccnl'  && <TabCcnl  password={password} solaLettura={solaLettura} />}
+          {tabAttivo === 'inps'  && <TabInps  solaLettura={solaLettura} />}
+          {tabAttivo === 'inail' && <TabInail solaLettura={solaLettura} />}
+          {tabAttivo === 'tfr'   && <TabTfr   solaLettura={solaLettura} />}
+          {tabAttivo === 'ccnl'  && <TabCcnl  solaLettura={solaLettura} />}
           {tabAttivo === 'docs'  && <TabDocs />}
         </div>
 

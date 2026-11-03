@@ -3,11 +3,12 @@
 import { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
+import { percorsoInterno } from '@/lib/safe-path';
 
 function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const from = searchParams.get('from') || '/calcolatore';
+  const from = percorsoInterno(searchParams.get('from'));
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -42,7 +43,7 @@ function LoginForm() {
   };
 
   return (
-    <div style={{
+    <main id="contenuto" style={{
       minHeight: '100vh',
       display: 'flex',
       alignItems: 'center',
@@ -73,7 +74,7 @@ function LoginForm() {
             </svg>
           </div>
           <h1 style={{
-            fontFamily: "'Syne', sans-serif",
+            fontFamily: "var(--font-display), sans-serif",
             fontWeight: 700,
             fontSize: '22px',
             color: 'var(--color-text-primary)',
@@ -166,7 +167,7 @@ function LoginForm() {
               color: 'white',
               border: 'none',
               borderRadius: '10px',
-              fontFamily: "'Plus Jakarta Sans', sans-serif",
+              fontFamily: "var(--font-sans), sans-serif",
               fontWeight: 600,
               fontSize: '14px',
               cursor: loading ? 'wait' : 'pointer',
@@ -186,7 +187,7 @@ function LoginForm() {
           Accesso riservato. Contatta l&apos;amministratore<br />per ottenere le credenziali.
         </p>
       </div>
-    </div>
+    </main>
   );
 }
 

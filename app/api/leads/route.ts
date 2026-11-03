@@ -1,8 +1,8 @@
 import { randomUUID } from 'crypto';
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { ipRichiesta } from '@/lib/admin-auth';
-import { leadRateLimited } from '@/lib/lead-rate-limit';
+import { ipRichiesta } from '@/lib/client-ip';
+import { troppoFrequente } from '@/lib/rate-limit';
 import { salvaLead } from '@/lib/lead-store';
 import {
   LEAD_UNLOCK_COOKIE,
@@ -26,7 +26,7 @@ const LeadSchema = z.object({
   privacy: z.boolean().refine(v => v === true, { message: 'Consenso privacy obbligatorio' }),
   marketing: z.boolean().optional().default(false),
   modulo: z.enum(['dipendenti', 'edili', 'domestici', 'soci']),
-  meta: z.record(z.string(), z.string()).optional(),
+  meta: z.record(z.string().max(40), z.string().max(200)).optional(),
   website: z.string().max(200).optional(),
 });
 
@@ -45,7 +45,7 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   const ip = ipRichiesta(req);
-  if (leadRateLimited(ip)) {
+  if (await troppoFrequente('leads', ip, 8, 900_000)) {
     return noStore({ errore: 'Troppi tentativi. Riprova tra qualche minuto.' }, 429);
   }
 

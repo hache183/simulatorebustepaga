@@ -22,8 +22,8 @@ import {
 
 // Schema di validazione Zod — rifiuta qualsiasi input malformato prima del calcolo
 const InputSchema = z.object({
-  ccnlId: z.string().min(1, 'Seleziona un CCNL'),
-  livello: z.string().min(1, 'Seleziona il livello contrattuale'),
+  ccnlId: z.string().min(1, 'Seleziona un CCNL').max(80),
+  livello: z.string().min(1, 'Seleziona il livello contrattuale').max(40),
   ral: z.number({ error: 'La RAL deve essere un numero' })
     .min(1, 'RAL minima: 1 euro')
     .max(500_000, 'RAL massima: 500.000 euro'),
@@ -36,10 +36,10 @@ const InputSchema = z.object({
     .min(12, 'Minimo 12 mensilità')
     .max(16, 'Massimo 16 mensilità — oltre non esiste nel diritto del lavoro italiano'),
   anzianitaAnni: z.number().min(0).max(50),
-  numeroDipendenti: z.number().min(1),
-  regione: z.string(),
-  codiceInail: z.string(),
-  agevolazioniSelezionate: z.array(z.string()),
+  numeroDipendenti: z.number().min(1).max(100_000),
+  regione: z.string().max(80),
+  codiceInail: z.string().max(32),
+  agevolazioniSelezionate: z.array(z.string().max(80)).max(40),
   includiAssistenzaSanitaria: z.boolean(),
   aliquotaInps: z.number().min(0).max(0.5),
   quotaNonGodute: z.number().min(0).max(1).optional(),

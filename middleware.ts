@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { ADMIN_SESSION_COOKIE, verificaSessioneAdmin } from '@/lib/admin-session';
 
 /**
- * Simulatore pubblico; solo /admin e /api/admin richiedono login consulente.
+ * Simulatore pubblico; solo /admin e /api/admin richiedono la sessione consulente.
  */
 
 const PUBLIC_API_PREFIXES = [
@@ -15,6 +16,7 @@ const PUBLIC_API_PREFIXES = [
   '/api/agevolazioni',
   '/api/societari',
   '/api/leads',
+  '/api/aci',
 ];
 
 function isPublicApi(pathname: string): boolean {
@@ -38,13 +40,18 @@ function requiresAdminAuth(pathname: string): boolean {
   return pathname.startsWith('/admin') || pathname.startsWith('/api/admin');
 }
 
-function verifyAdminToken(request: NextRequest): boolean {
-  const token = request.cookies.get('auth_token')?.value;
-  const expected = process.env.AUTH_TOKEN;
-  return Boolean(token && expected && token === expected);
+function conNoindex(response: NextResponse, pathname: string): NextResponse {
+  if (
+    pathname.startsWith('/api') ||
+    pathname.startsWith('/admin') ||
+    pathname === '/login'
+  ) {
+    response.headers.set('X-Robots-Tag', 'noindex, nofollow');
+  }
+  return response;
 }
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   if (
@@ -60,25 +67,26 @@ export function middleware(request: NextRequest) {
     if (pathname.startsWith('/calcolatore') || pathname.startsWith('/admin')) {
       response.headers.set('Cache-Control', 'no-store, must-revalidate');
     }
-    return response;
+    return conNoindex(response, pathname);
   }
 
   if (requiresAdminAuth(pathname)) {
-    if (!verifyAdminToken(request)) {
+    const token = request.cookies.get(ADMIN_SESSION_COOKIE)?.value;
+    if (!(await verificaSessioneAdmin(token))) {
       if (pathname.startsWith('/api/')) {
-        return NextResponse.json({ errore: 'Non autorizzato' }, { status: 401 });
+        return conNoindex(NextResponse.json({ errore: 'Non autorizzato' }, { status: 401 }), pathname);
       }
       const loginUrl = request.nextUrl.clone();
       loginUrl.pathname = '/login';
       loginUrl.searchParams.set('from', pathname);
-      return NextResponse.redirect(loginUrl);
+      return conNoindex(NextResponse.redirect(loginUrl), pathname);
     }
     const response = NextResponse.next();
     response.headers.set('Cache-Control', 'no-store, must-revalidate');
-    return response;
+    return conNoindex(response, pathname);
   }
 
-  return NextResponse.next();
+  return conNoindex(NextResponse.next(), pathname);
 }
 
 export const config = {

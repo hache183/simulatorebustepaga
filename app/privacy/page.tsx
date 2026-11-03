@@ -2,11 +2,18 @@ import Link from 'next/link';
 
 export const metadata = {
   title: 'Informativa privacy — CostWork Pro',
+  description: 'Informativa sul trattamento dei dati inseriti per sbloccare il report del simulatore CostWork Pro.',
+  alternates: { canonical: '/privacy' },
+  openGraph: {
+    title: 'Informativa privacy — CostWork Pro',
+    description: 'Informativa sul trattamento dei dati inseriti per sbloccare il report del simulatore CostWork Pro.',
+    url: '/privacy',
+  },
 };
 
 export default function PrivacyPage() {
   return (
-    <main style={{
+    <main id="contenuto" style={{
       maxWidth: '720px',
       margin: '0 auto',
       padding: '80px 24px 48px',
@@ -14,7 +21,7 @@ export default function PrivacyPage() {
       color: 'var(--color-text-primary)',
     }}>
       <h1 style={{
-        fontFamily: "'Syne', sans-serif",
+        fontFamily: "var(--font-display), sans-serif",
         fontSize: '28px',
         fontWeight: 700,
         marginBottom: '16px',

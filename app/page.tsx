@@ -2,9 +2,15 @@ import Link from 'next/link';
 import { AppHeader } from '@/components/AppHeader';
 import { listCcnlUi } from '@/lib/ccnl';
 
+const TITOLO_HOME = 'CostWork Pro — Quanto costa un\'assunzione';
+const DESCRIZIONE_HOME = 'Simula il costo aziendale e il netto del dipendente su CCNL, edilizia, lavoro domestico e compensi di soci e amministratori.';
+
 export const metadata = {
-  title: 'CostWork Pro — Quanto costa un\'assunzione',
-  description: 'Simula il costo aziendale e il netto del dipendente su CCNL, edilizia, lavoro domestico e compensi di soci e amministratori.',
+  title: TITOLO_HOME,
+  description: DESCRIZIONE_HOME,
+  alternates: { canonical: '/' },
+  openGraph: { title: TITOLO_HOME, description: DESCRIZIONE_HOME, url: '/' },
+  twitter: { title: TITOLO_HOME, description: DESCRIZIONE_HOME },
 };
 
 const FAQ = [
@@ -30,10 +36,24 @@ export default function HomePage() {
   const contratti = listCcnlUi().length;
   const anno = new Date().getFullYear();
 
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: FAQ.map(voce => ({
+      '@type': 'Question',
+      name: voce.q,
+      acceptedAnswer: { '@type': 'Answer', text: voce.a },
+    })),
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, '\\u003c') }}
+      />
       <AppHeader />
-      <main className="home">
+      <main id="contenuto" className="home">
         <section className="home-hero">
           <p className="home-kicker">Simulatore costo del lavoro · aliquote {anno}</p>
           <h1>Quanto costa davvero assumere una persona</h1>

@@ -11,9 +11,11 @@ import { registraSimulazione, sintesiSimulazione } from '@/lib/lead-store';
 
 const MAX_COMPENSO = 5_000_000;
 
-function numero(v: unknown, fallback: number): number {
+function numero(v: unknown, fallback: number, max: number): number {
   const n = Number(v);
-  return Number.isFinite(n) && n >= 0 ? n : fallback;
+  if (!Number.isFinite(n) || n < 0) return fallback;
+  if (n > max) throw new RangeError('Valore fuori scala');
+  return n;
 }
 
 function traccia(leadId: string, body: unknown, risultato: unknown) {
@@ -35,7 +37,7 @@ export async function POST(req: NextRequest) {
     const body = await req.json() as Partial<SociState> & SocietariInput;
 
     if (body.tipo) {
-      const lordo = numero(body.compensoAnnuo, -1);
+      const lordo = numero(body.compensoAnnuo, -1, MAX_COMPENSO);
       if (lordo < 0 || lordo > MAX_COMPENSO) {
         return NextResponse.json({ errore: 'Compenso non valido' }, { status: 400 });
       }
@@ -45,7 +47,7 @@ export async function POST(req: NextRequest) {
     }
 
     const base = defaultStateSoci();
-    const lordo = numero(body.lordoAnnuo ?? body.compensoAnnuo, base.lordoAnnuo);
+    const lordo = numero(body.lordoAnnuo ?? body.compensoAnnuo, base.lordoAnnuo, MAX_COMPENSO);
     if (lordo > MAX_COMPENSO) {
       return NextResponse.json({ errore: 'Compenso non valido' }, { status: 400 });
     }
@@ -54,12 +56,12 @@ export async function POST(req: NextRequest) {
       modalita: body.modalita === 'senza_compenso' ? 'senza_compenso' : 'con_compenso',
       lordoAnnuo: lordo,
       haAltraCoperturaInps: Boolean(body.haAltraCoperturaInps),
-      giorniTrasfertaNazionale: numero(body.giorniTrasfertaNazionale, 0),
-      importoTrasfertaNazionale: numero(body.importoTrasfertaNazionale, base.importoTrasfertaNazionale),
-      giorniTrasfertaEstera: numero(body.giorniTrasfertaEstera, 0),
-      importoTrasfertaEstera: numero(body.importoTrasfertaEstera, base.importoTrasfertaEstera),
-      km: numero(body.km, 0),
-      costoKm: numero(body.costoKm, 0),
+      giorniTrasfertaNazionale: numero(body.giorniTrasfertaNazionale, 0, 366),
+      importoTrasfertaNazionale: numero(body.importoTrasfertaNazionale, base.importoTrasfertaNazionale, 100_000),
+      giorniTrasfertaEstera: numero(body.giorniTrasfertaEstera, 0, 366),
+      importoTrasfertaEstera: numero(body.importoTrasfertaEstera, base.importoTrasfertaEstera, 100_000),
+      km: numero(body.km, 0, 1_000_000),
+      costoKm: numero(body.costoKm, 0, 100),
     };
 
     const risultato = calcolaSoci(stato);

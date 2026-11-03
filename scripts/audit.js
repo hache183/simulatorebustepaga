@@ -134,15 +134,13 @@ for (const a of (inps.agevolazioni || [])) {
 const envPath = path.join(__dirname, '..', '.env.local');
 if (fs.existsSync(envPath)) {
   const env = fs.readFileSync(envPath, 'utf-8');
-  const hasAdminPw = env.includes('ADMIN_PASSWORD=');
   const hasAuthPw = env.includes('AUTH_PASSWORD=');
   const hasAuthEmail = env.includes('AUTH_EMAIL=');
-  const hasAuthToken = env.includes('AUTH_TOKEN=');
-  if (!hasAdminPw) issues.push('ENV: ADMIN_PASSWORD mancante in .env.local');
+  const hasSession = env.includes('AUTH_SESSION_SECRET=');
   if (!hasAuthPw)  issues.push('ENV: AUTH_PASSWORD mancante in .env.local');
   if (!hasAuthEmail) issues.push('ENV: AUTH_EMAIL mancante in .env.local');
-  if (!hasAuthToken) issues.push('ENV: AUTH_TOKEN mancante in .env.local');
-  if (hasAdminPw && hasAuthPw && hasAuthEmail && hasAuthToken)
+  if (!hasSession) issues.push('ENV: AUTH_SESSION_SECRET mancante in .env.local');
+  if (hasAuthPw && hasAuthEmail && hasSession)
     ok.push('ENV vars OK');
 } else {
   ok.push('ENV: .env.local assente (accettabile se non usi API/autenticazione locale)');

@@ -3,9 +3,10 @@ import { getCcnlData } from '@/lib/ccnl';
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  ctx: { params: Promise<{ id: string }> },
 ) {
   try {
+    const params = await ctx.params;
     const convivente = req.nextUrl.searchParams.get('convivente') === 'true';
     const id = convivente && (params.id === 'domestici' || params.id === 'domestici_non_conviventi')
       ? 'domestici_conviventi'

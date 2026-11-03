@@ -1,29 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { ZodError } from 'zod';
 import { calculateCosto } from '@/lib/engine';
-import { LRUCache } from 'lru-cache';
+import { ipRichiesta } from '@/lib/client-ip';
 import { richiediAccessoLead } from '@/lib/lead-guard';
 import { registraSimulazione, sintesiSimulazione } from '@/lib/lead-store';
-
-// Rate limiter: max 20 calcoli per minuto per IP
-const rateLimiter = new LRUCache<string, number[]>({ max: 500, ttl: 60_000 });
-
-function isRateLimited(ip: string): boolean {
-  const ora = Date.now();
-  const hits = rateLimiter.get(ip) ?? [];
-  const recenti = hits.filter(t => ora - t < 60_000);
-  if (recenti.length >= 20) return true;
-  rateLimiter.set(ip, [...recenti, ora]);
-  return false;
-}
+import { troppoFrequente } from '@/lib/rate-limit';
 
 export async function POST(req: NextRequest) {
   const accesso = richiediAccessoLead(req);
   if (!accesso.ok) return accesso.risposta;
 
-  const ip = req.headers.get('x-forwarded-for') ?? '127.0.0.1';
+  const ip = ipRichiesta(req);
 
-  if (isRateLimited(ip)) {
+  if (await troppoFrequente('calcola', ip, 20, 60_000)) {
     return NextResponse.json(
       { errore: 'Troppe richieste. Attendi un minuto prima di ricalcolare.' },
       { status: 429 }
