@@ -1,12 +1,12 @@
 import Link from 'next/link';
 
 export const metadata = {
-  title: 'Informativa privacy — CostWork Pro',
-  description: 'Informativa sul trattamento dei dati inseriti per sbloccare il report del simulatore CostWork Pro.',
+  title: 'Informativa privacy — Costi Lavoro Italia',
+  description: 'Informativa sul trattamento dei dati inseriti per sbloccare il report del simulatore Costi Lavoro Italia.',
   alternates: { canonical: '/privacy' },
   openGraph: {
-    title: 'Informativa privacy — CostWork Pro',
-    description: 'Informativa sul trattamento dei dati inseriti per sbloccare il report del simulatore CostWork Pro.',
+    title: 'Informativa privacy — Costi Lavoro Italia',
+    description: 'Informativa sul trattamento dei dati inseriti per sbloccare il report del simulatore Costi Lavoro Italia.',
     url: '/privacy',
   },
 };
@@ -29,7 +29,7 @@ export default function PrivacyPage() {
         Informativa privacy
       </h1>
       <p style={{ color: 'var(--color-text-secondary)', marginBottom: '24px' }}>
-        Questa pagina descrive come vengono trattati i dati inseriti per sbloccare il report del simulatore CostWork Pro.
+        Questa pagina descrive come vengono trattati i dati inseriti per sbloccare il report del simulatore Costi Lavoro Italia.
         Il titolare del trattamento deve completare questo testo con i propri riferimenti legali (ragione sociale, sede, contatti DPO).
       </p>
       <h2 style={{ fontSize: '16px', marginTop: '24px' }}>Finalità</h2>

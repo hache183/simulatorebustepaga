@@ -1,9 +1,12 @@
 import Link from 'next/link';
 import { AppHeader } from '@/components/AppHeader';
-import { listCcnlUi } from '@/lib/ccnl';
+import { SiteFooter } from '@/components/SiteFooter';
+import { calculateCosto } from '@/lib/engine';
+import { getCcnlData, pagaMensileBase } from '@/lib/ccnl';
+import { NOME_SITO } from '@/lib/site';
 
-const TITOLO_HOME = 'CostWork Pro — Quanto costa un\'assunzione';
-const DESCRIZIONE_HOME = 'Simula il costo aziendale e il netto del dipendente su CCNL, edilizia, lavoro domestico e compensi di soci e amministratori.';
+const TITOLO_HOME = `${NOME_SITO} — il costo di un quarto livello del commercio`;
+const DESCRIZIONE_HOME = 'Prospetto calcolato sul CCNL Terziario, 4° livello, minimo tabellare, 14 mensilità, Lombardia. Gli altri casi si impostano nel simulatore.';
 
 export const metadata = {
   title: TITOLO_HOME,
@@ -15,34 +18,71 @@ export const metadata = {
 
 const FAQ = [
   {
-    q: 'Devo lasciare i dati prima di provare il simulatore?',
-    a: 'No. CCNL, livello, RAL, orario e dati aziendali si compilano liberamente. Nome, email e telefono servono solo quando chiedi il report.',
+    q: 'I dati si chiedono prima di compilare il contratto?',
+    a: 'No. CCNL, livello, retribuzione, orario, regione e voce INAIL si scrivono senza lasciare recapiti. Nome, email e telefono servono solo quando si chiede il prospetto.',
   },
   {
-    q: 'I parametri si perdono quando inserisco i recapiti?',
-    a: 'No. Dopo l\'invio il calcolo parte da solo con i valori già inseriti e il prospetto compare subito.',
+    q: 'Il calcolo riparte dopo il modulo?',
+    a: 'Sì. I parametri restano in pagina. Dopo l\'invio il motore usa quegli stessi valori e il prospetto compare senza reinserirli.',
   },
   {
-    q: 'Devo rifare il modulo ogni volta?',
-    a: 'No. Un cookie tecnico sblocca i report sullo stesso browser per circa 30 giorni. Poi il modulo si ripresenta solo alla generazione del report.',
+    q: 'Ogni visita richiede di nuovo i recapiti?',
+    a: 'No. Un cookie tecnico, httpOnly, tiene sbloccato il browser per circa trenta giorni. Poi il modulo torna solo alla generazione del prospetto.',
   },
   {
-    q: 'Il risultato è un cedolino ufficiale?',
-    a: 'È una simulazione indicativa: minimi tabellari, aliquote e regole del motore. Il caso concreto va verificato dal consulente.',
+    q: 'Si può consegnare al dipendente come cedolino?',
+    a: 'No. È una simulazione su minimi tabellari, aliquote caricate e regole del motore. Addizionali e detrazioni personali vanno verificate dal consulente.',
   },
 ];
 
-export default function HomePage() {
-  const contratti = listCcnlUi().length;
+const euro = new Intl.NumberFormat('it-IT', {
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
+});
+
+function cifra(n: number) {
+  return `${euro.format(n)} €`;
+}
+
+export default async function HomePage() {
   const anno = new Date().getFullYear();
+  const ccnl = getCcnlData('commercio');
+  const livello = ccnl.livelli.find(l => l.codice === '4');
+  if (!livello) throw new Error('Livello 4 del commercio assente');
+  const ral = Math.round(pagaMensileBase(livello) * ccnl.mensilita * 100) / 100;
+  const esempio = await calculateCosto({
+    ccnlId: 'commercio',
+    livello: '4',
+    ral,
+    tipoContratto: 'tempo_indeterminato',
+    oreLavoro: 40,
+    mensilita: ccnl.mensilita,
+    anzianitaAnni: 0,
+    numeroDipendenti: 8,
+    regione: 'Lombardia',
+    codiceInail: '0111',
+    agevolazioniSelezionate: [],
+    includiAssistenzaSanitaria: true,
+    aliquotaInps: 0.288,
+  });
+  const voce = (id: string) => esempio.voci.find(v => v.id === id)?.importoAnnuo ?? 0;
+  const righe = [
+    ['Retribuzione annua lorda', voce('ral')],
+    ['Contributi INPS a carico del datore', voce('inps')],
+    ['TFR accantonato', voce('tfr')],
+    ['Premio INAIL', voce('inail')],
+    ['Ferie, permessi ed ex festività non godute', voce('ferie_permessi_festivita')],
+    ['Assistenza sanitaria', voce('assistenza_sanitaria')],
+    ['Ebiter', voce('ente_bilaterale_ebiter')],
+  ];
 
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
-    mainEntity: FAQ.map(voce => ({
+    mainEntity: FAQ.map(item => ({
       '@type': 'Question',
-      name: voce.q,
-      acceptedAnswer: { '@type': 'Answer', text: voce.a },
+      name: item.q,
+      acceptedAnswer: { '@type': 'Answer', text: item.a },
     })),
   };
 
@@ -54,122 +94,122 @@ export default function HomePage() {
       />
       <AppHeader />
       <main id="contenuto" className="home">
-        <section className="home-hero">
-          <p className="home-kicker">Simulatore costo del lavoro · aliquote {anno}</p>
-          <h1>Quanto costa davvero assumere una persona</h1>
-          <p className="home-lead">
-            CostWork Pro calcola il costo azienda e il netto del dipendente a partire dal CCNL,
-            dal livello e dalla retribuzione. Compili i parametri subito. I recapiti si chiedono
-            solo quando generi il report.
+        <section className="mast">
+          <p className="mast__index">01</p>
+          <div>
+            <p className="kicker">Terziario · 4° livello · aliquote {anno}</p>
+            <h1>Un quarto livello del commercio, messo in colonna.</h1>
+          </div>
+          <p className="mast__deck">
+            Minimo tabellare, quattordici mensilità, quaranta ore, tempo indeterminato, otto dipendenti in Lombardia, voce INAIL 0111, INPS datoriale al 28,80%, nessuna agevolazione.
+            Le cifre sotto escono dal motore. Non sono un cedolino.
           </p>
-          <div className="home-cta">
+        </section>
+
+        <section className="ledger" aria-label="Prospetto di esempio calcolato">
+          <table>
+            <caption>
+              Costo azienda annuo {cifra(esempio.costoTotaleAnnuo)}. Netto mensile stimato, media su dodici mesi, {cifra(esempio.nettoDipendente.nettoMensile12)}.
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">Voce</th>
+                <th scope="col">Importo annuo</th>
+              </tr>
+            </thead>
+            <tbody>
+              {righe.map(([nome, importo]) => (
+                <tr key={nome}>
+                  <th scope="row">{nome}</th>
+                  <td>{cifra(Number(importo))}</td>
+                </tr>
+              ))}
+              <tr className="ledger__totale">
+                <th scope="row">Costo totale azienda</th>
+                <td>{cifra(esempio.costoTotaleAnnuo)}</td>
+              </tr>
+              <tr>
+                <th scope="row">Netto mensile stimato del dipendente</th>
+                <td>{cifra(esempio.nettoDipendente.nettoMensile12)}</td>
+              </tr>
+            </tbody>
+          </table>
+          <p className="ledger__nota">
+            RAL di partenza {cifra(ral)}, pari al minimo del 4° livello per {ccnl.mensilita} mensilità.
+            Tredicesima e quattordicesima sono già dentro la retribuzione. Il netto non tiene conto di carichi familiari né dell&apos;addizionale del singolo comune.
+          </p>
+          <p className="ledger__azioni">
             <Link href="/calcolatore" className="ui-btn ui-btn--primary" data-testid="cta-simulatore">
-              Apri il simulatore
+              Calcola un altro inquadramento
             </Link>
             <Link href="/calcolatore?tab=soci" className="ui-btn ui-btn--secondary">
-              Compensi societari
+              Compenso di un amministratore
             </Link>
-          </div>
-          <ul className="home-stats">
-            <li><strong>{contratti}</strong><span>CCNL nel modulo dipendenti</span></li>
-            <li><strong>Costo e netto</strong><span>azienda, IRPEF e voci</span></li>
-            <li><strong>4 moduli</strong><span>dipendenti, edili, domestici, soci</span></li>
-          </ul>
-        </section>
-
-        <section className="home-section">
-          <h2>A chi serve</h2>
-          <div className="home-grid">
-            <article className="home-card">
-              <h3>Studi e consulenti del lavoro</h3>
-              <p>Un prospetto da mostrare al cliente prima della lettera di assunzione, con le voci già separate.</p>
-            </article>
-            <article className="home-card">
-              <h3>HR e amministrazione</h3>
-              <p>Confronti livello, orario e agevolazioni senza ricostruire il costo a mano ogni volta.</p>
-            </article>
-            <article className="home-card">
-              <h3>Imprenditori</h3>
-              <p>Vedi il costo annuo e mensile e quanto resta in busta, prima di decidere l&apos;assunzione.</p>
-            </article>
-          </div>
-        </section>
-
-        <section className="home-section">
-          <h2>Cosa calcola</h2>
-          <div className="home-grid home-grid--2">
-            <article className="home-card">
-              <h3>Costo azienda</h3>
-              <p>INPS a carico del datore, INAIL, TFR, tredicesima e altre mensilità, contributi contrattuali e agevolazioni selezionate.</p>
-            </article>
-            <article className="home-card">
-              <h3>Netto del dipendente</h3>
-              <p>Trattenute INPS, IRPEF con detrazioni da lavoro dipendente e addizionali regionale e comunale in media.</p>
-            </article>
-            <article className="home-card">
-              <h3>CCNL, edilizia e domestici</h3>
-              <p>
-                {contratti} contratti nel modulo dipendenti, operai edili con Cassa Edile e imponibile per elementi,
-                collaboratori familiari conviventi e non, con CassaColf.
-              </p>
-            </article>
-            <article className="home-card">
-              <h3>Soci e amministratori</h3>
-              <p>Compenso in Gestione separata con riparto due terzi società e un terzo percipiente, trasferte e rimborso chilometrico ACI.</p>
-            </article>
-          </div>
-        </section>
-
-        <section className="home-section">
-          <h2>Come funziona</h2>
-          <ol className="home-steps">
-            <li>
-              <span>1</span>
-              <div>
-                <h3>Compili i parametri</h3>
-                <p>Scegli il modulo, il contratto, il livello e i dati aziendali. Nessun recapito in questa fase.</p>
-              </div>
-            </li>
-            <li>
-              <span>2</span>
-              <div>
-                <h3>Chiedi il report</h3>
-                <p>Al clic su calcola, se è la prima volta, lasci nome, email, telefono e il consenso privacy.</p>
-              </div>
-            </li>
-            <li>
-              <span>3</span>
-              <div>
-                <h3>Leggi il prospetto</h3>
-                <p>Il calcolo usa i dati già inseriti. Costo totale, netto e dettaglio delle voci compaiono subito.</p>
-              </div>
-            </li>
-          </ol>
-        </section>
-
-        <section className="home-section">
-          <h2>Domande frequenti</h2>
-          <div className="home-faq">
-            {FAQ.map(voce => (
-              <details key={voce.q}>
-                <summary>{voce.q}</summary>
-                <p>{voce.a}</p>
-              </details>
-            ))}
-          </div>
-        </section>
-
-        <section className="home-note">
-          <p>
-            Simulazione indicativa, non un cedolino. Le aliquote in uso sono quelle caricate per il {anno}.
-            {' '}
-            <Link href="/privacy">Informativa privacy</Link>
           </p>
-          <Link href="/calcolatore" className="ui-btn ui-btn--primary">
-            Vai al simulatore
-          </Link>
+        </section>
+
+        <section className="sezione">
+          <p className="sezione__n">02</p>
+          <div>
+            <h2>Come si legge una riga</h2>
+            <dl className="glossa">
+              <div>
+                <dt>Retribuzione</dt>
+                <dd>Il minimo del livello, più le indennità fisse del contratto. Una RAL diversa si scrive nel modulo e diventa superminimo.</dd>
+              </div>
+              <div>
+                <dt>INPS del datore</dt>
+                <dd>Aliquota del settore. Sotto i quindici dipendenti il commercio usa la fascia fino a quindici. Le agevolazioni si scelgono dopo, e si vedono come sconto.</dd>
+              </div>
+              <div>
+                <dt>INAIL</dt>
+                <dd>Tasso della voce di tariffa, in media nazionale. Il tasso aziendale vero dipende dall&apos;oscillazione e può scostarsi anche del quaranta per cento.</dd>
+              </div>
+              <div>
+                <dt>Netto</dt>
+                <dd>Trattenuta INPS del lavoratore, IRPEF con la detrazione da lavoro dipendente, bonus cuneo se spetta, addizionali regionale e comunale in media nazionale.</dd>
+              </div>
+            </dl>
+          </div>
+        </section>
+
+        <section className="sezione">
+          <p className="sezione__n">03</p>
+          <div>
+            <h2>Gli altri tre calcoli</h2>
+            <ol className="indice">
+              <li>
+                <span>Edili</span>
+                <p>Operai di industria o artigianato. Il costo passa dalla Cassa Edile: l&apos;aliquota in pagina è indicativa e cambia con la cassa provinciale.</p>
+              </li>
+              <li>
+                <span>Domestici</span>
+                <p>Conviventi e non conviventi, contributi a ore e Cassa Colf. Il datore privato non trattiene l&apos;IRPEF: il netto in busta è senza imposta.</p>
+              </li>
+              <li>
+                <span>Soci e amministratori</span>
+                <p>Compenso in Gestione separata. Due terzi restano sulla società, un terzo sul percipiente. In più, trasferte e chilometri delle tabelle ACI.</p>
+              </li>
+            </ol>
+          </div>
+        </section>
+
+        <section className="sezione">
+          <p className="sezione__n">04</p>
+          <div>
+            <h2>Prima di usare il numero</h2>
+            <div className="faq">
+              {FAQ.map((voce, i) => (
+                <details key={voce.q}>
+                  <summary><span>{String(i + 1).padStart(2, '0')}</span>{voce.q}</summary>
+                  <p>{voce.a}</p>
+                </details>
+              ))}
+            </div>
+          </div>
         </section>
       </main>
+      <SiteFooter />
     </>
   );
 }

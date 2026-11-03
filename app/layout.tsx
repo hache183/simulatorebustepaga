@@ -1,31 +1,32 @@
 import type { Metadata } from 'next';
-import { DM_Mono, Plus_Jakarta_Sans, Syne } from 'next/font/google';
-import { siteUrl } from '@/lib/site';
+import { Cormorant_Garamond, IBM_Plex_Mono, IBM_Plex_Sans } from 'next/font/google';
+import { NOME_SITO, siteUrl } from '@/lib/site';
 import './globals.css';
 
-const sans = Plus_Jakarta_Sans({
+const sans = IBM_Plex_Sans({
   subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
+  weight: ['400', '500', '600'],
   display: 'swap',
   variable: '--font-sans',
 });
 
-const display = Syne({
+const display = Cormorant_Garamond({
   subsets: ['latin'],
-  weight: ['600', '700', '800'],
+  weight: ['500', '600', '700'],
+  style: ['normal', 'italic'],
   display: 'swap',
   variable: '--font-display',
 });
 
-const mono = DM_Mono({
+const mono = IBM_Plex_Mono({
   subsets: ['latin'],
   weight: ['400', '500'],
   display: 'swap',
   variable: '--font-mono',
 });
 
-const titolo = 'CostWork Pro — Calcolatore Costo del Lavoro';
-const descrizione = 'Strumento professionale multi-CCNL per il calcolo del costo aziendale del lavoro in Italia';
+const titolo = `${NOME_SITO} — costo di un'assunzione`;
+const descrizione = 'Simulatore del costo aziendale e del netto stimato su CCNL, edilizia, lavoro domestico e compensi di soci e amministratori.';
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl()),
@@ -38,7 +39,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'it_IT',
-    siteName: 'CostWork Pro',
+    siteName: NOME_SITO,
     title: titolo,
     description: descrizione,
     url: '/',

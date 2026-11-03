@@ -1,57 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { ADMIN_SESSION_COOKIE, verificaSessioneAdmin } from '@/lib/admin-session';
 
 /**
- * Simulatore pubblico; solo /admin e /api/admin richiedono la sessione consulente.
+ * Il simulatore è pubblico. Le API di calcolo restano dietro il cookie lead
+ * (controllo nella route, non qui). /api non va indicizzato.
  */
 
-const PUBLIC_API_PREFIXES = [
-  '/api/auth/login',
-  '/api/auth/logout',
-  '/api/auth/session',
-  '/api/calcola',
-  '/api/ccnl/',
-  '/api/inps/',
-  '/api/inail/',
-  '/api/agevolazioni',
-  '/api/societari',
-  '/api/leads',
-  '/api/aci',
-];
-
-function isPublicApi(pathname: string): boolean {
-  return PUBLIC_API_PREFIXES.some(p => pathname === p || pathname.startsWith(p));
-}
-
-function isPublicPage(pathname: string): boolean {
-  if (
-    pathname === '/' ||
-    pathname === '/login' ||
-    pathname === '/privacy' ||
-    pathname.startsWith('/calcolatore') ||
-    pathname === '/compensi-societari'
-  ) {
-    return true;
-  }
-  return false;
-}
-
-function requiresAdminAuth(pathname: string): boolean {
-  return pathname.startsWith('/admin') || pathname.startsWith('/api/admin');
-}
-
-function conNoindex(response: NextResponse, pathname: string): NextResponse {
-  if (
-    pathname.startsWith('/api') ||
-    pathname.startsWith('/admin') ||
-    pathname === '/login'
-  ) {
-    response.headers.set('X-Robots-Tag', 'noindex, nofollow');
-  }
-  return response;
-}
-
-export async function middleware(request: NextRequest) {
+export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   if (
@@ -62,31 +16,14 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  if (isPublicPage(pathname) || isPublicApi(pathname)) {
-    const response = NextResponse.next();
-    if (pathname.startsWith('/calcolatore') || pathname.startsWith('/admin')) {
-      response.headers.set('Cache-Control', 'no-store, must-revalidate');
-    }
-    return conNoindex(response, pathname);
+  const response = NextResponse.next();
+  if (pathname.startsWith('/api')) {
+    response.headers.set('X-Robots-Tag', 'noindex, nofollow');
   }
-
-  if (requiresAdminAuth(pathname)) {
-    const token = request.cookies.get(ADMIN_SESSION_COOKIE)?.value;
-    if (!(await verificaSessioneAdmin(token))) {
-      if (pathname.startsWith('/api/')) {
-        return conNoindex(NextResponse.json({ errore: 'Non autorizzato' }, { status: 401 }), pathname);
-      }
-      const loginUrl = request.nextUrl.clone();
-      loginUrl.pathname = '/login';
-      loginUrl.searchParams.set('from', pathname);
-      return conNoindex(NextResponse.redirect(loginUrl), pathname);
-    }
-    const response = NextResponse.next();
+  if (pathname.startsWith('/calcolatore')) {
     response.headers.set('Cache-Control', 'no-store, must-revalidate');
-    return conNoindex(response, pathname);
   }
-
-  return conNoindex(NextResponse.next(), pathname);
+  return response;
 }
 
 export const config = {

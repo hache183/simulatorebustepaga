@@ -24,79 +24,29 @@ export function RisultatiCalcolatore({ risultato, onRicalcola }: Props) {
     : 0.0919;
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+    <div className="prospetto" style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
 
-      {/* SEZIONE A — KPI bar */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '16px' }}>
-        {/* Card 1 — Costo annuo */}
-        <div style={{
-          background: 'var(--color-bg-surface)', border: '1px solid var(--color-border)',
-          borderRadius: '10px', padding: '20px',
-        }}>
-          <p style={{ fontSize: '12px', color: 'var(--color-text-secondary)',
-            fontFamily: "var(--font-sans), sans-serif", marginBottom: '6px' }}>
-            Costo annuo aziendale
-          </p>
-          <p style={{
-            fontFamily: "var(--font-mono), monospace", fontSize: '24px', fontWeight: 500,
-            color: 'var(--color-accent-bright)', lineHeight: 1,
-          }}>
-            {eur(costoTotaleAnnuo)}
-          </p>
+      <dl className="sintesi">
+        <div>
+          <dt>Costo annuo aziendale</dt>
+          <dd>{eur(costoTotaleAnnuo)}</dd>
         </div>
-        {/* Card 2 — Costo mensile */}
-        <div style={{
-          background: 'var(--color-bg-surface)', border: '1px solid var(--color-border)',
-          borderRadius: '10px', padding: '20px',
-        }}>
-          <p style={{ fontSize: '12px', color: 'var(--color-text-secondary)',
-            fontFamily: "var(--font-sans), sans-serif", marginBottom: '6px' }}>
-            Equivalente mensile medio
-          </p>
-          <p style={{
-            fontFamily: "var(--font-mono), monospace", fontSize: '22px', fontWeight: 500,
-            color: 'var(--color-text-primary)', lineHeight: 1,
-          }}>
-            {eur(costoTotaleMensile)}
-          </p>
+        <div>
+          <dt>Equivalente mensile</dt>
+          <dd>{eur(costoTotaleMensile)}</dd>
         </div>
-        {/* Card 3 — % sulla RAL */}
-        <div style={{
-          background: 'var(--color-bg-surface)', border: '1px solid var(--color-border)',
-          borderRadius: '10px', padding: '20px',
-        }}>
-          <p style={{ fontSize: '12px', color: 'var(--color-text-secondary)',
-            fontFamily: "var(--font-sans), sans-serif", marginBottom: '6px' }}>
-            Incidenza sulla RAL
-          </p>
-          <p style={{
-            fontFamily: "var(--font-mono), monospace", fontSize: '22px', fontWeight: 500,
-            color: percentualeRal > 1.45 ? 'var(--color-red)' : percentualeRal <= 1.30 ? 'var(--color-green)' : 'var(--color-amber)',
-            lineHeight: 1,
-          }}>
+        <div>
+          <dt>Incidenza sulla RAL</dt>
+          <dd className={percentualeRal > 1.45 ? 'is-alto' : percentualeRal <= 1.30 ? 'is-basso' : 'is-medio'}>
             {pct(percentualeRal)}
-          </p>
+          </dd>
         </div>
-        {/* Card 4 — Netto mensile dipendente */}
-        <div style={{
-          background: 'var(--color-bg-surface)', border: '1px solid var(--color-border)',
-          borderRadius: '10px', padding: '20px',
-        }}>
-          <p style={{ fontSize: '12px', color: 'var(--color-text-secondary)',
-            fontFamily: "var(--font-sans), sans-serif", marginBottom: '6px' }}>
-            Netto mensile stimato dip.
-          </p>
-          <p style={{
-            fontFamily: "var(--font-mono), monospace", fontSize: '22px', fontWeight: 500,
-            color: 'var(--color-text-primary)', lineHeight: 1,
-          }}>
-            {eur(nettoDipendente.nettoMensile12)}
-          </p>
-          <p style={{ fontSize: '10px', color: 'var(--color-text-muted)', marginTop: '4px' }}>
-            Media su 12 mesi — stima indicativa
-          </p>
+        <div>
+          <dt>Netto mensile stimato</dt>
+          <dd>{eur(nettoDipendente.nettoMensile12)}</dd>
+          <p className="sintesi__nota">Media su 12 mesi. Stima, non cedolino.</p>
         </div>
-      </div>
+      </dl>
 
       {/* SEZIONE C — Barra composizione */}
       <div>
@@ -105,11 +55,11 @@ export function RisultatiCalcolatore({ risultato, onRicalcola }: Props) {
           fontFamily: "var(--font-sans), sans-serif" }}>
           Composizione del costo
         </p>
-        <div style={{ display: 'flex', height: '14px', borderRadius: '8px', overflow: 'hidden' }}>
+        <div style={{ display: 'flex', height: '4px', overflow: 'hidden' }}>
           {vociInCosto.map(v => {
             const colori: Record<string, string> = {
-              ral: '#14b8a6', inps_azienda: '#2dd4bf', tfr: '#22c55e', inail: '#f59e0b',
-              tredicesima: '#818cf8', quattordicesima: '#a78bfa', ccnl_contrattuale: '#71717a', agevolazione: '#38383f',
+              ral: '#0C2340', inps_azienda: '#3E4C5E', tfr: '#8A4B08', inail: '#9F1D2A',
+              tredicesima: '#C4BBAE', quattordicesima: '#A39888', ccnl_contrattuale: '#6E6458', agevolazione: '#146C3A',
             };
             return (
               <div key={v.id}
@@ -125,8 +75,8 @@ export function RisultatiCalcolatore({ risultato, onRicalcola }: Props) {
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px 16px', marginTop: '10px' }}>
           {vociInCosto.map(v => {
             const colori: Record<string, string> = {
-              ral: '#14b8a6', inps_azienda: '#2dd4bf', tfr: '#22c55e', inail: '#f59e0b',
-              tredicesima: '#818cf8', quattordicesima: '#a78bfa', ccnl_contrattuale: '#71717a', agevolazione: '#38383f',
+              ral: '#0C2340', inps_azienda: '#3E4C5E', tfr: '#8A4B08', inail: '#9F1D2A',
+              tredicesima: '#C4BBAE', quattordicesima: '#A39888', ccnl_contrattuale: '#6E6458', agevolazione: '#146C3A',
             };
             return (
               <div key={v.id} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>

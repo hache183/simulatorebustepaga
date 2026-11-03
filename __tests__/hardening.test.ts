@@ -1,29 +1,12 @@
 import { NextRequest } from 'next/server';
 import { ipRichiesta } from '@/lib/client-ip';
 import { escapeHtml } from '@/lib/html';
-import { percorsoInterno } from '@/lib/safe-path';
 import { troppoFrequente } from '@/lib/rate-limit';
-import {
-  creaSessioneAdmin,
-  verificaSessioneAdmin,
-} from '@/lib/admin-session';
 import { GET as cercaAci } from '@/app/api/aci/route';
 
 beforeEach(() => {
   delete process.env.UPSTASH_REDIS_REST_URL;
   delete process.env.UPSTASH_REDIS_REST_TOKEN;
-  process.env.AUTH_SESSION_SECRET = 'segreto-sessione-admin-32byte';
-  process.env.AUTH_SESSION_VERSION = '1';
-});
-
-test('percorso interno rifiuta open redirect', () => {
-  expect(percorsoInterno(null)).toBe('/calcolatore');
-  expect(percorsoInterno('/admin')).toBe('/admin');
-  expect(percorsoInterno('/calcolatore?tab=soci')).toBe('/calcolatore?tab=soci');
-  expect(percorsoInterno('https://evil.test')).toBe('/calcolatore');
-  expect(percorsoInterno('//evil.test')).toBe('/calcolatore');
-  expect(percorsoInterno('/\\evil.test')).toBe('/calcolatore');
-  expect(percorsoInterno('/%2F%2Fevil.test')).toBe('/calcolatore');
 });
 
 test('escape HTML nell\'email', () => {
@@ -46,18 +29,6 @@ test('rate limit in memoria blocca oltre la soglia', async () => {
   expect(await troppoFrequente('test', ip, 2, 60_000)).toBe(false);
   expect(await troppoFrequente('test', ip, 2, 60_000)).toBe(false);
   expect(await troppoFrequente('test', ip, 2, 60_000)).toBe(true);
-});
-
-test('sessione admin è casuale, firmata e revocabile di versione', async () => {
-  const a = await creaSessioneAdmin();
-  const b = await creaSessioneAdmin();
-  expect(a).toBeTruthy();
-  expect(b).toBeTruthy();
-  expect(a).not.toBe(b);
-  expect(await verificaSessioneAdmin(a)).toBe(true);
-  expect(await verificaSessioneAdmin('v1.aaaa.bbbb')).toBe(false);
-  process.env.AUTH_SESSION_VERSION = '2';
-  expect(await verificaSessioneAdmin(a)).toBe(false);
 });
 
 test('ricerca ACI non restituisce il catalogo intero', async () => {

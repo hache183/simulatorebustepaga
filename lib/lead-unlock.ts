@@ -34,7 +34,7 @@ export function segretoLeadConfigurato(): boolean {
 /**
  * Confronto a tempo costante. Gli HMAC hanno lunghezza fissa, ma una firma
  * alterata può averne un'altra: timingSafeEqual rifiuta lunghezze diverse,
- * quindi si confrontano gli hash SHA-256 (sempre 32 byte), come in admin-auth.
+ * quindi si confrontano gli hash SHA-256 (sempre 32 byte).
  */
 function macUguali(ricevuta: Buffer, attesa: Buffer): boolean {
   const ha = createHash('sha256').update(ricevuta).digest();
