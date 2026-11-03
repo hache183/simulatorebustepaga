@@ -5,9 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useState, useEffect } from 'react';
 import type { LivelloCcnl, ContributoContrattuale } from '@/types';
-import { pagaMensileBase, listCcnlUi } from '@/lib/ccnl';
-
-const CCNL_DISPONIBILI = listCcnlUi().map(c => ({ id: c.id, nome: c.nome }));
+import { pagaMensileBase } from '@/lib/paga-mensile';
 
 const fmtEur = (n: number) => new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR', minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n);
 
@@ -30,10 +28,11 @@ type Step1FormData = z.infer<typeof Step1Schema>;
 export type Step1Data = Step1FormData & { tipoContratto: 'tempo_indeterminato' | 'tempo_determinato' };
 
 interface Props {
+  contratti: { id: string; nome: string }[];
   onNext: (data: Step1Data) => void;
 }
 
-export function CalcolatoreFormStep1({ onNext }: Props) {
+export function CalcolatoreFormStep1({ contratti, onNext }: Props) {
   const [livelli, setLivelli] = useState<LivelloCcnl[]>([]);
   const [loadingLivelli, setLoadingLivelli] = useState(false);
   const [ccnlMensilita, setCcnlMensilita] = useState<number>(13);
@@ -128,13 +127,13 @@ export function CalcolatoreFormStep1({ onNext }: Props) {
       {/* Label sezione */}
       <div style={{ borderBottom: '1px solid var(--color-border)', paddingBottom: '14px' }}>
         <p style={{
-          fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, fontSize: '11px',
+          fontFamily: "var(--font-sans), sans-serif", fontWeight: 600, fontSize: '11px',
           color: 'var(--color-accent-bright)', letterSpacing: '0.06em', textTransform: 'uppercase',
         }}>
           Step 1 di 2
         </p>
         <h2 style={{
-          fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: '18px',
+          fontFamily: "var(--font-display), sans-serif", fontWeight: 700, fontSize: '18px',
           color: 'var(--color-text-primary)', marginTop: '4px',
         }}>
           Dati dell&apos;assunzione
@@ -154,7 +153,7 @@ export function CalcolatoreFormStep1({ onNext }: Props) {
           borderRadius: '6px', fontSize: '13px', cursor: 'pointer',
         }}>
           <option value="">— Seleziona il CCNL —</option>
-          {CCNL_DISPONIBILI.map(c => (
+          {contratti.map(c => (
             <option key={c.id} value={c.id}>{c.nome}</option>
           ))}
         </select>
@@ -202,7 +201,7 @@ export function CalcolatoreFormStep1({ onNext }: Props) {
             <p style={{ fontSize: '12px', fontWeight: 600, color: 'var(--color-text-primary)', marginBottom: '4px' }}>
               Liv. {livelloData.codice} — {livelloData.qualifica}
             </p>
-            <div style={{ display: 'flex', gap: '16px', fontSize: '12px', color: 'var(--color-text-secondary)', fontFamily: "'DM Mono', monospace" }}>
+            <div style={{ display: 'flex', gap: '16px', fontSize: '12px', color: 'var(--color-text-secondary)', fontFamily: "var(--font-mono), monospace" }}>
               <span>Min. tab. {fmtEur(livelloData.minimoTabellare)}{isDomesticiCcnl ? '/ora' : '/mese'}</span>
               <span>RAL tab. {fmtEur(ralTabellare)}/anno{isDomesticiCcnl ? ` · ${oreLavoro}h/sett.` : ''}</span>
             </div>
@@ -222,7 +221,7 @@ export function CalcolatoreFormStep1({ onNext }: Props) {
             <div style={{ position: 'relative' }}>
               <span style={{
                 position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)',
-                fontFamily: "'DM Mono', monospace", fontSize: '13px', color: 'var(--color-text-muted)',
+                fontFamily: "var(--font-mono), monospace", fontSize: '13px', color: 'var(--color-text-muted)',
               }}>€</span>
               <input id="pagaOraria" type="number" step="0.01" placeholder={String(livelloData.minimoTabellare)}
                 {...register('pagaOraria', { valueAsNumber: true })}
@@ -230,7 +229,7 @@ export function CalcolatoreFormStep1({ onNext }: Props) {
                   width: '100%', padding: '11px 14px 11px 28px',
                   background: 'var(--color-bg-input)', color: 'var(--color-text-primary)',
                   border: `1px solid ${errors.pagaOraria ? 'var(--color-red)' : 'var(--color-border)'}`, borderRadius: '6px', fontSize: '13px',
-                  fontFamily: "'DM Mono', monospace",
+                  fontFamily: "var(--font-mono), monospace",
                 }}
               />
             </div>
@@ -249,7 +248,7 @@ export function CalcolatoreFormStep1({ onNext }: Props) {
                 width: '100%', padding: '11px 14px',
                 background: 'var(--color-bg-input)', color: 'var(--color-text-primary)',
                 border: `1px solid ${errors.oreSettimanali ? 'var(--color-red)' : 'var(--color-border)'}`, borderRadius: '6px', fontSize: '13px',
-                fontFamily: "'DM Mono', monospace",
+                fontFamily: "var(--font-mono), monospace",
               }}
             />
             {errors.oreSettimanali && <p style={{ marginTop: '4px', fontSize: '11px', color: 'var(--color-red)' }}>{errors.oreSettimanali.message}</p>}
@@ -323,7 +322,7 @@ export function CalcolatoreFormStep1({ onNext }: Props) {
         <div style={{ position: 'relative' }}>
           <span style={{
             position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)',
-            fontFamily: "'DM Mono', monospace", fontSize: '13px', color: 'var(--color-text-muted)',
+            fontFamily: "var(--font-mono), monospace", fontSize: '13px', color: 'var(--color-text-muted)',
           }}>€</span>
           <input id="ral" type="number" step="any" placeholder="28.000"
             {...register('ral', { valueAsNumber: true })}
@@ -332,7 +331,7 @@ export function CalcolatoreFormStep1({ onNext }: Props) {
               background: 'var(--color-bg-input)', color: 'var(--color-text-primary)',
               border: `1px solid ${errors.ral ? 'var(--color-red)' : 'var(--color-border)'}`,
               borderRadius: '6px', fontSize: '13px',
-              fontFamily: "'DM Mono', monospace",
+              fontFamily: "var(--font-mono), monospace",
             }}
           />
         </div>
@@ -355,7 +354,7 @@ export function CalcolatoreFormStep1({ onNext }: Props) {
           <p style={{
             marginTop: '8px', fontSize: '11px', padding: '8px 10px', borderRadius: '4px',
             background: 'var(--color-green-dim)', color: 'var(--color-green)', border: '1px solid var(--color-green)',
-            fontFamily: "'DM Mono', monospace",
+            fontFamily: "var(--font-mono), monospace",
           }}>
             Superminimo: {fmtEur((ralWatch - ralTabellare) / 12)}/mese ({fmtEur(ralWatch - ralTabellare)}/anno)
           </p>
@@ -367,12 +366,12 @@ export function CalcolatoreFormStep1({ onNext }: Props) {
       {!isDomestico && (
       <div>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-          <label style={{ fontSize: '13px', fontWeight: 500,
+          <label htmlFor="oreLavoro" style={{ fontSize: '13px', fontWeight: 500,
             color: 'var(--color-text-secondary)' }}>
             Ore settimanali
           </label>
           <span style={{
-            fontFamily: "'DM Mono', monospace", fontSize: '13px', fontWeight: 500,
+            fontFamily: "var(--font-mono), monospace", fontSize: '13px', fontWeight: 500,
             color: Number(oreLavoro) >= 40 ? 'var(--color-green)' : 'var(--color-amber)',
             background: Number(oreLavoro) >= 40 ? 'var(--color-green-dim)' : 'var(--color-amber-dim)',
             padding: '2px 8px', borderRadius: '4px',
@@ -386,7 +385,7 @@ export function CalcolatoreFormStep1({ onNext }: Props) {
         />
         <div style={{ display: 'flex', justifyContent: 'space-between',
           fontSize: '10px', color: 'var(--color-text-muted)', marginTop: '4px',
-          fontFamily: "'DM Mono', monospace" }}>
+          fontFamily: "var(--font-mono), monospace" }}>
           <span>8h</span><span>40h</span><span>48h</span>
         </div>
         {isDomesticiCcnl && (
@@ -416,7 +415,7 @@ export function CalcolatoreFormStep1({ onNext }: Props) {
         </div>
         {ccnlSelezionato && (
           <p style={{ fontSize: '11px', color: 'var(--color-text-muted)', marginBottom: '8px',
-            fontFamily: "'DM Mono', monospace" }}>
+            fontFamily: "var(--font-mono), monospace" }}>
             Il CCNL selezionato prevede <strong style={{ color: 'var(--color-text-secondary)' }}>{ccnlMensilita}</strong> mensilità
           </p>
         )}
@@ -429,7 +428,7 @@ export function CalcolatoreFormStep1({ onNext }: Props) {
                 style={{
                   padding: '8px 10px', borderRadius: '6px', fontSize: '13px', fontWeight: 600,
                   cursor: 'pointer', transition: 'all 0.15s ease', textAlign: 'center',
-                  fontFamily: "'DM Mono', monospace",
+                  fontFamily: "var(--font-mono), monospace",
                   background: selected ? 'var(--color-accent-glow)' : 'var(--color-bg-input)',
                   border: `1px solid ${selected ? 'var(--color-accent)' : 'var(--color-border)'}`,
                   color: selected ? 'var(--color-accent-bright)' : 'var(--color-text-secondary)',
@@ -474,7 +473,7 @@ export function CalcolatoreFormStep1({ onNext }: Props) {
         width: '100%', padding: '14px',
         background: 'var(--color-accent)',
         color: 'white', border: 'none', borderRadius: '10px',
-        fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, fontSize: '14px',
+        fontFamily: "var(--font-sans), sans-serif", fontWeight: 600, fontSize: '14px',
         cursor: 'pointer', transition: 'background 0.15s ease, opacity 0.15s ease',
         opacity: loadingLivelli ? 0.5 : 1,
       }}>

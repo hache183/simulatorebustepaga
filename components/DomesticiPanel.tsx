@@ -43,7 +43,7 @@ const inputStyle: CSSProperties = {
   border: '1px solid var(--color-border)',
   borderRadius: '6px',
   fontSize: '13px',
-  fontFamily: "'DM Mono', monospace",
+  fontFamily: "var(--font-mono), monospace",
 };
 
 export function DomesticiPanel() {
@@ -237,7 +237,7 @@ export function DomesticiPanel() {
           gap: '18px',
         }}>
           <div>
-            <h2 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: '18px', color: 'var(--color-text-primary)' }}>
+            <h2 style={{ fontFamily: "var(--font-display), sans-serif", fontWeight: 700, fontSize: '18px', color: 'var(--color-text-primary)' }}>
               Collaboratori familiari
             </h2>
             <p style={{ marginTop: '6px', fontSize: '12px', color: 'var(--color-text-muted)', lineHeight: 1.5 }}>
@@ -326,7 +326,7 @@ export function DomesticiPanel() {
           </p>
 
           <p style={{ fontSize: '13px', color: 'var(--color-text-secondary)' }}>
-            Mensile lordo <strong style={{ fontFamily: "'DM Mono', monospace", color: 'var(--color-text-primary)' }}>{eur(preview.mensile)}</strong>
+            Mensile lordo <strong style={{ fontFamily: "var(--font-mono), monospace", color: 'var(--color-text-primary)' }}>{eur(preview.mensile)}</strong>
             {' '}· annuo {eur(round2(preview.mensile * mensilita))} ({mensilita} mensilità)
           </p>
           {preview.errore && <p style={{ fontSize: '12px', color: 'var(--color-red)' }}>{preview.errore}</p>}
@@ -334,7 +334,7 @@ export function DomesticiPanel() {
           <button type="button" onClick={calcola} disabled={loading || Boolean(preview.errore)} style={{
             padding: '14px', border: 'none', borderRadius: '8px', cursor: 'pointer',
             background: 'var(--color-accent)', color: 'white', fontWeight: 600, fontSize: '14px',
-            fontFamily: "'Plus Jakarta Sans', sans-serif",
+            fontFamily: "var(--font-sans), sans-serif",
           }}>
             {loading ? 'Calcolo…' : 'Calcola il costo'}
           </button>

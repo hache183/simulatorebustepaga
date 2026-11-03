@@ -4,8 +4,14 @@ import { useEffect, useMemo, useState, type CSSProperties } from 'react';
 import { RisultatiCalcolatore } from '@/components/RisultatiCalcolatore';
 import { useReportLead } from '@/components/LeadFunnel';
 import { AccessoLeadRichiesto, CalcoloAnnullato, leggiRispostaSimulazione } from '@/lib/lead-session';
-import { livelliOperaioEdili } from '@/lib/edili';
 import type { CalcolatoreOutput } from '@/types';
+
+export interface LivelloEdileUi {
+  codice: string;
+  minimoTabellare: number;
+  descrizione?: string;
+  qualifica?: string;
+}
 
 interface VoceInail { codice: string; settore: string; tassoPerMille: number; }
 
@@ -25,14 +31,18 @@ const inputStyle: CSSProperties = {
   border: '1px solid var(--color-border)',
   borderRadius: '6px',
   fontSize: '13px',
-  fontFamily: "'DM Mono', monospace",
+  fontFamily: "var(--font-mono), monospace",
 };
 
 function filtraVociInail36(voci: VoceInail[]): VoceInail[] {
   return voci.filter(v => v.codice.startsWith('36'));
 }
 
-export function EdiliPanel() {
+export function EdiliPanel({
+  livelliPerCcnl,
+}: {
+  livelliPerCcnl: Record<string, LivelloEdileUi[]>;
+}) {
   const { eseguiReport } = useReportLead();
   const [ccnlId, setCcnlId] = useState<string>('edilizia_industria');
   const [vociInail, setVociInail] = useState<VoceInail[]>([]);
@@ -56,14 +66,13 @@ export function EdiliPanel() {
       .catch(() => {});
   }, []);
 
-  useEffect(() => {
-    const operai = livelliOperaioEdili(ccnlId);
-    if (!operai.some(l => l.codice === livello)) {
-      setLivello(operai[0]?.codice ?? '1');
-    }
-  }, [ccnlId, livello]);
+  const livelliOperaio = livelliPerCcnl[ccnlId] ?? [];
 
-  const livelliOperaio = useMemo(() => livelliOperaioEdili(ccnlId), [ccnlId]);
+  useEffect(() => {
+    if (!livelliOperaio.some(l => l.codice === livello)) {
+      setLivello(livelliOperaio[0]?.codice ?? '1');
+    }
+  }, [ccnlId, livello, livelliOperaio]);
 
   const minimoAnnuo = useMemo(() => {
     const liv = livelliOperaio.find(l => l.codice === livello);
@@ -131,7 +140,7 @@ export function EdiliPanel() {
           gap: '18px',
         }}>
           <h2 style={{
-            fontFamily: "'Plus Jakarta Sans', sans-serif",
+            fontFamily: "var(--font-sans), sans-serif",
             fontSize: '18px',
             fontWeight: 600,
             margin: 0,

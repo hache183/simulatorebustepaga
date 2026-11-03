@@ -10,15 +10,14 @@ import {
 } from '@/lib/admin-auth';
 
 export async function POST(req: NextRequest) {
-  let body: { password?: string; filePath?: string; content?: string };
+  let body: { filePath?: string; content?: string };
   try {
     body = await req.json();
   } catch {
     return rispostaAdmin({ errore: 'Body JSON non valido' }, 400);
   }
 
-  const password = body.password ?? req.headers.get('x-admin-password') ?? undefined;
-  const auth = autenticaAdmin(req, password);
+  const auth = await autenticaAdmin(req);
   if (!auth.ok) return auth.risposta;
 
   const filePath = body.filePath ?? '';

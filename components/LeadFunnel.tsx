@@ -40,6 +40,8 @@ export function LeadReportGate({ children }: { children: ReactNode }) {
   const attesa = useRef<{ resolve: () => void; reject: (errore: Error) => void } | null>(null);
   const [modulo, setModulo] = useState<LeadModulo>('dipendenti');
   const [aperto, setAperto] = useState(false);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     let attivo = true;
@@ -70,6 +72,46 @@ export function LeadReportGate({ children }: { children: ReactNode }) {
     if (errore) corrente.reject(errore);
     else corrente.resolve();
   };
+  const chiudiRef = useRef(chiudi);
+  chiudiRef.current = chiudi;
+
+  useEffect(() => {
+    if (!aperto) return;
+    triggerRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    const node = dialogRef.current;
+    const selettore = 'a[href], button:not([disabled]), input:not([disabled]):not([tabindex="-1"]), select:not([disabled]), textarea:not([disabled])';
+    const focusabili = () => Array.from(node?.querySelectorAll<HTMLElement>(selettore) ?? []);
+    const id = window.setTimeout(() => focusabili()[0]?.focus(), 0);
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        chiudiRef.current(new CalcoloAnnullato());
+        return;
+      }
+      if (e.key !== 'Tab') return;
+      const els = focusabili();
+      if (els.length === 0) {
+        e.preventDefault();
+        return;
+      }
+      const first = els[0];
+      const last = els[els.length - 1];
+      const attivo = document.activeElement;
+      if (e.shiftKey && (attivo === first || !node?.contains(attivo))) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && attivo === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+    document.addEventListener('keydown', onKey);
+    return () => {
+      window.clearTimeout(id);
+      document.removeEventListener('keydown', onKey);
+      triggerRef.current?.focus();
+    };
+  }, [aperto]);
 
   const eseguiReport = useCallback(async (mod: LeadModulo, azione: () => Promise<void>) => {
     if (inCorso.current) return;
@@ -99,9 +141,12 @@ export function LeadReportGate({ children }: { children: ReactNode }) {
       {children}
       {aperto && (
         <div
+          ref={dialogRef}
           className="lead-overlay no-print"
           data-testid="lead-prima-report"
-          role="presentation"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="lead-dialog-title"
           onMouseDown={e => {
             if (e.target === e.currentTarget) chiudi(new CalcoloAnnullato());
           }}

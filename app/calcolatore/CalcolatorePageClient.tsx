@@ -9,7 +9,7 @@ import { useReportLead } from '@/components/LeadFunnel';
 import { SociAmministratoriPanel } from '@/components/SociAmministratoriPanel';
 import { AccessoLeadRichiesto, CalcoloAnnullato, leggiRispostaSimulazione } from '@/lib/lead-session';
 import { DomesticiPanel } from '@/components/DomesticiPanel';
-import { EdiliPanel } from '@/components/EdiliPanel';
+import { EdiliPanel, type LivelloEdileUi } from '@/components/EdiliPanel';
 import type { CalcolatoreOutput } from '@/types';
 
 interface Step1Data {
@@ -39,7 +39,13 @@ interface Step2Data {
   oreAssenzeAnnue?: number;
 }
 
-export function CalcolatorePageClient() {
+export function CalcolatorePageClient({
+  contratti,
+  livelliPerCcnl,
+}: {
+  contratti: { id: string; nome: string }[];
+  livelliPerCcnl: Record<string, LivelloEdileUi[]>;
+}) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const tabParam = searchParams.get('tab');
@@ -148,7 +154,7 @@ export function CalcolatorePageClient() {
                       <div style={{
                         width: '22px', height: '22px', borderRadius: '50%',
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        fontSize: '11px', fontFamily: "'DM Mono', monospace", fontWeight: 500,
+                        fontSize: '11px', fontFamily: "var(--font-mono), monospace", fontWeight: 500,
                         background: s.done ? 'var(--color-green)' : isActive ? 'var(--color-accent)' : 'var(--color-bg-elevated)',
                         color: (s.done || isActive) ? 'white' : 'var(--color-text-muted)',
                         border: `1px solid ${s.done ? 'var(--color-green)' : isActive ? 'var(--color-accent)' : 'var(--color-border)'}`,
@@ -157,7 +163,7 @@ export function CalcolatorePageClient() {
                         {s.done ? '✓' : s.n}
                       </div>
                       <span style={{
-                        fontSize: '13px', fontFamily: "'Plus Jakarta Sans', sans-serif",
+                        fontSize: '13px', fontFamily: "var(--font-sans), sans-serif",
                         color: isActive ? 'var(--color-text-primary)' : s.done ? 'var(--color-green)' : 'var(--color-text-muted)',
                         fontWeight: isActive ? 600 : 400,
                       }}>
@@ -183,7 +189,7 @@ export function CalcolatorePageClient() {
           padding: '24px 32px',
           overflowY: 'auto',
         }}>
-          <EdiliPanel />
+          <EdiliPanel livelliPerCcnl={livelliPerCcnl} />
         </div>
       )}
 
@@ -227,7 +233,7 @@ export function CalcolatorePageClient() {
         {/* Colonna sinistra — form */}
         {step !== 'risultati' && (
           <div className="calcolatore-panel" style={{ animation: 'fadeSlideIn 0.2s ease forwards' }}>
-            {step === 1 && <CalcolatoreFormStep1 onNext={handleStep1} />}
+            {step === 1 && <CalcolatoreFormStep1 contratti={contratti} onNext={handleStep1} />}
             {step === 2 && <CalcolatoreFormStep2 onSubmit={handleStep2} onBack={() => setStep(1)} isLoading={isLoading} ccnlId={step1Data?.ccnlId} />}
           </div>
         )}
@@ -255,7 +261,7 @@ export function CalcolatorePageClient() {
                   <path d="M9 17H7A5 5 0 0 1 7 7h2M15 7h2a5 5 0 0 1 0 10h-2M8 12h8"/>
                 </svg>
               </div>
-              <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, fontSize: '16px',
+              <p style={{ fontFamily: "var(--font-sans), sans-serif", fontWeight: 600, fontSize: '16px',
                 color: 'var(--color-text-secondary)', marginBottom: '8px' }}>
                 Il report apparirà qui
               </p>
@@ -295,7 +301,7 @@ export function CalcolatorePageClient() {
               borderRadius: '10px', padding: '20px',
               animation: 'fadeSlideIn 0.2s ease forwards',
             }}>
-              <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, fontSize: '13px',
+              <p style={{ fontFamily: "var(--font-sans), sans-serif", fontWeight: 600, fontSize: '13px',
                 color: 'var(--color-red)' }}>
                 Errore nel calcolo
               </p>

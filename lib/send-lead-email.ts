@@ -1,4 +1,5 @@
 import { Resend } from 'resend';
+import { escapeHtml } from '@/lib/html';
 import type { LeadModulo } from '@/lib/lead-unlock';
 
 export interface LeadPayload {
@@ -23,27 +24,29 @@ export async function inviaEmailLead(lead: LeadPayload): Promise<void> {
   }
 
   const resend = new Resend(apiKey);
+  const testo = (v: string) => v.replace(/[\r\n\t]/g, ' ').trim();
+  const meta = lead.meta && Object.keys(lead.meta).length > 0
+    ? Object.entries(lead.meta).map(([k, v]) => `${testo(k)}=${testo(v)}`).join(', ')
+    : '';
   const righe = [
-    `ID: ${lead.id}`,
+    `ID: ${testo(lead.id)}`,
     `Modulo: ${lead.modulo}`,
-    `Nome: ${lead.nome}`,
-    `Email: ${lead.email}`,
-    lead.telefono ? `Telefono: ${lead.telefono}` : null,
-    lead.azienda ? `Azienda: ${lead.azienda}` : null,
-    lead.ruolo ? `Ruolo: ${lead.ruolo}` : null,
+    `Nome: ${testo(lead.nome)}`,
+    `Email: ${testo(lead.email)}`,
+    lead.telefono ? `Telefono: ${testo(lead.telefono)}` : null,
+    lead.azienda ? `Azienda: ${testo(lead.azienda)}` : null,
+    lead.ruolo ? `Ruolo: ${testo(lead.ruolo)}` : null,
     `Consenso marketing: ${lead.marketing ? 'sì' : 'no'}`,
-    lead.meta && Object.keys(lead.meta).length > 0
-      ? `Contesto: ${Object.entries(lead.meta).map(([k, v]) => `${k}=${v}`).join(', ')}`
-      : null,
+    meta ? `Contesto: ${meta}` : null,
     `Data: ${new Date().toLocaleString('it-IT', { timeZone: 'Europe/Rome' })}`,
-  ].filter(Boolean);
+  ].filter((r): r is string => Boolean(r));
 
   const { error } = await resend.emails.send({
     from,
     to: [to],
     subject: `[CostWork Pro] Nuovo lead — ${lead.modulo}`,
     text: righe.join('\n'),
-    html: `<pre style="font-family:sans-serif;font-size:14px;line-height:1.5">${righe.join('\n')}</pre>`,
+    html: `<pre style="font-family:sans-serif;font-size:14px;line-height:1.5">${righe.map(escapeHtml).join('\n')}</pre>`,
   });
 
   if (error) {

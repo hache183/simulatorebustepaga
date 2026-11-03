@@ -18,9 +18,9 @@ const REGIONI = [
 ];
 
 const Step2Schema = z.object({
-  numeroDipendenti: z.number().min(1, 'Inserisci il numero di dipendenti'),
-  regione: z.string(),
-  codiceInail: z.string(),
+  numeroDipendenti: z.number().min(1, 'Inserisci il numero di dipendenti').max(100_000, 'Numero troppo alto'),
+  regione: z.string().max(80),
+  codiceInail: z.string().max(32),
   anzianitaAnni: z.number().min(0).max(50),
   aliquotaInps: z.number().min(0).max(50),
 });
@@ -75,13 +75,13 @@ export function CalcolatoreFormStep2({ onSubmit, onBack, isLoading, ccnlId }: Pr
       {/* Label sezione */}
       <div style={{ borderBottom: '1px solid var(--color-border)', paddingBottom: '14px' }}>
         <p style={{
-          fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, fontSize: '11px',
+          fontFamily: "var(--font-sans), sans-serif", fontWeight: 600, fontSize: '11px',
           color: 'var(--color-accent-bright)', letterSpacing: '0.06em', textTransform: 'uppercase',
         }}>
           Step 2 di 2
         </p>
         <h2 style={{
-          fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: '18px',
+          fontFamily: "var(--font-display), sans-serif", fontWeight: 700, fontSize: '18px',
           color: 'var(--color-text-primary)', marginTop: '4px',
         }}>
           {isDomestici ? 'Dati del rapporto domestico' : 'Dati aziendali'}
@@ -112,7 +112,7 @@ export function CalcolatoreFormStep2({ onSubmit, onBack, isLoading, ccnlId }: Pr
             background: 'var(--color-bg-input)', color: 'var(--color-text-primary)',
             border: `1px solid ${errors.numeroDipendenti ? 'var(--color-red)' : 'var(--color-border)'}`,
             borderRadius: '6px', fontSize: '13px',
-            fontFamily: "'DM Mono', monospace",
+            fontFamily: "var(--font-mono), monospace",
           }}
         />
         {errors.numeroDipendenti && <p style={{ marginTop: '4px', fontSize: '11px', color: 'var(--color-red)' }}>{errors.numeroDipendenti.message}</p>}
@@ -178,7 +178,7 @@ export function CalcolatoreFormStep2({ onSubmit, onBack, isLoading, ccnlId }: Pr
             background: 'var(--color-bg-input)', color: 'var(--color-text-primary)',
             border: `1px solid ${errors.anzianitaAnni ? 'var(--color-red)' : 'var(--color-border)'}`,
             borderRadius: '6px', fontSize: '13px',
-            fontFamily: "'DM Mono', monospace",
+            fontFamily: "var(--font-mono), monospace",
           }}
         />
         {errors.anzianitaAnni && <p style={{ marginTop: '4px', fontSize: '11px', color: 'var(--color-red)' }}>Valore non valido (0–50 anni)</p>}
@@ -198,12 +198,12 @@ export function CalcolatoreFormStep2({ onSubmit, onBack, isLoading, ccnlId }: Pr
               background: 'var(--color-bg-input)', color: 'var(--color-text-primary)',
               border: `1px solid ${errors.aliquotaInps ? 'var(--color-red)' : 'var(--color-border)'}`,
               borderRadius: '6px', fontSize: '13px',
-              fontFamily: "'DM Mono', monospace",
+              fontFamily: "var(--font-mono), monospace",
             }}
           />
           <span style={{
             position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)',
-            fontFamily: "'DM Mono', monospace", fontSize: '13px', color: 'var(--color-text-muted)',
+            fontFamily: "var(--font-mono), monospace", fontSize: '13px', color: 'var(--color-text-muted)',
           }}>%</span>
         </div>
         <p style={{ marginTop: '6px', fontSize: '11px', color: 'var(--color-text-muted)', lineHeight: '1.5' }}>
@@ -243,7 +243,7 @@ export function CalcolatoreFormStep2({ onSubmit, onBack, isLoading, ccnlId }: Pr
           flex: 1, padding: '14px',
           background: 'transparent', color: 'var(--color-text-secondary)',
           border: '1px solid var(--color-border)', borderRadius: '10px',
-          fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, fontSize: '14px',
+          fontFamily: "var(--font-sans), sans-serif", fontWeight: 600, fontSize: '14px',
           cursor: 'pointer', transition: 'border-color 0.15s ease',
         }}>
           ← Indietro
@@ -252,7 +252,7 @@ export function CalcolatoreFormStep2({ onSubmit, onBack, isLoading, ccnlId }: Pr
           flex: 1, padding: '14px',
           background: 'var(--color-accent)',
           color: 'white', border: 'none', borderRadius: '10px',
-          fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, fontSize: '14px',
+          fontFamily: "var(--font-sans), sans-serif", fontWeight: 600, fontSize: '14px',
           cursor: 'pointer', transition: 'background 0.15s ease, opacity 0.15s ease',
           opacity: isLoading ? 0.5 : 1,
         }}>

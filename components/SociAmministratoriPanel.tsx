@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from 'react';
-import { cercaVeicoli, type CatalogoAci, type VeicoloAci } from '@/lib/aci';
+import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
+import type { VeicoloAci } from '@/lib/aci';
 import {
   defaultStateSoci,
   type SociResult,
@@ -30,7 +30,7 @@ const labelStyle: CSSProperties = {
 const inputStyle: CSSProperties = {
   width: '100%',
   padding: '11px 14px',
-  fontFamily: "'DM Mono', monospace",
+  fontFamily: "var(--font-mono), monospace",
 };
 
 function NumInput({
@@ -60,8 +60,9 @@ function sezioneVeicolo(v: VeicoloAci): string {
 export function SociAmministratoriPanel() {
   const { eseguiReport } = useReportLead();
   const [stato, setStato] = useState<SociState>(defaultStateSoci);
-  const [catalogo, setCatalogo] = useState<VeicoloAci[] | null>(null);
   const [query, setQuery] = useState('');
+  const [visibili, setVisibili] = useState<VeicoloAci[]>([]);
+  const [troncato, setTroncato] = useState(false);
   const [aperto, setAperto] = useState(false);
   const [veicolo, setVeicolo] = useState<VeicoloAci | null>(null);
   const [overrideManuale, setOverrideManuale] = useState(false);
@@ -74,13 +75,32 @@ export function SociAmministratoriPanel() {
     setStato(s => ({ ...s, [k]: v }));
 
   useEffect(() => {
+    if (overrideManuale || query.trim().length < 2) {
+      setVisibili([]);
+      setTroncato(false);
+      return;
+    }
+    const ctrl = new AbortController();
     let attivo = true;
-    void import('@/data/aci-2026.json').then(mod => {
-      const data = mod.default as CatalogoAci;
-      if (attivo) setCatalogo(data.veicoli);
-    });
-    return () => { attivo = false; };
-  }, []);
+    const q = query.trim();
+    void fetch(`/api/aci?q=${encodeURIComponent(q)}`, { signal: ctrl.signal })
+      .then(r => r.json())
+      .then((data: { veicoli?: VeicoloAci[]; troncato?: boolean }) => {
+        if (!attivo) return;
+        setVisibili(data.veicoli ?? []);
+        setTroncato(Boolean(data.troncato));
+      })
+      .catch(e => {
+        if (!attivo) return;
+        if (e instanceof DOMException && e.name === 'AbortError') return;
+        setVisibili([]);
+        setTroncato(false);
+      });
+    return () => {
+      attivo = false;
+      ctrl.abort();
+    };
+  }, [query, overrideManuale]);
 
   useEffect(() => {
     const chiudi = (e: MouseEvent) => {
@@ -119,12 +139,6 @@ export function SociAmministratoriPanel() {
     });
   };
 
-  const trovati = useMemo(
-    () => (catalogo && !overrideManuale ? cercaVeicoli(catalogo, query, 41) : []),
-    [catalogo, query, overrideManuale],
-  );
-  const visibili = trovati.slice(0, 40);
-
   const pair = (a: ReactNode, b: ReactNode) => (
     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>{a}{b}</div>
   );
@@ -147,7 +161,7 @@ export function SociAmministratoriPanel() {
       <div className="calcolatore-panel" style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
         <div>
           <h2 style={{
-            fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: '20px',
+            fontFamily: "var(--font-display), sans-serif", fontWeight: 700, fontSize: '20px',
             color: 'var(--color-text-primary)', marginBottom: '8px',
           }}>
             Soci e Amministratori
@@ -180,7 +194,7 @@ export function SociAmministratoriPanel() {
                 style={{
                   appearance: 'none', border: 'none', cursor: 'pointer',
                   padding: '8px 14px', fontSize: '13px',
-                  fontFamily: "'Plus Jakarta Sans', sans-serif",
+                  fontFamily: "var(--font-sans), sans-serif",
                   background: attivo ? 'var(--color-accent)' : 'transparent',
                   color: attivo ? 'white' : 'var(--color-text-muted)',
                   fontWeight: attivo ? 600 : 500,
@@ -314,10 +328,10 @@ export function SociAmministratoriPanel() {
                 id="aci-cerca"
                 role="combobox"
                 aria-expanded={aperto}
+                aria-controls="aci-lista"
                 aria-autocomplete="list"
                 autoComplete="off"
-                placeholder={catalogo ? 'Cerca, es. panda o golf 1.5' : 'Caricamento tabelle ACI…'}
-                disabled={!catalogo}
+                placeholder="Cerca, es. panda o golf 1.5"
                 value={query}
                 onChange={e => {
                   setQuery(e.target.value);
@@ -330,8 +344,9 @@ export function SociAmministratoriPanel() {
                 onFocus={() => setAperto(true)}
                 style={inputStyle}
               />
-              {aperto && catalogo && query.trim().length >= 2 && (
+              {aperto && query.trim().length >= 2 && (
                 <ul
+                  id="aci-lista"
                   role="listbox"
                   style={{
                     position: 'absolute',
@@ -360,6 +375,7 @@ export function SociAmministratoriPanel() {
                       <button
                         type="button"
                         role="option"
+                        aria-selected={veicolo?.idModello === v.idModello && veicolo.alimentazione === v.alimentazione && veicolo.inProduzione === v.inProduzione}
                         onMouseDown={e => e.preventDefault()}
                         onClick={() => scegli(v)}
                         style={{
@@ -381,7 +397,7 @@ export function SociAmministratoriPanel() {
                       </button>
                     </li>
                   ))}
-                  {trovati.length > 40 && (
+                  {troncato && (
                     <li style={{ padding: '8px 10px', fontSize: '11px', color: 'var(--color-text-muted)' }}>
                       Mostrati i primi 40. Affina la ricerca.
                     </li>
@@ -430,7 +446,7 @@ export function SociAmministratoriPanel() {
             color: '#fff',
             fontWeight: 600,
             fontSize: '14px',
-            fontFamily: "'Plus Jakarta Sans', sans-serif",
+            fontFamily: "var(--font-sans), sans-serif",
             opacity: loading ? 0.7 : 1,
           }}
         >

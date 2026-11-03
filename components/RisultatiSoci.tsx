@@ -34,7 +34,7 @@ export function RisultatiSoci({ out, stato, onRicalcola }: Props) {
           <p style={{ fontSize: '12px', color: 'var(--color-text-muted)', marginBottom: '6px' }}>
             Liquido complessivo al socio / amministratore
           </p>
-          <p style={{ fontFamily: "'DM Mono', monospace", fontSize: '22px', fontWeight: 500, color: 'var(--color-accent-bright)' }}>
+          <p style={{ fontFamily: "var(--font-mono), monospace", fontSize: '22px', fontWeight: 500, color: 'var(--color-accent-bright)' }}>
             {eur(out.nettoTotalePercepito)}
           </p>
         </div>
@@ -42,7 +42,7 @@ export function RisultatiSoci({ out, stato, onRicalcola }: Props) {
           <p style={{ fontSize: '12px', color: 'var(--color-text-muted)', marginBottom: '6px' }}>
             Costo totale per il datore di lavoro
           </p>
-          <p style={{ fontFamily: "'DM Mono', monospace", fontSize: '22px', fontWeight: 500, color: 'var(--color-text-primary)' }}>
+          <p style={{ fontFamily: "var(--font-mono), monospace", fontSize: '22px', fontWeight: 500, color: 'var(--color-text-primary)' }}>
             {eur(out.costoTotaleDatore)}
           </p>
           <p style={{ fontSize: '10px', color: 'var(--color-text-muted)', marginTop: '6px', lineHeight: 1.4 }}>
@@ -93,7 +93,7 @@ export function RisultatiSoci({ out, stato, onRicalcola }: Props) {
           flex: 1, padding: '14px',
           background: 'transparent', color: 'var(--color-text-secondary)',
           border: '1px solid var(--color-border)', borderRadius: '10px',
-          fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, fontSize: '14px',
+          fontFamily: "var(--font-sans), sans-serif", fontWeight: 600, fontSize: '14px',
           cursor: 'pointer',
         }}>
           ← Nuovo calcolo
@@ -102,7 +102,7 @@ export function RisultatiSoci({ out, stato, onRicalcola }: Props) {
           flex: 1, padding: '14px',
           background: 'var(--color-accent)', color: '#fff',
           border: 'none', borderRadius: '10px',
-          fontFamily: "'Plus Jakarta Sans', sans-serif", fontWeight: 600, fontSize: '14px',
+          fontFamily: "var(--font-sans), sans-serif", fontWeight: 600, fontSize: '14px',
           cursor: 'pointer',
         }}>
           Stampa report
@@ -127,7 +127,7 @@ function Row({ k, v, sub, strong }: { k: string; v: string; sub?: boolean; stron
       <td style={{
         padding: '8px 0',
         textAlign: 'right',
-        fontFamily: "'DM Mono', monospace",
+        fontFamily: "var(--font-mono), monospace",
         fontSize: sub ? '12px' : '13px',
         fontWeight: strong ? 600 : 400,
       }}>
