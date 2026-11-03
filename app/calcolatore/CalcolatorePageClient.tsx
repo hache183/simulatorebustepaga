@@ -152,7 +152,7 @@ export function CalcolatorePageClient({
                   <div key={s.n} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                       <div style={{
-                        width: '22px', height: '22px', borderRadius: '50%',
+                        width: '22px', height: '22px', borderRadius: '0',
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
                         fontSize: '11px', fontFamily: "var(--font-mono), monospace", fontWeight: 500,
                         background: s.done ? 'var(--color-green)' : isActive ? 'var(--color-accent)' : 'var(--color-bg-elevated)',
@@ -233,32 +233,9 @@ export function CalcolatorePageClient({
 
           {/* Placeholder iniziale */}
           {step === 1 && !risultato && (
-            <div style={{
-              background: 'var(--color-bg-surface)',
-              border: '1px solid var(--color-border)',
-              borderRadius: '10px',
-              padding: '48px 32px',
-              textAlign: 'center',
-            }}>
-              <div style={{
-                width: '64px', height: '64px', margin: '0 auto 16px',
-                background: 'var(--color-bg-elevated)',
-                borderRadius: '12px',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                border: '1px solid var(--color-border)',
-              }}>
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--color-text-muted)" strokeWidth="1.5">
-                  <path d="M9 17H7A5 5 0 0 1 7 7h2M15 7h2a5 5 0 0 1 0 10h-2M8 12h8"/>
-                </svg>
-              </div>
-              <p style={{ fontFamily: "var(--font-sans), sans-serif", fontWeight: 600, fontSize: '16px',
-                color: 'var(--color-text-secondary)', marginBottom: '8px' }}>
-                Il report apparirà qui
-              </p>
-              <p style={{ fontSize: '13px', color: 'var(--color-text-muted)', lineHeight: '1.6' }}>
-                Compila il form e premi <strong style={{ color: 'var(--color-text-secondary)' }}>Calcola il costo</strong>
-                <br />per visualizzare il report dettagliato voce per voce
-              </p>
+            <div className="attesa-prospetto">
+              <p className="kicker">In attesa</p>
+              <p>Il prospetto si compone qui, dopo il secondo passo. Prima si scelgono contratto e livello.</p>
             </div>
           )}
 

@@ -1,18 +1,19 @@
 import type { Metadata } from 'next';
-import { IBM_Plex_Mono, Newsreader, Source_Sans_3 } from 'next/font/google';
+import { Cormorant_Garamond, IBM_Plex_Mono, IBM_Plex_Sans } from 'next/font/google';
 import { NOME_SITO, siteUrl } from '@/lib/site';
 import './globals.css';
 
-const sans = Source_Sans_3({
+const sans = IBM_Plex_Sans({
   subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
+  weight: ['400', '500', '600'],
   display: 'swap',
   variable: '--font-sans',
 });
 
-const display = Newsreader({
+const display = Cormorant_Garamond({
   subsets: ['latin'],
   weight: ['500', '600', '700'],
+  style: ['normal', 'italic'],
   display: 'swap',
   variable: '--font-display',
 });

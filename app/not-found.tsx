@@ -7,10 +7,10 @@ export default function NotFound() {
     <>
       <AppHeader />
       <main id="contenuto" className="stato-pagina">
-        <p className="stato-pagina__kicker">404</p>
-        <h1>Pagina non trovata</h1>
-        <p>L&apos;indirizzo non corrisponde a una pagina di Costi Lavoro Italia.</p>
-        <Link href="/" className="ui-btn ui-btn--primary">Torna alla home</Link>
+        <p className="stato-pagina__n">404</p>
+        <h1>Questa pagina non è nel sito.</h1>
+        <p>L&apos;indirizzo non corrisponde a una sezione di Costi Lavoro Italia.</p>
+        <Link href="/" className="ui-btn ui-btn--primary">Torna all&apos;inizio</Link>
       </main>
       <SiteFooter />
     </>

@@ -15,9 +15,9 @@ export default function ErrorPage({
     <>
       <AppHeader />
       <main id="contenuto" className="stato-pagina">
-        <p className="stato-pagina__kicker">Errore</p>
-        <h1>Qualcosa è andato storto</h1>
-        <p>Non siamo riusciti a completare la richiesta. Puoi riprovare oppure tornare alla home.</p>
+        <p className="stato-pagina__n">500</p>
+        <h1>La pagina non si è completata.</h1>
+        <p>La richiesta si è interrotta. Si può riprovare, oppure tornare all&apos;inizio.</p>
         {error.digest && <p className="stato-pagina__digest">Riferimento: {error.digest}</p>}
         <div className="stato-pagina__azioni">
           <button type="button" className="ui-btn ui-btn--primary" onClick={() => reset()}>

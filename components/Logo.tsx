@@ -18,7 +18,7 @@ export function LogoMark({ size = 40 }: { size?: number }) {
       aria-hidden="true"
       focusable="false"
     >
-      <rect width="48" height="48" rx="11" fill={NAVY} />
+      <rect width="48" height="48" rx="8" fill={NAVY} />
       <rect x="9" y="27" width="8" height="12" rx="1.2" fill={GREEN} />
       <rect x="20" y="16" width="8" height="23" rx="1.2" fill="#FFFFFF" />
       <rect x="31" y="8" width="8" height="31" rx="1.2" fill={RED} />
