@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { AppHeader } from '@/components/AppHeader';
+import { SiteFooter } from '@/components/SiteFooter';
 
 export default function NotFound() {
   return (
@@ -8,9 +9,10 @@ export default function NotFound() {
       <main id="contenuto" className="stato-pagina">
         <p className="stato-pagina__kicker">404</p>
         <h1>Pagina non trovata</h1>
-        <p>L&apos;indirizzo non corrisponde a una pagina di CostWork Pro.</p>
+        <p>L&apos;indirizzo non corrisponde a una pagina di Costi Lavoro Italia.</p>
         <Link href="/" className="ui-btn ui-btn--primary">Torna alla home</Link>
       </main>
+      <SiteFooter />
     </>
   );
 }

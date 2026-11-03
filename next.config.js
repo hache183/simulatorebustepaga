@@ -29,9 +29,6 @@ const nextConfig = {
         ],
       },
       { source: '/api/:path*', headers: noindex },
-      { source: '/admin', headers: noindex },
-      { source: '/admin/:path*', headers: noindex },
-      { source: '/login', headers: noindex },
     ];
   },
 };

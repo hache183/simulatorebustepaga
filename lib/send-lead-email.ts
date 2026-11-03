@@ -44,7 +44,7 @@ export async function inviaEmailLead(lead: LeadPayload): Promise<void> {
   const { error } = await resend.emails.send({
     from,
     to: [to],
-    subject: `[CostWork Pro] Nuovo lead — ${lead.modulo}`,
+    subject: `[Costi Lavoro Italia] Nuovo lead — ${lead.modulo}`,
     text: righe.join('\n'),
     html: `<pre style="font-family:sans-serif;font-size:14px;line-height:1.5">${righe.map(escapeHtml).join('\n')}</pre>`,
   });

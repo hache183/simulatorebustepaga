@@ -100,10 +100,10 @@ export function CalcolatorePageClient({
   const ricalcola = () => { setStep(1); setRisultato(null); setErrore(null); };
 
   return (
-    <div className="print-unlock" data-testid="simulatore" style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
+    <div className="print-unlock simulatore" data-testid="simulatore">
 
       {/* Tab modulo + step dipendenti — sotto l'header */}
-      <div className="no-print calcolatore-shell" style={{ paddingTop: '56px' }}>
+      <div className="no-print calcolatore-shell">
         <div style={{
           maxWidth: '1400px', margin: '0 auto',
           padding: '0 32px',
@@ -160,7 +160,7 @@ export function CalcolatorePageClient({
                         border: `1px solid ${s.done ? 'var(--color-green)' : isActive ? 'var(--color-accent)' : 'var(--color-border)'}`,
                         transition: 'all 0.2s ease',
                       }}>
-                        {s.done ? '✓' : s.n}
+                        {s.n}
                       </div>
                       <span style={{
                         fontSize: '13px', fontFamily: "var(--font-sans), sans-serif",
@@ -218,17 +218,7 @@ export function CalcolatorePageClient({
       )}
 
       {/* Contenuto principale — due colonne */}
-      <div className="print-unlock" style={{
-        display: tab === 'dipendenti' ? 'grid' : 'none',
-        flex: 1,
-        maxWidth: '1400px', margin: '0 auto',
-        width: '100%',
-        padding: '24px 32px',
-        gridTemplateColumns: step === 'risultati' ? '1fr' : '420px 1fr',
-        gap: '24px',
-        alignItems: 'start',
-        overflowY: 'auto',
-      }}>
+      <div className={`print-unlock simulatore-grid${step === 'risultati' ? ' is-risultati' : ''}${tab === 'dipendenti' ? '' : ' is-hidden'}`}>
 
         {/* Colonna sinistra — form */}
         {step !== 'risultati' && (

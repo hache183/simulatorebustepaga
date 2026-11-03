@@ -97,8 +97,8 @@ export function LeadCaptureForm({ modulo, onSuccess, onAnnulla }: Props) {
 
   return (
     <div className="lead-funnel__card" data-testid="lead-form">
-      <p className="lead-funnel__kicker">Report gratuito</p>
-      <h1 id="lead-dialog-title" className="lead-funnel__title">Sblocca il report</h1>
+      <p className="lead-funnel__kicker">Prospetto</p>
+      <h1 id="lead-dialog-title" className="lead-funnel__title">Per vedere il prospetto</h1>
       <p className="lead-funnel__subtitle">
         {passo === 1
           ? 'I parametri che hai inserito restano salvati. Lascia i tuoi recapiti per generare il prospetto: dopo l\'invio il calcolo parte da solo. Niente account, sblocco per 30 giorni su questo browser.'

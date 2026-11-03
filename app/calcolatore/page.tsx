@@ -2,12 +2,13 @@ import { Suspense } from 'react';
 import type { Metadata } from 'next';
 import { CalcolatorePageClient } from './CalcolatorePageClient';
 import { AppHeader } from '@/components/AppHeader';
+import { SiteFooter } from '@/components/SiteFooter';
 import { LeadReportGate } from '@/components/LeadFunnel';
 import { listCcnlUi } from '@/lib/ccnl';
 import { livelliOperaioEdili } from '@/lib/edili';
 import type { LivelloEdileUi } from '@/components/EdiliPanel';
 
-const TITOLO = 'Simulatore costo del lavoro — CostWork Pro';
+const TITOLO = 'Simulatore — Costi Lavoro Italia';
 const DESCRIZIONE = 'Calcola costo azienda e netto su CCNL, edilizia, lavoro domestico e compensi di soci e amministratori.';
 
 export const metadata: Metadata = {
@@ -48,6 +49,7 @@ export default function CalcolatorePageWrapper() {
           </LeadReportGate>
         </Suspense>
       </main>
+      <SiteFooter />
     </>
   );
 }

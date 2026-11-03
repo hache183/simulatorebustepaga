@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { AppHeader } from '@/components/AppHeader';
+import { SiteFooter } from '@/components/SiteFooter';
 
 export default function ErrorPage({
   error,
@@ -25,6 +26,7 @@ export default function ErrorPage({
           <Link href="/" className="ui-btn ui-btn--secondary">Torna alla home</Link>
         </div>
       </main>
+      <SiteFooter />
     </>
   );
 }
