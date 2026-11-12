@@ -169,24 +169,52 @@
 }
 .lead strong { color: var(--fg); font-weight: 500; }
 .ctaBlock { display: flex; flex-direction: column; align-items: flex-start; gap: 14px; }
-.page .cta {
+/* CTA primaria: fondo panna, testo e freccia scuri in ogni stato.
+   `.page a:visited { color: inherit }` qui sopra vince su `.page .cta` (0,2,1 contro 0,2,0):
+   per questo ogni stato del link è dichiarato con una specificità più alta. */
+.page a.cta,
+.page a.cta:link,
+.page a.cta:visited {
   display: inline-flex;
   align-items: center;
   gap: 16px;
-  background: var(--cta-bg);
+  background-color: var(--cta-bg);
+  border: 1px solid var(--cta-bg);
   color: var(--cta-fg);
   font-family: var(--display);
   font-weight: 600;
   font-variation-settings: "opsz" 144, "SOFT" 0, "WONK" 0;
   font-size: 15px;
   line-height: 1.5;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
   padding: 16px 22px 16px 24px;
   border-radius: 0;
-  transition: background 0.15s;
+  transition: background-color 0.15s, border-color 0.15s;
 }
-.cta svg { display: block; }
-.page .cta:hover { background: #fff; }
+.page a.cta * {
+  color: var(--cta-fg);
+}
+.page a.cta svg {
+  display: block;
+  color: var(--cta-fg);
+  stroke: var(--cta-fg);
+}
+.page a.cta:hover,
+.page a.cta:visited:hover {
+  background-color: var(--color-btn-bg-hover);
+  border-color: var(--color-btn-bg-hover);
+  color: var(--cta-fg);
+}
+.page a.cta:active {
+  background-color: var(--color-btn-bg-active);
+  border-color: var(--color-btn-bg-active);
+  color: var(--cta-fg);
+}
+.page a.cta:focus-visible {
+  color: var(--cta-fg);
+  outline: 2px solid var(--fg);
+  outline-offset: 3px;
+}
 .ctaNote {
   font-family: var(--mono);
   font-size: 11px;

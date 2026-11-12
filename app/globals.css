@@ -25,6 +25,8 @@
   --color-text-muted:    #6F6C65;
   --color-btn-bg:        #EDEAE3;
   --color-btn-fg:        #0A0B0D;
+  --color-btn-bg-hover:  #DDD8CE;
+  --color-btn-bg-active: #D2CCC0;
   --swatch-ral:          #EDEAE3;
   --swatch-inps:         #8E8B83;
   --swatch-tfr:          #E2B15A;
@@ -250,37 +252,87 @@ input[type="range"]::-moz-range-thumb {
 .app-header__textlink.is-active,
 .app-header__textlink:hover { color: var(--color-text-primary); }
 
-/* UI kit */
+/* UI kit — pulsanti.
+   Primario: fondo panna, testo e icone scuri in ogni stato (anche :visited, :hover,
+   :focus, :active, disabled). Il colore è impostato sul bottone e su ogni figlio,
+   così niente eredita il panna del body. */
 a.ui-btn { text-decoration: none; }
 .ui-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 10px;
   padding: 12px 18px;
   border-radius: 0;
   font-family: var(--font-sans), sans-serif;
-  font-weight: 500;
+  font-weight: 600;
   font-size: 14px;
+  line-height: 1.4;
   letter-spacing: 0.01em;
   cursor: pointer;
-  border: none;
-  transition: background 0.15s, opacity 0.15s;
+  border: 1px solid transparent;
+  transition: background-color 0.15s, border-color 0.15s, opacity 0.15s;
 }
 .ui-btn--full { width: 100%; }
-.ui-btn--primary {
-  background: var(--color-btn-bg);
+
+.ui-btn--primary,
+a.ui-btn--primary:link,
+a.ui-btn--primary:visited {
+  background-color: var(--color-btn-bg);
+  border-color: var(--color-btn-bg);
   color: var(--color-btn-fg);
 }
-.ui-btn--primary:hover:not(:disabled) { background: #fff; }
-.ui-btn--primary:disabled { opacity: 0.55; cursor: not-allowed; }
-.ui-btn--secondary {
-  background: var(--color-bg-elevated);
-  color: var(--color-text-primary);
-  border: 1px solid var(--color-border);
+.ui-btn--primary *,
+.ui-btn--primary svg {
+  color: var(--color-btn-fg);
 }
+.ui-btn--primary svg { stroke: currentColor; }
+.ui-btn--primary:hover:not(:disabled),
+a.ui-btn--primary:hover {
+  background-color: var(--color-btn-bg-hover);
+  border-color: var(--color-btn-bg-hover);
+  color: var(--color-btn-fg);
+}
+.ui-btn--primary:active:not(:disabled) {
+  background-color: var(--color-btn-bg-active);
+  border-color: var(--color-btn-bg-active);
+  color: var(--color-btn-fg);
+}
+.ui-btn--primary:focus-visible {
+  color: var(--color-btn-fg);
+  outline: 2px solid var(--color-text-primary);
+  outline-offset: 3px;
+}
+.ui-btn--primary:disabled,
+.ui-btn--primary[aria-disabled="true"] {
+  opacity: 0.55;
+  cursor: not-allowed;
+  color: var(--color-btn-fg);
+}
+
+.ui-btn--secondary,
+a.ui-btn--secondary:link,
+a.ui-btn--secondary:visited {
+  background-color: transparent;
+  border-color: var(--color-border-bright);
+  color: var(--color-text-primary);
+}
+.ui-btn--secondary *,
+.ui-btn--secondary svg { color: var(--color-text-primary); }
+.ui-btn--secondary:hover:not(:disabled),
+a.ui-btn--secondary:hover {
+  background-color: rgba(237, 234, 227, 0.08);
+  color: var(--color-text-primary);
+}
+.ui-btn--secondary:disabled { opacity: 0.55; cursor: not-allowed; }
+
 .ui-btn--ghost {
-  background: transparent;
+  background-color: transparent;
   color: var(--color-text-secondary);
+}
+.ui-btn--ghost:hover:not(:disabled) {
+  background-color: rgba(237, 234, 227, 0.08);
+  color: var(--color-text-primary);
 }
 
 .ui-card {

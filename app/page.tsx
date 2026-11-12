@@ -30,9 +30,9 @@ export const metadata = {
     title: TITOLO_HOME,
     description: DESCRIZIONE_HOME,
     url: '/',
-    images: [{ url: '/brand/og.png', width: 1200, height: 630, alt: 'Costi Lavoro Italia — Lo stipendio è solo la prima riga. Simulatore del costo del lavoro.' }],
+    images: [{ url: '/opengraph-image', width: 1200, height: 630, alt: 'Costi Lavoro Italia — Lo stipendio è solo la prima riga. Simulatore del costo del lavoro.' }],
   },
-  twitter: { title: TITOLO_HOME, description: DESCRIZIONE_HOME, images: ['/brand/og.png'] },
+  twitter: { title: TITOLO_HOME, description: DESCRIZIONE_HOME, images: ['/opengraph-image'] },
 };
 
 const SIMULATORE = '/calcolatore';
