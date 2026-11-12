@@ -9,7 +9,7 @@ export function AppHeader() {
   return (
     <header className="no-print app-header">
       <Link href="/" className="app-header__brand" aria-label="Costi Lavoro Italia, vai alla home">
-        <Logo markSize={36} />
+        <Logo height={52} />
       </Link>
       <nav className="app-header__nav" aria-label="Sezioni">
         <Suspense fallback={
