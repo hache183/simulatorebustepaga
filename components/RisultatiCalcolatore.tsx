@@ -261,6 +261,16 @@ export function RisultatiCalcolatore({ risultato, onRicalcola }: Props) {
         </p>
       </div>
 
+      <p style={{
+        margin: 0,
+        fontSize: '13px',
+        color: 'var(--color-text-secondary)',
+        lineHeight: 1.55,
+        fontFamily: "var(--font-sans), sans-serif",
+      }}>
+        Questa è una stima indicativa, per darti un’idea del costo. Non sostituisce un cedolino né un parere professionale. Un consulente del lavoro ti ricontatterà e elaborerà la tua richiesta con un preventivo totalmente gratuito.
+      </p>
+
       {/* SEZIONE F — Footer azioni */}
       <div style={{ display: 'flex', gap: '12px' }} className="no-print">
         <button onClick={onRicalcola} className="ui-btn ui-btn--secondary" style={{
