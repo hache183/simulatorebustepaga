@@ -27,8 +27,6 @@ const mono = IBM_Plex_Mono({
 
 const titolo = `${NOME_SITO} — costo di un'assunzione`;
 const descrizione = 'Simulatore del costo aziendale e del netto stimato su CCNL, edilizia, lavoro domestico e compensi di soci e amministratori.';
-const OG_ALT = 'Costi Lavoro Italia — Lo stipendio è solo la prima riga. Simulatore del costo del lavoro.';
-const OG_IMAGE = { url: '/brand/og.png', width: 1200, height: 630, alt: OG_ALT };
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl()),
@@ -38,10 +36,6 @@ export const metadata: Metadata = {
   },
   description: descrizione,
   alternates: { canonical: '/' },
-  icons: {
-    icon: [{ url: '/brand/favicon-32.png', sizes: '32x32', type: 'image/png' }],
-    apple: [{ url: '/brand/seal-clean-180.png', sizes: '180x180', type: 'image/png' }],
-  },
   openGraph: {
     type: 'website',
     locale: 'it_IT',
@@ -49,13 +43,11 @@ export const metadata: Metadata = {
     title: titolo,
     description: descrizione,
     url: '/',
-    images: [OG_IMAGE],
   },
   twitter: {
     card: 'summary_large_image',
     title: titolo,
     description: descrizione,
-    images: ['/brand/og.png'],
   },
 };
 

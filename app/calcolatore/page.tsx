@@ -19,9 +19,9 @@ export const metadata: Metadata = {
     title: TITOLO,
     description: DESCRIZIONE,
     url: '/calcolatore',
-    images: [{ url: '/brand/og.png', width: 1200, height: 630, alt: 'Costi Lavoro Italia — Lo stipendio è solo la prima riga. Simulatore del costo del lavoro.' }],
+    images: [{ url: '/opengraph-image', width: 1200, height: 630, alt: 'Costi Lavoro Italia — Lo stipendio è solo la prima riga. Simulatore del costo del lavoro.' }],
   },
-  twitter: { title: TITOLO, description: DESCRIZIONE, images: ['/brand/og.png'] },
+  twitter: { title: TITOLO, description: DESCRIZIONE, images: ['/opengraph-image'] },
 };
 
 export default function CalcolatorePageWrapper() {
