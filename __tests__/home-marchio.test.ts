@@ -12,16 +12,7 @@ function sorgenti(dir: string): string[] {
   });
 }
 
-const PNG = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
-const BRAND = [
-  'lockup-dark.png',
-  'lockup-light.png',
-  'seal-clean-180.png',
-  'seal-clean-192.png',
-  'seal-clean-512.png',
-  'favicon-32.png',
-  'og.png',
-];
+const BRAND_SVG = ['marchio-panna.svg', 'marchio-navy.svg', 'icona.svg', 'anteprima.svg'];
 
 describe('home scura', () => {
   const home = leggi('app/page.tsx');
@@ -63,9 +54,63 @@ describe('marchio', () => {
     expect(leggi('app/home.module.css')).toContain('clamp(2.4rem, min(6vw, 100cqi / 11.5), 5.5rem)');
   });
 
-  test.each(BRAND)('%s è un PNG valido', (nome) => {
-    const buf = readFileSync(join(root, 'public/brand', nome));
-    expect(buf.subarray(0, 8).equals(PNG)).toBe(true);
-    expect(buf.subarray(buf.length - 8, buf.length - 4).toString('latin1')).toBe('IEND');
+  test.each(BRAND_SVG)('%s è un SVG vettoriale senza font né immagini incorporate', (nome) => {
+    const svg = leggi(join('public/brand', nome));
+    expect(svg.startsWith('<svg xmlns="http://www.w3.org/2000/svg"')).toBe(true);
+    expect(svg.trimEnd().endsWith('</svg>')).toBe(true);
+    expect(svg).not.toMatch(/<text|<image|@font-face|base64/);
+  });
+
+  test('marchio solo scritta: niente sigillo, nessun riferimento ai vecchi PNG', () => {
+    expect(readdirSync(join(root, 'public/brand')).sort()).toEqual([...BRAND_SVG].sort());
+    const logo = leggi('components/Logo.tsx');
+    expect(logo).toContain('/brand/marchio-panna.svg');
+    expect(logo).toContain('/brand/marchio-navy.svg');
+    for (const file of [...sorgenti('app'), ...sorgenti('components')]) {
+      expect({ file, vecchi: /seal-clean|lockup-(dark|light)|favicon-32|\/brand\/og\.png/.test(leggi(file)) })
+        .toEqual({ file, vecchi: false });
+    }
+  });
+
+  test('la scritta usa la riga tricolore e i colori del marchio', () => {
+    const panna = leggi('public/brand/marchio-panna.svg');
+    const navy = leggi('public/brand/marchio-navy.svg');
+    for (const colore of ['#1F8A4C', '#C91C30']) {
+      expect(panna).toContain(colore);
+      expect(navy).toContain(colore);
+    }
+    expect(panna).toContain('fill="#EDEAE3"');
+    expect(navy).toContain('fill="#071F45"');
+    expect(leggi('app/icon.svg')).toBe(leggi('public/brand/icona.svg'));
+  });
+});
+
+describe('pulsanti', () => {
+  const css = leggi('app/globals.css');
+  const home = leggi('app/home.module.css');
+
+  test('primario: fondo panna e testo scuro in ogni stato', () => {
+    expect(css).toContain('--color-btn-bg:        #EDEAE3;');
+    expect(css).toContain('--color-btn-fg:        #0A0B0D;');
+    expect(css).toContain('--color-btn-bg-hover:  #DDD8CE;');
+    expect(css).toMatch(/a\.ui-btn--primary:visited \{[^}]*color: var\(--color-btn-fg\)/);
+    expect(css).toMatch(/\.ui-btn--primary \*,\s*\.ui-btn--primary svg \{\s*color: var\(--color-btn-fg\)/);
+    expect(css).not.toMatch(/ui-btn--primary:hover[^{]*\{[^}]*#fff/);
+  });
+
+  test('la CTA della home batte `.page a:visited { color: inherit }`', () => {
+    expect(home).toMatch(/\.page a\.cta:visited \{[^}]*color: var\(--cta-fg\)/);
+    expect(home).toMatch(/\.page a\.cta svg \{[^}]*color: var\(--cta-fg\)/);
+    expect(home).not.toMatch(/\.cta:hover \{ background: #fff/);
+  });
+
+  test('i pulsanti con stile in linea non fissano più colore e fondo', () => {
+    for (const file of sorgenti('components')) {
+      const src = leggi(file);
+      const btn = src.match(/<button[^>]*style=\{\{[^}]*\}\}/g) ?? [];
+      for (const b of btn) {
+        expect({ file, b, ok: !/color-btn-(bg|fg)/.test(b) }).toEqual({ file, b, ok: true });
+      }
+    }
   });
 });

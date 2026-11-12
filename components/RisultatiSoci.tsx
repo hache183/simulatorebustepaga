@@ -89,21 +89,13 @@ export function RisultatiSoci({ out, stato, onRicalcola }: Props) {
       </div>
 
       <div style={{ display: 'flex', gap: '12px' }} className="no-print">
-        <button type="button" onClick={onRicalcola} style={{
+        <button type="button" onClick={onRicalcola} className="ui-btn ui-btn--secondary" style={{
           flex: 1, padding: '14px',
-          background: 'transparent', color: 'var(--color-text-secondary)',
-          border: '1px solid var(--color-border)', borderRadius: 0,
-          fontFamily: "var(--font-sans), sans-serif", fontWeight: 600, fontSize: '14px',
-          cursor: 'pointer',
         }}>
           ← Nuovo calcolo
         </button>
-        <button type="button" onClick={() => window.print()} style={{
+        <button type="button" onClick={() => window.print()} className="ui-btn ui-btn--primary" style={{
           flex: 1, padding: '14px',
-          background: 'var(--color-btn-bg)', color: 'var(--color-btn-fg)',
-          border: 'none', borderRadius: 0,
-          fontFamily: "var(--font-sans), sans-serif", fontWeight: 600, fontSize: '14px',
-          cursor: 'pointer',
         }}>
           Stampa report
         </button>

@@ -436,18 +436,11 @@ export function SociAmministratoriPanel() {
           type="button"
           onClick={generaReport}
           disabled={loading}
+          className="ui-btn ui-btn--primary"
           style={{
             marginTop: '8px',
             padding: '14px',
-            border: 'none',
-            borderRadius: 0,
-            cursor: loading ? 'wait' : 'pointer',
-            background: 'var(--color-btn-bg)',
-            color: 'var(--color-btn-fg)',
-            fontWeight: 600,
-            fontSize: '14px',
-            fontFamily: "var(--font-sans), sans-serif",
-            opacity: loading ? 0.7 : 1,
+            cursor: loading ? 'wait' : undefined,
           }}
         >
           {loading ? 'Generazione report…' : 'Genera report'}

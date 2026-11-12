@@ -263,21 +263,13 @@ export function RisultatiCalcolatore({ risultato, onRicalcola }: Props) {
 
       {/* SEZIONE F — Footer azioni */}
       <div style={{ display: 'flex', gap: '12px' }} className="no-print">
-        <button onClick={onRicalcola} style={{
+        <button onClick={onRicalcola} className="ui-btn ui-btn--secondary" style={{
           flex: 1, padding: '14px',
-          background: 'transparent', color: 'var(--color-text-secondary)',
-          border: '1px solid var(--color-border)', borderRadius: 0,
-          fontFamily: "var(--font-sans), sans-serif", fontWeight: 600, fontSize: '14px',
-          cursor: 'pointer', transition: 'border-color 0.15s ease',
         }}>
           ← Nuovo calcolo
         </button>
-        <button onClick={() => window.print()} style={{
+        <button onClick={() => window.print()} className="ui-btn ui-btn--primary" style={{
           flex: 1, padding: '14px',
-          background: 'var(--color-bg-elevated)', color: 'var(--color-text-primary)',
-          border: '1px solid var(--color-border-bright)', borderRadius: 0,
-          fontFamily: "var(--font-sans), sans-serif", fontWeight: 600, fontSize: '14px',
-          cursor: 'pointer', transition: 'border-color 0.15s ease',
         }}>
           🖨 Stampa report
         </button>
