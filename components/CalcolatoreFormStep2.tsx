@@ -81,7 +81,7 @@ export function CalcolatoreFormStep2({ onSubmit, onBack, isLoading, ccnlId }: Pr
           Step 2 di 2
         </p>
         <h2 style={{
-          fontFamily: "var(--font-display), sans-serif", fontWeight: 700, fontSize: '18px',
+          fontFamily: "var(--font-display), Georgia, serif", fontWeight: 600, fontSize: '18px',
           color: 'var(--color-text-primary)', marginTop: '4px',
         }}>
           {isDomestici ? 'Dati del rapporto domestico' : 'Dati aziendali'}
@@ -213,7 +213,7 @@ export function CalcolatoreFormStep2({ onSubmit, onBack, isLoading, ccnlId }: Pr
       </div>}
 
       {!isDomestici && <div style={{
-        padding: '12px 14px', borderRadius: '8px',
+        padding: '12px 14px', borderRadius: 0,
         background: 'var(--color-bg-elevated)', border: '1px solid var(--color-border)',
       }}>
         <p style={{ fontSize: '13px', fontWeight: 600, color: 'var(--color-text-secondary)', marginBottom: '6px' }}>
@@ -225,7 +225,7 @@ export function CalcolatoreFormStep2({ onSubmit, onBack, isLoading, ccnlId }: Pr
       </div>}
 
       {!isDomestici && <div style={{
-        padding: '12px 14px', borderRadius: '8px',
+        padding: '12px 14px', borderRadius: 0,
         background: 'var(--color-bg-elevated)', border: '1px solid var(--color-border)',
       }}>
         <p style={{ fontSize: '13px', fontWeight: 600, color: 'var(--color-text-secondary)', marginBottom: '6px' }}>
@@ -239,22 +239,13 @@ export function CalcolatoreFormStep2({ onSubmit, onBack, isLoading, ccnlId }: Pr
 
       {/* Pulsanti */}
       <div style={{ display: 'flex', gap: '12px' }}>
-        <button type="button" onClick={onBack} style={{
+        <button type="button" onClick={onBack} className="ui-btn ui-btn--secondary" style={{
           flex: 1, padding: '14px',
-          background: 'transparent', color: 'var(--color-text-secondary)',
-          border: '1px solid var(--color-border)', borderRadius: '10px',
-          fontFamily: "var(--font-sans), sans-serif", fontWeight: 600, fontSize: '14px',
-          cursor: 'pointer', transition: 'border-color 0.15s ease',
         }}>
           ← Indietro
         </button>
-        <button type="submit" disabled={isLoading} style={{
+        <button type="submit" disabled={isLoading} className="ui-btn ui-btn--primary" style={{
           flex: 1, padding: '14px',
-          background: 'var(--color-accent)',
-          color: 'white', border: 'none', borderRadius: '10px',
-          fontFamily: "var(--font-sans), sans-serif", fontWeight: 600, fontSize: '14px',
-          cursor: 'pointer', transition: 'background 0.15s ease, opacity 0.15s ease',
-          opacity: isLoading ? 0.5 : 1,
         }}>
           {isLoading ? 'Calcolo...' : 'Calcola il costo →'}
         </button>

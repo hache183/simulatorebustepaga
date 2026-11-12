@@ -8,6 +8,7 @@ export const metadata = {
     title: 'Informativa privacy — Costi Lavoro Italia',
     description: 'Informativa sul trattamento dei dati inseriti per sbloccare il report del simulatore Costi Lavoro Italia.',
     url: '/privacy',
+    images: [{ url: '/opengraph-image', width: 1200, height: 630, alt: 'Costi Lavoro Italia — Lo stipendio è solo la prima riga. Simulatore del costo del lavoro.' }],
   },
 };
 
@@ -21,9 +22,9 @@ export default function PrivacyPage() {
       color: 'var(--color-text-primary)',
     }}>
       <h1 style={{
-        fontFamily: "var(--font-display), sans-serif",
+        fontFamily: "var(--font-display), Georgia, serif",
         fontSize: '28px',
-        fontWeight: 700,
+        fontWeight: 600,
         marginBottom: '16px',
       }}>
         Informativa privacy

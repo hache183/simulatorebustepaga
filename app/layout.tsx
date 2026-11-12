@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Cormorant_Garamond, IBM_Plex_Mono, IBM_Plex_Sans } from 'next/font/google';
+import { Fraunces, IBM_Plex_Mono, IBM_Plex_Sans } from 'next/font/google';
 import { NOME_SITO, siteUrl } from '@/lib/site';
 import './globals.css';
 
@@ -10,12 +10,12 @@ const sans = IBM_Plex_Sans({
   variable: '--font-sans',
 });
 
-const display = Cormorant_Garamond({
+const display = Fraunces({
   subsets: ['latin'],
-  weight: ['500', '600', '700'],
-  style: ['normal', 'italic'],
+  weight: 'variable',
   display: 'swap',
   variable: '--font-display',
+  axes: ['opsz', 'SOFT', 'WONK'],
 });
 
 const mono = IBM_Plex_Mono({

@@ -1,15 +1,8 @@
 import Link from 'next/link';
-import { IBM_Plex_Mono, Instrument_Sans, Syne } from 'next/font/google';
+import { IBM_Plex_Mono, Instrument_Sans } from 'next/font/google';
 import { Logo } from '@/components/Logo';
 import { NOME_SITO } from '@/lib/site';
 import styles from './home.module.css';
-
-const syne = Syne({
-  subsets: ['latin'],
-  weight: ['700', '800'],
-  display: 'swap',
-  variable: '--home-display',
-});
 
 const instrument = Instrument_Sans({
   subsets: ['latin'],
@@ -33,8 +26,13 @@ export const metadata = {
   title: TITOLO_HOME,
   description: DESCRIZIONE_HOME,
   alternates: { canonical: '/' },
-  openGraph: { title: TITOLO_HOME, description: DESCRIZIONE_HOME, url: '/' },
-  twitter: { title: TITOLO_HOME, description: DESCRIZIONE_HOME },
+  openGraph: {
+    title: TITOLO_HOME,
+    description: DESCRIZIONE_HOME,
+    url: '/',
+    images: [{ url: '/opengraph-image', width: 1200, height: 630, alt: 'Costi Lavoro Italia — Lo stipendio è solo la prima riga. Simulatore del costo del lavoro.' }],
+  },
+  twitter: { title: TITOLO_HOME, description: DESCRIZIONE_HOME, images: ['/opengraph-image'] },
 };
 
 const SIMULATORE = '/calcolatore';
@@ -93,7 +91,7 @@ function Cta({ testId }: { testId?: string }) {
 
 export default function HomePage() {
   return (
-    <div className={`${styles.page} ${syne.variable} ${instrument.variable} ${plexMono.variable}`}>
+    <div className={`${styles.page} ${instrument.variable} ${plexMono.variable}`}>
       <span className={`${styles.tick} ${styles.tickTl}`} aria-hidden="true" />
       <span className={`${styles.tick} ${styles.tickTr}`} aria-hidden="true" />
       <span className={`${styles.tick} ${styles.tickBl}`} aria-hidden="true" />

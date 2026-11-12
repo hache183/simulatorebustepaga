@@ -15,8 +15,13 @@ export const metadata: Metadata = {
   title: TITOLO,
   description: DESCRIZIONE,
   alternates: { canonical: '/calcolatore' },
-  openGraph: { title: TITOLO, description: DESCRIZIONE, url: '/calcolatore' },
-  twitter: { title: TITOLO, description: DESCRIZIONE },
+  openGraph: {
+    title: TITOLO,
+    description: DESCRIZIONE,
+    url: '/calcolatore',
+    images: [{ url: '/opengraph-image', width: 1200, height: 630, alt: 'Costi Lavoro Italia — Lo stipendio è solo la prima riga. Simulatore del costo del lavoro.' }],
+  },
+  twitter: { title: TITOLO, description: DESCRIZIONE, images: ['/opengraph-image'] },
 };
 
 export default function CalcolatorePageWrapper() {
