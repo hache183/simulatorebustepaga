@@ -1,14 +1,15 @@
 import type React from 'react';
 
 /**
- * Marchio Costi Lavoro Italia: sigillo con le barre tricolori e wordmark serif.
- * I PNG stanno in public/brand, byte per byte quelli del brand pack.
- * Il file è alto 200px: nitido fino a 3x per un'altezza di 62px.
- *  - tone "light": wordmark navy, per la stampa e i fondi chiari
- *  - tone "dark":  wordmark panna, per i fondi scuri. In stampa si usa il navy.
+ * Marchio Costi Lavoro Italia: solo scritta. "Costi Lavoro" in Fraunces, riga tricolore, ITALIA in Cinzel.
+ * Niente sigillo né simbolo accanto al nome.
+ * I file sono SVG vettoriali in public/brand (glifi già convertiti in tracciati, generati da
+ * scripts/marchio-svg.py): nitidi a ogni altezza.
+ *  - tone "light": scritta navy, per la stampa e i fondi chiari
+ *  - tone "dark":  scritta panna, per i fondi scuri. In stampa si usa il navy.
  */
 
-const LOCKUP_RATIO = 811 / 200;
+export const MARCHIO_RATIO = 1405.22 / 341.08;
 
 type Props = {
   tone?: 'light' | 'dark';
@@ -18,7 +19,7 @@ type Props = {
 };
 
 export function Logo({ tone = 'light', height = 48, className }: Props) {
-  const width = Math.round(height * LOCKUP_RATIO);
+  const width = Math.round(height * MARCHIO_RATIO);
   const screenClass = ['logo', tone === 'dark' ? 'logo--screen' : '', className].filter(Boolean).join(' ');
   const style = { '--logo-h': `${height}px` } as React.CSSProperties;
   return (
@@ -26,7 +27,7 @@ export function Logo({ tone = 'light', height = 48, className }: Props) {
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         className={screenClass}
-        src={`/brand/lockup-${tone}.png`}
+        src={tone === 'dark' ? '/brand/marchio-panna.svg' : '/brand/marchio-navy.svg'}
         width={width}
         height={height}
         alt="Costi Lavoro Italia"
@@ -37,7 +38,7 @@ export function Logo({ tone = 'light', height = 48, className }: Props) {
         // eslint-disable-next-line @next/next/no-img-element
         <img
           className={className ? `logo logo--print ${className}` : 'logo logo--print'}
-          src="/brand/lockup-light.png"
+          src="/brand/marchio-navy.svg"
           width={width}
           height={height}
           alt=""
