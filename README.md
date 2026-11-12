@@ -23,14 +23,20 @@ La home spiega il simulatore e porta a `/calcolatore`. I parametri si compilano 
 
 ### Variabili
 
-In `.env.local` e, su Vercel, nelle Environment Variables del progetto. L’elenco completo è in `.env.example`.
+In `.env.local` e, su Vercel, nelle Environment Variables del progetto. Le variabili SMTP dei lead, su Hostinger, si impostano nel pannello della Web App prima del deploy. L’elenco completo è in `.env.example`.
 
 Lead:
 
 - `LEAD_COOKIE_SECRET` — segreto HMAC del cookie di sblocco. Obbligatorio, almeno 16 caratteri (meglio 32 o più, casuali). Senza questo valore il modulo non sblocca il simulatore.
-- `LEADS_TO_EMAIL` — indirizzo che riceve i lead
-- `LEADS_FROM_EMAIL` — mittente verificato su Resend (es. `Costi Lavoro Italia <noreply@costilavoroitalia.it>`)
-- `RESEND_API_KEY` — chiave API Resend
+
+La notifica del lead parte via SMTP. Non si invia nessuna mail al visitatore. Servono tutte le variabili qui sotto: se ne manca una, `POST /api/leads` risponde 503 e non sblocca il simulatore.
+
+- `SMTP_HOST` — server SMTP. Su Hostinger: `smtp.hostinger.com`
+- `SMTP_PORT` — `465`, con SSL implicito. Se la porta 465 non funziona, usa `587` (STARTTLS)
+- `SMTP_USER` — indirizzo completo della casella. È l’utente con cui il server si autentica. Su Hostinger: `info@costilavoroitalia.it`
+- `SMTP_PASS` — password di quella casella. Non va mai committata
+- `LEADS_TO_EMAIL` — destinatario della notifica. La stessa casella (`info@costilavoroitalia.it`), così il messaggio arriva nella posta in arrivo del titolare
+- `LEADS_FROM_EMAIL` — mittente. Può essere solo l’indirizzo (`info@costilavoroitalia.it`) oppure `Costi Lavoro Italia <info@costilavoroitalia.it>`
 
 Rate limit (opzionale):
 
@@ -45,7 +51,7 @@ In locale ogni lead e le simulazioni che esegue finiscono anche in `data/runtime
 
 ### Prova manuale del gate
 
-1. Imposta `LEAD_COOKIE_SECRET` e le tre variabili Resend, poi `npm run dev`.
+1. Imposta `LEAD_COOKIE_SECRET` e le variabili SMTP dei lead (`SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `LEADS_TO_EMAIL`, `LEADS_FROM_EMAIL`), poi `npm run dev`.
 2. Apri `http://localhost:3000`: deve comparire la home, con il pulsante per il simulatore.
 3. Apri `/calcolatore` e compila CCNL e livello: il modulo lead non deve comparire.
 4. Premi **Calcola il costo**: compare il modulo. Annullando, i parametri restano. Inviando i dati, parte il report.
