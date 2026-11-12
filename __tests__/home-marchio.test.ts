@@ -25,6 +25,36 @@ describe('home scura', () => {
     expect(home).toContain('Tre passi, poi il report.');
     expect(home).toContain('Cosa trovi nel report.');
     expect(home).toContain('Costo totale azienda');
+    expect(home).toContain('Quanto costa davvero<br /> un contratto.');
+  });
+
+  test('spiega a che serve, la stima indicativa e il preventivo gratuito', () => {
+    expect(home).toContain('Questo simulatore serve a darti un’idea del costo completo a carico dell’azienda');
+    expect(home).toContain('Il risultato è una stima indicativa. Poi un consulente del lavoro ti ricontatta e elabora la tua richiesta con un preventivo totalmente gratuito.');
+    expect(home).toContain('Il simulatore è gratuito. Dopo i parametri lasci i recapiti, vedi subito la stima sul sito e vieni ricontattato da un consulente del lavoro per un preventivo totalmente gratuito.');
+    expect(home).toContain('è una prima idea del costo.');
+    expect(home).toContain("titolo: 'Consulti la stima'");
+    expect(home).toContain('il preventivo preciso e gratuito lo elabora il consulente.');
+    expect(home).toContain('Non è un cedolino e non è un preventivo definitivo.');
+    expect(home).not.toContain('Il prospetto si invia');
+    expect(home).not.toContain('Non ti inviamo mail automatiche.');
+
+    const form = leggi('components/LeadCaptureForm.tsx');
+    expect(form).toContain('Lascia i recapiti per vedere la stima');
+    expect(form).toContain('vedi subito il report sul sito. Un consulente del lavoro ti ricontatterà per un preventivo totalmente gratuito.');
+    expect(form).toContain('necessario per vedere la stima ed essere ricontattato');
+
+    const avviso = 'Questa è una stima indicativa, per darti un’idea del costo. Non sostituisce un cedolino né un parere professionale. Un consulente del lavoro ti ricontatterà e elaborerà la tua richiesta con un preventivo totalmente gratuito.';
+    for (const file of ['components/RisultatiCalcolatore.tsx', 'components/RisultatiSoci.tsx']) {
+      const src = leggi(file);
+      expect({ file, avviso: src.includes(avviso) }).toEqual({ file, avviso: true });
+      const dopoAvviso = src.slice(src.indexOf(avviso));
+      expect({ file, stampa: dopoAvviso.includes('className="no-print"') }).toEqual({ file, stampa: true });
+    }
+
+    expect(leggi('components/SiteFooter.tsx')).toContain('Stima indicativa su minimi, aliquote e regole del {anno}. Non è un cedolino, non sostituisce il consulente del lavoro.');
+    expect(leggi('app/layout.tsx')).toContain('Stima indicativa del costo di un’assunzione a carico di chi paga. Un consulente del lavoro elabora poi un preventivo totalmente gratuito.');
+    expect(leggi('app/calcolatore/page.tsx')).toContain('Stima indicativa del costo azienda su dipendenti, edili, domestici, soci e amministratori. Un consulente del lavoro elabora poi un preventivo totalmente gratuito.');
   });
 
   test('nessun importo in euro, nessun prospetto di esempio, nessuna nota da bozzetto', () => {

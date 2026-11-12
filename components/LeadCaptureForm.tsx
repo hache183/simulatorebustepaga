@@ -98,11 +98,11 @@ export function LeadCaptureForm({ modulo, onSuccess, onAnnulla }: Props) {
   return (
     <div className="lead-funnel__card" data-testid="lead-form">
       <p className="lead-funnel__kicker">Richiesta · {passo} di 2</p>
-      <h1 id="lead-dialog-title" className="lead-funnel__title">Il prospetto si invia a questi recapiti</h1>
+      <h1 id="lead-dialog-title" className="lead-funnel__title">Lascia i recapiti per vedere la stima</h1>
       <p className="lead-funnel__subtitle">
         {passo === 1
-          ? 'Contratto, livello e retribuzione restano quelli già scritti. Dopo l\'invio il calcolo riparte da solo. Il browser resta sbloccato per trenta giorni.'
-          : 'Azienda e ruolo sono facoltativi. Il consenso al trattamento è necessario per generare il prospetto; le comunicazioni commerciali no.'}
+          ? 'Contratto, livello e retribuzione restano quelli già inseriti. Dopo l’invio il calcolo riparte da solo e vedi subito il report sul sito. Un consulente del lavoro ti ricontatterà per un preventivo totalmente gratuito. Il browser resta sbloccato per trenta giorni.'
+          : 'Azienda e ruolo sono facoltativi. Il consenso al trattamento è necessario per vedere la stima ed essere ricontattato; le comunicazioni commerciali no.'}
       </p>
 
       <ol className="lead-funnel__steps">

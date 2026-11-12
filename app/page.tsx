@@ -20,7 +20,7 @@ const plexMono = IBM_Plex_Mono({
 
 const TITOLO_HOME = `${NOME_SITO} — simulatore del costo del lavoro`;
 const DESCRIZIONE_HOME =
-  'Stima il costo completo a carico dell’azienda: retribuzione, contributi INPS, TFR, premio INAIL, ferie, permessi e istituti contrattuali. Per dipendenti, edili, collaboratori domestici, soci e amministratori.';
+  'Stima indicativa del costo completo a carico dell’azienda: retribuzione, contributi INPS, TFR, premio INAIL, ferie e permessi. Un consulente del lavoro elabora poi un preventivo totalmente gratuito.';
 
 export const metadata = {
   title: TITOLO_HOME,
@@ -48,17 +48,17 @@ const PASSI = [
   {
     n: '01',
     titolo: 'Imposti i parametri',
-    testo: 'Contratto, livello, orario, provincia e le altre voci del caso. Il motore stima retribuzione, contributi e istituti sul profilo che hai scelto.',
+    testo: 'Contratto, livello, orario, provincia e le altre voci del caso. Il simulatore stima retribuzione, contributi e istituti sul profilo che hai scelto: è una prima idea del costo.',
   },
   {
     n: '02',
     titolo: 'Lasci i tuoi dati',
-    testo: 'Nome, email, telefono e azienda, prima di sbloccare il report. I dati arrivano a noi: tu non ricevi una mail automatica.',
+    testo: 'Lasci nome, email, telefono e azienda, poi vedi il report. Un consulente del lavoro ti ricontatterà, prenderà in carico la richiesta e preparerà un preventivo totalmente gratuito.',
   },
   {
     n: '03',
-    titolo: 'Consulti il report',
-    testo: 'Il dettaglio dei costi è sul sito, da leggere e scaricare subito. Le cifre si vedono solo sul tuo caso, dopo i parametri.',
+    titolo: 'Consulti la stima',
+    testo: 'Il dettaglio dei costi è sul sito, da leggere e scaricare subito. È una prima idea sul tuo caso: il preventivo preciso e gratuito lo elabora il consulente.',
   },
 ];
 
@@ -119,12 +119,12 @@ export default function HomePage() {
           </h1>
           <div className={styles.heroBottom}>
             <p className={styles.lead}>
-              Costi Lavoro Italia stima il <strong>costo completo a carico dell’azienda</strong>: retribuzione, contributi INPS, TFR, premio INAIL, ferie, permessi e istituti contrattuali. Per dipendenti, edili, collaboratori domestici, soci e amministratori. Si parte da CCNL, livello, orario e provincia. Il calcolo lo fai tu, nel simulatore.
+              Questo simulatore serve a darti un’idea del costo completo a carico dell’azienda: non solo lo stipendio, ma anche contributi INPS, TFR, premio INAIL, ferie, permessi e le altre voci del contratto. Vale per dipendenti, edili, collaboratori domestici, soci e amministratori, a partire da contratto, livello, orario e provincia. Il risultato è una stima indicativa. Poi un consulente del lavoro ti ricontatta e elabora la tua richiesta con un preventivo totalmente gratuito.
             </p>
             <div className={styles.ctaBlock}>
               <Cta testId="cta-simulatore" />
               <p className={styles.ctaNote}>
-                Gratuito. Dopo i parametri chiediamo i dati di contatto, poi vedi e scarichi il report sul sito. Non ti inviamo mail automatiche.
+                Il simulatore è gratuito. Dopo i parametri lasci i recapiti, vedi subito la stima sul sito e vieni ricontattato da un consulente del lavoro per un preventivo totalmente gratuito.
               </p>
             </div>
           </div>
@@ -173,7 +173,7 @@ export default function HomePage() {
           <div className={styles.reportGrid}>
             <div className={styles.reportIntro}>
               <p>Il report elenca ogni componente del costo aziendale, calcolata sui tuoi parametri. Qui sotto è l’indice di quello che ottieni: gli importi li vedi nel simulatore.</p>
-              <p className={styles.disclaimer}>Non è un cedolino e non sostituisce un parere professionale. Le stime seguono aliquote e contratti caricati nel motore. Validità indicativa, anno 2026.</p>
+              <p className={styles.disclaimer}>Non è un cedolino e non è un preventivo definitivo. È una stima indicativa, secondo le aliquote e i contratti del 2026 caricati nel motore. Un consulente del lavoro ti ricontatta e elabora la tua richiesta con un preventivo totalmente gratuito.</p>
             </div>
             <ul className={styles.voci}>
               {VOCI.map(v => (

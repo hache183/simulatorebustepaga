@@ -26,7 +26,7 @@ const mono = IBM_Plex_Mono({
 });
 
 const titolo = `${NOME_SITO} — costo di un'assunzione`;
-const descrizione = 'Simulatore del costo aziendale e del netto stimato su CCNL, edilizia, lavoro domestico e compensi di soci e amministratori.';
+const descrizione = 'Stima indicativa del costo di un’assunzione a carico di chi paga. Un consulente del lavoro elabora poi un preventivo totalmente gratuito.';
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl()),

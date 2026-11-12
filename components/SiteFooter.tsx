@@ -10,7 +10,7 @@ export function SiteFooter() {
         <Logo tone="dark" height={48} />
         <div>
           <p>
-            Simulazione su minimi, aliquote e regole caricati per il {anno}. Non è un cedolino, non sostituisce il consulente del lavoro.
+            Stima indicativa su minimi, aliquote e regole del {anno}. Non è un cedolino, non sostituisce il consulente del lavoro.
           </p>
           <p className="site-footer__links">
             <Link href="/privacy">Informativa privacy</Link>
