@@ -324,7 +324,7 @@ describe('POST /api/leads e il foglio', () => {
 
   test('se l\'email fallisce non scrive sul foglio e non sblocca', async () => {
     configuraFoglio();
-    (inviaEmailLead as jest.Mock).mockRejectedValue(new Error('resend down'));
+    (inviaEmailLead as jest.Mock).mockRejectedValue(new Error('smtp down'));
     const res = await creaLead(richiesta(corpoLead(), '203.0.113.74'));
     expect(res.status).toBe(503);
     expect(mockAppend).not.toHaveBeenCalled();

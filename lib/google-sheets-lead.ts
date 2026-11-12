@@ -2,7 +2,7 @@ import type { LeadPayload } from '@/lib/send-lead-email';
 import { creaClientFogli } from '@/lib/google-sheets-api';
 
 /**
- * Copia opzionale del lead su un foglio Google, dopo l'email Resend.
+ * Copia opzionale del lead su un foglio Google, dopo l'email SMTP.
  * Se le variabili mancano non fa nulla. Se la scrittura fallisce, l'errore
  * sale al chiamante: POST /api/leads lo registra e sblocca comunque.
  * L'honeypot non arriva qui.
