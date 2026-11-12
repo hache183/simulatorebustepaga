@@ -469,13 +469,8 @@ export function CalcolatoreFormStep1({ contratti, onNext }: Props) {
       </div>
 
       {/* Pulsante */}
-      <button type="submit" disabled={loadingLivelli} style={{
+      <button type="submit" disabled={loadingLivelli} className="ui-btn ui-btn--primary" style={{
         width: '100%', padding: '14px',
-        background: 'var(--color-btn-bg)',
-        color: 'var(--color-btn-fg)', border: 'none', borderRadius: 0,
-        fontFamily: "var(--font-sans), sans-serif", fontWeight: 600, fontSize: '14px',
-        cursor: 'pointer', transition: 'background 0.15s ease, opacity 0.15s ease',
-        opacity: loadingLivelli ? 0.5 : 1,
       }}>
         Avanti →
       </button>

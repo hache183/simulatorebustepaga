@@ -331,10 +331,8 @@ export function DomesticiPanel() {
           </p>
           {preview.errore && <p style={{ fontSize: '12px', color: 'var(--color-red)' }}>{preview.errore}</p>}
 
-          <button type="button" onClick={calcola} disabled={loading || Boolean(preview.errore)} style={{
-            padding: '14px', border: 'none', borderRadius: 0, cursor: 'pointer',
-            background: 'var(--color-btn-bg)', color: 'var(--color-btn-fg)', fontWeight: 600, fontSize: '14px',
-            fontFamily: "var(--font-sans), sans-serif",
+          <button type="button" onClick={calcola} disabled={loading || Boolean(preview.errore)} className="ui-btn ui-btn--primary" style={{
+            padding: '14px',
           }}>
             {loading ? 'Calcolo…' : 'Calcola il costo'}
           </button>

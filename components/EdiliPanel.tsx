@@ -226,17 +226,11 @@ export function EdiliPanel({
             type="button"
             onClick={calcola}
             disabled={loading || !codiceInail}
+            className="ui-btn ui-btn--primary"
             style={{
               marginTop: '8px',
               padding: '12px 20px',
-              background: 'var(--color-btn-bg)',
-              color: 'var(--color-btn-fg)',
-              border: 'none',
-              borderRadius: 0,
-              fontWeight: 600,
-              fontSize: '14px',
-              cursor: loading ? 'wait' : 'pointer',
-              opacity: loading || !codiceInail ? 0.6 : 1,
+              cursor: loading ? 'wait' : undefined,
             }}
           >
             {loading ? 'Calcolo in corso…' : 'Calcola il costo'}
