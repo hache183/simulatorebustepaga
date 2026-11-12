@@ -230,14 +230,14 @@ export function DomesticiPanel() {
         <div style={{
           background: 'var(--color-bg-surface)',
           border: '1px solid var(--color-border)',
-          borderRadius: '10px',
+          borderRadius: 0,
           padding: '28px',
           display: 'flex',
           flexDirection: 'column',
           gap: '18px',
         }}>
           <div>
-            <h2 style={{ fontFamily: "var(--font-display), sans-serif", fontWeight: 700, fontSize: '18px', color: 'var(--color-text-primary)' }}>
+            <h2 style={{ fontFamily: "var(--font-display), Georgia, serif", fontWeight: 600, fontSize: '18px', color: 'var(--color-text-primary)' }}>
               Collaboratori familiari
             </h2>
             <p style={{ marginTop: '6px', fontSize: '12px', color: 'var(--color-text-muted)', lineHeight: 1.5 }}>
@@ -332,8 +332,8 @@ export function DomesticiPanel() {
           {preview.errore && <p style={{ fontSize: '12px', color: 'var(--color-red)' }}>{preview.errore}</p>}
 
           <button type="button" onClick={calcola} disabled={loading || Boolean(preview.errore)} style={{
-            padding: '14px', border: 'none', borderRadius: '8px', cursor: 'pointer',
-            background: 'var(--color-accent)', color: 'white', fontWeight: 600, fontSize: '14px',
+            padding: '14px', border: 'none', borderRadius: 0, cursor: 'pointer',
+            background: 'var(--color-btn-bg)', color: 'var(--color-btn-fg)', fontWeight: 600, fontSize: '14px',
             fontFamily: "var(--font-sans), sans-serif",
           }}>
             {loading ? 'Calcolo…' : 'Calcola il costo'}
@@ -346,7 +346,7 @@ export function DomesticiPanel() {
         {!risultato && !loading && (
           <div style={{
             background: 'var(--color-bg-surface)', border: '1px solid var(--color-border)',
-            borderRadius: '10px', padding: '48px 32px', textAlign: 'center',
+            borderRadius: 0, padding: '48px 32px', textAlign: 'center',
           }}>
             <p style={{ fontWeight: 600, color: 'var(--color-text-secondary)' }}>Il report apparirà qui</p>
           </div>
@@ -367,7 +367,7 @@ const labelStyle: CSSProperties = {
 function pill(active: boolean): CSSProperties {
   return {
     padding: '8px 10px',
-    borderRadius: '6px',
+    borderRadius: 0,
     fontSize: '12px',
     fontWeight: 600,
     cursor: 'pointer',

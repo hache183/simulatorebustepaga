@@ -133,7 +133,7 @@ export function EdiliPanel({
         <div style={{
           background: 'var(--color-bg-surface)',
           border: '1px solid var(--color-border)',
-          borderRadius: '10px',
+          borderRadius: 0,
           padding: '28px',
           display: 'flex',
           flexDirection: 'column',
@@ -229,10 +229,10 @@ export function EdiliPanel({
             style={{
               marginTop: '8px',
               padding: '12px 20px',
-              background: 'var(--color-accent)',
-              color: 'white',
+              background: 'var(--color-btn-bg)',
+              color: 'var(--color-btn-fg)',
               border: 'none',
-              borderRadius: '6px',
+              borderRadius: 0,
               fontWeight: 600,
               fontSize: '14px',
               cursor: loading ? 'wait' : 'pointer',
@@ -252,7 +252,7 @@ export function EdiliPanel({
             <div style={{
               background: 'var(--color-bg-surface)',
               border: '1px solid var(--color-border)',
-              borderRadius: '10px',
+              borderRadius: 0,
               padding: '48px 32px',
               textAlign: 'center',
             }}>

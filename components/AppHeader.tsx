@@ -9,18 +9,18 @@ export function AppHeader() {
   return (
     <header className="no-print app-header">
       <Link href="/" className="app-header__brand" aria-label="Costi Lavoro Italia, vai alla home">
-        <Logo height={52} />
+        <Logo tone="dark" height={62} />
       </Link>
       <nav className="app-header__nav" aria-label="Sezioni">
         <Suspense fallback={
           <>
             <HeaderLink href="/calcolatore" active={false}>Simulatore</HeaderLink>
             <HeaderLink href="/calcolatore?tab=soci" active={false}>Compensi</HeaderLink>
+            <Link href="/privacy" className="app-header__textlink app-header__privacy">Privacy</Link>
           </>
         }>
           <HeaderLinks />
         </Suspense>
-        <Link href="/privacy" className="app-header__textlink app-header__privacy">Privacy</Link>
       </nav>
     </header>
   );
@@ -35,6 +35,7 @@ function HeaderLinks() {
     <>
       <HeaderLink href="/calcolatore" active={isSim}>Simulatore</HeaderLink>
       <HeaderLink href="/calcolatore?tab=soci" active={isSoci}>Compensi</HeaderLink>
+      <Link href="/privacy" className={`app-header__textlink app-header__privacy${pathname === '/privacy' ? ' is-active' : ''}`}>Privacy</Link>
     </>
   );
 }

@@ -1,6 +1,5 @@
 import { readFileSync, readdirSync, statSync } from 'fs';
 import { join } from 'path';
-import { BRAND_FILES, PNG_FAVICON_32, PNG_OG, PNG_SEAL_CLEAN_180 } from '@/lib/brand-png';
 
 const root = join(__dirname, '..');
 const leggi = (p: string) => readFileSync(join(root, p), 'utf8');
@@ -14,6 +13,15 @@ function sorgenti(dir: string): string[] {
 }
 
 const PNG = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
+const BRAND = [
+  'lockup-dark.png',
+  'lockup-light.png',
+  'seal-clean-180.png',
+  'seal-clean-192.png',
+  'seal-clean-512.png',
+  'favicon-32.png',
+  'og.png',
+];
 
 describe('home scura', () => {
   const home = leggi('app/page.tsx');
@@ -42,12 +50,22 @@ describe('marchio', () => {
     }
   });
 
-  test.each(Object.entries({ ...BRAND_FILES, 'favicon-32': PNG_FAVICON_32, 'seal-clean-180': PNG_SEAL_CLEAN_180, og: PNG_OG }))(
-    '%s è un PNG valido',
-    (_nome, base64) => {
-      const buf = Buffer.from(base64, 'base64');
-      expect(buf.subarray(0, 8).equals(PNG)).toBe(true);
-      expect(buf.subarray(buf.length - 8, buf.length - 4).toString('latin1')).toBe('IEND');
-    },
-  );
+  test('niente Syne né PNG incorporati in base64', () => {
+    for (const file of [...sorgenti('app'), ...sorgenti('components'), ...sorgenti('lib')]) {
+      const src = leggi(file);
+      expect({ file, syne: /Syne|lib\/brand-png/.test(src) }).toEqual({ file, syne: false });
+    }
+  });
+
+  test('i titoli di display usano Fraunces', () => {
+    expect(leggi('app/layout.tsx')).toContain('Fraunces');
+    expect(leggi('app/home.module.css')).toContain('var(--font-display)');
+    expect(leggi('app/home.module.css')).toContain('clamp(2.4rem, min(6vw, 100cqi / 11.5), 5.5rem)');
+  });
+
+  test.each(BRAND)('%s è un PNG valido', (nome) => {
+    const buf = readFileSync(join(root, 'public/brand', nome));
+    expect(buf.subarray(0, 8).equals(PNG)).toBe(true);
+    expect(buf.subarray(buf.length - 8, buf.length - 4).toString('latin1')).toBe('IEND');
+  });
 });

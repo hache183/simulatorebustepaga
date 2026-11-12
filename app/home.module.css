@@ -1,17 +1,17 @@
 /* Home scura — Costi Lavoro Italia. Token e misure dal brief approvato (brand-pack/DESIGN.md). */
 
 .page {
-  --bg: #0A0B0D;
-  --fg: #EDEAE3;
-  --muted: #8E8B83;
-  --faint: #6F6C65;
-  --line: rgba(237, 234, 227, 0.13);
-  --line-strong: rgba(237, 234, 227, 0.28);
-  --cta-bg: #EDEAE3;
-  --cta-fg: #0A0B0D;
-  --green: #1F8A4C;
+  --bg: var(--color-bg-base);
+  --fg: var(--color-text-primary);
+  --muted: var(--color-text-secondary);
+  --faint: var(--color-text-muted);
+  --line: var(--color-border);
+  --line-strong: var(--color-border-bright);
+  --cta-bg: var(--color-btn-bg);
+  --cta-fg: var(--color-btn-fg);
+  --green: var(--color-green);
   --pad: 64px;
-  --display: var(--home-display), sans-serif;
+  --display: var(--font-display), Georgia, 'Iowan Old Style', serif;
   --sans: var(--home-sans), system-ui, sans-serif;
   --mono: var(--home-mono), monospace;
 
@@ -33,7 +33,7 @@
 /* Il fondo della pagina resta scuro anche in overscroll. */
 :global(html):has(.page),
 :global(body):has(.page) {
-  background-color: #0A0B0D;
+  background-color: var(--color-bg-base);
   color-scheme: dark;
 }
 
@@ -144,13 +144,11 @@
 
 .page .headline {
   font-family: var(--display);
-  font-weight: 800;
-  /* 8.4vw come nel bozzetto, ma mai oltre la larghezza utile: la seconda riga
-     («è solo la prima») misura circa 10.6em, così restano sempre tre righe. */
-  font-size: clamp(3.4rem, 8.4vw, 6.85rem);
-  font-size: clamp(3.4rem, min(8.4vw, 100cqi / 10.65), 6.85rem);
-  line-height: 0.9;
-  letter-spacing: -0.048em;
+  font-weight: 600;
+  font-size: clamp(2.4rem, min(6vw, 100cqi / 11.5), 5.5rem);
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  font-variation-settings: "opsz" 144, "SOFT" 0, "WONK" 0;
   align-self: center;
   padding: 24px 0 32px;
 }
@@ -178,7 +176,8 @@
   background: var(--cta-bg);
   color: var(--cta-fg);
   font-family: var(--display);
-  font-weight: 700;
+  font-weight: 600;
+  font-variation-settings: "opsz" 144, "SOFT" 0, "WONK" 0;
   font-size: 15px;
   line-height: 1.5;
   letter-spacing: -0.02em;
@@ -217,7 +216,8 @@
 }
 .page .secHead h2 {
   font-family: var(--display);
-  font-weight: 700;
+  font-weight: 600;
+  font-variation-settings: "opsz" 144, "SOFT" 0, "WONK" 0;
   font-size: clamp(1.75rem, 3vw, 2.35rem);
   letter-spacing: -0.035em;
   line-height: 1.1;
@@ -253,7 +253,8 @@
 }
 .page .modulo h3 {
   font-family: var(--display);
-  font-weight: 700;
+  font-weight: 600;
+  font-variation-settings: "opsz" 144, "SOFT" 0, "WONK" 0;
   font-size: 26px;
   letter-spacing: -0.03em;
   line-height: 1.05;
@@ -274,7 +275,8 @@
 .step + .step { padding-left: 40px; }
 .page .stepN {
   font-family: var(--display);
-  font-weight: 800;
+  font-weight: 600;
+  font-variation-settings: "opsz" 144, "SOFT" 0, "WONK" 0;
   font-size: 88px;
   line-height: 0.85;
   letter-spacing: -0.06em;
@@ -284,7 +286,8 @@
 }
 .page .step h3 {
   font-family: var(--display);
-  font-weight: 700;
+  font-weight: 600;
+  font-variation-settings: "opsz" 144, "SOFT" 0, "WONK" 0;
   font-size: 22px;
   line-height: 1.5;
   letter-spacing: -0.03em;
@@ -330,7 +333,8 @@
 }
 .page .voceTotal {
   font-family: var(--display);
-  font-weight: 700;
+  font-weight: 600;
+  font-variation-settings: "opsz" 144, "SOFT" 0, "WONK" 0;
   font-size: 20px;
   letter-spacing: -0.03em;
   padding-top: 20px;
@@ -346,7 +350,8 @@
 }
 .page .close h2 {
   font-family: var(--display);
-  font-weight: 700;
+  font-weight: 600;
+  font-variation-settings: "opsz" 144, "SOFT" 0, "WONK" 0;
   font-size: clamp(1.8rem, 3.4vw, 2.8rem);
   letter-spacing: -0.035em;
   line-height: 1.1;
@@ -386,9 +391,6 @@
   .heroTop { flex-wrap: wrap; gap: 8px 16px; }
   .kicker, .meta { white-space: normal; }
   .page .headline {
-    font-size: 2rem;
-    font-size: min(2rem, 100cqi / 10.65);
-    letter-spacing: -0.045em;
     padding: 28px 0 24px;
   }
   .heroBottom, .moduli, .steps, .reportGrid, .secHead, .close {

@@ -7,7 +7,7 @@ export function SiteFooter() {
     <footer className="site-footer">
       <div className="site-footer__rule" aria-hidden="true" />
       <div className="site-footer__inner">
-        <Logo height={40} />
+        <Logo tone="dark" height={48} />
         <div>
           <p>
             Simulazione su minimi, aliquote e regole caricati per il {anno}. Non è un cedolino, non sostituisce il consulente del lavoro.

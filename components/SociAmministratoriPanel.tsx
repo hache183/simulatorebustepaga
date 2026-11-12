@@ -161,7 +161,7 @@ export function SociAmministratoriPanel() {
       <div className="calcolatore-panel" style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
         <div>
           <h2 style={{
-            fontFamily: "var(--font-display), sans-serif", fontWeight: 700, fontSize: '20px',
+            fontFamily: "var(--font-display), Georgia, serif", fontWeight: 600, fontSize: '20px',
             color: 'var(--color-text-primary)', marginBottom: '8px',
           }}>
             Soci e Amministratori
@@ -177,7 +177,7 @@ export function SociAmministratoriPanel() {
           display: 'inline-flex',
           background: 'var(--color-bg-elevated)',
           border: '1px solid var(--color-border)',
-          borderRadius: '8px',
+          borderRadius: 0,
           overflow: 'hidden',
           alignSelf: 'flex-start',
         }}>
@@ -281,7 +281,7 @@ export function SociAmministratoriPanel() {
           <div style={{
             background: 'var(--color-amber-dim)',
             border: '1px solid var(--color-amber)',
-            borderRadius: '8px',
+            borderRadius: 0,
             padding: '10px 12px',
             fontSize: '12px',
             color: 'var(--color-text-secondary)',
@@ -361,7 +361,7 @@ export function SociAmministratoriPanel() {
                     overflowY: 'auto',
                     background: 'var(--color-bg-surface)',
                     border: '1px solid var(--color-border)',
-                    borderRadius: '8px',
+                    borderRadius: 0,
                     boxShadow: '0 8px 24px rgba(0,0,0,0.12)',
                   }}
                 >
@@ -386,7 +386,7 @@ export function SociAmministratoriPanel() {
                           background: 'transparent',
                           cursor: 'pointer',
                           padding: '8px 10px',
-                          borderRadius: '6px',
+                          borderRadius: 0,
                           color: 'var(--color-text-primary)',
                         }}
                       >
@@ -440,10 +440,10 @@ export function SociAmministratoriPanel() {
             marginTop: '8px',
             padding: '14px',
             border: 'none',
-            borderRadius: '10px',
+            borderRadius: 0,
             cursor: loading ? 'wait' : 'pointer',
-            background: 'var(--color-accent)',
-            color: '#fff',
+            background: 'var(--color-btn-bg)',
+            color: 'var(--color-btn-fg)',
             fontWeight: 600,
             fontSize: '14px',
             fontFamily: "var(--font-sans), sans-serif",

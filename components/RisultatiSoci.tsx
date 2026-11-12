@@ -92,7 +92,7 @@ export function RisultatiSoci({ out, stato, onRicalcola }: Props) {
         <button type="button" onClick={onRicalcola} style={{
           flex: 1, padding: '14px',
           background: 'transparent', color: 'var(--color-text-secondary)',
-          border: '1px solid var(--color-border)', borderRadius: '10px',
+          border: '1px solid var(--color-border)', borderRadius: 0,
           fontFamily: "var(--font-sans), sans-serif", fontWeight: 600, fontSize: '14px',
           cursor: 'pointer',
         }}>
@@ -100,8 +100,8 @@ export function RisultatiSoci({ out, stato, onRicalcola }: Props) {
         </button>
         <button type="button" onClick={() => window.print()} style={{
           flex: 1, padding: '14px',
-          background: 'var(--color-accent)', color: '#fff',
-          border: 'none', borderRadius: '10px',
+          background: 'var(--color-btn-bg)', color: 'var(--color-btn-fg)',
+          border: 'none', borderRadius: 0,
           fontFamily: "var(--font-sans), sans-serif", fontWeight: 600, fontSize: '14px',
           cursor: 'pointer',
         }}>

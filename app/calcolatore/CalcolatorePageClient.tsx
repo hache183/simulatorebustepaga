@@ -155,16 +155,16 @@ export function CalcolatorePageClient({
                         width: '22px', height: '22px', borderRadius: '0',
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
                         fontSize: '11px', fontFamily: "var(--font-mono), monospace", fontWeight: 500,
-                        background: s.done ? 'var(--color-green)' : isActive ? 'var(--color-accent)' : 'var(--color-bg-elevated)',
-                        color: (s.done || isActive) ? 'white' : 'var(--color-text-muted)',
-                        border: `1px solid ${s.done ? 'var(--color-green)' : isActive ? 'var(--color-accent)' : 'var(--color-border)'}`,
+                        background: s.done ? 'transparent' : isActive ? 'var(--color-btn-bg)' : 'var(--color-bg-elevated)',
+                        color: isActive ? 'var(--color-btn-fg)' : s.done ? 'var(--color-accent-bright)' : 'var(--color-text-muted)',
+                        border: `1px solid ${s.done ? 'var(--color-green)' : isActive ? 'var(--color-btn-bg)' : 'var(--color-border)'}`,
                         transition: 'all 0.2s ease',
                       }}>
                         {s.n}
                       </div>
                       <span style={{
                         fontSize: '13px', fontFamily: "var(--font-sans), sans-serif",
-                        color: isActive ? 'var(--color-text-primary)' : s.done ? 'var(--color-green)' : 'var(--color-text-muted)',
+                        color: isActive ? 'var(--color-text-primary)' : s.done ? 'var(--color-accent-bright)' : 'var(--color-text-muted)',
                         fontWeight: isActive ? 600 : 400,
                       }}>
                         {s.label}
@@ -244,17 +244,17 @@ export function CalcolatorePageClient({
             <div style={{
               background: 'var(--color-bg-surface)',
               border: '1px solid var(--color-border)',
-              borderRadius: '10px', padding: '28px',
+              borderRadius: 0, padding: '28px',
               display: 'flex', flexDirection: 'column', gap: '16px',
             }}>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px' }}>
                 {[1,2,3].map(i => (
-                  <div key={i} className="skeleton" style={{ height: '72px', borderRadius: '6px' }} />
+                  <div key={i} className="skeleton" style={{ height: '72px' }} />
                 ))}
               </div>
-              <div className="skeleton" style={{ height: '8px', borderRadius: '4px' }} />
+              <div className="skeleton" style={{ height: '8px' }} />
               {[1,2,3,4,5].map(i => (
-                <div key={i} className="skeleton" style={{ height: '36px', borderRadius: '4px' }} />
+                <div key={i} className="skeleton" style={{ height: '36px' }} />
               ))}
             </div>
           )}
@@ -265,7 +265,7 @@ export function CalcolatorePageClient({
               background: 'var(--color-red-dim)',
               border: '1px solid var(--color-red)',
               borderLeft: '3px solid var(--color-red)',
-              borderRadius: '10px', padding: '20px',
+              borderRadius: 0, padding: '20px',
               animation: 'fadeSlideIn 0.2s ease forwards',
             }}>
               <p style={{ fontFamily: "var(--font-sans), sans-serif", fontWeight: 600, fontSize: '13px',

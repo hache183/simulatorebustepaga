@@ -8,6 +8,21 @@ const pct = (n: number) => (n * 100).toFixed(1) + '%';
 const pct2 = (n: number) =>
   (n * 100).toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '%';
 
+const SWATCH: Record<string, string> = {
+  ral: 'var(--swatch-ral)',
+  inps_azienda: 'var(--swatch-inps)',
+  tfr: 'var(--swatch-tfr)',
+  inail: 'var(--swatch-inail)',
+  tredicesima: 'var(--swatch-tredicesima)',
+  quattordicesima: 'var(--swatch-quattordicesima)',
+  ccnl_contrattuale: 'var(--swatch-ccnl)',
+  agevolazione: 'var(--swatch-agevolazione)',
+};
+
+function coloreVoce(categoria: string): string {
+  return SWATCH[categoria] ?? 'var(--swatch-fallback)';
+}
+
 interface Props {
   risultato: CalcolatoreOutput;
   onRicalcola: () => void;
@@ -56,31 +71,21 @@ export function RisultatiCalcolatore({ risultato, onRicalcola }: Props) {
           Composizione del costo
         </p>
         <div style={{ display: 'flex', height: '4px', overflow: 'hidden' }}>
-          {vociInCosto.map(v => {
-            const colori: Record<string, string> = {
-              ral: '#0C2340', inps_azienda: '#3E4C5E', tfr: '#8A4B08', inail: '#9F1D2A',
-              tredicesima: '#C4BBAE', quattordicesima: '#A39888', ccnl_contrattuale: '#6E6458', agevolazione: '#146C3A',
-            };
-            return (
+          {vociInCosto.map(v => (
               <div key={v.id}
                 style={{
                   width: `${(v.importoAnnuo / costoTotaleAnnuo) * 100}%`,
-                  background: colori[v.categoria] ?? '#38383f',
+                  background: coloreVoce(v.categoria),
                 }}
                 title={`${v.descrizione}: ${eur(v.importoAnnuo)}`}
               />
-            );
-          })}
+          ))}
         </div>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px 16px', marginTop: '10px' }}>
           {vociInCosto.map(v => {
-            const colori: Record<string, string> = {
-              ral: '#0C2340', inps_azienda: '#3E4C5E', tfr: '#8A4B08', inail: '#9F1D2A',
-              tredicesima: '#C4BBAE', quattordicesima: '#A39888', ccnl_contrattuale: '#6E6458', agevolazione: '#146C3A',
-            };
             return (
               <div key={v.id} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: colori[v.categoria] ?? '#38383f', flexShrink: 0 }} />
+                <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: coloreVoce(v.categoria), flexShrink: 0 }} />
                 <span style={{ fontSize: '12px', color: 'var(--color-text-muted)', fontFamily: "var(--font-sans), sans-serif" }}>
                   {v.descrizione.split(' — ')[0].split('(')[0].trim()}
                 </span>
@@ -91,7 +96,7 @@ export function RisultatiCalcolatore({ risultato, onRicalcola }: Props) {
       </div>
 
       {/* SEZIONE D — Tabella dettaglio */}
-      <div style={{ borderRadius: '10px', overflow: 'hidden', border: '1px solid var(--color-border)' }}>
+      <div style={{ borderRadius: 0, overflow: 'hidden', border: '1px solid var(--color-border)' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
           <thead>
             <tr style={{ background: 'var(--color-bg-elevated)' }}>
@@ -171,7 +176,7 @@ export function RisultatiCalcolatore({ risultato, onRicalcola }: Props) {
           marginBottom: '12px', fontFamily: "var(--font-sans), sans-serif" }}>
           Prospetto netto dipendente (stima)
         </p>
-        <div style={{ borderRadius: '10px', overflow: 'hidden', border: '1px solid var(--color-border)' }}>
+        <div style={{ borderRadius: 0, overflow: 'hidden', border: '1px solid var(--color-border)' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
             <tbody>
               {(isDomestico ? [
@@ -261,7 +266,7 @@ export function RisultatiCalcolatore({ risultato, onRicalcola }: Props) {
         <button onClick={onRicalcola} style={{
           flex: 1, padding: '14px',
           background: 'transparent', color: 'var(--color-text-secondary)',
-          border: '1px solid var(--color-border)', borderRadius: '10px',
+          border: '1px solid var(--color-border)', borderRadius: 0,
           fontFamily: "var(--font-sans), sans-serif", fontWeight: 600, fontSize: '14px',
           cursor: 'pointer', transition: 'border-color 0.15s ease',
         }}>
@@ -270,7 +275,7 @@ export function RisultatiCalcolatore({ risultato, onRicalcola }: Props) {
         <button onClick={() => window.print()} style={{
           flex: 1, padding: '14px',
           background: 'var(--color-bg-elevated)', color: 'var(--color-text-primary)',
-          border: '1px solid var(--color-border-bright)', borderRadius: '10px',
+          border: '1px solid var(--color-border-bright)', borderRadius: 0,
           fontFamily: "var(--font-sans), sans-serif", fontWeight: 600, fontSize: '14px',
           cursor: 'pointer', transition: 'border-color 0.15s ease',
         }}>

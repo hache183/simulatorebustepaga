@@ -9,7 +9,7 @@ export default function manifest(): MetadataRoute.Manifest {
     start_url: '/',
     display: 'standalone',
     background_color: '#0A0B0D',
-    theme_color: '#071F45',
+    theme_color: '#0A0B0D',
     lang: 'it',
     icons: [
       { src: '/brand/seal-clean-192.png', sizes: '192x192', type: 'image/png' },
