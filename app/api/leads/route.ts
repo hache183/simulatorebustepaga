@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { ipRichiesta } from '@/lib/client-ip';
 import { troppoFrequente } from '@/lib/rate-limit';
+import { salvaLeadSuFoglio } from '@/lib/google-sheets-lead';
 import { salvaLead } from '@/lib/lead-store';
 import {
   LEAD_UNLOCK_COOKIE,
@@ -90,6 +91,14 @@ export async function POST(req: NextRequest) {
   } catch (e) {
     console.error('[api/leads]', e);
     return noStore({ errore: 'Impossibile inviare la richiesta. Riprova più tardi.' }, 503);
+  }
+
+  // Il foglio è opzionale: senza config si salta, se la scrittura fallisce si sblocca comunque.
+  try {
+    await salvaLeadSuFoglio(lead);
+  } catch (e) {
+    const messaggio = e instanceof Error ? e.message : 'errore sconosciuto';
+    console.error('[google-sheets]', messaggio);
   }
 
   try {

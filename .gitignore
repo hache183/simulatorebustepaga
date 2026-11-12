@@ -37,6 +37,11 @@ yarn-error.log*
 # registro lead locale (dati personali)
 /data/runtime/
 
+# credenziali Google (il JSON del service account non va committato)
+service-account*.json
+*-service-account.json
+google-credentials.json
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

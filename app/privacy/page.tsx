@@ -42,7 +42,8 @@ export default function PrivacyPage() {
       <h2 style={{ fontSize: '16px', marginTop: '24px' }}>Base giuridica e conservazione</h2>
       <p style={{ color: 'var(--color-text-secondary)' }}>
         Il consenso privacy è obbligatorio per generare il report. Il consenso marketing è facoltativo. I dati sono conservati
-        per il tempo necessario alle finalità indicate e secondo gli obblighi di legge applicabili al titolare. Lo sblocco sul browser
+        per il tempo necessario alle finalità indicate e secondo gli obblighi di legge applicabili al titolare. I dati del contatto
+        possono essere conservati anche su un foglio Google accessibile al titolare. Lo sblocco sul browser
         dura circa 30 giorni e non sostituisce il consenso.
       </p>
       <p style={{ marginTop: '32px' }}>

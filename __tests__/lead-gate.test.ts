@@ -73,6 +73,10 @@ function alteraFirma(token: string): string {
 beforeEach(() => {
   process.env.LEAD_COOKIE_SECRET = SECRET;
   process.env.LEAD_STORE_PATH = storeFile;
+  delete process.env.GOOGLE_SHEETS_SPREADSHEET_ID;
+  delete process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
+  delete process.env.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY;
+  delete process.env.GOOGLE_SHEETS_TAB_NAME;
   fs.rmSync(storeFile, { force: true });
   jest.clearAllMocks();
 });
