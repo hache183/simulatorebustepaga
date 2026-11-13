@@ -5,11 +5,11 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: NOME_SITO,
     short_name: 'Costi Lavoro',
-    description: 'Simulatore del costo aziendale del lavoro in Italia.',
+    description: 'Simulatore gratuito del costo del lavoro in Italia: stima indicativa e preventivo gratuito di un consulente del lavoro.',
     start_url: '/',
     display: 'standalone',
-    background_color: '#0A0B0D',
-    theme_color: '#0A0B0D',
+    background_color: '#F6F0E6',
+    theme_color: '#B4432A',
     lang: 'it',
     icons: [
       { src: '/icona/192', sizes: '192x192', type: 'image/png' },
