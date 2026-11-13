@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { AppHeader } from '@/components/AppHeader';
 import { SiteFooter } from '@/components/SiteFooter';
+import { Reveal } from '@/components/Reveal';
 import { NOME_SITO } from '@/lib/site';
 import styles from './home.module.css';
 
@@ -169,17 +170,17 @@ export default function HomePage() {
 
         <section className={`${styles.band} ${styles.bandBeige}`} aria-labelledby="home-moduli">
           <div className={styles.wrap}>
-            <div className={styles.intro}>
+            <Reveal className={styles.intro}>
               <h2 id="home-moduli">Quattro moduli, un metodo.</h2>
               <p>Vale per dipendenti, edili, collaboratori domestici, soci e amministratori, a partire da contratto, livello, orario e provincia.</p>
-            </div>
+            </Reveal>
             <div className={styles.moduli}>
               {MODULI.map(m => (
-                <article key={m.n} className={styles.modulo}>
+                <Reveal as="article" key={m.n} className={styles.modulo}>
                   <p className={styles.numero} aria-hidden="true">{m.n}</p>
                   <h3>{m.titolo}</h3>
                   <p>{m.testo}</p>
-                </article>
+                </Reveal>
               ))}
             </div>
           </div>
@@ -187,17 +188,17 @@ export default function HomePage() {
 
         <section className={styles.band} aria-labelledby="home-passi">
           <div className={styles.wrap}>
-            <div className={styles.intro}>
+            <Reveal className={styles.intro}>
               <h2 id="home-passi">Come funziona, in tre passi.</h2>
               <p>Nessun gergo: inserisci i dati che conosci, il resto lo calcola il simulatore. Poi ti richiama una persona.</p>
-            </div>
+            </Reveal>
             <ol className={styles.passi}>
               {PASSI.map(p => (
-                <li key={p.n} className={styles.passo}>
+                <Reveal as="li" key={p.n} className={styles.passo}>
                   <p className={styles.numero} aria-hidden="true">{p.n}</p>
                   <h3>{p.titolo}</h3>
                   <p>{p.testo}</p>
-                </li>
+                </Reveal>
               ))}
             </ol>
           </div>
@@ -205,14 +206,14 @@ export default function HomePage() {
 
         <section className={`${styles.band} ${styles.bandBeige}`} aria-labelledby="home-report">
           <div className={`${styles.wrap} ${styles.reportGrid}`}>
-            <div className={styles.reportIntro}>
+            <Reveal className={styles.reportIntro}>
               <h2 id="home-report">Cosa trovi nel report.</h2>
               <p>Il report elenca ogni componente del costo aziendale, calcolata sui tuoi parametri. Qui accanto c’è l’indice di quello che ottieni: gli importi li vedi nel simulatore.</p>
               <p className={styles.disclaimer}>
                 Non è un cedolino e non è un preventivo definitivo. È una stima indicativa, secondo le aliquote e i contratti del 2026 caricati nel motore. Un consulente del lavoro ti ricontatta e elabora la tua richiesta con un preventivo totalmente gratuito.
               </p>
-            </div>
-            <ul className={styles.voci}>
+            </Reveal>
+            <Reveal as="ul" className={styles.voci}>
               {VOCI.map(v => (
                 <li key={v} className={styles.voce}>
                   <span>{v}</span>
@@ -225,16 +226,16 @@ export default function HomePage() {
                 <span className={styles.puntini} aria-hidden="true" />
                 <span className={styles.mark}>nel report</span>
               </li>
-            </ul>
+            </Reveal>
           </div>
         </section>
 
         <section className={`${styles.band} ${styles.chiusura}`}>
-          <div className={styles.wrap}>
+          <Reveal className={styles.wrap}>
             <h2>Quanto costa davvero un contratto.</h2>
             <p>Una prima idea subito, poi il preventivo gratuito di un consulente del lavoro.</p>
             <Cta />
-          </div>
+          </Reveal>
         </section>
       </main>
 

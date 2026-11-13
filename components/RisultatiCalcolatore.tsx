@@ -2,6 +2,7 @@
 
 import type { CalcolatoreOutput } from '@/types';
 import { AvvisoStima } from '@/components/AvvisoStima';
+import { ImportoAnimato } from '@/components/ImportoAnimato';
 
 const eur = (n: number) =>
   new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR', minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n);
@@ -40,12 +41,12 @@ export function RisultatiCalcolatore({ risultato, onRicalcola }: Props) {
     : 0.0919;
 
   return (
-    <div className="prospetto" style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
+    <div className="prospetto prospetto-animato" style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
 
       <dl className="sintesi">
         <div>
           <dt>Costo annuo aziendale</dt>
-          <dd>{eur(costoTotaleAnnuo)}</dd>
+          <dd><ImportoAnimato valore={costoTotaleAnnuo} formatta={eur} /></dd>
         </div>
         <div>
           <dt>Equivalente mensile</dt>
