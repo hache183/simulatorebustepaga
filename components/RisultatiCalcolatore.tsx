@@ -1,6 +1,7 @@
 'use client';
 
 import type { CalcolatoreOutput } from '@/types';
+import { AvvisoStima } from '@/components/AvvisoStima';
 
 const eur = (n: number) =>
   new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR', minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n);
@@ -63,9 +64,11 @@ export function RisultatiCalcolatore({ risultato, onRicalcola }: Props) {
         </div>
       </dl>
 
+      <AvvisoStima />
+
       {/* SEZIONE C — Barra composizione */}
       <div>
-        <p style={{ fontSize: '13px', color: 'var(--color-text-secondary)',
+        <p style={{ fontSize: '15px', color: 'var(--color-text-secondary)',
           marginBottom: '10px',
           fontFamily: "var(--font-sans), sans-serif" }}>
           Composizione del costo
@@ -86,7 +89,7 @@ export function RisultatiCalcolatore({ risultato, onRicalcola }: Props) {
             return (
               <div key={v.id} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                 <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: coloreVoce(v.categoria), flexShrink: 0 }} />
-                <span style={{ fontSize: '12px', color: 'var(--color-text-muted)', fontFamily: "var(--font-sans), sans-serif" }}>
+                <span style={{ fontSize: '14px', color: 'var(--color-text-muted)', fontFamily: "var(--font-sans), sans-serif" }}>
                   {v.descrizione.split(' — ')[0].split('(')[0].trim()}
                 </span>
               </div>
@@ -97,13 +100,13 @@ export function RisultatiCalcolatore({ risultato, onRicalcola }: Props) {
 
       {/* SEZIONE D — Tabella dettaglio */}
       <div style={{ borderRadius: 0, overflow: 'hidden', border: '1px solid var(--color-border)' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
+        <table className="tabella-voci" style={{ width: '100%', borderCollapse: 'collapse', fontSize: '15px' }}>
           <thead>
             <tr style={{ background: 'var(--color-bg-elevated)' }}>
               {['Voce di costo', 'Importo annuo', 'Importo mensile medio', '% RAL'].map((h, i) => (
                 <th key={h} style={{
                   textAlign: i === 0 ? 'left' : 'right',
-                  padding: '12px 16px', fontSize: '12px',
+                  padding: '12px 16px', fontSize: '14px',
                   color: 'var(--color-text-secondary)',
                   fontFamily: "var(--font-sans), sans-serif", fontWeight: 500,
                 }}>
@@ -120,14 +123,14 @@ export function RisultatiCalcolatore({ risultato, onRicalcola }: Props) {
               }}>
                 <td style={{ padding: '12px 16px', color: 'var(--color-text-primary)' }}>
                   <div>{v.descrizione}</div>
-                  {v.notaLegge && <div style={{ fontSize: '12px', color: 'var(--color-text-muted)', marginTop: '2px' }}>{v.notaLegge}</div>}
+                  {v.notaLegge && <div style={{ fontSize: '14px', color: 'var(--color-text-muted)', marginTop: '2px' }}>{v.notaLegge}</div>}
                 </td>
                 <td style={{ padding: '12px 16px', textAlign: 'right',
-                  fontFamily: "var(--font-mono), monospace", color: 'var(--color-text-primary)' }}>
+                  fontFamily: "var(--font-sans), sans-serif", color: 'var(--color-text-primary)' }}>
                   {eur(v.importoAnnuo)}
                 </td>
                 <td style={{ padding: '12px 16px', textAlign: 'right',
-                  fontFamily: "var(--font-mono), monospace", color: 'var(--color-text-secondary)' }}>
+                  fontFamily: "var(--font-sans), sans-serif", color: 'var(--color-text-secondary)' }}>
                   {eur(v.importoMensile)}
                 </td>
                 <td style={{ padding: '12px 16px', textAlign: 'right', color: 'var(--color-text-secondary)' }}>
@@ -138,22 +141,22 @@ export function RisultatiCalcolatore({ risultato, onRicalcola }: Props) {
             {/* Riga totale */}
             <tr style={{ background: 'var(--color-bg-elevated)', borderTop: '2px solid var(--color-accent)' }}>
               <td style={{ padding: '14px 16px',
-                fontFamily: "var(--font-sans), sans-serif", fontWeight: 700, fontSize: '13px',
+                fontFamily: "var(--font-sans), sans-serif", fontWeight: 700, fontSize: '15px',
                 color: 'var(--color-accent-bright)' }}>
                 Costo totale aziendale
               </td>
               <td style={{ padding: '14px 16px', textAlign: 'right',
-                fontFamily: "var(--font-mono), monospace", fontWeight: 500, fontSize: '15px',
+                fontFamily: "var(--font-sans), sans-serif", fontWeight: 500, fontSize: '17px',
                 color: 'var(--color-accent-bright)' }}>
                 {eur(costoTotaleAnnuo)}
               </td>
               <td style={{ padding: '14px 16px', textAlign: 'right',
-                fontFamily: "var(--font-mono), monospace", fontSize: '14px',
+                fontFamily: "var(--font-sans), sans-serif", fontSize: '16px',
                 color: 'var(--color-accent-bright)' }}>
                 {eur(costoTotaleMensile)}
               </td>
               <td style={{ padding: '14px 16px', textAlign: 'right',
-                fontFamily: "var(--font-mono), monospace", fontSize: '14px',
+                fontFamily: "var(--font-sans), sans-serif", fontSize: '16px',
                 color: 'var(--color-accent-bright)' }}>
                 {pct(percentualeRal)}
               </td>
@@ -162,7 +165,7 @@ export function RisultatiCalcolatore({ risultato, onRicalcola }: Props) {
         </table>
         {!isDomestico && (
           <p style={{
-            margin: '12px 16px 14px', fontSize: '12px', color: 'var(--color-text-secondary)',
+            margin: '12px 16px 14px', fontSize: '14px', color: 'var(--color-text-secondary)',
             lineHeight: '1.5',
           }}>
             Il costo indicato rappresenta il costo massimo teorico, in assenza di agevolazioni contributive. In funzione della data di assunzione e dei requisiti soggettivi e oggettivi dell&apos;azienda e delle risorse, dovrà essere verificata l&apos;eventuale applicabilità. A titolo esemplificativo tali agevolazioni possono comportare una riduzione del 50% o in alcuni casi fino al 100% dei contributi INPS a carico D/L.
@@ -172,12 +175,12 @@ export function RisultatiCalcolatore({ risultato, onRicalcola }: Props) {
 
       {/* SEZIONE E — Prospetto netto dipendente */}
       <div>
-        <p style={{ fontSize: '13px', fontWeight: 600, color: 'var(--color-text-secondary)',
+        <p style={{ fontSize: '15px', fontWeight: 600, color: 'var(--color-text-secondary)',
           marginBottom: '12px', fontFamily: "var(--font-sans), sans-serif" }}>
           Prospetto netto dipendente (stima)
         </p>
         <div style={{ borderRadius: 0, overflow: 'hidden', border: '1px solid var(--color-border)' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '15px' }}>
             <tbody>
               {(isDomestico ? [
                 { label: 'RAL lorda', value: nettoDipendente.ralLorda, sign: '' },
@@ -206,7 +209,7 @@ export function RisultatiCalcolatore({ risultato, onRicalcola }: Props) {
                     {row.label}
                   </td>
                   <td style={{ padding: '10px 16px', textAlign: 'right',
-                    fontFamily: "var(--font-mono), monospace",
+                    fontFamily: "var(--font-sans), sans-serif",
                     color: row.color ?? 'var(--color-text-primary)',
                     fontWeight: row.bold ? 600 : 400 }}>
                     {row.sign === '+' ? '+' : row.sign === '−' ? '−' : ''}{eur(row.value)}
@@ -216,11 +219,11 @@ export function RisultatiCalcolatore({ risultato, onRicalcola }: Props) {
               {/* Riga netto annuo */}
               <tr style={{ background: 'var(--color-bg-elevated)', borderTop: '2px solid var(--color-accent)' }}>
                 <td style={{ padding: '12px 16px', fontWeight: 700, color: 'var(--color-accent-bright)',
-                  fontFamily: "var(--font-sans), sans-serif", fontSize: '13px' }}>
+                  fontFamily: "var(--font-sans), sans-serif", fontSize: '15px' }}>
                   NETTO ANNUO stimato
                 </td>
                 <td style={{ padding: '12px 16px', textAlign: 'right',
-                  fontFamily: "var(--font-mono), monospace", fontWeight: 600, fontSize: '15px',
+                  fontFamily: "var(--font-sans), sans-serif", fontWeight: 600, fontSize: '17px',
                   color: 'var(--color-accent-bright)' }}>
                   {eur(nettoDipendente.nettoAnnuo)}
                 </td>
@@ -228,11 +231,11 @@ export function RisultatiCalcolatore({ risultato, onRicalcola }: Props) {
               {/* Netto mensile su 12 mesi */}
               <tr style={{ background: 'var(--color-bg-elevated)' }}>
                 <td style={{ padding: '10px 16px', fontWeight: 600, color: 'var(--color-text-primary)',
-                  fontFamily: "var(--font-sans), sans-serif", fontSize: '13px' }}>
+                  fontFamily: "var(--font-sans), sans-serif", fontSize: '15px' }}>
                   NETTO MENSILE stimato (su 12 mesi)
                 </td>
                 <td style={{ padding: '10px 16px', textAlign: 'right',
-                  fontFamily: "var(--font-mono), monospace", fontWeight: 600, fontSize: '14px',
+                  fontFamily: "var(--font-sans), sans-serif", fontWeight: 600, fontSize: '16px',
                   color: 'var(--color-text-primary)' }}>
                   {eur(nettoDipendente.nettoMensile12)}
                 </td>
@@ -240,11 +243,11 @@ export function RisultatiCalcolatore({ risultato, onRicalcola }: Props) {
               {/* Netto per busta */}
               <tr style={{ background: 'var(--color-bg-elevated)', borderTop: '1px solid var(--color-border)' }}>
                 <td style={{ padding: '10px 16px', color: 'var(--color-text-secondary)',
-                  fontFamily: "var(--font-sans), sans-serif", fontSize: '13px' }}>
+                  fontFamily: "var(--font-sans), sans-serif", fontSize: '15px' }}>
                   NETTO per busta ({risultato.input.mensilita} mensilità)
                 </td>
                 <td style={{ padding: '10px 16px', textAlign: 'right',
-                  fontFamily: "var(--font-mono), monospace", fontSize: '13px',
+                  fontFamily: "var(--font-sans), sans-serif", fontSize: '15px',
                   color: 'var(--color-text-secondary)' }}>
                   {eur(nettoDipendente.nettoPerMensilita)}
                 </td>
@@ -254,7 +257,7 @@ export function RisultatiCalcolatore({ risultato, onRicalcola }: Props) {
         </div>
         {/* Disclaimer netto */}
         <p style={{
-          marginTop: '10px', fontSize: '11px', color: 'var(--color-text-muted)',
+          marginTop: '10px', fontSize: '13px', color: 'var(--color-text-muted)',
           lineHeight: '1.5', fontStyle: 'italic',
         }}>
           {nettoDipendente.disclaimer}
@@ -271,7 +274,7 @@ export function RisultatiCalcolatore({ risultato, onRicalcola }: Props) {
         <button onClick={() => window.print()} className="ui-btn ui-btn--primary" style={{
           flex: 1, padding: '14px',
         }}>
-          🖨 Stampa report
+          Stampa report
         </button>
       </div>
 

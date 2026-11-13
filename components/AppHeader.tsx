@@ -9,20 +9,37 @@ export function AppHeader() {
   return (
     <header className="no-print app-header">
       <Link href="/" className="app-header__brand" aria-label="Costi Lavoro Italia, vai alla home">
-        <Logo tone="dark" height={62} />
+        <Logo height={46} />
       </Link>
       <nav className="app-header__nav" aria-label="Sezioni">
-        <Suspense fallback={
-          <>
-            <HeaderLink href="/calcolatore" active={false}>Simulatore</HeaderLink>
-            <HeaderLink href="/calcolatore?tab=soci" active={false}>Compensi</HeaderLink>
-            <Link href="/privacy" className="app-header__textlink app-header__privacy">Privacy</Link>
-          </>
-        }>
+        <Suspense fallback={<LinkStatici />}>
           <HeaderLinks />
         </Suspense>
       </nav>
+      <details className="app-header__menu">
+        <summary aria-label="Apri il menu delle sezioni">
+          Menu
+          <svg width="18" height="14" viewBox="0 0 18 14" aria-hidden="true">
+            <path d="M1 1h16M1 7h16M1 13h16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+          </svg>
+        </summary>
+        <nav className="app-header__menu-panel" aria-label="Menu sezioni">
+          <Suspense fallback={<LinkStatici />}>
+            <HeaderLinks />
+          </Suspense>
+        </nav>
+      </details>
     </header>
+  );
+}
+
+function LinkStatici() {
+  return (
+    <>
+      <HeaderLink href="/calcolatore" active={false}>Simulatore</HeaderLink>
+      <HeaderLink href="/calcolatore?tab=soci" active={false}>Compensi</HeaderLink>
+      <HeaderLink href="/privacy" active={false}>Privacy</HeaderLink>
+    </>
   );
 }
 
@@ -35,7 +52,7 @@ function HeaderLinks() {
     <>
       <HeaderLink href="/calcolatore" active={isSim}>Simulatore</HeaderLink>
       <HeaderLink href="/calcolatore?tab=soci" active={isSoci}>Compensi</HeaderLink>
-      <Link href="/privacy" className={`app-header__textlink app-header__privacy${pathname === '/privacy' ? ' is-active' : ''}`}>Privacy</Link>
+      <HeaderLink href="/privacy" active={pathname === '/privacy'}>Privacy</HeaderLink>
     </>
   );
 }
