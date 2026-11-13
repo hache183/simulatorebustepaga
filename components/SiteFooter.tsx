@@ -17,6 +17,18 @@ export function SiteFooter() {
           </p>
         </div>
       </div>
+      <div className="site-footer__credits">
+        <p>
+          Realizzato da Tre Lune Technologies ·{' '}
+          <a href="mailto:info@3lune.tech">info@3lune.tech</a>
+        </p>
+        <p>
+          Powered by{' '}
+          <a href="https://3lune.tech" target="_blank" rel="noopener noreferrer">
+            Tre Lune
+          </a>
+        </p>
+      </div>
     </footer>
   );
 }
