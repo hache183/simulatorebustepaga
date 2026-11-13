@@ -9,7 +9,7 @@ import { livelliOperaioEdili } from '@/lib/edili';
 import type { LivelloEdileUi } from '@/components/EdiliPanel';
 
 const TITOLO = 'Simulatore — Costi Lavoro Italia';
-const DESCRIZIONE = 'Calcola costo azienda e netto su CCNL, edilizia, lavoro domestico e compensi di soci e amministratori.';
+const DESCRIZIONE = 'Stima gratuita del costo azienda e del netto su CCNL, edilizia, lavoro domestico e compensi di soci e amministratori. Poi un consulente del lavoro ti ricontatta con un preventivo totalmente gratuito.';
 
 export const metadata: Metadata = {
   title: TITOLO,

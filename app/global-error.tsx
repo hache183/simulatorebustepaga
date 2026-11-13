@@ -1,14 +1,16 @@
 'use client';
 
-import { Fraunces } from 'next/font/google';
+import { Newsreader } from 'next/font/google';
 
-const display = Fraunces({
+const display = Newsreader({
   subsets: ['latin'],
   weight: 'variable',
+  style: ['normal', 'italic'],
   display: 'swap',
   variable: '--font-display',
-  axes: ['opsz', 'SOFT', 'WONK'],
 });
+
+const INCHIOSTRO = '#2B2420';
 
 export default function GlobalError({
   error,
@@ -19,47 +21,48 @@ export default function GlobalError({
 }) {
   return (
     <html lang="it" className={display.variable}>
-      <body style={{ margin: 0, background: '#0A0B0D', color: '#EDEAE3', fontFamily: 'system-ui, sans-serif' }}>
+      <body style={{ margin: 0, background: '#F6F0E6', color: INCHIOSTRO, fontFamily: 'system-ui, sans-serif', fontSize: 18 }}>
         <main id="contenuto" style={{ maxWidth: 640, margin: '18vh auto', padding: 24 }}>
           <p style={{
             fontFamily: 'var(--font-display), Georgia, serif',
+            fontStyle: 'italic',
             fontWeight: 500,
-            fontSize: 72,
+            fontSize: 96,
             lineHeight: 0.9,
             margin: 0,
-            color: '#EDEAE3',
-            fontVariationSettings: '"opsz" 144, "SOFT" 0, "WONK" 0',
+            color: '#B4432A',
           }}>
             500
           </p>
           <h1 style={{
             fontFamily: 'var(--font-display), Georgia, serif',
-            fontSize: 36,
-            fontWeight: 600,
-            lineHeight: 1.05,
-            margin: '8px 0 12px',
-            fontVariationSettings: '"opsz" 144, "SOFT" 0, "WONK" 0',
+            fontSize: 44,
+            fontWeight: 500,
+            lineHeight: 1.08,
+            margin: '12px 0 14px',
           }}>
             La pagina non si è aperta.
           </h1>
-          <p style={{ color: '#8E8B83', lineHeight: 1.6, fontFamily: 'system-ui, sans-serif' }}>
+          <p style={{ color: '#5A4E45', lineHeight: 1.6 }}>
             Il caricamento si è interrotto. Si può riprovare tra un momento.
           </p>
           {error.digest && (
-            <p style={{ color: '#6F6C65', fontSize: 13 }}>Riferimento: {error.digest}</p>
+            <p style={{ color: '#6E6157', fontSize: 15 }}>Riferimento: {error.digest}</p>
           )}
           <button
             type="button"
             onClick={() => reset()}
             style={{
               marginTop: 16,
-              background: '#EDEAE3',
-              color: '#0A0B0D',
+              background: '#B4432A',
+              color: '#FFFFFF',
               border: 'none',
-              borderRadius: 0,
-              padding: '12px 18px',
-              fontWeight: 600,
+              borderRadius: 12,
+              padding: '16px 26px',
+              fontSize: 18,
+              fontWeight: 700,
               cursor: 'pointer',
+              boxShadow: '0 2px 0 #93351F',
             }}
           >
             Riprova
