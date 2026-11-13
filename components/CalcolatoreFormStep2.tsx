@@ -17,12 +17,18 @@ const REGIONI = [
   'Trentino-Alto Adige','Umbria',"Valle d'Aosta",'Veneto',
 ];
 
+const asNumero = (v: unknown) => {
+  if (v === '' || v == null) return undefined;
+  const n = typeof v === 'number' ? v : Number(v);
+  return Number.isFinite(n) ? n : undefined;
+};
+
 const Step2Schema = z.object({
-  numeroDipendenti: z.number().min(1, 'Inserisci il numero di dipendenti').max(100_000, 'Numero troppo alto'),
+  numeroDipendenti: z.number({ error: 'Inserisci il numero di dipendenti' }).min(1, 'Inserisci il numero di dipendenti').max(100_000, 'Numero troppo alto'),
   regione: z.string().max(80),
   codiceInail: z.string().max(32),
-  anzianitaAnni: z.number().min(0).max(50),
-  aliquotaInps: z.number().min(0).max(50),
+  anzianitaAnni: z.number({ error: 'Valore non valido (0–50 anni)' }).min(0, 'Valore non valido (0–50 anni)').max(50, 'Valore non valido (0–50 anni)'),
+  aliquotaInps: z.number({ error: 'Inserisci l’aliquota INPS' }).min(0).max(50),
 });
 
 type Step2Data = z.infer<typeof Step2Schema>;
@@ -105,7 +111,7 @@ export function CalcolatoreFormStep2({ onSubmit, onBack, isLoading, ccnlId }: Pr
           Numero di dipendenti in azienda
         </label>
         <input id="numeroDipendenti" type="number" min="1"
-          {...register('numeroDipendenti', { valueAsNumber: true })}
+          {...register('numeroDipendenti', { setValueAs: asNumero })}
           placeholder="es. 10"
           style={{
             width: '100%', padding: '11px 14px',
@@ -172,7 +178,7 @@ export function CalcolatoreFormStep2({ onSubmit, onBack, isLoading, ccnlId }: Pr
           Anzianità nel CCNL (anni, per scatti)
         </label>
         <input id="anzianitaAnni" type="number" min="0" max="50"
-          {...register('anzianitaAnni', { valueAsNumber: true })}
+          {...register('anzianitaAnni', { setValueAs: asNumero })}
           style={{
             width: '100%', padding: '11px 14px',
             background: 'var(--color-bg-input)', color: 'var(--color-text-primary)',
@@ -192,7 +198,7 @@ export function CalcolatoreFormStep2({ onSubmit, onBack, isLoading, ccnlId }: Pr
         </label>
         <div style={{ position: 'relative' }}>
           <input id="aliquotaInps" type="number" step="0.01" min="0" max="50"
-            {...register('aliquotaInps', { valueAsNumber: true })}
+            {...register('aliquotaInps', { setValueAs: asNumero })}
             style={{
               width: '100%', padding: '11px 14px 11px 14px',
               background: 'var(--color-bg-input)', color: 'var(--color-text-primary)',
@@ -213,7 +219,7 @@ export function CalcolatoreFormStep2({ onSubmit, onBack, isLoading, ccnlId }: Pr
       </div>}
 
       {!isDomestici && <div style={{
-        padding: '12px 14px', borderRadius: 0,
+        padding: '12px 14px', borderRadius: 'var(--radius-ctrl)',
         background: 'var(--color-bg-elevated)', border: '1px solid var(--color-border)',
       }}>
         <p style={{ fontSize: '15px', fontWeight: 600, color: 'var(--color-text-secondary)', marginBottom: '6px' }}>
@@ -225,7 +231,7 @@ export function CalcolatoreFormStep2({ onSubmit, onBack, isLoading, ccnlId }: Pr
       </div>}
 
       {!isDomestici && <div style={{
-        padding: '12px 14px', borderRadius: 0,
+        padding: '12px 14px', borderRadius: 'var(--radius-ctrl)',
         background: 'var(--color-bg-elevated)', border: '1px solid var(--color-border)',
       }}>
         <p style={{ fontSize: '15px', fontWeight: 600, color: 'var(--color-text-secondary)', marginBottom: '6px' }}>

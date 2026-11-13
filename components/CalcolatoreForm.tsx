@@ -9,10 +9,17 @@ import { pagaMensileBase } from '@/lib/paga-mensile';
 
 const fmtEur = (n: number) => new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR', minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n);
 
+/** Stringa vuota o NaN → undefined, così Zod non risponde in inglese "received NaN". */
+const asNumero = (v: unknown) => {
+  if (v === '' || v == null) return undefined;
+  const n = typeof v === 'number' ? v : Number(v);
+  return Number.isFinite(n) ? n : undefined;
+};
+
 const Step1Schema = z.object({
   ccnlId: z.string().min(1, 'Seleziona un CCNL'),
   livello: z.string().min(1, 'Seleziona il livello contrattuale'),
-  ral: z.number().min(1_000, 'Minimo 1.000 €').max(500_000, 'Massimo 500.000 €'),
+  ral: z.number({ error: 'Inserisci la RAL' }).min(1_000, 'Minimo 1.000 €').max(500_000, 'Massimo 500.000 €'),
   oreLavoro: z.number().min(1).max(48),
   pagaOraria: z.number().min(0).max(500).optional(),
   oreSettimanali: z.number().int().min(1).max(54).optional(),
@@ -107,7 +114,8 @@ export function CalcolatoreFormStep1({ contratti, onNext }: Props) {
     }
   }, [isDomesticiCcnl, livelloSelezionato, retribPersonalizzataAttiva, oreLavoro]);
 
-  const warningRalInferiore = !isDomestico && retribPersonalizzataAttiva && livelloData && ralWatch && ralWatch < ralTabellare;
+  const ralValida = typeof ralWatch === 'number' && Number.isFinite(ralWatch);
+  const warningRalInferiore = !isDomestico && retribPersonalizzataAttiva && livelloData && ralValida && ralWatch < ralTabellare;
 
   return (
     <form onSubmit={handleSubmit((data) => {
@@ -195,7 +203,7 @@ export function CalcolatoreFormStep1({ contratti, onNext }: Props) {
         {/* Riquadro informativo livello selezionato */}
         {livelloData && (
           <div style={{
-            marginTop: '10px', padding: '12px', borderRadius: 0,
+            marginTop: '10px', padding: '12px', borderRadius: 'var(--radius-ctrl)',
             background: 'var(--color-bg-elevated)', border: '1px solid var(--color-border)',
           }}>
             <p style={{ fontSize: '14px', fontWeight: 600, color: 'var(--color-text-primary)', marginBottom: '4px' }}>
@@ -224,7 +232,7 @@ export function CalcolatoreFormStep1({ contratti, onNext }: Props) {
                 fontFamily: "var(--font-sans), sans-serif", fontSize: '15px', color: 'var(--color-text-muted)',
               }}>€</span>
               <input id="pagaOraria" type="number" step="0.01" placeholder={String(livelloData.minimoTabellare)}
-                {...register('pagaOraria', { valueAsNumber: true })}
+                {...register('pagaOraria', { setValueAs: asNumero })}
                 style={{
                   width: '100%', padding: '11px 14px 11px 28px',
                   background: 'var(--color-bg-input)', color: 'var(--color-text-primary)',
@@ -243,7 +251,7 @@ export function CalcolatoreFormStep1({ contratti, onNext }: Props) {
               Ore settimanali
             </label>
             <input id="oreSettimanali" type="number" step="1" min="1" max="54"
-              {...register('oreSettimanali', { valueAsNumber: true })}
+              {...register('oreSettimanali', { setValueAs: asNumero })}
               style={{
                 width: '100%', padding: '11px 14px',
                 background: 'var(--color-bg-input)', color: 'var(--color-text-primary)',
@@ -280,10 +288,11 @@ export function CalcolatoreFormStep1({ contratti, onNext }: Props) {
                 outline: `1px solid ${retribPersonalizzataAttiva ? 'var(--color-accent)' : 'var(--color-border)'}`,
               }}>
               <div style={{
-                width: '16px', height: '16px', borderRadius: '50%', background: 'var(--color-btn-bg)',
+                width: '16px', height: '16px', borderRadius: '50%',
+                background: retribPersonalizzataAttiva ? 'var(--carta-bianca)' : 'var(--color-btn-bg)',
                 position: 'absolute', top: '3px',
                 left: retribPersonalizzataAttiva ? '21px' : '3px',
-                transition: 'left 0.2s ease',
+                transition: 'left 0.2s ease, background 0.2s ease',
               }} />
             </button>
             <label style={{ fontSize: '15px', fontWeight: 500, color: 'var(--color-text-secondary)', cursor: 'pointer' }}
@@ -325,7 +334,7 @@ export function CalcolatoreFormStep1({ contratti, onNext }: Props) {
             fontFamily: "var(--font-sans), sans-serif", fontSize: '15px', color: 'var(--color-text-muted)',
           }}>€</span>
           <input id="ral" type="number" step="any" placeholder="28.000"
-            {...register('ral', { valueAsNumber: true })}
+            {...register('ral', { setValueAs: asNumero })}
             style={{
               width: '100%', padding: '11px 14px 11px 28px',
               background: 'var(--color-bg-input)', color: 'var(--color-text-primary)',
@@ -350,7 +359,7 @@ export function CalcolatoreFormStep1({ contratti, onNext }: Props) {
         )}
 
         {/* Superminimo info (MOD4) */}
-        {retribPersonalizzataAttiva && livelloData && ralWatch > ralTabellare && (
+        {retribPersonalizzataAttiva && livelloData && ralValida && ralWatch > ralTabellare && (
           <p style={{
             marginTop: '8px', fontSize: '13px', padding: '8px 10px', borderRadius: '4px',
             background: 'var(--color-green-dim)', color: 'var(--color-green)', border: '1px solid var(--color-green)',
@@ -380,13 +389,13 @@ export function CalcolatoreFormStep1({ contratti, onNext }: Props) {
           </span>
         </div>
         <input id="oreLavoro" type="range" min="8" max="48" step="1"
-          {...register('oreLavoro', { valueAsNumber: true })}
+          {...register('oreLavoro', { setValueAs: asNumero })}
           style={{ width: '100%' }}
         />
-        <div style={{ display: 'flex', justifyContent: 'space-between',
-          fontSize: '12px', color: 'var(--color-text-muted)', marginTop: '4px',
-          fontFamily: "var(--font-sans), sans-serif" }}>
-          <span>8h</span><span>40h</span><span>48h</span>
+        <div className="slider-scala" aria-hidden="true">
+          <span data-tick="min">8h</span>
+          <span data-tick="mid">40h</span>
+          <span data-tick="max">48h</span>
         </div>
         {isDomesticiCcnl && (
           <p style={{ marginTop: '6px', fontSize: '13px', lineHeight: '1.5',
@@ -404,14 +413,14 @@ export function CalcolatoreFormStep1({ contratti, onNext }: Props) {
 
       {/* Mensilità */}
       <div>
-        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '16px', marginBottom: '8px' }}>
-          <label style={{ fontSize: '15px', fontWeight: 500,
+        <div style={{ marginBottom: '8px' }}>
+          <label style={{ display: 'block', fontSize: '15px', fontWeight: 500,
             color: 'var(--color-text-secondary)' }}>
             Mensilità
           </label>
-          <span style={{ fontSize: '13px', color: 'var(--color-text-muted)', textAlign: 'right', maxWidth: '60%' }}>
+          <p style={{ marginTop: '4px', fontSize: '13px', color: 'var(--color-text-muted)', lineHeight: 1.45 }}>
             Precompilato dal CCNL — modifica solo se c&apos;è un accordo integrativo
-          </span>
+          </p>
         </div>
         {ccnlSelezionato && (
           <p style={{ fontSize: '13px', color: 'var(--color-text-muted)', marginBottom: '8px',
@@ -426,7 +435,7 @@ export function CalcolatoreFormStep1({ contratti, onNext }: Props) {
               <button key={n} type="button"
                 onClick={() => setValue('mensilita', n)}
                 style={{
-                  padding: '8px 10px', borderRadius: 0, fontSize: '15px', fontWeight: 600,
+                  padding: '8px 10px', borderRadius: 'var(--radius-ctrl)', fontSize: '15px', fontWeight: 600,
                   cursor: 'pointer', transition: 'all 0.15s ease', textAlign: 'center',
                   fontFamily: "var(--font-sans), sans-serif",
                   background: selected ? 'var(--color-accent-glow)' : 'var(--color-bg-input)',

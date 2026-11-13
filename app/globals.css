@@ -121,6 +121,31 @@ select option {
   color: var(--color-text-primary);
 }
 
+/* Freccia del select: nativa troppo aderente al bordo. Icona inchiostro, 16px dal margine. */
+select {
+  -webkit-appearance: none !important;
+  appearance: none !important;
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M3.5 6 8 10.5 12.5 6' stroke='%232B2420' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 16px center !important;
+  background-size: 16px 16px !important;
+  padding-right: 44px !important;
+}
+select:disabled {
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M3.5 6 8 10.5 12.5 6' stroke='%232B2420' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round' opacity='0.45'/%3E%3C/svg%3E") !important;
+}
+
+/* Spinners nativi dei number: stesse freccette incollate al bordo. */
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 input::placeholder { color: var(--color-text-muted) !important; }
 
 input[type="range"] {
@@ -206,11 +231,35 @@ input[type="range"]::-moz-range-thumb {
 .step-done    { color: var(--color-green); }
 .step-pending { color: var(--color-text-muted); }
 
+.modulo-bar {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 32px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  flex-wrap: wrap;
+}
+.modulo-tabs {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+.modulo-steps {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
 .modulo-tab {
   appearance: none;
   background: transparent;
   border: none;
   border-bottom: 2px solid transparent;
+  border-radius: 8px 8px 0 0;
   color: var(--color-text-muted);
   cursor: pointer;
   font-family: var(--font-sans), sans-serif;
@@ -220,6 +269,8 @@ input[type="range"]::-moz-range-thumb {
   margin-bottom: -1px;
   padding: 0 14px;
   transition: color 0.15s ease;
+  white-space: nowrap;
+  flex: 0 0 auto;
 }
 .modulo-tab:hover { color: var(--color-text-primary); }
 .modulo-tab { color: var(--color-text-secondary); border-bottom-width: 3px; }
@@ -228,10 +279,31 @@ input[type="range"]::-moz-range-thumb {
   color: var(--color-text-primary);
   font-weight: 600;
 }
+.modulo-tab:focus { outline: none; }
+/* Senza riquadro: la scheda ha già la sottolineatura. In tastiera, un fondo morbido. */
 .modulo-tab:focus-visible {
-  outline: 2px solid var(--color-accent);
-  outline-offset: 2px;
+  outline: none;
+  background: var(--color-accent-glow);
+  color: var(--color-text-primary);
 }
+
+/* Etichette della scala ore: 40h cade all'80% del tratto 8–48, non al centro. */
+.slider-scala {
+  position: relative;
+  height: 1.2em;
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--color-text-muted);
+  font-family: var(--font-sans), sans-serif;
+}
+.slider-scala span {
+  position: absolute;
+  top: 0;
+  transform: translateX(-50%);
+}
+.slider-scala [data-tick="min"] { left: 8px; }
+.slider-scala [data-tick="mid"] { left: calc(8px + 0.8 * (100% - 16px)); }
+.slider-scala [data-tick="max"] { left: calc(100% - 8px); }
 
 /* App header */
 .logo {
@@ -1058,9 +1130,16 @@ a[href="/privacy"]:not(.app-header__textlink):not(.ui-btn):not(.site-footer a) {
   .tabella-voci thead th:first-child { padding-top: 12px !important; }
 }
 
-/* Barra dei moduli su mobile: schede più compatte, i passi su una riga propria. */
+/* Barra dei moduli su schermi stretti: una riga con scorrimento, i passi sotto. */
 @media (max-width: 720px) {
-  .calcolatore-shell > div { padding: 4px 16px 10px !important; gap: 4px 2px !important; }
+  .modulo-bar { padding: 4px 16px 10px; gap: 4px 8px; }
   .calcolatore-shell .modulo-tab { font-size: 16px; height: 46px; padding: 0 10px; }
-  .calcolatore-shell > div > span:first-of-type { flex-basis: 100% !important; height: 0; }
+  .modulo-tabs {
+    flex: 1 1 100%;
+    overflow-x: auto;
+    scrollbar-width: thin;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+  .modulo-steps { margin-left: 0; flex: 1 1 100%; }
 }

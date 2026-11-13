@@ -100,7 +100,7 @@ export function RisultatiCalcolatore({ risultato, onRicalcola }: Props) {
       </div>
 
       {/* SEZIONE D — Tabella dettaglio */}
-      <div style={{ borderRadius: 0, overflow: 'hidden', border: '1px solid var(--color-border)' }}>
+      <div style={{ borderRadius: 'var(--radius-card)', overflow: 'hidden', border: '1px solid var(--color-border)' }}>
         <table className="tabella-voci" style={{ width: '100%', borderCollapse: 'collapse', fontSize: '15px' }}>
           <thead>
             <tr style={{ background: 'var(--color-bg-elevated)' }}>
@@ -180,7 +180,7 @@ export function RisultatiCalcolatore({ risultato, onRicalcola }: Props) {
           marginBottom: '12px', fontFamily: "var(--font-sans), sans-serif" }}>
           Prospetto netto dipendente (stima)
         </p>
-        <div style={{ borderRadius: 0, overflow: 'hidden', border: '1px solid var(--color-border)' }}>
+        <div style={{ borderRadius: 'var(--radius-card)', overflow: 'hidden', border: '1px solid var(--color-border)' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '15px' }}>
             <tbody>
               {(isDomestico ? [

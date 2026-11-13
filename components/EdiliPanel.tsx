@@ -247,7 +247,7 @@ export function EdiliPanel({
             <div style={{
               background: 'var(--color-bg-surface)',
               border: '1px solid var(--color-border)',
-              borderRadius: 0,
+              borderRadius: 'var(--radius-card)',
               padding: '48px 32px',
               textAlign: 'center',
             }}>

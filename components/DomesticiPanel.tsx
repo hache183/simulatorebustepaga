@@ -344,7 +344,7 @@ export function DomesticiPanel() {
         {!risultato && !loading && (
           <div style={{
             background: 'var(--color-bg-surface)', border: '1px solid var(--color-border)',
-            borderRadius: 0, padding: '48px 32px', textAlign: 'center',
+            borderRadius: 'var(--radius-card)', padding: '48px 32px', textAlign: 'center',
           }}>
             <p style={{ fontWeight: 600, color: 'var(--color-text-secondary)' }}>Il report apparirà qui</p>
           </div>
@@ -365,7 +365,7 @@ const labelStyle: CSSProperties = {
 function pill(active: boolean): CSSProperties {
   return {
     padding: '8px 10px',
-    borderRadius: 0,
+    borderRadius: 'var(--radius-ctrl)',
     fontSize: '14px',
     fontWeight: 600,
     cursor: 'pointer',
