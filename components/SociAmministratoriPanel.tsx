@@ -177,7 +177,7 @@ export function SociAmministratoriPanel() {
           display: 'inline-flex',
           background: 'var(--color-bg-elevated)',
           border: '1px solid var(--color-border)',
-          borderRadius: 0,
+          borderRadius: 'var(--radius-ctrl)',
           overflow: 'hidden',
           alignSelf: 'flex-start',
         }}>
@@ -281,7 +281,7 @@ export function SociAmministratoriPanel() {
           <div style={{
             background: 'var(--color-amber-dim)',
             border: '1px solid var(--color-amber)',
-            borderRadius: 0,
+            borderRadius: 'var(--radius-ctrl)',
             padding: '10px 12px',
             fontSize: '14px',
             color: 'var(--color-text-secondary)',
@@ -361,7 +361,7 @@ export function SociAmministratoriPanel() {
                     overflowY: 'auto',
                     background: 'var(--color-bg-surface)',
                     border: '1px solid var(--color-border)',
-                    borderRadius: 0,
+                    borderRadius: '8px',
                     boxShadow: '0 8px 24px rgba(0,0,0,0.12)',
                   }}
                 >
@@ -386,7 +386,7 @@ export function SociAmministratoriPanel() {
                           background: 'transparent',
                           cursor: 'pointer',
                           padding: '8px 10px',
-                          borderRadius: 0,
+                          borderRadius: '8px',
                           color: 'var(--color-text-primary)',
                         }}
                       >
