@@ -154,7 +154,7 @@ export function CalcolatorePageClient({
                       <div style={{
                         width: '22px', height: '22px', borderRadius: '0',
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        fontSize: '11px', fontFamily: "var(--font-mono), monospace", fontWeight: 500,
+                        fontSize: '13px', fontFamily: "var(--font-sans), sans-serif", fontWeight: 500,
                         background: s.done ? 'transparent' : isActive ? 'var(--color-btn-bg)' : 'var(--color-bg-elevated)',
                         color: isActive ? 'var(--color-btn-fg)' : s.done ? 'var(--color-accent-bright)' : 'var(--color-text-muted)',
                         border: `1px solid ${s.done ? 'var(--color-green)' : isActive ? 'var(--color-btn-bg)' : 'var(--color-border)'}`,
@@ -163,7 +163,7 @@ export function CalcolatorePageClient({
                         {s.n}
                       </div>
                       <span style={{
-                        fontSize: '13px', fontFamily: "var(--font-sans), sans-serif",
+                        fontSize: '15px', fontFamily: "var(--font-sans), sans-serif",
                         color: isActive ? 'var(--color-text-primary)' : s.done ? 'var(--color-accent-bright)' : 'var(--color-text-muted)',
                         fontWeight: isActive ? 600 : 400,
                       }}>
@@ -171,7 +171,7 @@ export function CalcolatorePageClient({
                       </span>
                     </div>
                     {i < 2 && (
-                      <span style={{ color: 'var(--color-border-bright)', fontSize: '12px' }}>›</span>
+                      <span style={{ color: 'var(--color-border-bright)', fontSize: '14px' }}>›</span>
                     )}
                   </div>
                 );
@@ -268,11 +268,11 @@ export function CalcolatorePageClient({
               borderRadius: 0, padding: '20px',
               animation: 'fadeSlideIn 0.2s ease forwards',
             }}>
-              <p style={{ fontFamily: "var(--font-sans), sans-serif", fontWeight: 600, fontSize: '13px',
+              <p style={{ fontFamily: "var(--font-sans), sans-serif", fontWeight: 600, fontSize: '15px',
                 color: 'var(--color-red)' }}>
                 Errore nel calcolo
               </p>
-              <p style={{ fontSize: '13px', color: 'var(--color-text-secondary)', marginTop: '6px' }}>{errore}</p>
+              <p style={{ fontSize: '15px', color: 'var(--color-text-secondary)', marginTop: '6px' }}>{errore}</p>
             </div>
           )}
 
