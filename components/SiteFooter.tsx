@@ -5,16 +5,15 @@ export function SiteFooter() {
   const anno = new Date().getFullYear();
   return (
     <footer className="site-footer">
-      <div className="site-footer__rule" aria-hidden="true" />
       <div className="site-footer__inner">
-        <Logo tone="dark" height={48} />
+        <Logo height={44} />
         <div>
           <p>
-            Simulazione su minimi, aliquote e regole caricati per il {anno}. Non è un cedolino, non sostituisce il consulente del lavoro.
+            Stima indicativa su minimi e aliquote {anno}. Non è un cedolino: il preventivo gratuito lo prepara un consulente del lavoro.
           </p>
           <p className="site-footer__links">
-            <Link href="/privacy">Informativa privacy</Link>
             <Link href="/calcolatore">Simulatore</Link>
+            <Link href="/privacy">Informativa privacy</Link>
           </p>
         </div>
       </div>
