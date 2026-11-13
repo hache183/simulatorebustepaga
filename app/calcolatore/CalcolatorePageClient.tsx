@@ -104,44 +104,47 @@ export function CalcolatorePageClient({
 
       {/* Tab modulo + step dipendenti — sotto l'header */}
       <div className="no-print calcolatore-shell">
-        <div style={{
-          maxWidth: '1400px', margin: '0 auto',
-          padding: '0 32px',
-          display: 'flex', alignItems: 'center', gap: '8px',
-          minHeight: '44px',
-          flexWrap: 'wrap',
-        }}>
-          <button
-            type="button"
-            className={`modulo-tab${tab === 'dipendenti' ? ' active' : ''}`}
-            onClick={() => vaiA('dipendenti')}
-          >
-            Dipendenti
-          </button>
-          <button
-            type="button"
-            className={`modulo-tab${tab === 'edili' ? ' active' : ''}`}
-            onClick={() => vaiA('edili')}
-          >
-            Dipendenti edili
-          </button>
-          <button
-            type="button"
-            className={`modulo-tab${tab === 'domestici' ? ' active' : ''}`}
-            onClick={() => vaiA('domestici')}
-          >
-            Collaboratori familiari / domestici
-          </button>
-          <button
-            type="button"
-            className={`modulo-tab${tab === 'soci' ? ' active' : ''}`}
-            onClick={() => vaiA('soci')}
-          >
-            Soci e Amministratori
-          </button>
+        <div className="modulo-bar">
+          <div className="modulo-tabs" role="tablist" aria-label="Tipo di simulazione">
+            <button
+              type="button"
+              role="tab"
+              aria-selected={tab === 'dipendenti'}
+              className={`modulo-tab${tab === 'dipendenti' ? ' active' : ''}`}
+              onClick={() => vaiA('dipendenti')}
+            >
+              Dipendenti
+            </button>
+            <button
+              type="button"
+              role="tab"
+              aria-selected={tab === 'edili'}
+              className={`modulo-tab${tab === 'edili' ? ' active' : ''}`}
+              onClick={() => vaiA('edili')}
+            >
+              Dipendenti edili
+            </button>
+            <button
+              type="button"
+              role="tab"
+              aria-selected={tab === 'domestici'}
+              className={`modulo-tab${tab === 'domestici' ? ' active' : ''}`}
+              onClick={() => vaiA('domestici')}
+            >
+              Collaboratori familiari / domestici
+            </button>
+            <button
+              type="button"
+              role="tab"
+              aria-selected={tab === 'soci'}
+              className={`modulo-tab${tab === 'soci' ? ' active' : ''}`}
+              onClick={() => vaiA('soci')}
+            >
+              Soci e Amministratori
+            </button>
+          </div>
           {tab === 'dipendenti' && (
-            <>
-              <span style={{ flex: 1 }} />
+            <div className="modulo-steps">
               {[
                 { n: 1, label: 'Assunzione',  done: step !== 1 },
                 { n: 2, label: 'Azienda',     done: step === 'risultati' },
@@ -152,7 +155,7 @@ export function CalcolatorePageClient({
                   <div key={s.n} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                       <div style={{
-                        width: '22px', height: '22px', borderRadius: '0',
+                        width: '22px', height: '22px', borderRadius: '6px',
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
                         fontSize: '13px', fontFamily: "var(--font-sans), sans-serif", fontWeight: 500,
                         background: s.done ? 'transparent' : isActive ? 'var(--color-btn-bg)' : 'var(--color-bg-elevated)',
@@ -176,7 +179,7 @@ export function CalcolatorePageClient({
                   </div>
                 );
               })}
-            </>
+            </div>
           )}
         </div>
       </div>
@@ -244,7 +247,7 @@ export function CalcolatorePageClient({
             <div style={{
               background: 'var(--color-bg-surface)',
               border: '1px solid var(--color-border)',
-              borderRadius: 0, padding: '28px',
+              borderRadius: 'var(--radius-card)', padding: '28px',
               display: 'flex', flexDirection: 'column', gap: '16px',
             }}>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px' }}>
@@ -265,7 +268,7 @@ export function CalcolatorePageClient({
               background: 'var(--color-red-dim)',
               border: '1px solid var(--color-red)',
               borderLeft: '3px solid var(--color-red)',
-              borderRadius: 0, padding: '20px',
+              borderRadius: 'var(--radius-ctrl)', padding: '20px',
               animation: 'fadeSlideIn 0.2s ease forwards',
             }}>
               <p style={{ fontFamily: "var(--font-sans), sans-serif", fontWeight: 600, fontSize: '15px',
