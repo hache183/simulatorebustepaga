@@ -91,7 +91,7 @@ input, select, textarea {
   border-radius: var(--radius-ctrl);
   font-family: var(--font-sans), system-ui, sans-serif;
   font-size: 17px;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, outline-color 0.2s ease, outline-offset 0.2s ease, background-color 0.2s ease;
 }
 
 input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
@@ -100,6 +100,8 @@ textarea {
   border-radius: var(--radius-ctrl) !important;
   border-color: var(--color-border-bright) !important;
   min-height: 48px;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
 }
 
 input:focus, select:focus, textarea:focus {
@@ -328,9 +330,13 @@ a.ui-btn { text-decoration: none; }
   letter-spacing: 0.01em;
   cursor: pointer;
   border: 1px solid transparent;
-  transition: background-color 0.15s, border-color 0.15s, opacity 0.15s;
+  transition: background-color 0.15s, border-color 0.15s, opacity 0.15s, transform 0.18s ease, box-shadow 0.18s ease;
 }
 .ui-btn--full { width: 100%; }
+.ui-btn--primary svg { transition: transform 0.2s ease; }
+.ui-btn--primary:hover:not(:disabled):not([aria-disabled="true"]) { transform: translateY(-2px); }
+.ui-btn--primary:hover:not(:disabled):not([aria-disabled="true"]) svg { transform: translateX(4px); }
+.ui-btn--primary:active:not(:disabled) { transform: translateY(1px); }
 
 .ui-btn--primary,
 a.ui-btn--primary:link,
@@ -963,6 +969,59 @@ a[href="/privacy"]:not(.app-header__textlink):not(.ui-btn):not(.site-footer a) {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
+}
+
+/* Mini animazioni condivise: comparsa allo scorrimento e risultati in sequenza. */
+@keyframes rivela {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: none; }
+}
+@media screen and (prefers-reduced-motion: no-preference) {
+  [data-reveal="pending"] { opacity: 0; transform: translateY(16px); }
+  [data-reveal="in"] { animation: rivela 0.5s ease-out both; }
+
+  .prospetto-animato .sintesi > div {
+    animation: rivela 0.4s ease-out both;
+  }
+  .prospetto-animato .sintesi > div:nth-child(1) { animation-delay: 0ms; }
+  .prospetto-animato .sintesi > div:nth-child(2) { animation-delay: 60ms; }
+  .prospetto-animato .sintesi > div:nth-child(3) { animation-delay: 120ms; }
+  .prospetto-animato .sintesi > div:nth-child(4) { animation-delay: 180ms; }
+  .prospetto-animato table tbody tr {
+    animation: rivela 0.35s ease-out both;
+    animation-delay: 800ms;
+  }
+  .prospetto-animato table tbody tr:nth-child(1) { animation-delay: 160ms; }
+  .prospetto-animato table tbody tr:nth-child(2) { animation-delay: 200ms; }
+  .prospetto-animato table tbody tr:nth-child(3) { animation-delay: 240ms; }
+  .prospetto-animato table tbody tr:nth-child(4) { animation-delay: 280ms; }
+  .prospetto-animato table tbody tr:nth-child(5) { animation-delay: 320ms; }
+  .prospetto-animato table tbody tr:nth-child(6) { animation-delay: 360ms; }
+  .prospetto-animato table tbody tr:nth-child(7) { animation-delay: 400ms; }
+  .prospetto-animato table tbody tr:nth-child(8) { animation-delay: 440ms; }
+  .prospetto-animato table tbody tr:nth-child(9) { animation-delay: 480ms; }
+  .prospetto-animato table tbody tr:nth-child(10) { animation-delay: 520ms; }
+  .prospetto-animato table tbody tr:nth-child(11) { animation-delay: 560ms; }
+  .prospetto-animato table tbody tr:nth-child(12) { animation-delay: 600ms; }
+  .prospetto-animato table tbody tr:nth-child(13) { animation-delay: 640ms; }
+  .prospetto-animato table tbody tr:nth-child(14) { animation-delay: 680ms; }
+  .prospetto-animato table tbody tr:nth-child(15) { animation-delay: 720ms; }
+  .prospetto-animato table tbody tr:nth-child(16) { animation-delay: 760ms; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ui-btn--primary:hover:not(:disabled):not([aria-disabled="true"]),
+  .ui-btn--primary:hover:not(:disabled):not([aria-disabled="true"]) svg { transform: none; }
+}
+
+/* Totale che conta: la cifra finale tiene la larghezza, stampa e lettori di schermo leggono il valore finale. */
+.importo-animato { display: inline-grid; }
+.importo-animato > * { grid-area: 1 / 1; }
+.importo-animato__misura { visibility: hidden; }
+.importo-animato__stampa { display: none; }
+@media print {
+  .importo-animato__cifra { display: none !important; }
+  .importo-animato__stampa { display: inline !important; }
+  [data-reveal], .prospetto-animato > *, .prospetto-animato tr { opacity: 1 !important; transform: none !important; animation: none !important; }
 }
 
 @media (prefers-reduced-motion: reduce) {

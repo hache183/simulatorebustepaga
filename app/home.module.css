@@ -116,10 +116,13 @@
   transition: background-color 0.15s ease, transform 0.15s ease;
 }
 .page a.cta svg { color: #FFFFFF; }
+.page a.cta svg { transition: transform 0.2s ease; }
 .page a.cta:hover {
   background: var(--terracotta-scura);
   color: #FFFFFF;
+  transform: translateY(-2px);
 }
+.page a.cta:hover svg { transform: translateX(4px); }
 .page a.cta:active { transform: translateY(1px); }
 .page a.cta:focus-visible {
   outline: 3px solid var(--senape);
@@ -271,7 +274,9 @@
   line-height: 1.4;
   transform: rotate(2.5deg);
   box-shadow: 0 12px 24px -14px rgba(0, 0, 0, 0.4);
+  transition: transform 0.28s ease;
 }
+.postit:hover { transform: rotate(4.8deg); }
 .postit b {
   display: block;
   margin-bottom: 4px;
@@ -426,6 +431,7 @@
     margin: 22px 8px 0 18px;
     transform: rotate(1.2deg);
   }
+  .postit:hover { transform: rotate(3deg); }
   .band { padding: 56px 0 64px; }
   .intro { display: block; }
   .intro h2 { margin-bottom: 12px; }
@@ -443,4 +449,79 @@
   .foglio { padding-left: 14px; padding-right: 14px; }
   .riga { font-size: 15px; }
   .puntini { min-width: 4px; }
+}
+
+/* Mini animazioni: solo transform e opacità, niente scostamento di layout. */
+@keyframes entra {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes timbroEntra {
+  from { opacity: 0; transform: scale(1.15) rotate(8deg); }
+  to { opacity: 1; transform: scale(1) rotate(4deg); }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .kicker,
+  .headline {
+    animation: entra 0.45s ease-out both;
+  }
+  .lead,
+  .ctaRiga,
+  .nota {
+    animation: entra 0.45s ease-out 0.09s both;
+  }
+  .foglioWrap {
+    animation: entra 0.5s ease-out 0.16s both;
+  }
+  .timbro {
+    animation: timbroEntra 0.35s cubic-bezier(0.2, 0.7, 0.2, 1) 0.38s both;
+  }
+
+  .modulo[data-reveal="in"]:nth-child(1),
+  .passo[data-reveal="in"]:nth-child(1) { animation-delay: 0ms; }
+  .modulo[data-reveal="in"]:nth-child(2),
+  .passo[data-reveal="in"]:nth-child(2) { animation-delay: 70ms; }
+  .modulo[data-reveal="in"]:nth-child(3),
+  .passo[data-reveal="in"]:nth-child(3) { animation-delay: 140ms; }
+  .modulo[data-reveal="in"]:nth-child(4) { animation-delay: 210ms; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kicker,
+  .headline,
+  .lead,
+  .ctaRiga,
+  .nota,
+  .foglioWrap,
+  .timbro {
+    animation: none;
+  }
+  .page a.cta:hover,
+  .page a.cta:hover svg {
+    transform: none;
+  }
+  .postit,
+  .postit:hover {
+    transform: rotate(2.5deg);
+    transition: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) and (max-width: 960px) {
+  .postit,
+  .postit:hover { transform: rotate(1.2deg); }
+}
+
+@media print {
+  .kicker,
+  .headline,
+  .lead,
+  .ctaRiga,
+  .nota,
+  .foglioWrap,
+  .timbro {
+    animation: none !important;
+    opacity: 1 !important;
+  }
 }

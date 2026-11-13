@@ -2,6 +2,7 @@
 
 import type { SociResult, SociState } from '@/lib/societari';
 import { AvvisoStima } from '@/components/AvvisoStima';
+import { ImportoAnimato } from '@/components/ImportoAnimato';
 
 const eur = (n: number) =>
   new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR', minimumFractionDigits: 2 }).format(n);
@@ -29,14 +30,14 @@ export function RisultatiSoci({ out, stato, onRicalcola }: Props) {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+    <div className="prospetto-animato" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
       <div className="campi-affiancati" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '12px' }}>
         <div style={boxStyle}>
           <p style={{ fontSize: '14px', color: 'var(--color-text-muted)', marginBottom: '6px' }}>
             Liquido complessivo al socio / amministratore
           </p>
           <p style={{ fontFamily: "var(--font-sans), sans-serif", fontSize: '22px', fontWeight: 500, color: 'var(--color-accent-bright)' }}>
-            {eur(out.nettoTotalePercepito)}
+            <ImportoAnimato valore={out.nettoTotalePercepito} formatta={eur} />
           </p>
         </div>
         <div style={boxStyle}>
@@ -44,7 +45,7 @@ export function RisultatiSoci({ out, stato, onRicalcola }: Props) {
             Costo totale per il datore di lavoro
           </p>
           <p style={{ fontFamily: "var(--font-sans), sans-serif", fontSize: '22px', fontWeight: 500, color: 'var(--color-text-primary)' }}>
-            {eur(out.costoTotaleDatore)}
+            <ImportoAnimato valore={out.costoTotaleDatore} formatta={eur} />
           </p>
           <p style={{ fontSize: '12px', color: 'var(--color-text-muted)', marginTop: '6px', lineHeight: 1.4 }}>
             {conCompenso ? 'Include la quota 2/3 Gestione separata' : 'Solo trasferte e rimborso km'}
