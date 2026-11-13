@@ -75,19 +75,19 @@ export function CalcolatoreFormStep2({ onSubmit, onBack, isLoading, ccnlId }: Pr
       {/* Label sezione */}
       <div style={{ borderBottom: '1px solid var(--color-border)', paddingBottom: '14px' }}>
         <p style={{
-          fontFamily: "var(--font-sans), sans-serif", fontWeight: 600, fontSize: '11px',
+          fontFamily: "var(--font-sans), sans-serif", fontWeight: 600, fontSize: '13px',
           color: 'var(--color-accent-bright)', letterSpacing: '0.06em', textTransform: 'uppercase',
         }}>
           Step 2 di 2
         </p>
         <h2 style={{
-          fontFamily: "var(--font-display), Georgia, serif", fontWeight: 600, fontSize: '18px',
+          fontFamily: "var(--font-display), Georgia, serif", fontWeight: 500, fontSize: '28px', lineHeight: 1.15,
           color: 'var(--color-text-primary)', marginTop: '4px',
         }}>
           {isDomestici ? 'Dati del rapporto domestico' : 'Dati aziendali'}
         </h2>
         {isDomestici && (
-          <p style={{ marginTop: '8px', fontSize: '12px', color: 'var(--color-text-muted)', lineHeight: '1.5',
+          <p style={{ marginTop: '8px', fontSize: '14px', color: 'var(--color-text-muted)', lineHeight: '1.5',
             padding: '8px 10px', borderRadius: '6px', background: 'var(--color-bg-elevated)',
             border: '1px solid var(--color-border)' }}>
             Per il lavoro domestico non si applicano: agevolazioni contributive imprenditoriali,
@@ -100,7 +100,7 @@ export function CalcolatoreFormStep2({ onSubmit, onBack, isLoading, ccnlId }: Pr
       {/* Numero dipendenti — nascosto per domestici */}
       {!isDomestici && (
       <div>
-        <label htmlFor="numeroDipendenti" style={{ display: 'block', fontSize: '13px', fontWeight: 500,
+        <label htmlFor="numeroDipendenti" style={{ display: 'block', fontSize: '15px', fontWeight: 500,
           color: 'var(--color-text-secondary)', marginBottom: '6px' }}>
           Numero di dipendenti in azienda
         </label>
@@ -111,18 +111,18 @@ export function CalcolatoreFormStep2({ onSubmit, onBack, isLoading, ccnlId }: Pr
             width: '100%', padding: '11px 14px',
             background: 'var(--color-bg-input)', color: 'var(--color-text-primary)',
             border: `1px solid ${errors.numeroDipendenti ? 'var(--color-red)' : 'var(--color-border)'}`,
-            borderRadius: '6px', fontSize: '13px',
-            fontFamily: "var(--font-mono), monospace",
+            borderRadius: '6px', fontSize: '15px',
+            fontFamily: "var(--font-sans), sans-serif",
           }}
         />
-        {errors.numeroDipendenti && <p style={{ marginTop: '4px', fontSize: '11px', color: 'var(--color-red)' }}>{errors.numeroDipendenti.message}</p>}
+        {errors.numeroDipendenti && <p style={{ marginTop: '4px', fontSize: '13px', color: 'var(--color-red)' }}>{errors.numeroDipendenti.message}</p>}
       </div>
       )}
 
       {/* Regione — nascosta per lavoro domestico */}
       {!isDomestici && (
       <div>
-        <label htmlFor="regione" style={{ display: 'block', fontSize: '13px', fontWeight: 500,
+        <label htmlFor="regione" style={{ display: 'block', fontSize: '15px', fontWeight: 500,
           color: 'var(--color-text-secondary)', marginBottom: '6px' }}>
           Regione
         </label>
@@ -132,18 +132,18 @@ export function CalcolatoreFormStep2({ onSubmit, onBack, isLoading, ccnlId }: Pr
           width: '100%', padding: '11px 14px',
           background: 'var(--color-bg-input)', color: 'var(--color-text-primary)',
           border: `1px solid ${errors.regione ? 'var(--color-red)' : 'var(--color-border)'}`,
-          borderRadius: '6px', fontSize: '13px', cursor: 'pointer',
+          borderRadius: '6px', fontSize: '15px', cursor: 'pointer',
         }}>
           <option value="">— Seleziona la regione —</option>
           {REGIONI.map(r => <option key={r} value={r}>{r}</option>)}
         </select>
-        {errors.regione && <p style={{ marginTop: '4px', fontSize: '11px', color: 'var(--color-red)' }}>{errors.regione.message}</p>}
+        {errors.regione && <p style={{ marginTop: '4px', fontSize: '13px', color: 'var(--color-red)' }}>{errors.regione.message}</p>}
       </div>
       )}
 
       {/* Categoria INAIL — nascosta per domestici (contributo fisso annuo via INPS) */}
       {!isDomestici && <div>
-        <label htmlFor="codiceInail" style={{ display: 'block', fontSize: '13px', fontWeight: 500,
+        <label htmlFor="codiceInail" style={{ display: 'block', fontSize: '15px', fontWeight: 500,
           color: 'var(--color-text-secondary)', marginBottom: '6px' }}>
           Categoria INAIL
         </label>
@@ -153,7 +153,7 @@ export function CalcolatoreFormStep2({ onSubmit, onBack, isLoading, ccnlId }: Pr
           width: '100%', padding: '11px 14px',
           background: 'var(--color-bg-input)', color: 'var(--color-text-primary)',
           border: `1px solid ${errors.codiceInail ? 'var(--color-red)' : 'var(--color-border)'}`,
-          borderRadius: '6px', fontSize: '13px', cursor: 'pointer',
+          borderRadius: '6px', fontSize: '15px', cursor: 'pointer',
         }}>
           <option value="">— Seleziona la categoria —</option>
           {voceInail.map(v => (
@@ -162,12 +162,12 @@ export function CalcolatoreFormStep2({ onSubmit, onBack, isLoading, ccnlId }: Pr
             </option>
           ))}
         </select>
-        {errors.codiceInail && <p style={{ marginTop: '4px', fontSize: '11px', color: 'var(--color-red)' }}>{errors.codiceInail.message}</p>}
+        {errors.codiceInail && <p style={{ marginTop: '4px', fontSize: '13px', color: 'var(--color-red)' }}>{errors.codiceInail.message}</p>}
       </div>}
 
       {/* Anzianità */}
       <div>
-        <label htmlFor="anzianitaAnni" style={{ display: 'block', fontSize: '13px', fontWeight: 500,
+        <label htmlFor="anzianitaAnni" style={{ display: 'block', fontSize: '15px', fontWeight: 500,
           color: 'var(--color-text-secondary)', marginBottom: '6px' }}>
           Anzianità nel CCNL (anni, per scatti)
         </label>
@@ -177,16 +177,16 @@ export function CalcolatoreFormStep2({ onSubmit, onBack, isLoading, ccnlId }: Pr
             width: '100%', padding: '11px 14px',
             background: 'var(--color-bg-input)', color: 'var(--color-text-primary)',
             border: `1px solid ${errors.anzianitaAnni ? 'var(--color-red)' : 'var(--color-border)'}`,
-            borderRadius: '6px', fontSize: '13px',
-            fontFamily: "var(--font-mono), monospace",
+            borderRadius: '6px', fontSize: '15px',
+            fontFamily: "var(--font-sans), sans-serif",
           }}
         />
-        {errors.anzianitaAnni && <p style={{ marginTop: '4px', fontSize: '11px', color: 'var(--color-red)' }}>Valore non valido (0–50 anni)</p>}
+        {errors.anzianitaAnni && <p style={{ marginTop: '4px', fontSize: '13px', color: 'var(--color-red)' }}>Valore non valido (0–50 anni)</p>}
       </div>
 
       {/* Aliquota INPS — nascosta per domestici (engine usa per-ora Circ. n. 9/2026) */}
       {!isDomestici && <div>
-        <label htmlFor="aliquotaInps" style={{ display: 'block', fontSize: '13px', fontWeight: 500,
+        <label htmlFor="aliquotaInps" style={{ display: 'block', fontSize: '15px', fontWeight: 500,
           color: 'var(--color-text-secondary)', marginBottom: '6px' }}>
           Aliquota INPS datoriale (%)
         </label>
@@ -197,29 +197,29 @@ export function CalcolatoreFormStep2({ onSubmit, onBack, isLoading, ccnlId }: Pr
               width: '100%', padding: '11px 14px 11px 14px',
               background: 'var(--color-bg-input)', color: 'var(--color-text-primary)',
               border: `1px solid ${errors.aliquotaInps ? 'var(--color-red)' : 'var(--color-border)'}`,
-              borderRadius: '6px', fontSize: '13px',
-              fontFamily: "var(--font-mono), monospace",
+              borderRadius: '6px', fontSize: '15px',
+              fontFamily: "var(--font-sans), sans-serif",
             }}
           />
           <span style={{
             position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)',
-            fontFamily: "var(--font-mono), monospace", fontSize: '13px', color: 'var(--color-text-muted)',
+            fontFamily: "var(--font-sans), sans-serif", fontSize: '15px', color: 'var(--color-text-muted)',
           }}>%</span>
         </div>
-        <p style={{ marginTop: '6px', fontSize: '11px', color: 'var(--color-text-muted)', lineHeight: '1.5' }}>
+        <p style={{ marginTop: '6px', fontSize: '13px', color: 'var(--color-text-muted)', lineHeight: '1.5' }}>
           Aliquote contributive INPS a carico del D/L. Il valore precompilato è quello medio per la generalità delle imprese. Il valore preciso è distinto dal settore specifico (es. Artigiani, Commercianti, Industrie). Verifica con il tuo consulente.
         </p>
-        {errors.aliquotaInps && <p style={{ marginTop: '4px', fontSize: '11px', color: 'var(--color-red)' }}>{errors.aliquotaInps.message}</p>}
+        {errors.aliquotaInps && <p style={{ marginTop: '4px', fontSize: '13px', color: 'var(--color-red)' }}>{errors.aliquotaInps.message}</p>}
       </div>}
 
       {!isDomestici && <div style={{
         padding: '12px 14px', borderRadius: 0,
         background: 'var(--color-bg-elevated)', border: '1px solid var(--color-border)',
       }}>
-        <p style={{ fontSize: '13px', fontWeight: 600, color: 'var(--color-text-secondary)', marginBottom: '6px' }}>
+        <p style={{ fontSize: '15px', fontWeight: 600, color: 'var(--color-text-secondary)', marginBottom: '6px' }}>
           Assistenza sanitaria integrativa (sempre inclusa)
         </p>
-        <p style={{ fontSize: '12px', color: 'var(--color-text-muted)', lineHeight: 1.55 }}>
+        <p style={{ fontSize: '14px', color: 'var(--color-text-muted)', lineHeight: 1.55 }}>
           {NOTA_ASSISTENZA_SANITARIA_FORFAIT}
         </p>
       </div>}
@@ -228,10 +228,10 @@ export function CalcolatoreFormStep2({ onSubmit, onBack, isLoading, ccnlId }: Pr
         padding: '12px 14px', borderRadius: 0,
         background: 'var(--color-bg-elevated)', border: '1px solid var(--color-border)',
       }}>
-        <p style={{ fontSize: '13px', fontWeight: 600, color: 'var(--color-text-secondary)', marginBottom: '6px' }}>
+        <p style={{ fontSize: '15px', fontWeight: 600, color: 'var(--color-text-secondary)', marginBottom: '6px' }}>
           Ferie, permessi ed ex festività non godute
         </p>
-        <p style={{ fontSize: '12px', color: 'var(--color-text-muted)', lineHeight: 1.55 }}>
+        <p style={{ fontSize: '14px', color: 'var(--color-text-muted)', lineHeight: 1.55 }}>
           Formula fissa: {ORE_FERIE_NON_GODUTE_FISSE} h × (retribuzione mensile / {DIVISORE_ORARIO_FERIE_FISSO})
           = valore ferie, permessi ed ex festività. Non modificabile dall&apos;operatore.
         </p>

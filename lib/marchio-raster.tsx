@@ -3,8 +3,9 @@ import { join } from 'path';
 import { ImageResponse } from 'next/og';
 
 /**
- * Rasterizza in PNG i master SVG del marchio (public/brand) al momento della build.
- * Gli SVG hanno i glifi già in tracciati: non servono font.
+ * Rasterizza in PNG i master SVG carta e terracotta (public/brand) al momento della build.
+ * icona.svg: simbolo chiaro su quadrato terracotta; anteprima.svg: marchio e titolo su carta.
+ * Gli SVG sono generati da scripts/marchio-svg.py e hanno i glifi già in tracciati: non servono font.
  */
 export async function svgComePng(file: string, width: number, height: number) {
   const svg = await readFile(join(process.cwd(), 'public/brand', file));

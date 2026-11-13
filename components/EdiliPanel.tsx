@@ -30,8 +30,8 @@ const inputStyle: CSSProperties = {
   color: 'var(--color-text-primary)',
   border: '1px solid var(--color-border)',
   borderRadius: '6px',
-  fontSize: '13px',
-  fontFamily: "var(--font-mono), monospace",
+  fontSize: '15px',
+  fontFamily: "var(--font-sans), sans-serif",
 };
 
 function filtraVociInail36(voci: VoceInail[]): VoceInail[] {
@@ -124,37 +124,38 @@ export function EdiliPanel({
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-      <div style={{
+      <div className="modulo-layout" style={{
         display: 'grid',
-        gridTemplateColumns: 'minmax(320px, 420px) 1fr',
-        gap: '24px',
+        gridTemplateColumns: 'minmax(0, 460px) minmax(0, 1fr)',
+        gap: '32px',
         alignItems: 'start',
       }}>
         <div style={{
           background: 'var(--color-bg-surface)',
           border: '1px solid var(--color-border)',
-          borderRadius: 0,
+          borderRadius: 'var(--radius-card)',
           padding: '28px',
           display: 'flex',
           flexDirection: 'column',
           gap: '18px',
         }}>
           <h2 style={{
-            fontFamily: "var(--font-sans), sans-serif",
-            fontSize: '18px',
-            fontWeight: 600,
+            fontFamily: "var(--font-display), Georgia, serif",
+            fontSize: '28px',
+            fontWeight: 500,
+            lineHeight: 1.15,
             margin: 0,
           }}>
             Dipendenti edili
           </h2>
-          <p style={{ fontSize: '13px', color: 'var(--color-text-muted)', margin: 0, lineHeight: 1.5 }}>
+          <p style={{ fontSize: '15px', color: 'var(--color-text-muted)', margin: 0, lineHeight: 1.5 }}>
             Operai edili (Industria o Artigianato). Imponibile A+B+C+D+E su 12 mensilità; INPS datore 35,08%; Cassa Edile.
           </p>
-          <p style={{ fontSize: '12px', color: 'var(--color-text-muted)', margin: 0, lineHeight: 1.5 }}>
+          <p style={{ fontSize: '14px', color: 'var(--color-text-muted)', margin: 0, lineHeight: 1.5 }}>
             Nota: l&apos;aliquota della Cassa Edile è indicativa e potrà subire variazioni in base alla cassa edile provinciale di appartenenza.
           </p>
 
-          <label style={{ fontSize: '12px', color: 'var(--color-text-muted)' }}>
+          <label style={{ fontSize: '14px', color: 'var(--color-text-muted)' }}>
             CCNL
             <select
               value={ccnlId}
@@ -167,7 +168,7 @@ export function EdiliPanel({
             </select>
           </label>
 
-          <label style={{ fontSize: '12px', color: 'var(--color-text-muted)' }}>
+          <label style={{ fontSize: '14px', color: 'var(--color-text-muted)' }}>
             Livello (solo operaio)
             <select
               value={livello}
@@ -182,7 +183,7 @@ export function EdiliPanel({
             </select>
           </label>
 
-          <label style={{ fontSize: '12px', color: 'var(--color-text-muted)' }}>
+          <label style={{ fontSize: '14px', color: 'var(--color-text-muted)' }}>
             Ore settimanali
             <input
               type="number"
@@ -194,7 +195,7 @@ export function EdiliPanel({
             />
           </label>
 
-          <label style={{ fontSize: '12px', color: 'var(--color-text-muted)' }}>
+          <label style={{ fontSize: '14px', color: 'var(--color-text-muted)' }}>
             RAL annua concordata (opzionale, solo se supera il minimo tabellare × 12)
             <input
               type="number"
@@ -206,7 +207,7 @@ export function EdiliPanel({
             />
           </label>
 
-          <label style={{ fontSize: '12px', color: 'var(--color-text-muted)' }}>
+          <label style={{ fontSize: '14px', color: 'var(--color-text-muted)' }}>
             Categoria INAIL (voce 36xx)
             <select
               value={codiceInail}
@@ -237,7 +238,7 @@ export function EdiliPanel({
           </button>
 
           {errore && (
-            <p style={{ color: 'var(--color-red)', fontSize: '13px', margin: 0 }}>{errore}</p>
+            <p style={{ color: 'var(--color-red)', fontSize: '15px', margin: 0 }}>{errore}</p>
           )}
         </div>
 
@@ -250,7 +251,7 @@ export function EdiliPanel({
               padding: '48px 32px',
               textAlign: 'center',
             }}>
-              <p style={{ fontSize: '13px', color: 'var(--color-text-muted)' }}>
+              <p style={{ fontSize: '15px', color: 'var(--color-text-muted)' }}>
                 Compila i dati e premi <strong>Calcola il costo</strong> per il prospetto A–E, Cassa Edile e netto.
               </p>
             </div>

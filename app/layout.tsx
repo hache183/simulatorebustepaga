@@ -1,32 +1,26 @@
-import type { Metadata } from 'next';
-import { Fraunces, IBM_Plex_Mono, IBM_Plex_Sans } from 'next/font/google';
+import type { Metadata, Viewport } from 'next';
+import { Hanken_Grotesk, Newsreader } from 'next/font/google';
 import { NOME_SITO, siteUrl } from '@/lib/site';
 import './globals.css';
 
-const sans = IBM_Plex_Sans({
+const sans = Hanken_Grotesk({
   subsets: ['latin'],
-  weight: ['400', '500', '600'],
+  weight: 'variable',
   display: 'swap',
   variable: '--font-sans',
 });
 
-const display = Fraunces({
+const display = Newsreader({
   subsets: ['latin'],
   weight: 'variable',
+  style: ['normal', 'italic'],
+  axes: ['opsz'],
   display: 'swap',
   variable: '--font-display',
-  axes: ['opsz', 'SOFT', 'WONK'],
 });
 
-const mono = IBM_Plex_Mono({
-  subsets: ['latin'],
-  weight: ['400', '500'],
-  display: 'swap',
-  variable: '--font-mono',
-});
-
-const titolo = `${NOME_SITO} — costo di un'assunzione`;
-const descrizione = 'Simulatore del costo aziendale e del netto stimato su CCNL, edilizia, lavoro domestico e compensi di soci e amministratori.';
+const titolo = `${NOME_SITO} — quanto costa davvero un'assunzione`;
+const descrizione = 'Simulatore gratuito del costo del lavoro: una stima indicativa per dipendenti, edili, lavoro domestico, soci e amministratori. Poi un consulente del lavoro ti ricontatta con un preventivo totalmente gratuito.';
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl()),
@@ -51,9 +45,14 @@ export const metadata: Metadata = {
   },
 };
 
+export const viewport: Viewport = {
+  themeColor: '#F6F0E6',
+  colorScheme: 'light',
+};
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="it" className={`${sans.variable} ${display.variable} ${mono.variable}`}>
+    <html lang="it" className={`${sans.variable} ${display.variable}`}>
       <body>
         <a className="skip-link" href="#contenuto">Vai al contenuto</a>
         {children}

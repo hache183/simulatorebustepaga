@@ -42,8 +42,8 @@ const inputStyle: CSSProperties = {
   color: 'var(--color-text-primary)',
   border: '1px solid var(--color-border)',
   borderRadius: '6px',
-  fontSize: '13px',
-  fontFamily: "var(--font-mono), monospace",
+  fontSize: '15px',
+  fontFamily: "var(--font-sans), sans-serif",
 };
 
 export function DomesticiPanel() {
@@ -225,22 +225,22 @@ export function DomesticiPanel() {
   const oreBloccate = modo === 'convivente' && !sostituzione && ramo === 'pieno';
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: risultato ? '1fr' : '420px 1fr', gap: '24px', alignItems: 'start' }}>
+    <div className="modulo-layout" style={{ display: 'grid', gridTemplateColumns: risultato ? '1fr' : 'minmax(0, 460px) minmax(0, 1fr)', gap: '32px', alignItems: 'start' }}>
       {!risultato && (
         <div style={{
           background: 'var(--color-bg-surface)',
           border: '1px solid var(--color-border)',
-          borderRadius: 0,
+          borderRadius: 'var(--radius-card)',
           padding: '28px',
           display: 'flex',
           flexDirection: 'column',
           gap: '18px',
         }}>
           <div>
-            <h2 style={{ fontFamily: "var(--font-display), Georgia, serif", fontWeight: 600, fontSize: '18px', color: 'var(--color-text-primary)' }}>
+            <h2 style={{ fontFamily: "var(--font-display), Georgia, serif", fontWeight: 500, fontSize: '28px', lineHeight: 1.15, color: 'var(--color-text-primary)' }}>
               Collaboratori familiari
             </h2>
-            <p style={{ marginTop: '6px', fontSize: '12px', color: 'var(--color-text-muted)', lineHeight: 1.5 }}>
+            <p style={{ marginTop: '6px', fontSize: '14px', color: 'var(--color-text-muted)', lineHeight: 1.5 }}>
               {modo === 'non_convivente' || sostituzione
                 ? `Retribuzione mensile = paga oraria × ore settimanali × ${coeff.toFixed(2).replace('.', ',')}, poi × ${mensilita} mensilità del CCNL.`
                 : ramo === 'part_time'
@@ -269,12 +269,12 @@ export function DomesticiPanel() {
                 <button type="button" onClick={() => attivaSostituzione(true)} style={pill(sostituzione)}>Part-time per sostituzione titolare (tab. C)</button>
               </div>
               {sostituzione && (
-                <p style={{ fontSize: '12px', color: 'var(--color-text-muted)', lineHeight: 1.5 }}>
+                <p style={{ fontSize: '14px', color: 'var(--color-text-muted)', lineHeight: 1.5 }}>
                   Sostituzione del titolare: solo livelli CS e DS, retribuzione oraria della tab. C per le ore settimanali inserite.
                 </p>
               )}
               {ramo === 'part_time' && !sostituzione && (
-                <p style={{ fontSize: '12px', color: 'var(--color-text-muted)', lineHeight: 1.5 }}>{ERRORE_PART_TIME}</p>
+                <p style={{ fontSize: '14px', color: 'var(--color-text-muted)', lineHeight: 1.5 }}>{ERRORE_PART_TIME}</p>
               )}
             </>
           )}
@@ -303,14 +303,14 @@ export function DomesticiPanel() {
               onChange={e => setOre(Number(e.target.value))}
               style={{ ...inputStyle, opacity: oreBloccate ? 0.7 : 1 }} />
             {oreBloccate && (
-              <p style={{ marginTop: '4px', fontSize: '11px', color: 'var(--color-text-muted)' }}>
+              <p style={{ marginTop: '4px', fontSize: '13px', color: 'var(--color-text-muted)' }}>
                 Tempo pieno convivente: ore bloccate a 54. Il mensile è quello della tab. A.
               </p>
             )}
           </div>
 
           {modo === 'non_convivente' && (
-            <p style={{ fontSize: '11px', color: 'var(--color-text-muted)', lineHeight: 1.5 }}>
+            <p style={{ fontSize: '13px', color: 'var(--color-text-muted)', lineHeight: 1.5 }}>
               Ferie, permessi ed ex festività non godute: formula fissa Y = (173 × ore sett.) / 40, costo = Y × paga oraria. Non modificabile dall&apos;operatore.
             </p>
           )}
@@ -321,22 +321,22 @@ export function DomesticiPanel() {
               onChange={e => setAnzianitaAnni(Number(e.target.value))} style={inputStyle} />
           </div>
 
-          <p style={{ fontSize: '11px', color: 'var(--color-text-muted)', lineHeight: 1.5 }}>
+          <p style={{ fontSize: '13px', color: 'var(--color-text-muted)', lineHeight: 1.5 }}>
             CassaColf obbligatoria: quota datore 0,04 €/ora, sempre inclusa nel costo.
           </p>
 
-          <p style={{ fontSize: '13px', color: 'var(--color-text-secondary)' }}>
-            Mensile lordo <strong style={{ fontFamily: "var(--font-mono), monospace", color: 'var(--color-text-primary)' }}>{eur(preview.mensile)}</strong>
+          <p style={{ fontSize: '15px', color: 'var(--color-text-secondary)' }}>
+            Mensile lordo <strong style={{ fontFamily: "var(--font-sans), sans-serif", color: 'var(--color-text-primary)' }}>{eur(preview.mensile)}</strong>
             {' '}· annuo {eur(round2(preview.mensile * mensilita))} ({mensilita} mensilità)
           </p>
-          {preview.errore && <p style={{ fontSize: '12px', color: 'var(--color-red)' }}>{preview.errore}</p>}
+          {preview.errore && <p style={{ fontSize: '14px', color: 'var(--color-red)' }}>{preview.errore}</p>}
 
           <button type="button" onClick={calcola} disabled={loading || Boolean(preview.errore)} className="ui-btn ui-btn--primary" style={{
             padding: '14px',
           }}>
             {loading ? 'Calcolo…' : 'Calcola il costo'}
           </button>
-          {errore && <p style={{ fontSize: '12px', color: 'var(--color-red)' }}>{errore}</p>}
+          {errore && <p style={{ fontSize: '14px', color: 'var(--color-red)' }}>{errore}</p>}
         </div>
       )}
 
@@ -358,7 +358,7 @@ export function DomesticiPanel() {
 }
 
 const labelStyle: CSSProperties = {
-  display: 'block', fontSize: '13px', fontWeight: 500,
+  display: 'block', fontSize: '15px', fontWeight: 500,
   color: 'var(--color-text-secondary)', marginBottom: '6px',
 };
 
@@ -366,7 +366,7 @@ function pill(active: boolean): CSSProperties {
   return {
     padding: '8px 10px',
     borderRadius: 0,
-    fontSize: '12px',
+    fontSize: '14px',
     fontWeight: 600,
     cursor: 'pointer',
     textAlign: 'left',

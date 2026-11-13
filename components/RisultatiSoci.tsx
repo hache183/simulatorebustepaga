@@ -1,6 +1,7 @@
 'use client';
 
 import type { SociResult, SociState } from '@/lib/societari';
+import { AvvisoStima } from '@/components/AvvisoStima';
 
 const eur = (n: number) =>
   new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR', minimumFractionDigits: 2 }).format(n);
@@ -29,35 +30,37 @@ export function RisultatiSoci({ out, stato, onRicalcola }: Props) {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+      <div className="campi-affiancati" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '12px' }}>
         <div style={boxStyle}>
-          <p style={{ fontSize: '12px', color: 'var(--color-text-muted)', marginBottom: '6px' }}>
+          <p style={{ fontSize: '14px', color: 'var(--color-text-muted)', marginBottom: '6px' }}>
             Liquido complessivo al socio / amministratore
           </p>
-          <p style={{ fontFamily: "var(--font-mono), monospace", fontSize: '22px', fontWeight: 500, color: 'var(--color-accent-bright)' }}>
+          <p style={{ fontFamily: "var(--font-sans), sans-serif", fontSize: '22px', fontWeight: 500, color: 'var(--color-accent-bright)' }}>
             {eur(out.nettoTotalePercepito)}
           </p>
         </div>
         <div style={boxStyle}>
-          <p style={{ fontSize: '12px', color: 'var(--color-text-muted)', marginBottom: '6px' }}>
+          <p style={{ fontSize: '14px', color: 'var(--color-text-muted)', marginBottom: '6px' }}>
             Costo totale per il datore di lavoro
           </p>
-          <p style={{ fontFamily: "var(--font-mono), monospace", fontSize: '22px', fontWeight: 500, color: 'var(--color-text-primary)' }}>
+          <p style={{ fontFamily: "var(--font-sans), sans-serif", fontSize: '22px', fontWeight: 500, color: 'var(--color-text-primary)' }}>
             {eur(out.costoTotaleDatore)}
           </p>
-          <p style={{ fontSize: '10px', color: 'var(--color-text-muted)', marginTop: '6px', lineHeight: 1.4 }}>
+          <p style={{ fontSize: '12px', color: 'var(--color-text-muted)', marginTop: '6px', lineHeight: 1.4 }}>
             {conCompenso ? 'Include la quota 2/3 Gestione separata' : 'Solo trasferte e rimborso km'}
           </p>
         </div>
       </div>
 
+      <AvvisoStima />
+
       <div style={{ ...boxStyle, padding: '24px' }}>
-        <p style={{ fontSize: '12px', color: 'var(--color-text-muted)', lineHeight: 1.55, marginBottom: '14px' }}>
+        <p style={{ fontSize: '14px', color: 'var(--color-text-muted)', lineHeight: 1.55, marginBottom: '14px' }}>
           {conCompenso
             ? 'Costo totale datore = compenso lordo annuo + quota contributiva 2/3 a carico della società + trasferte e rimborso km. Trasferte e km sono fuori dalla base Gestione separata e IRPEF.'
             : 'Senza compenso il lordo è zero e non c’è Gestione separata. Restano trasferte e rimborso km, che entrano nel liquido e nel costo datore.'}
         </p>
-        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '15px' }}>
           <tbody>
             <Row k="Compenso lordo annuo" v={eur(out.compensoLordo)} />
             {out.ripartoGs && (
@@ -82,7 +85,7 @@ export function RisultatiSoci({ out, stato, onRicalcola }: Props) {
           </tbody>
         </table>
         {fisc && (
-          <p style={{ marginTop: '14px', fontSize: '11px', color: 'var(--color-text-muted)', lineHeight: 1.55 }}>
+          <p style={{ marginTop: '14px', fontSize: '13px', color: 'var(--color-text-muted)', lineHeight: 1.55 }}>
             {fisc.disclaimer}
           </p>
         )}
@@ -119,7 +122,7 @@ function Row({ k, v, sub, strong }: { k: string; v: string; sub?: boolean; stron
       <td style={{
         padding: '8px 0',
         textAlign: 'right',
-        fontFamily: "var(--font-mono), monospace",
+        fontFamily: "var(--font-sans), sans-serif",
         fontSize: sub ? '12px' : '13px',
         fontWeight: strong ? 600 : 400,
       }}>

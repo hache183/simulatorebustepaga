@@ -12,25 +12,61 @@ function sorgenti(dir: string): string[] {
   });
 }
 
-const BRAND_SVG = ['marchio-panna.svg', 'marchio-navy.svg', 'icona.svg', 'anteprima.svg'];
+const BRAND_SVG = ['marchio.svg', 'simbolo.svg', 'icona.svg', 'anteprima.svg'];
+const PREVENTIVO = 'preventivo totalmente gratuito';
 
-describe('home scura', () => {
+describe('home carta e terracotta', () => {
   const home = leggi('app/page.tsx');
 
   test('mantiene il testo approvato e porta al simulatore', () => {
-    expect(home).toContain('Lo stipendio<br /> è solo la prima<br /> riga.');
+    expect(home).toContain('Lo stipendio è solo la');
+    expect(home).toContain('prima riga.');
+    expect(home).toContain('Simulatore del costo del lavoro');
     expect(home).toContain('Apri il simulatore');
     expect(home).toContain("const SIMULATORE = '/calcolatore'");
     expect(home).toContain('Quattro moduli, un metodo.');
-    expect(home).toContain('Tre passi, poi il report.');
     expect(home).toContain('Cosa trovi nel report.');
     expect(home).toContain('Costo totale azienda');
   });
 
-  test('nessun importo in euro, nessun prospetto di esempio, nessuna nota da bozzetto', () => {
-    expect(home).not.toMatch(/€|\beuro\b/i);
+  test('spiega a cosa serve il simulatore e cosa succede dopo', () => {
+    expect(home).toContain('Questo simulatore serve a darti un’idea del');
+    expect(home).toContain('Il risultato è una stima indicativa.');
+    expect(home).toContain(`vieni ricontattato da un consulente del lavoro per un <strong>${PREVENTIVO}</strong>`);
+    for (const titolo of ['Imposti i parametri', 'Lasci i tuoi dati', 'Consulti la stima']) {
+      expect(home).toContain(titolo);
+    }
+    expect(home).toContain('Non è un cedolino e non è un preventivo definitivo.');
+    expect(home).not.toMatch(/mail automatic|ti inviamo|via email/i);
+    expect(home).not.toMatch(/!/);
+  });
+
+  test('il prospetto della hero è un esempio dichiarato e torna in somma', () => {
+    expect(home).toContain('ESEMPIO');
+    expect(home).toContain('Importi di esempio, non riferiti al tuo caso.');
+    const importi = [...home.matchAll(/(\d{1,3}(?:\.\d{3})?) €/g)].map(m => Number(m[1].replace('.', '')));
+    const totale = importi.pop();
+    expect(importi.reduce((a, b) => a + b, 0)).toBe(totale);
     expect(home).not.toContain('calculateCosto');
-    expect(home).not.toContain('Schizzo di home');
+  });
+});
+
+describe('copy sul consulente', () => {
+  test('form dei recapiti: niente prospetto inviato al visitatore', () => {
+    const form = leggi('components/LeadCaptureForm.tsx');
+    expect(form).toContain('Lascia i recapiti per vedere la stima');
+    expect(form).toContain(PREVENTIVO);
+    expect(form).not.toContain('si invia a questi recapiti');
+  });
+
+  test('i risultati mostrano l’avviso anche in stampa', () => {
+    const avviso = leggi('components/AvvisoStima.tsx');
+    expect(avviso).toContain('Questa è una stima indicativa');
+    expect(avviso).toContain(PREVENTIVO);
+    expect(avviso).not.toContain('no-print');
+    for (const file of ['components/RisultatiCalcolatore.tsx', 'components/RisultatiSoci.tsx']) {
+      expect(leggi(file)).toContain('<AvvisoStima />');
+    }
   });
 });
 
@@ -48,10 +84,13 @@ describe('marchio', () => {
     }
   });
 
-  test('i titoli di display usano Fraunces', () => {
-    expect(leggi('app/layout.tsx')).toContain('Fraunces');
-    expect(leggi('app/home.module.css')).toContain('var(--font-display)');
-    expect(leggi('app/home.module.css')).toContain('clamp(2.4rem, min(6vw, 100cqi / 11.5), 5.5rem)');
+  test('font: Newsreader per i titoli, Hanken Grotesk per il testo, nessun residuo del vecchio tema', () => {
+    const layout = leggi('app/layout.tsx');
+    expect(layout).toContain('Newsreader');
+    expect(layout).toContain('Hanken_Grotesk');
+    for (const file of [...sorgenti('app'), ...sorgenti('components')]) {
+      expect({ file, vecchi: /Fraunces|Cinzel|Instrument_Sans|IBM_Plex/.test(leggi(file)) }).toEqual({ file, vecchi: false });
+    }
   });
 
   test.each(BRAND_SVG)('%s è un SVG vettoriale senza font né immagini incorporate', (nome) => {
@@ -61,27 +100,23 @@ describe('marchio', () => {
     expect(svg).not.toMatch(/<text|<image|@font-face|base64/);
   });
 
-  test('marchio solo scritta: niente sigillo, nessun riferimento ai vecchi PNG', () => {
+  test('solo i nuovi asset, nessun riferimento ai vecchi', () => {
     expect(readdirSync(join(root, 'public/brand')).sort()).toEqual([...BRAND_SVG].sort());
-    const logo = leggi('components/Logo.tsx');
-    expect(logo).toContain('/brand/marchio-panna.svg');
-    expect(logo).toContain('/brand/marchio-navy.svg');
-    for (const file of [...sorgenti('app'), ...sorgenti('components')]) {
-      expect({ file, vecchi: /seal-clean|lockup-(dark|light)|favicon-32|\/brand\/og\.png/.test(leggi(file)) })
+    expect(leggi('components/Logo.tsx')).toContain('/brand/marchio.svg');
+    for (const file of [...sorgenti('app'), ...sorgenti('components'), ...sorgenti('lib')]) {
+      expect({ file, vecchi: /marchio-panna|marchio-navy|seal-clean|lockup-(dark|light)|favicon-32|\/brand\/og\.png/.test(leggi(file)) })
         .toEqual({ file, vecchi: false });
     }
   });
 
-  test('la scritta usa la riga tricolore e i colori del marchio', () => {
-    const panna = leggi('public/brand/marchio-panna.svg');
-    const navy = leggi('public/brand/marchio-navy.svg');
-    for (const colore of ['#1F8A4C', '#C91C30']) {
-      expect(panna).toContain(colore);
-      expect(navy).toContain(colore);
-    }
-    expect(panna).toContain('fill="#EDEAE3"');
-    expect(navy).toContain('fill="#071F45"');
+  test('i colori del marchio: senape per la prima riga, terracotta e inchiostro', () => {
+    const marchio = leggi('public/brand/marchio.svg');
+    expect(marchio).toContain('fill="#E2A23B"');
+    expect(marchio).toContain('fill="#B4432A"');
+    expect(marchio).toContain('fill="#2B2420"');
+    expect(leggi('public/brand/anteprima.svg')).toContain('fill="#F6F0E6"');
     expect(leggi('app/icon.svg')).toBe(leggi('public/brand/icona.svg'));
+    expect(leggi('app/manifest.ts')).toContain("background_color: '#F6F0E6'");
   });
 });
 
@@ -89,19 +124,19 @@ describe('pulsanti', () => {
   const css = leggi('app/globals.css');
   const home = leggi('app/home.module.css');
 
-  test('primario: fondo panna e testo scuro in ogni stato', () => {
-    expect(css).toContain('--color-btn-bg:        #EDEAE3;');
-    expect(css).toContain('--color-btn-fg:        #0A0B0D;');
-    expect(css).toContain('--color-btn-bg-hover:  #DDD8CE;');
+  test('primario: fondo terracotta e testo bianco in ogni stato', () => {
+    expect(css).toContain('--color-btn-bg:        var(--terracotta);');
+    expect(css).toContain('--color-btn-fg:        #FFFFFF;');
+    expect(css).toContain('--color-btn-bg-hover:  var(--terracotta-scura);');
     expect(css).toMatch(/a\.ui-btn--primary:visited \{[^}]*color: var\(--color-btn-fg\)/);
     expect(css).toMatch(/\.ui-btn--primary \*,\s*\.ui-btn--primary svg \{\s*color: var\(--color-btn-fg\)/);
-    expect(css).not.toMatch(/ui-btn--primary:hover[^{]*\{[^}]*#fff/);
+    expect(css).toMatch(/\.ui-btn--primary:hover:not\(:disabled\),\s*a\.ui-btn--primary:hover \{[^}]*color: var\(--color-btn-fg\)/);
   });
 
-  test('la CTA della home batte `.page a:visited { color: inherit }`', () => {
-    expect(home).toMatch(/\.page a\.cta:visited \{[^}]*color: var\(--cta-fg\)/);
-    expect(home).toMatch(/\.page a\.cta svg \{[^}]*color: var\(--cta-fg\)/);
-    expect(home).not.toMatch(/\.cta:hover \{ background: #fff/);
+  test('la CTA della home resta bianca su terracotta anche da visitata', () => {
+    expect(home).toMatch(/\.page a\.cta:visited \{[^}]*background: var\(--terracotta\);[^}]*color: #FFFFFF;/);
+    expect(home).toMatch(/\.page a\.cta svg \{ color: #FFFFFF; \}/);
+    expect(home).toMatch(/\.page a\.cta:hover \{[^}]*color: #FFFFFF;/);
   });
 
   test('i pulsanti con stile in linea non fissano più colore e fondo', () => {

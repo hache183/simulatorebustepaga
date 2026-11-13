@@ -22,7 +22,7 @@ const eurKm = (n: number) =>
 
 const labelStyle: CSSProperties = {
   display: 'block',
-  fontSize: '13px',
+  fontSize: '15px',
   marginBottom: '6px',
   color: 'var(--color-text-secondary)',
 };
@@ -30,7 +30,7 @@ const labelStyle: CSSProperties = {
 const inputStyle: CSSProperties = {
   width: '100%',
   padding: '11px 14px',
-  fontFamily: "var(--font-mono), monospace",
+  fontFamily: "var(--font-sans), sans-serif",
 };
 
 function NumInput({
@@ -140,7 +140,7 @@ export function SociAmministratoriPanel() {
   };
 
   const pair = (a: ReactNode, b: ReactNode) => (
-    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>{a}{b}</div>
+    <div className="campi-affiancati" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '12px' }}>{a}{b}</div>
   );
 
   const scegli = (v: VeicoloAci) => {
@@ -152,21 +152,21 @@ export function SociAmministratoriPanel() {
   };
 
   return (
-    <div className="soci-layout" style={{
+    <div className="modulo-layout" style={{
       display: 'grid',
-      gridTemplateColumns: 'minmax(340px, 420px) 1fr',
-      gap: '24px',
+      gridTemplateColumns: 'minmax(0, 460px) minmax(0, 1fr)',
+      gap: '32px',
       alignItems: 'start',
     }}>
       <div className="calcolatore-panel" style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
         <div>
           <h2 style={{
-            fontFamily: "var(--font-display), Georgia, serif", fontWeight: 600, fontSize: '20px',
+            fontFamily: "var(--font-display), Georgia, serif", fontWeight: 500, fontSize: '28px', lineHeight: 1.15,
             color: 'var(--color-text-primary)', marginBottom: '8px',
           }}>
             Soci e Amministratori
           </h2>
-          <p style={{ fontSize: '12px', color: 'var(--color-text-muted)', lineHeight: 1.55 }}>
+          <p style={{ fontSize: '14px', color: 'var(--color-text-muted)', lineHeight: 1.55 }}>
             Compenso annuo in Gestione separata, oppure solo trasferte e rimborso km.
             Il contributo si ripartisce per due terzi sulla società e un terzo sul percipiente.
             Addizionali regionali e comunali come media, uguale al motore dipendenti.
@@ -193,7 +193,7 @@ export function SociAmministratoriPanel() {
                 onClick={() => set('modalita', value)}
                 style={{
                   appearance: 'none', border: 'none', cursor: 'pointer',
-                  padding: '8px 14px', fontSize: '13px',
+                  padding: '8px 14px', fontSize: '15px',
                   fontFamily: "var(--font-sans), sans-serif",
                   background: attivo ? 'var(--color-accent)' : 'transparent',
                   color: attivo ? 'white' : 'var(--color-text-muted)',
@@ -215,7 +215,7 @@ export function SociAmministratoriPanel() {
 
             <div>
               <p style={{ ...labelStyle, marginBottom: '8px' }}>Gestione separata</p>
-              <label style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', fontSize: '13px', color: 'var(--color-text-secondary)', lineHeight: 1.45 }}>
+              <label style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', fontSize: '15px', color: 'var(--color-text-secondary)', lineHeight: 1.45 }}>
                 <input
                   type="checkbox"
                   checked={stato.haAltraCoperturaInps}
@@ -224,7 +224,7 @@ export function SociAmministratoriPanel() {
                 />
                 Iscritto ad altra gestione obbligatoria o pensionato (aliquota 24%)
               </label>
-              <p style={{ fontSize: '11px', color: 'var(--color-text-muted)', lineHeight: 1.55, marginTop: '8px' }}>
+              <p style={{ fontSize: '13px', color: 'var(--color-text-muted)', lineHeight: 1.55, marginTop: '8px' }}>
                 Aliquota applicata: <strong>{stato.haAltraCoperturaInps ? '24%' : '35,03%'}</strong>
                 {' '}— Circ. INPS 8/2026. Senza la spunta resta l&apos;aliquota intera.
                 Riparto 2/3 società e 1/3 percipiente.
@@ -235,12 +235,12 @@ export function SociAmministratoriPanel() {
 
         <div style={{ borderTop: '1px solid var(--color-border)', paddingTop: '16px' }}>
           <p style={{
-            fontSize: '11px', fontWeight: 600, color: 'var(--color-text-secondary)',
+            fontSize: '13px', fontWeight: 600, color: 'var(--color-text-secondary)',
             letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: '14px',
           }}>
             Trasferte
           </p>
-          <p style={{ fontSize: '12px', color: 'var(--color-text-secondary)', marginBottom: '8px' }}>Nazionale</p>
+          <p style={{ fontSize: '14px', color: 'var(--color-text-secondary)', marginBottom: '8px' }}>Nazionale</p>
           {pair(
             <div>
               <label style={labelStyle}>Giorni</label>
@@ -255,7 +255,7 @@ export function SociAmministratoriPanel() {
             </div>,
           )}
           <div style={{ height: '12px' }} />
-          <p style={{ fontSize: '12px', color: 'var(--color-text-secondary)', marginBottom: '8px' }}>Estera</p>
+          <p style={{ fontSize: '14px', color: 'var(--color-text-secondary)', marginBottom: '8px' }}>Estera</p>
           {pair(
             <div>
               <label style={labelStyle}>Giorni</label>
@@ -273,7 +273,7 @@ export function SociAmministratoriPanel() {
 
         <div style={{ borderTop: '1px solid var(--color-border)', paddingTop: '16px' }}>
           <p style={{
-            fontSize: '11px', fontWeight: 600, color: 'var(--color-text-secondary)',
+            fontSize: '13px', fontWeight: 600, color: 'var(--color-text-secondary)',
             letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: '14px',
           }}>
             Rimborso chilometrico
@@ -283,7 +283,7 @@ export function SociAmministratoriPanel() {
             border: '1px solid var(--color-amber)',
             borderRadius: 0,
             padding: '10px 12px',
-            fontSize: '12px',
+            fontSize: '14px',
             color: 'var(--color-text-secondary)',
             lineHeight: 1.5,
             marginBottom: '12px',
@@ -291,7 +291,7 @@ export function SociAmministratoriPanel() {
             {BANNER_ACI}
           </div>
 
-          <label style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', fontSize: '13px', color: 'var(--color-text-secondary)', marginBottom: '12px' }}>
+          <label style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', fontSize: '15px', color: 'var(--color-text-secondary)', marginBottom: '12px' }}>
             <input
               type="checkbox"
               checked={overrideManuale}
@@ -317,7 +317,7 @@ export function SociAmministratoriPanel() {
             <div>
               <label style={labelStyle}>€ / km (dalla Gazzetta Ufficiale)</label>
               <NumInput value={stato.costoKm} onChange={n => set('costoKm', n)} step="0.0001" />
-              <p style={{ fontSize: '11px', color: 'var(--color-text-muted)', marginTop: '6px', lineHeight: 1.45 }}>
+              <p style={{ fontSize: '13px', color: 'var(--color-text-muted)', marginTop: '6px', lineHeight: 1.45 }}>
                 {NOTA_OVERRIDE}
               </p>
             </div>
@@ -366,7 +366,7 @@ export function SociAmministratoriPanel() {
                   }}
                 >
                   {visibili.length === 0 && (
-                    <li style={{ padding: '10px 12px', fontSize: '12px', color: 'var(--color-text-muted)' }}>
+                    <li style={{ padding: '10px 12px', fontSize: '14px', color: 'var(--color-text-muted)' }}>
                       Nessun modello. Usa l&apos;inserimento manuale del costo km.
                     </li>
                   )}
@@ -390,22 +390,22 @@ export function SociAmministratoriPanel() {
                           color: 'var(--color-text-primary)',
                         }}
                       >
-                        <span style={{ fontSize: '13px' }}>{v.marca} {v.modello}</span>
-                        <span style={{ display: 'block', fontSize: '11px', color: 'var(--color-text-muted)', marginTop: '2px' }}>
+                        <span style={{ fontSize: '15px' }}>{v.marca} {v.modello}</span>
+                        <span style={{ display: 'block', fontSize: '13px', color: 'var(--color-text-muted)', marginTop: '2px' }}>
                           {sezioneVeicolo(v)} · {eurKm(v.costoKm)}
                         </span>
                       </button>
                     </li>
                   ))}
                   {troncato && (
-                    <li style={{ padding: '8px 10px', fontSize: '11px', color: 'var(--color-text-muted)' }}>
+                    <li style={{ padding: '8px 10px', fontSize: '13px', color: 'var(--color-text-muted)' }}>
                       Mostrati i primi 40. Affina la ricerca.
                     </li>
                   )}
                 </ul>
               )}
               {veicolo && (
-                <p style={{ fontSize: '12px', color: 'var(--color-text-secondary)', marginTop: '8px', lineHeight: 1.45 }}>
+                <p style={{ fontSize: '14px', color: 'var(--color-text-secondary)', marginTop: '8px', lineHeight: 1.45 }}>
                   {veicolo.marca} {veicolo.modello}
                   <br />
                   <span style={{ color: 'var(--color-text-muted)' }}>{sezioneVeicolo(veicolo)}</span>
@@ -446,7 +446,7 @@ export function SociAmministratoriPanel() {
           {loading ? 'Generazione report…' : 'Genera report'}
         </button>
         {errore && (
-          <p style={{ fontSize: '13px', color: 'var(--color-red)', margin: 0 }}>{errore}</p>
+          <p style={{ fontSize: '15px', color: 'var(--color-red)', margin: 0 }}>{errore}</p>
         )}
       </div>
 
@@ -456,7 +456,7 @@ export function SociAmministratoriPanel() {
             <p style={{ fontWeight: 600, color: 'var(--color-text-secondary)', marginBottom: '8px' }}>
               Il report apparirà qui
             </p>
-            <p style={{ fontSize: '13px', color: 'var(--color-text-muted)', lineHeight: 1.6 }}>
+            <p style={{ fontSize: '15px', color: 'var(--color-text-muted)', lineHeight: 1.6 }}>
               Compila i dati e premi <strong>Genera report</strong> per il prospetto completo.
             </p>
           </div>
